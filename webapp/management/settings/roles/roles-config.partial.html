@@ -1,0 +1,53 @@
+<h2 class="page-title"><i class="material-icons">people</i>
+        Role Management
+    </h2>
+<p>Use this module to assign appropriate permissions to various roles within Cab9. You will not be able to modify the security settings for Super Admin.</p>
+<div class="row mt30 mb30">
+    <div class="col-sm-6">
+        <button type="button" ng-click="saveChanges()" class="btn btn-success btn-xs" ng-if="PERMISSIONS.test('settings.roles','W')"><i class="material-icons">save</i>Save Changes</button>
+        <button type="button" ng-click="cancelChanges()" class="btn btn-warning btn-xs" ng-if="PERMISSIONS.test('settings.roles','W')" style=""><i class="material-icons">undo</i>Cancel</button>
+        <button type="button" ng-click="addNewRole()" class="btn btn-success btn-xs" ng-if="PERMISSIONS.test('settings.roles','W')" style=""><i class="material-icons">add_box</i>Add New Role</button>
+    </div>
+    <div class="col-sm-6 text-right">
+    </div>
+</div>
+<div>
+    <table class="table table-bordered roles-table">
+        <thead>
+            <tr>
+                <th style="width: 25%">
+                    <strong class="brand-secondary">Permission</strong>
+                </th>
+                <th ng-repeat="role in roles" class="text-center" style="{{75 / roles.length}}%">
+                    {{role.Name}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="p in permissions" ng-show="p.$show">
+                <td ng-style="{ 'padding-left': calcLeft(p.Name) }">
+                    <i class="material-icons grey" ng-click="toggle(p)" ng-if="!p.$expand && p.$childs.length">
+                            keyboard_arrow_right
+                        </i>
+                    <i class="material-icons grey" ng-click="toggle(p)" ng-if="p.$expand && p.$childs.length">
+                            keyboard_arrow_down
+                        </i>
+                    <i class="material-icons" ng-show="!p.$childs.length"></i>
+                    <strong class="grey" ng-if="p.$childs.length" ng-click="toggle(p)">&nbsp;{{p.DisplayName}}</strong>
+                    <span class="grey" ng-if="!p.$childs.length" ng-click="toggle(p)">&nbsp;{{p.DisplayName}}</span>
+                </td>
+                <td ng-repeat="role in roles" class="text-center">
+                    <table class="table table-borderless mb0">
+                        <tr>
+                            <td ng-repeat="pr in p.Rights">
+                                {{pr}}
+                                <br/>
+                                <i class="glyphicon" ng-class="getPermissionClassForRole(p, role, pr)" ng-click="togglePermissionForRole(p, role, pr)" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

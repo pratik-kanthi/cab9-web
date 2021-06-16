@@ -1,0 +1,699 @@
+﻿<div class="driver-payments">
+    <div class="module">
+        <div class="row">
+            <div class="col-md-4 module-options">
+                <h3 class="section-title mt0">Invoicing Period Overview </h3>
+                <strong class="brand-secondary" ng-show="currentPeriod.type == 'Week'">{{currentPeriod.from | date}} - {{currentPeriod.to | date}} {{((currentPeriod.from == lastWeek) ? '(Last Week)' : ((currentPeriod.from == currentWeek) ? '(Current Week)' : ''))}}</strong>
+                <strong class="brand-secondary" ng-show="currentPeriod.type == 'Month'">{{currentPeriod.from | date:'d MMM yyyy'}} - {{currentPeriod.to | date}} {{((currentPeriod.from == lastMonth) ? '(Last Month)' : ((currentPeriod.from == currentMonth) ? '(Current Month)' : ''))}}</strong>
+            </div>
+            <div class="col-md-8 text-right">
+                <div class="date-controls">
+                    <button class="btn btn-info mr15" style="padding-left: 16px;" ng-click="exportSummary()" ng-if="PERMISSIONS.test('invoices','W')">Export Summary</button>
+                    <button class="btn btn-success mr15" style="padding-left: 16px;" ng-click="gotoPeriod(currentMonth, 'Month')">Current Month</button>
+                    <button class="btn btn-primary" style="padding-left: 16px;" ng-click="back()"><i class="material-icons">keyboard_arrow_left</i></button>
+                    <div class="current-period">
+                        <!--      {{currentPeriod.from == lasstMonth ? 'Last Month' : (currentPeriod.from == currentMonth ? 'Current Month': ('Year: '+currentPeriod.year+', Week: '+currentPeriod.week))}} -->
+                        {{'Year: '+currentPeriod.year+', Month: '+ currentPeriod.month}}
+                    </div>
+                    <button class="btn btn-primary" style="padding-left: 16px;" ng-click="forward()" ng-disabled="currentPeriod.from == currentMonth"><i class="material-icons">keyboard_arrow_right</i></button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <a class="btn btn-primary" ng-class="{ 'active': currentPeriod.type == 'Month' }" ng-click="gotoPeriod(currentPeriod.thisMonth.weekStart, currentPeriod.thisMonth.type)" style="padding: 4px;height: 48px;" >
+                            <small>{{currentPeriod.thisMonth.title}}</small><br />
+                            <small>{{currentPeriod.thisMonth.subtitle}}</small>
+                        </a>
+                    
+                        <a class="btn btn-info" ng-class="{ 'active': currentPeriod.type == 'Week' && currentPeriod.from == item.weekStart }" ng-repeat="item in currentPeriod.weeks" ng-click="gotoPeriod(item.weekStart, item.type)" style="padding: 4px;height: 48px;">
+                            <small>{{item.title}}</small><br />
+                            <small>{{item.subtitle}}</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt20">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs nav-justified">
+                    <!--<li class="bg-success" ng-class="{ 'active': tab.current == 'SUMMARY' }"><a class="payments" ng-click="tab.current = 'SUMMARY'">Period<br>Summary</a></li>-->
+                    <li class="bg-success" ng-class="{ 'active': tab.current == 'GENERATED' }"><a class="payments" ng-click="tab.current = 'GENERATED'">Generated<br>Invoices <span class="badge badge-success" style="display:inline;">{{currentPeriod.allInvoices.length}}</span></a></li>
+                    <li class="bg-success" ng-class="{ 'active': tab.current == 'MANUAL' }"><a class="payments" ng-click="tab.current = 'MANUAL'">Manual<br>Invoices <span class="badge badge-success" style="display:inline;">{{currentPeriod.extraPayments.length}}</span></a></li>
+                    <li class="bg-info" ng-class="{ 'active': tab.current == 'QUEUE' }"><a class="queued" ng-click="tab.current = 'QUEUE'">Queued<br>Invoices <span class="badge badge-success" style="display:inline;">{{currentPeriod.undergeneration.length}}</span></a></li>
+                    <li class="bg-danger" ng-class="{ 'active': tab.current == 'ATTENTION' }"><a class="attention" ng-click="tab.current = 'ATTENTION'">Attention<br>Required <span class="badge badge-danger" style="display:inline;">{{currentPeriod.attentionRequired.length}}</span></a></li>
+                    <li class="bg-info" ng-class="{ 'active': tab.current == 'ELIGABLE' }"><a class="queued" ng-click="tab.current = 'ELIGABLE'">Eligable<br>Clients <span class="badge badge-info" style="display:inline;">{{currentPeriod.eligable.length}}</span></a></li>
+                </ul>
+                <div ng-if="loading" class="tab-content">
+                    <div class="dploader">
+                        <div class="ball-clip-rotate-multiple" style='margin: 15% auto !important'>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:15px;">
+                    <!--<div ng-show="!loading && tab.current == 'SUMMARY'" ng-if="tab.current == 'SUMMARY'" class="tab-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="totals">
+                                    <div class="wrapper">
+                                        <i class="material-icons">event</i>
+                                        <div class="data">
+                                            <small>Bookings</small>
+                                            <strong>{{currentPeriod.stats.bookings|number:0}}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="wrapper">
+                                        <i class="material-icons">assignment</i>
+                                        <div class="data">
+                                            <small>Total Invoices</small>
+                                            <strong>{{currentPeriod.stats.count}}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="payments">
+                                    <div class="column">
+                                        <div class="wrapper">
+                                            <div class="data bg-dark bg-secondary">
+                                                <div class="value">
+                                                    <small>Total Amount</small>
+                                                    <strong>{{currentPeriod.stats.total | currency}}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="wrapper">
+                                            <div class="data">
+                                                <div class="value">
+                                                    <small>Average Amount</small>
+                                                    <strong>{{currentPeriod.stats.averageAmount | currency}}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="wrapper">
+                                            <div class="data" style="background-color: #dff0d8;">
+                                                <div class="value">
+                                                    <small>Total Paid</small>
+                                                    <strong>{{currentPeriod.stats.paymentsTotal | currency}}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="wrapper">
+                                            <div class="data bg-danger">
+                                                <div class="value">
+                                                    <small>Outstanding</small>
+                                                    <strong>{{currentPeriod.stats.total - currentPeriod.stats.paymentsTotal | currency}}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="wrapper" style="padding-top:8px;">
+                                            <div class="data">
+                                                <div class="value">
+                                                    <small>Largest Invoice</small>
+                                                    <strong>{{currentPeriod.stats.largestAmount | currency}}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="column" style="display:none;"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><span><i class="material-icons">timeline</i></span><strong>Weekly Invoice Amounts</strong></h3>
+                                    </div>
+                                    <div class="panel-body" ng-show="!graphLoading">
+                                        <flot dataset="paymentsGraph.data" options="paymentsGraph.options" height="300px" width="95%"></flot>
+                                    </div>
+                                    <div class="panel-body" ng-show="graphLoading">
+                                        <div class="dploader">
+                                            <div class="ball-clip-rotate-multiple" style='margin: 15% auto !important'>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><span><i class="material-icons">payment</i></span>Payments</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="alert alert-warning mb0" ng-if="currentPeriod.stats.paymentBreakdown.length == 0">No Payments Added</div>
+                                        <flot dataset="paymentsData" options="pieOptions" width="100%" height="175px" ng-if="currentPeriod.stats.paymentBreakdown.length > 0"></flot>
+                                        <div ng-if="currentPeriod.stats.paymentBreakdown.length > 0" class="mt15">
+                                            <span class="brand-secondary">Total: </span><strong class="brand-primary">{{currentPeriod.stats.paymentsTotal | currency}}</strong>
+                                        </div>
+                                    </div>
+                                    <table class="table table-condensed" ng-if="currentPeriod.stats.paymentBreakdown.length > 0">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in currentPeriod.stats.paymentBreakdown">
+                                                <td>{{item.Key}}</td>
+                                                <td>{{item.Value | currency}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-default table-panel">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><span><i class="material-icons">equalizer</i></span>Client Adjustments</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row pl15 pr15">
+                                            <div class="col-xs-8 pt20">
+                                                <div class="alert alert-warning mb0" ng-if="currentPeriod.stats.clientAdjustments.length == 0">No Adjustments Added</div>
+                                                <div ng-if="currentPeriod.stats.clientAdjustments.length > 0">
+                                                    <span class="brand-primary">Count:</span><strong> {{currentPeriod.stats.clientAdjustments.length}}</strong>
+                                                    <br />
+                                                    <span class="brand-primary">Total:</span><strong> {{currentPeriod.stats.clientAdjustmentsTotal | currency}}</strong>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <img src="/includes/images/driver.png" class="stat-image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="max-height:375px;overflow-y:scroll;">
+                                        <table class="table table-condensed table-bordered" ng-if="currentPeriod.stats.clientAdjustments.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Type</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in currentPeriod.stats.clientAdjustments | orderBy:'-Value'">
+                                                    <td>{{item.Key}}</td>
+                                                    <td>{{item.Value | currency}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><span><i class="material-icons">assignment</i></span>Expenses</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="alert alert-warning mb0" ng-if="currentPeriod.stats.expenses.length == 0">No Expenses Added</div>
+                                        <flot dataset="expensesData" options="pieOptions" width="100%" height="175px" ng-if="currentPeriod.stats.expenses.length > 0"></flot>
+                                        <div ng-if="currentPeriod.stats.expenses.length > 0" class="mt15">
+                                            <span class="brand-secondary">Count: </span><strong class="brand-primary">{{currentPeriod.stats.expenses.length}}</strong>
+                                            <br>
+                                            <span class="brand-secondary">Total: </span><strong class="brand-primary">{{currentPeriod.stats.expensesTotal | currency}}</strong>
+                                        </div>
+                                    </div>
+                                    <div style="max-height:300px;overflow-y:scroll;">
+                                        <table class="table table-condensed table-bordered" ng-if="currentPeriod.stats.expenses.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Type</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in currentPeriod.stats.expenses | orderBy:'-Value'">
+                                                    <td>{{item.Key}}</td>
+                                                    <td>{{item.Value | currency}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div ng-show="tab.current == 'GENERATED'" class="tab-content generated">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div ng-show="bulkMode == null" ng-if="PERMISSIONS.test('invoices', 'W')">
+                                    <div class="btn-group">
+                                        <a class="btn btn-default" style="padding-left:16px">Bulk Options: </a>
+                                        <a class="btn btn-success" style="padding-left:16px" ng-click="startBulkMode('APPROVE')">Approve</a>
+                                        <a class="btn btn-warning" style="padding-left:16px" ng-click="startBulkMode('SEND')">Send</a>
+                                        <!--<a class="btn btn-warning" style="padding-left:16px" ng-click="startBulkMode('REGEN')">Recalculate</a>-->
+                                        <a class="btn btn-danger" style="padding-left:16px" ng-click="startBulkMode('CANCEL')" ng-if="PERMISSIONS.test('invoices', 'D')">Cancel</a>
+                                    </div>
+                                </div>
+                                <div ng-show="bulkMode != null">
+                                    <div class="btn-group">
+                                        <a class="btn btn-default" style="padding-left:16px">Select Payments To {{bulkText}}: </a>
+                                        <a class="btn btn-success" style="padding-left:16px" ng-click="finishBulkMode()">Continue</a>
+                                        <a class="btn btn-warning" style="padding-left:16px" ng-click="cancelBulkMode()">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 view-options text-right">
+                                <a href="">
+                                    <span><i class="material-icons">search</i></span>
+                                    <input type="text" ng-model="searchTerm.$" id="searchTerm" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="table table-condensed">
+                            <div class="table-responsive table-striped-double">
+                                <table class="table module-table mt0 mb15">
+                                    <thead></thead>
+                                    <thead>
+                                        <tr>
+                                            <th style="width:10%">
+                                                Reference
+                                            </th>
+                                            <th style="width:40%">
+                                                Client
+                                            </th>
+                                            <th style="width:10%">
+                                                Status
+                                            </th>
+                                            <th style="width:20%">
+                                                Bookings
+                                            </th>
+                                            <!--<th>
+                                                Amounts
+                                            </th>-->
+                                            <!--<th class="text-right">Balance</th>-->
+                                            <th style="width:20%">
+                                                <div class="checkbox" style="display:inline-block" ng-if="bulkMode">
+                                                    <input type="checkbox" id="driver-check-all" ng-checked="selected.all()" ng-click="selected.toggleAll()">
+                                                    <label for="driver-check-all"></label>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-repeat="(title, group) in currentPeriod.invoices">
+                                        <tr>
+                                            <td colspan="7" style="text-align:left;">
+                                                <b>{{title}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat="p in group | filter:searchTerm | orderBy:'-Reference'">
+                                            <td>
+                                                <!--<div class="profile" style="background-image:url({{formatImage(p.ClientImageUrl, p.ClientAccountNo)}})">
+                                                </div>-->
+                                                <b>{{p.Reference}}</b>
+                                            </td>
+                                            <td>
+                                                <strong class="brand-secondary">({{p.ClientAccountNo}}) {{p.ClientName}} </strong>
+                                                <br />
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="label" ng-class="{ 'label-success': p.Status == 'Settled', 'label-default': p.Status == 'Sent', 'label-warning': p.Status == 'Approved', 'label-danger': p.Status == 'Draft' }" style="font-size:12px;">{{p.Status}}</span>
+                                            </td>
+                                            <td>
+                                                {{p.Bookings}} Booking(s)
+                                                <br />
+                                                <span ng-show="p.RequiresAttention > 0" class="text-danger">{{p.RequiresAttention}} Booking(s) Require Pricing</span>
+                                            </td>
+                                            <!--<td>
+                                                <strong> Collect:</strong> {{p.InvoiceAmount | currency}}
+                                                <br /> <strong>Paid:</strong> {{p.PaymentsTotal | currency}}
+                                            </td>-->
+                                            <!--<td class="text-right">
+                                                {{(p.Balance) | currency}}
+                                            </td>-->
+                                            <td style="overflow:visible;width: 150px;">
+                                                <div class="checkbox" style="display:inline-block" ng-show="!hasProcessing(p) && bulkMode && p.$bulk">
+                                                    <input type="checkbox" id="driver-check{{p.Id}}" ng-model="p.$selected">
+                                                    <label for="driver-check{{p.Id}}"></label>
+                                                </div>
+                                                <div class="btn-group text-right" dropdown ng-show="bulkMode == null">
+                                                    <a class="btn btn-primary" ui-sref="root.invoices.viewer({ Id: p.Id})" target="_blank" ng-if="PERMISSIONS.test('invoices.viewer')">View</a>
+                                                    <a class="btn btn-primary" dropdown-toggle ng-click="toggle = !toggle" style="width: 26px;min-width: initial;"><i class="caret" style="position:static;width:0;" ng-if="PERMISSIONS.test('driverpayments', 'W')"></i></a>
+                                                    <ul class="dropdown-menu">
+                                                        <li ng-show="p.Status == 'Draft' && p.RequiresAttention == 0"><a ng-click="approvePayment(p)">Approve</a></li>
+                                                        <li ng-show="p.Status == 'Draft' && p.RequiresAttention > 0"><a ng-click="forceApprovePayment(p)">Approve</a></li>
+                                                        <li><a ng-click="cancelPayment(p)" ng-if="PERMISSIONS.test('invoices', 'D')">Cancel</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!--<tr ng-show="filteredPayments.length == 0">
+                                            <td colspan="7" style="text-align:center;">
+                                                <b>No Generated Payments match the current search term.</b>
+                                            </td>
+                                        </tr>-->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="tab.current == 'QUEUE'" ng-if="tab.current == 'QUEUE'" class="tab-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                            </div>
+                            <div class="col-sm-6 view-options text-right">
+                                <a href="">
+                                    <span><i class="material-icons">search</i></span>
+                                    <input type="text" ng-model="searchTerm.$" id="searchTerm" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="alert alert-info mb15 mt15">These are the currently queued Auto-Generated Payments. You can use this page to check the progress of the Auto-Generation</div>
+                        <div class="table table-condensed">
+                            <div class="table-responsive table-striped">
+                                <table class="table module-table mt0">
+                                    <thead></thead>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Client
+                                            </th>
+                                            <th></th>
+                                            <th>
+                                                Week / Bookings
+                                            </th>
+                                            <th>
+                                                Status
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="p in currentPeriod.undergeneration | filter:searchTerm | orderBy:'-Balance' as filteredQueued">
+                                            <td>
+                                                <img class="img-circle" ng-src="{{formatImage(p.Client.ImageUrl, p.Client.Callsign)}}" height="50" width="50" />
+                                            </td>
+                                            <td>
+                                                {{p.Client.Name}} ({{p.Client.AccountNo}})
+                                                <br />
+                                            </td>
+                                            <td>
+                                                Wk: {{p.Week}} Month: {{p.Month}} Year: {{p.Year}}
+                                                <br />
+                                                <small>{{p.Bookings}} Booking(s)</small>
+                                            </td>
+                                            <td>
+                                                <span class="label" ng-class="{ 'label-danger': p.Status == 'ERROR', 'label-default': p.Status == 'QUEUED', 'label-info': p.Status == 'PROCESSING' }" style="font-size:12px;">{{p.Status}}</span>
+                                                <small>Queued at {{p.QueuedTime | date:'dd/MM/yyyy HH:mm'}}</small>
+                                            </td>
+                                            <td style="overflow:visible;"></td>
+                                        </tr>
+                                        <tr ng-show="filteredQueued.length == 0">
+                                            <td colspan="6" style="text-align:center;">
+                                                <b>No Queued Invoices match the current search term.</b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="tab.current == 'MANUAL'" ng-if="tab.current == 'MANUAL'" class="tab-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div ng-show="manualBulkMode == null" ng-if="PERMISSIONS.test('invoices', 'W')">
+                                    <div class="btn-group">
+                                        <a class="btn btn-default" style="padding-left:16px">Bulk Options: </a>
+                                        <a class="btn btn-success" style="padding-left:16px" ng-click="startBulkMode('APPROVE', true)">Approve</a>
+                                        <a class="btn btn-warning" style="padding-left:16px" ng-click="startBulkMode('SEND', true)">Send</a>
+                                        <!--<a class="btn btn-warning" style="padding-left:16px" ng-click="startBulkMode('REGEN')">Recalculate</a>-->
+                                        <a class="btn btn-danger" style="padding-left:16px" ng-click="startBulkMode('CANCEL', true)" ng-if="PERMISSIONS.test('invoices', 'D')">Cancel</a>
+                                    </div>
+                                </div>
+                                <div ng-show="manualBulkMode != null">
+                                    <div class="btn-group">
+                                        <a class="btn btn-default" style="padding-left:16px">Select Payments To {{bulkText}}: </a>
+                                        <a class="btn btn-success" style="padding-left:16px" ng-click="finishBulkMode(true)">Continue</a>
+                                        <a class="btn btn-warning" style="padding-left:16px" ng-click="cancelBulkMode(true)">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 view-options text-right">
+                                <a href="">
+                                    <span><i class="material-icons">search</i></span>
+                                    <input type="text" ng-model="searchTerm.$" id="searchTerm" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="table table-condensed">
+                            <div class="table-responsive table-striped-double">
+                                <table class="table table-bordered module-table mt0">
+                                    <thead></thead>
+                                    <thead>
+                                        <tr>
+                                            <th style="width:10%">
+                                                Reference
+                                            </th>
+                                            <th style="width:40%">
+                                                Client
+                                            </th>
+                                            <th style="width:10%">
+                                                Status
+                                            </th>
+                                            <th style="width:20%">
+                                                Bookings
+                                            </th>
+                                            <!--<th>
+                                                Amounts
+                                            </th>-->
+                                            <!--<th>Balance</th>-->
+                                            <th style="width:20%;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="p in currentPeriod.extraPayments | filter:searchTerm | orderBy:'-Reference' as filteredExtraPayments">
+                                            <td>
+                                                <b>{{p.Reference}}</b>
+                                            </td>
+                                            <td>
+                                                ({{p.ClientAccountNo}}) {{p.ClientName}} 
+                                                <br />
+                                            </td>
+                                            <td>
+                                                <span class="label" ng-class="{ 'label-success': p.Status == 'Settled', 'label-default': p.Status == 'Sent', 'label-warning': p.Status == 'Approved', 'label-danger': p.Status == 'Draft' }" style="font-size:12px;">{{p.Status}}</span>
+                                            </td>
+                                            <td>
+                                                {{p.Bookings}} Booking(s)
+                                                <br /> {{p.RequiresAttention}} Booking(s) Require Pricing
+                                            </td>
+                                            <!--<td>
+                                                <strong> Collect:</strong> {{p.InvoiceAmount | currency}}
+                                                <br /> <strong>Paid:</strong> {{p.PaymentsTotal | currency}}
+                                            </td>-->
+
+                                            <!--<td>
+                                                {{p.Balance | currency}}
+                                            </td>-->
+                                            <td style="overflow:visible;width: 150px;">
+                                                <div class="checkbox" style="display:inline-block" ng-show="!hasProcessing(p) && manualBulkMode && p.$bulk">
+                                                    <input type="checkbox" id="driver-check{{p.Id}}" ng-model="p.$selected">
+                                                    <label for="driver-check{{p.Id}}"></label>
+                                                </div>
+                                                <div class="btn-group text-right" dropdown ng-show="manualBulkMode == null">
+                                                    <a class="btn btn-primary" ui-sref="root.invoices.viewer({ Id: p.Id})" target="_blank" ng-if="PERMISSIONS.test('invoices.viewer')">View</a>
+                                                    <a class="btn btn-primary" dropdown-toggle ng-click="toggle = !toggle" style="width: 26px;min-width: initial;"><i class="caret" style="position:static;width:0;" ng-if="PERMISSIONS.test('driverpayments', 'W')"></i></a>
+                                                    <ul class="dropdown-menu">
+                                                        <li ng-show="p.Status == 'Draft' && p.RequiresAttention == 0"><a ng-click="approvePayment(p)">Approve</a></li>
+                                                        <li ng-show="p.Status == 'Draft' && p.RequiresAttention > 0"><a ng-click="forceApprovePayment(p)">Approve</a></li>
+                                                        <li><a ng-click="cancelPayment(p)" ng-if="PERMISSIONS.test('invoices', 'D')">Cancel</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show="filteredExtraPayments.length == 0">
+                                            <td colspan="6" style="text-align:center;">
+                                                <b>No Manual Payments match the current period/search term.</b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content" ng-show="tab.current == 'ATTENTION'">
+                        <div class="row">
+                            <dic class="col-sm-6"></dic>
+                            <div class="col-sm-6 view-options text-right">
+                                <a href="">
+                                    <span><i class="material-icons">search</i>Search</span>
+                                    <input type="text" ng-model="searchTerm.$" id="searchTerm" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="table table-condensed">
+                            <div class="table-responsive table-striped-double">
+                                <table class="table table-bordered module-table mt0">
+                                    <thead></thead>
+                                    <thead>
+                                        <tr>
+                                            <th style="width:145px">
+                                                Id
+                                                <br /> Date / Time
+                                            </th>
+                                            <th style="width:260px">
+                                                Journey
+                                            </th>
+                                            <th>
+                                                Client
+                                            </th>
+                                            <th>
+                                                Reason
+                                            </th>
+                                            <th>
+                                                
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="x in currentPeriod.attentionRequired | filter:searchTerm | orderBy:'-BookedDateTime' as filteredAttention">
+                                            <td>
+                                                <a ng-click="openBooking(x)" ng-if="PERMISSIONS.test('bookings')"><strong class="brand-primary">{{x.LocalId}}</strong></a>
+                                                <br /> {{x.BookedDateTime | date:'dd/MM/yyyy HH:mm'}}
+                                            </td>
+                                            <td>
+                                                <div ng-repeat="s in x.BookingStops">
+                                                    {{s.Address1}} {{s.Postcode}}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <strong class="brand-primary">{{x.LeadPassenger.Firstname}} {{x.LeadPassenger.Surname}}</strong>
+                                                <br />
+                                                <small class="text-muted">{{x.Client.Name}}</small>
+                                            </td>
+                                            <td>
+                                                {{x.ClientInvoiceStatus}}
+                                                <br ng-show="x.ClientInvoiceStatus" />
+                                                <span class="label label-warning" ng-show="x.AsDirected" style="width:95px;">As Directed</span> 
+                                                <span class="label label-warning" ng-show="x.Dispute" style="width:95px;">Client Services</span>
+                                            </td>
+                                            <td style="width: 150px;">
+                                                <!--<div ng-show="x.InvoiceCost">Calculated {{x.InvoiceCost | currency}}</div>-->
+                                                <div class="input-group">
+                                                    <span class="input-group-addon" style="display:inline;color:#fff;">£</span>
+                                                    <input type="text" ng-model="x.InvoiceCost" class="form-control" style="float:none;" ng-change="x.$changed = true" ng-disabled="!PERMISSIONS.test('invoices','W')" />
+                                                </div>
+                                            </td>
+                                            <td style="overflow:visible;">
+                                                <a class="btn btn-success" ng-click="approvePrice(x)" ng-show="x.InvoiceCost != null && !x.$changed" ng-if="PERMISSIONS.test('invoices','W')">Approve Price</a>
+                                                <a class="btn btn-success" ng-click="savePrice(x)" ng-show="x.$changed" ng-disabled="x.InvoiceCost == null" ng-if="PERMISSIONS.test('invoices','W')">Save Price</a>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show="filteredAttention.length == 0">
+                                            <td colspan="6" style="text-align:center;">
+                                                <b>No Bookings that require attention match the current period/search term.</b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="tab.current == 'ELIGABLE'" class="tab-content">
+                        <div class="row mt10">
+                            <div class="col-sm-6 ">
+                                <button class="btn btn-success" style="padding-left: 16px;" ng-click="autoGenerate()" ng-if="PERMISSIONS.test('invoices','W')">Auto Generate</button>
+                                <a ng-click="openPaymentModal()" class="btn btn-success" ng-if="PERMISSIONS.test('invoices','W')"><i class="material-icons">receipt</i>Create Manual Invoices</a>
+                                <!--<button class="btn btn-info" style="padding-left: 16px;" ng-click="preview()" ng-if="PERMISSIONS.test('invoices','W')">Manual Preview</button>-->
+                            </div>
+                            <div class="col-sm-6 view-options text-right">
+                                <a href="">
+                                    <span><i class="material-icons">search</i></span>
+                                    <input type="text" ng-model="payment.$search" id="searchTerm" />
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mt10">
+                            <div class="col-md-12">
+                                <div class="alert alert-info mb0" ng-show="currentPeriod.type == 'Month'">Currently only showing clients on Monthly/Daily invoice periods, select a week above to see Weekly Clients</div>
+                                <div class="alert alert-info mb0" ng-show="currentPeriod.type == 'Week'">Currently only showing clients on Weekly/Daily invoice periods, select a week above to see Monthly Clients</div>
+                            </div>
+                        </div>
+                        <div class="form-group driver-table mb0">
+                            <div class="table table-condensed">
+                                <div class="table-responsive table-striped">
+                                    <table class="table module-table mt0 mb0">
+                                        <thead></thead>
+                                        <thead>
+                                            <tr>
+                                                <th style="width:60px">
+                                                    Client
+                                                </th>
+                                                <th></th>
+                                                <th>Bookings</th>
+                                                <th class="text-right">Total Bookings</th>
+                                                <th class="text-right">Invoice Period</th>
+                                                <th class="text-right">Last Invoice</th>
+                                                <th class="text-right">Due</th>
+                                                <th class="text-right" ng-if="PERMISSIONS.test('invoices','W')">
+                                                    <div style="width:100px;">
+                                                        <div class="checkbox" style="display:inline-block">
+                                                            <input type="checkbox" id="client-checkall" ng-click="selectAllClients()" ng-checked="allClientsSelected">
+                                                            <label for="client-checkall"></label>
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in currentPeriod.eligable|filter:payment.$search|orderBy:'-TotalBookings'">
+                                                <td>
+                                                    <div class="profile" style="background-image:url({{formatImage(item.ImageUrl, item.AccountNo)}})">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <strong class="brand-secondary">{{item.Name}} ({{item.AccountNo}})</strong>
+                                                    <br /> {{item.Type}}
+                                                </td>
+                                                <td>
+                                                    <b>{{item.PeriodBookings}}</b> This Period
+                                                    <br />
+                                                    <b>{{item.PastBookings}}</b> Carried Forward
+                                                </td>
+                                                <td class="text-right">
+                                                    <b style="font-size:20px;" class="brand-primary">{{item.TotalBookings}}</b>
+                                                </td>
+                                                <td class="text-right">
+                                                    <b class="brand-primary">{{item.InvoicePeriod}}</b><!--<br />
+                                                    <small ng-if="item.LastInvoiceDate">{{item.LastInvoiceDate | Countdown}}</small>-->
+                                                </td>
+                                                <td class="text-right">
+                                                    <b class="brand-primary">{{item.LastInvoiceDate | date:'dd/MM/yyyy'}}</b><br />
+                                                    <small ng-if="item.LastInvoiceDate">{{item.LastInvoiceDate | Countdown}}</small>
+                                                </td>
+                                                <td class="text-right">
+                                                    <b class="brand-primary">{{item.Due}}</b>
+                                                </td>
+                                                <td class="text-center" ng-if="PERMISSIONS.test('invoices','W')">
+                                                    <div style="width:100px;">
+                                                        <div class="checkbox" ng-init="index=$index" style="display:inline-block" ng-show="!hasProcessing(item)">
+                                                            <input type="checkbox" id="client-check{{index}}" ng-model="item.$checked">
+                                                            <label for="client-check{{index}}"></label>
+                                                        </div>
+                                                        <span class="label label-warning" ng-show="hasProcessing(item)">Being Generated</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

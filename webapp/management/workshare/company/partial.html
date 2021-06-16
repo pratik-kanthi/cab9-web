@@ -1,0 +1,188 @@
+<h2 class="page-title">
+    <i class="material-icons">account_box</i>Company Profile
+</h2>
+<div ng-if="!newProfile && !companyProfile">
+    <p class="grey">
+        Welcome to Cab9 Workshare bringing all users together to create a large network across the UK and in the future, interracially.
+        To get involved create a profile then discover partners that will help you grow your business.
+        Take on extra work and fill in your dead legs by making your drivers available to other companies.
+        You can also easily pass on your overflow work to partners you trust.
+        You set the prices and coverage areas you’re prepared to work in so the work you receive will truly help your business.
+    </p>
+    <a ng-click="startCreate()" class="btn btn-primary mt20">
+        <i class="material-icons">add_circle</i>Create Company Profile
+    </a>
+</div>
+<div class="row" ng-if="companyProfile">
+    <div class="col-sm-2">
+        <tabs data="tabDefs" vertical="true" type="pills"></tabs>
+    </div>
+    <div class="col-sm-10">
+        <ui-view class="tab-content"></ui-view>
+    </div>
+</div>
+<div ng-if="newProfile" id="workshare-company-profile">
+    <div class=" row">
+        <div class="col-sm-8 col-md-7">
+            <div form-for="newProfile" schema="CompanyProfile" mode="CREATE">
+                <div class="mb10">
+                    <button class="btn btn-success mr10" ng-click="saveProfile()" ng-disabled="formFor.form.$invalid"><i class="material-icons">save</i>{{loading?'Saving...':'Save'}}
+                    </button>
+                    <button class="btn btn-warning" ng-click="cancelCreate()"><i class="material-icons">undo</i>Cancel
+                    </button>
+                </div>
+                <div class="mt20">
+                    <h3 class="section-title mt0">Company Information</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="CompanyDescription" display="About Company"></div>
+                            <div field-for="OperatorYearEstablished" display="Company Established Year"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div field-for="TwitterLink" display="Twitter Link"></div>
+                            <div field-for="FacebookLink" display="Facebook Link"></div>
+                            <div field-for="LinkedInLink" display="LinkedIn Link"></div>
+                        </div>
+                    </div>
+                    <h3 class="section-title mt0">Contact Details</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <strong class="brand-secondary">Primary Contact</strong>
+                            <p class="text-muted">Owner of the company or top-level key decision maker</p>
+                            <div field-for="PrimaryContactName" display="Name"></div>
+                            <div field-for="PrimaryContactPhone" display="Phone"></div>
+                            <div field-for="PrimaryContactEmail" display="Email"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <strong class="brand-secondary">Service Contact</strong>
+                            <p class="text-muted">Deals with day to day operation to be used for any live or upcoming bookings</p>
+                            <div field-for="ServiceManagerName" display="Name"></div>
+                            <div field-for="ServiceManagerPhone" display="Phone"></div>
+                            <div field-for="ServiceManagerEmail" display="Email"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <strong class="brand-secondary">Account Contact</strong>
+                            <p class="text-muted">This is where all invoices should be sent alongside any pricing queries</p>
+                            <div field-for="AccountManagerName" display="Name"></div>
+                            <div field-for="AccountManagerPhone" display="Phone"></div>
+                            <div field-for="AccountManagerEmail" display="Email"></div>
+                        </div>
+                    </div>
+                    <h3 class="section-title mt0">Pricing Model</h3>
+                    <p>Please assign a pricing model that presents an accurate price to partners covering all vehicle types and any route within your designated coverage area</p>
+                    <div field-for="PricingModelId" select-from="pricingModels" select-option-template="<div> {{option.Name}} </div>" display="Pricing Model"></div>
+                    <h3 class="section-title mt0">Operator Details</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="OperatorLicensingAuthority" display="Licensing Authority"></div>
+                            <div field-for="OperatorLicenseNumber" display="License Number"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div field-for="OperatorLicenseExpiryDate" display="License Expiry Date"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-5 hidden-sm hidden-xs">
+            <div class="panel panel-default profile">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Profile Summary</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="bio">
+                        <img ng-src="{{ COMPANY._ImageUrl }}" alt="" />
+                        <h4 ng-bind="COMPANY.Name"></h4>
+                        <h6 ng-bind="COMPANY._FullAddress"></h6>
+                        <div class="social">
+                            <a target="_blank" ng-href="{{ newProfile.FacebookLink }}" ng-if="newProfile.FacebookLink"><img src="/includes/images/facebook.png" alt="" /></a>
+                            <a target="_blank" ng-href="{{ newProfile.TwitterLink }}" ng-if="newProfile.TwitterLink"><img src="/includes/images/twitter.png" alt="" /></a>
+                            <a target="_blank" ng-href="{{ newProfile.LinkedInLink }}" ng-if="newProfile.LinkedInLink"><img src="/includes/images/linkedin.png" alt="" /></a>
+                            <a target="_blank" ng-href="{{ COMPANY.Website }}" ng-if="COMPANY.Website"><img src="/includes/images/website.png" alt="" /></a>
+                        </div>
+                        <p ng-class="!newProfile.CompanyDescription?'placeholder-text':'Description'" ng-bind="newProfile.CompanyDescription">
+                        </p>
+                    </div>
+                    <div class="section">
+                        <h4 class="section-subtitle">Contact Details</h4>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="info-row">
+                                    <div class="info-label">Primary Contact</div>
+                                    <div class="info-value">
+                                        <p class="mb5"><strong ng-class="!newProfile.PrimaryContactName?'placeholder-text':''" ng-bind="newProfile.PrimaryContactName||'Name'"></strong></p>
+                                        <p class="mb5" ng-class="!newProfile.PrimaryContactPhone?'placeholder-text':''" ng-bind="newProfile.PrimaryContactPhone||'Phone'"></p>
+                                        <p class="mb0" ng-class="!newProfile.PrimaryContactEmail?'placeholder-text':''" ng-bind="newProfile.PrimaryContactEmail||'Email'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="info-row">
+                                    <div class="info-label">Service Contact</div>
+                                    <div class="info-value">
+                                        <p class="mb5"><strong ng-class="!newProfile.ServiceManagerName?'placeholder-text':''" ng-bind="newProfile.ServiceManagerName||'Name'"></strong></p>
+                                        <p class="mb5" ng-class="!newProfile.ServiceManagerPhone?'placeholder-text':''" ng-bind="newProfile.ServiceManagerPhone||'Phone'"></p>
+                                        <p class="mb0" ng-class="!newProfile.ServiceManagerEmail?'placeholder-text':''" ng-bind="newProfile.ServiceManagerEmail||'Email'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt20">
+                            <div class="col-sm-6">
+                                <div class="info-row">
+                                    <div class="info-label">Account Contact</div>
+                                    <div class="info-value">
+                                        <p class="mb5"><strong ng-class="!newProfile.AccountManagerName?'placeholder-text':''" ng-bind="newProfile.AccountManagerName||'Name'"></strong></p>
+                                        <p class="mb5" ng-class="!newProfile.AccountManagerPhone?'placeholder-text':''" ng-bind="newProfile.AccountManagerPhone||'Phone'"></p>
+                                        <p class="mb0" ng-class="!newProfile.AccountManagerEmail?'placeholder-text':''" ng-bind="newProfile.AccountManagerEmail||'Email'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <h4 class="section-subtitle">Operator Details</h4>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="info-row">
+                                    <div class="info-label">License Number</div>
+                                    <div class="info-value">
+                                        <p class="mb5"><strong ng-class="!newProfile.OperatorLicenseNumber?'placeholder-text':''" ng-bind="newProfile.OperatorLicenseNumber||'License Number'"></strong></p>
+                                        <p class="mb5" ng-class="!newProfile.OperatorLicenseExpiryDate?'placeholder-text':''" ng-bind="newProfile.OperatorLicenseExpiryDate||'Expiry Date'"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="info-row">
+                                    <div class="info-label">Licensing Authority</div>
+                                    <div class="info-value">
+                                        <p class="mb5"><strong ng-class="!newProfile.OperatorLicensingAuthority?'placeholder-text':''" ng-bind="newProfile.OperatorLicensingAuthority||'Name'"></strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <h4 class="section-subtitle">Other Details</h4>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="info-row">
+                                    <div class="info-label">Pricing Model</div>
+                                    <div class="info-value">
+                                        <p class="mb5"><strong ng-class="!pricingModel.Name?'placeholder-text':''" ng-bind="pricingModel.Name||'Pricing Model'"></strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="info-row">
+                                    <div class="info-label">Year Established</div>
+                                    <div class="info-value">
+                                        <p class="mb5"><strong ng-class="!newProfile.OperatorYearEstablished?'placeholder-text':''" ng-bind="newProfile.OperatorYearEstablished||'Number of Years'"></strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

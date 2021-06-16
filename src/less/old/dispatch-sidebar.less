@@ -1,0 +1,159 @@
+.three-panel-layout {
+    .sidebar {
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 480px;
+        border-right: 2px solid #ddd;
+        z-index: 10;
+        .options {
+            padding: 0;
+            ul.nav {
+                height: 50px;
+                li {
+                    height: 50px;
+                    width: 33.33%;
+                    float: left;
+                    a {
+                        height: 50px !important;
+                        line-height: 50px;
+                        padding: 0;
+                        text-align: center;
+                        font-size: 16px;
+                        background: #eee !important;
+                        border: 0 !important;
+                        color: @brand-primary;
+                        border-radius: 0 !important;
+                    }
+                    &.active {
+                        .brand-gradient();
+                        border: 0 !important;
+                        a {
+                            background: transparent !important;
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+            .resize-options {
+                position: absolute;
+                right: 0;
+                top: 0;
+                height: 52px;
+                width: 50px;
+            }
+        }
+        .sidebar-content {
+            .search-box {
+                border: 0;
+                margin: 0;
+                .border-radius(0);
+                font-size: 14px;
+                height: 40px;
+                line-height: 40px;
+                outline: none;
+                margin-top: 5px;
+                outline: none;
+                border-color: inherit;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                background-image: url('/includes/images/search.png');
+                background-repeat: no-repeat;
+                background-position: left 10px center;
+                background-size: 20px;
+                padding-left: 40px;
+                &:focus {
+                    outline: none;
+                    border-color: inherit;
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                }
+            }
+            .booking-time-slider {
+                position: absolute;
+                height: 400px;
+                right: -120px;
+                width: 120px;
+                top: 140px;
+                padding-top: 8px;
+                padding-bottom: 8px;
+                &:hover {
+                    .opacity(100);
+                }
+                rzslider {
+                    .rz-bar {
+                        background: @brand-primary;
+                    }
+                    .rz-pointer {
+                        background-color: @brand-secondary;
+                        outline: 0 !important;
+                        &::after {
+                            background-color: #fff !important;
+                        }
+                    }
+                    .rz-bubble {
+                        color: @brand-primary;
+                        font-weight: 600;
+                    }
+                }
+            }
+            .status-filter {
+                .col-xs-4 {
+                    text-align: center;
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    height: 25px;
+                    line-height: 25px;
+                    color: #fff;
+                    font-weight: 600;
+                    cursor: pointer;
+                    &.Cancelled {
+                        background-color: @red;
+                    }
+                    &.Incoming {
+                        background-color: @orange;
+                    }
+                    &.Allocated {
+                        background-color: mix(@green, #fff, 80%);
+                    }
+                    &.OnRoute {
+                        background-color: @green
+                    }
+                    &.Arrived {
+                        background-color: mix(@brand-primary, #fff, 60%);
+                    }
+                    &.InProgress {
+                        background-color: mix(@brand-primary, #fff, 80%);
+                    }
+                    &.OpenToBid {
+                        background-color: mix(@brand-primary, #fff, 80%);
+                    }
+                    &.Clearing {
+                        background-color: @brand-primary;
+                    }
+                    &.Completed {
+                        background-color: @blue;
+                    }
+                    &.Offline {
+                        background-color: @dark-grey;
+                    }
+                    &.Available {
+                        background-color: @green;
+                    }
+                    &.OnJob {
+                        background-color: @orange;
+                    }
+                }
+            }
+            .sidebar-content-wrapper {
+                background-color: #f9f9f9;
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                overflow: scroll;
+                .hide-scrollbars();
+            }
+        }
+    }
+}

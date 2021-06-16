@@ -1,0 +1,52 @@
+<div id="workshare-company-profile">
+    <div class="panel panel-default fleet">
+        <div class="panel-heading">
+            <h3 class="panel-title">Manage Partners</h3>
+
+        </div>
+        <div class="panel-body">
+            <img src="/includes/images/spinner.gif" width="40" ng-if="fetching" />
+            <table class="table table-condensed" ng-if="!fetching && registeredPartners && registeredPartners.length>0">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Company</th>
+                        <th style="width: 15%;">Drivers</th>
+                        <th style="width: 15%;">Vehicles</th>
+                        <th style="width: 15%;">Bookings</th>
+                        <th style="width: 15%;">Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="partner in registeredPartners" id="request-{{partner.Id}}">
+                        <td>
+                            <a ui-sref="root.workshare.partner.details({Id: partner.Id})">
+                                <img class="logo" ng-src="{{partner.LogoUrl|formatImage}}" width="40" />
+                                <strong class="brand-primary" ng-bind="partner.Name"></strong>
+                            </a>
+                        </td>
+                        <td>
+                            <strong class="brand-primary" ng-bind="partner.DriversCount"></strong>
+                        </td>
+                        <td>
+                            <strong class="brand-primary" ng-bind="partner.VehiclesCount"></strong>
+                        </td>
+                        <td>
+                            <strong class="brand-primary" ng-bind="partner.BookingsCount"></strong>
+                        </td>
+                        <td>
+                            <div>
+                                <input id="active{{partner.Id}}" type="checkbox" class="check" ng-model="partner.Active" ng-change="changePartnerStatus(partner,$index)" />
+                                <label class="check-label" for="active{{partner.Id}}"></label>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-muted" ng-if="!fetching && (!registeredPartners || registeredPartners.length==0)">Here you can view all companies that you are partners with and you can choose to make them active or inactive
+                Currently you don’t have any partners. Begin your workshare journey by discovering some potential partners </p>
+            <button class="btn btn-primary" ng-if="!fetching && (!registeredPartners || registeredPartners.length==0)" ui-sref="root.workshare.discover-partner"><i class="material-icons">explore</i>Discover Partners
+            </button>
+
+        </div>
+    </div>
+</div>

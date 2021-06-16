@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-xs-6 module-options">
+        <a ui-sref="root.drivers.create" class="btn btn-success" ng-if="PERMISSIONS.test('drivers', 'W')"><i class="material-icons">add_circle</i>New Driver</a>
+        <a href="" class="btn btn-primary" ng-click="openDriverTypeModal()"><i class="material-icons">group</i>Driver Types</a>
+    </div>
+    <div class="col-xs-6 view-options">
+        <a href="" ng-click="showStatsModal()" class="hidden-lg"><i class="material-icons">insert_chart</i>Stats</a>
+        <a ui-sref="root.drivers.cards" ui-sref-active-eq="current-view"><i class="material-icons">view_module</i>Cards</a>
+        <a ui-sref="root.drivers.table" ui-sref-active-eq="current-view"><i class="material-icons">view_headline</i>Table</a>
+        <a href="" ng-click="">
+            <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+            <br />
+            <input type="text" ng-model="serverSearchTerm.$" id="searchTerm" ng-show="showSearch" ng-model-options="{ debounce: 250 }" />
+        </a>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿<div class="module" id="driver-earnings">
+    <h2 class="page-title"><i class="material-icons">library_books</i>Driver Earnings</h2>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="average">
+                <i class="material-icons">timeline</i>
+                <div class="info">
+                    <strong>Average Earnings</strong>
+                    <span>From {{DriverCount}} earning drivers.</span>
+                </div>
+                <div class="amount">
+                    {{AveCommission | currency}}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="max" ng-if="MaxItem">
+                <i class="material-icons">trending_up</i>
+                <div class="info">
+                    <strong>Maximum Earnings</strong>
+                    <span>({{MaxItem.Callsign}}) {{MaxItem.Firstname}} {{MaxItem.Surname}}</span>
+                </div>
+                <div class="amount">
+                    {{MaxCommission | currency}}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 view-options pt10">
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" />
+            </a>
+        </div>
+    </div>
+    <div class="module-item-content mt10">
+        <div class="row">
+            <div class="col-md-4" ng-repeat="d in data | filter:searchTerm | orderBy:'-JourneyCommission'">
+                <div class="earning">
+                    <div class="image" style="background-image: url('{{formatUrl(d.ImageUrl, d.Callsign)}}')">
+                    </div>
+                    <div class="info">
+                        <strong>({{d.Callsign}}) {{d.Firstname}} {{d.Surname}}</strong>
+                        <span>{{d.DriverType}}</span>
+                    </div>
+                    <div class="amount">
+                        {{d.JourneyCommission + d.WaitingCommission | currency}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

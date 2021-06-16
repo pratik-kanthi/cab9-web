@@ -1,0 +1,28 @@
+<div class="numplate-wrapper">
+	<div class="numplate-view-options">
+		<div class="row">
+			<div class="col-sm-8 col-xs-8">
+				 <div class="group-filters">
+				<a class="group-options" ng-click="chosenGroup = null" ng-class="(chosenGroup == null)?'active':''">All</a>
+				<a class="group-options" ng-click="$parent.chosenGroup = title" ng-class="($parent.chosenGroup == title)?'active':''" ng-repeat="(title, items) in groups">{{title}}({{(items | filter:searchTerm).length }})</a>
+				</div>
+			</div>
+			<div class="col-sm-4 col-xs-4 text-right">
+                <a class="btn btn-primary btn-xs show-hide-score" ng-click="showScore()">
+                    <i class="material-icons">av_timer</i> <span>Show Scores</span>
+                </a>
+			</div>
+		</div>
+	</div>
+	<div ng-repeat="(title, items) in ::groups track by title" ng-if="!chosenGroup || chosenGroup==title">
+		<h3 class="section-title" ng-show="results.length > 0">{{title}}</h3>
+		
+		<numplate ng-repeat="item in items  | filter:searchTerm as results track by item.Id" showscore="{{showScore}}" ></numplate>
+
+		<br class="clearfix" ng-show="results.length > 0" />
+	</div>
+    <div ng-if="rawItems.length === 0">
+        No Items Added Yet.
+    </div>
+    <br class="clearfix" />
+</div>

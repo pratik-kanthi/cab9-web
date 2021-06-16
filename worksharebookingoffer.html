@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="https://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Cab 9</title>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link href="includes/css/style.min.css" rel="stylesheet" />
+    <script src="includes/js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div style="height:100%">
+        <div class="verification">
+            <div id="success" class="login-container" style="display: none;"> 
+                <h4 class="verified">Request Successful</h4>
+                <span id="successMessage"></span>
+            </div>
+            <div id="failure" class="login-container" style="display: none;">
+                <h4 class="verified">Error Occurred</h4>
+                <span id="failureMessage"></span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+    const getQueryParams = (url) => {
+        let queryParams = {};
+        //create an anchor tag to use the property called search
+        let anchor = document.createElement('a');
+        //assigning url to href of anchor tag
+        anchor.href = url;
+        //search property returns the query string of url
+        let queryStrings = anchor.search.substring(1);
+        let params = queryStrings.split('&');
+
+        for (var i = 0; i < params.length; i++) {
+            var pair = params[i].split('=');
+            queryParams[pair[0]] = decodeURIComponent(pair[1]);
+        }
+        return queryParams;
+    };
+
+    var queryParams = getQueryParams(window.location.href);
+
+    if(queryParams.IsSuccess == 'true') {
+        document.getElementById('success').style.display = 'block';
+        document.getElementById('successMessage').innerText = queryParams.Message;
+    } else {
+        document.getElementById('failure').style.display = 'block';
+        document.getElementById('failureMessage').innerText = queryParams.Message;
+    }
+
+</script>

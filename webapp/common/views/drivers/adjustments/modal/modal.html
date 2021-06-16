@@ -1,0 +1,121 @@
+<div class="modal-header">
+    <h3 class="modal-title">Driver Payment Adjustment <span class="pull-right" ng-click="$dismiss()"><i class="material-icons">clear</i></span></h3>
+</div>
+<div class="modal-body">
+    <form form-for="adjustment" schema="DriverAdjustment" mode="{{viewMode}}" class="reference-modal">
+        <div class="row">
+            <div class="col-md-3">
+                <div field-for="Type"></div>
+            </div>
+            <div class="col-md-3">
+                <div field-for="Recurring"></div>
+            </div>
+            <div class="col-md-3">
+                <div field-for="Approved" required="false"></div>
+            </div>
+            <div class="col-md-3" ng-show="adjustment.Recurring == 'Recurring'">
+                <div field-for="AppliesToBooking" display="Booking Level"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div field-for="Reference"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="Amount">Amount</label>
+                    <div class="form-edit">
+                        <div class="input-group">
+                            <span class="input-group-btn prepend"><button type="button" class="btn" ng-class="(adjustment.AmountType=='Fixed')? 'btn-primary':''" ng-click="adjustment.AmountType = 'Fixed';">&#163;</button></span>
+                            <input class="form-control" type="text" name="Amount" ng-model="adjustment.Amount">
+                            <span class="input-group-btn append"><button type="button" class="btn" ng-class="(adjustment.AmountType=='Percentage')? 'btn-primary':''" ng-click="adjustment.AmountType = 'Percentage';">%</button></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div field-for="TaxId" select-from="taxes"></div>
+            </div>
+        </div>
+        <div class="row" ng-show="adjustment.Recurring == 'Installments'">
+            <div class="col-sm-6">
+                <div field-for="MinimumInstallment" display="Installment Amount"></div>
+            </div>
+        </div>
+        <div class="days-time-selector" ng-if="adjustment.AppliesToBooking">
+            <strong class="brand-primary">Select Days</strong>
+            <div class="day-selector mt0">
+                <div class="week-wrapper">
+                    <div class="day-wrapper" ng-repeat="day in week">
+                        <button class="day" ng-disabled="viewMode == 'VIEW'" ng-click="toggleDay(day)" ng-class="(day.selected==true)?'active':''">
+                            <strong class="text-muted">{{day.day}}</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt25" ng-if="adjustment.AppliesToBooking">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">From (HH:MM)</label>
+                        <div class="form-edit">
+                            <input type="text" placeholder="HH:MM" class="form-control" ng-model="adjustment.$StartTime">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">To (HH:MM)</label>
+                        <div class="form-edit">
+                            <input type="text" placeholder="HH:MM" class="form-control" ng-model="adjustment.$EndTime">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="vehicle-type-selector" ng-if="adjustment.AppliesToBooking">
+            <div class="row">
+                <div class="col-sm-6">
+                    <strong class="brand-primary">Linked Vehicle Types</strong>
+                    <table class="table table-condensed table-hover mb10 table-bordered">
+                        <tbody>
+                            <tr ng-if="adjustment.$VehicleTypes.length==0">
+                                <td>
+                                    <span class="text-muted">No VehicleTypes added.</span>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="item in adjustment.$VehicleTypes">
+                                <td>
+                                    <strong class="brand-primary">{{item.Name}}</strong>
+                                    <a href="" class="red pull-right ml8" ng-click="removeVehicleType(item)" ng-show="viewMode!='VIEW'">
+                                        <i class="material-icons">remove_circle</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-6" ng-show="viewMode != 'VIEW'">
+                    <div class="form-group" ng-show="unlinkedVehicleTypes.length>0">
+                        <label for="">Add Vehicle Type</label>
+                        <ui-select ng-model="selectedVehicleType" theme="selectize" title="Choose Vehicle Type" ng-change="addVehicleType($select.selected)" class="edit">
+                            <ui-select-match placeholder="Select from list...">{{$select.selected.Name}}</ui-select-match>
+                            <ui-select-choices repeat="vt in unlinkedVehicleTypes| filter: $select.search">
+                                <div ng-bind-html="vt.Name| highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <span ng-show="unlinkedVehicleTypes.length==0">No vehicle types available to add.</span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()">
+        <i class="material-icons">undo</i>Cancel
+    </button>
+    <button class="btn btn-xs btn-success" ng-click="save()" ng-disabled="formFor.form.$invalid">
+        <i class="material-icons">save</i> Save</button>
+</div>

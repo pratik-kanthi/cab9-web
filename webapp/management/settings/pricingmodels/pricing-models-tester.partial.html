@@ -1,0 +1,102 @@
+﻿<h3 class="section-title mt0">Booking Quote Tester</h3>
+<div class="row details">
+    <div form-for="selectedBooking" schema="Booking" mode="EDIT">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Booking Information</h3>
+                </div>
+                <div class="panel-body" style="overflow: visible">
+                    <div class="journey">
+                        <div ng-repeat="stop in selectedBooking.BookingStops">
+                            <div class="form-group" ng-if="$first">
+                                <label class="control-label" for="stop{{$index}}">
+                                    Pickup
+                                </label>
+                                <div class="form-edit booking-stop">
+                                    <div stop-edit name="stop{{$index}}" map="map" required="$first" model="stop"></div>
+                                    <a href="" class="stop-button add" ng-click="addStop()"><i class="material-icons">add_circle</i></a>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-init="stop.StopOrder = $index + 1" ng-if="!$first">
+                                <label class="control-label" for="stop{{$index}}">
+                                    {{ $last ? 'Drop Off' : 'Via'}}
+                                </label>
+                                <div class="form-edit booking-stop">
+                                    <div stop-edit name="stop{{$index}}" map="map" required="$first" model="stop"></div>
+                                    <a href="" class="stop-button add" ng-show="!$last" ng-click="addStop()"><i class="material-icons">add_circle</i></a>
+                                    <a href="" class="stop-button sub" ng-show="$middle" ng-click="selectedBooking.BookingStops.splice($index, 1)"><i class="material-icons">remove_circle</i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox" ng-show="COMPANY.ChauffeurModeActive">
+                        <input id="group-check-asdirected" type="checkbox" ng-model="selectedBooking.AsDirected" />
+                        <label for="group-check-asdirected"></label>
+                        <span class="label">As Directed</span>
+                    </div>
+                    <div class="row" ng-show="COMPANY.ChauffeurModeActive">
+                        <div class="col-md-6" field-for="ChauffeurMode" display="Chauffer Mode"></div>
+                        <div class="col-md-6" field-for="EstimatedMins" display="Estimated Mins" ng-show="selectedBooking.ChauffeurMode"></div>
+                    </div>
+                    <div field-for="VehicleTypeId" select-from="vehicleTypes" display="Vehicle Type"></div>
+                    <div field-for="Time" display="Time" step="300" required="true"></div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                <div class="title">Quote</div>
+                                <div class="content">
+                                    <div class="t-xl brand-primary">{{selectedBooking.ActualCost | currency}}</div>
+                                    <small class="text-muted" ng-if="quote.IsFixed">Fixed Fare</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                <div class="title">Distance</div>
+                                <div class="content">
+                                    <div class="t-xl brand-primary">{{(quote.EstimatedDistance || 0) | number:1}} Mi.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" ng-if="quote.DriverCost">
+                            Driver Fare: <b>{{quote.DriverCost | currency}}</b> ({{quote.DriverExclusion | currency}} Excluded)
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="" class="btn btn-primary" ng-click="getQuote()"><i class="material-icons">receipt</i>Quote</a>  
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Journey Map</h3>
+                    <div class="panel-options" ng-if="!mapSetup">
+                        <i class="material-icons spin">autorenew</i>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <ui-gmap-google-map center='map.center' control="map" styles="map.styles" zoom='map.zoom' pan="true" bounds="mapBounds" style="width:100%;height:450px;">
+                        <ui-gmap-polygons models="zonePolygons" path="'path'" editable="false" draggable="false" stroke="'stroke'" static="true" fit="true">
+                        </ui-gmap-polygons>
+                        <ui-gmap-markers models="bookingStops" coords="'coords'" idKey="id"></ui-gmap-markers>
+                        <ui-gmap-polylines models="segments" path="'path'" stroke="'stroke'" events="'events'" editable="false" static="false" draggable="false">
+                        </ui-gmap-polylines>
+                    </ui-gmap-google-map>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="row">
+    <div class="col-md-8">
+        <ul>
+            <li ng-repeat="s in segments">{{s.id}} - {{s.length}} - {{s.fare}}</li>
+        </ul>
+    </div>
+</div>
+ -->

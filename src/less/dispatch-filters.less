@@ -1,0 +1,94 @@
+#dispatch-filters {
+    .status {
+    	padding: 8px;
+    	font-weight: 400;
+    	margin-bottom: 16px;
+    	.checkbox {
+    		float: left;
+    		margin-top: 2px;
+    		margin-left: 4px;
+    		margin-right: 8px;
+    	}
+        &.Cancelled {
+            background-color: lighten(@grey, 25%);
+            .checkbox {
+                background-color: mix(@grey, #fff, 10%);
+            }
+            .checkbox label:after {
+            	border-color: @grey;
+            }
+        }
+        &.Incoming {
+            background-color: lighten(@orange, 25%);
+            .checkbox {
+                background-color: mix(@orange, #fff, 10%);
+            }
+            .checkbox label:after {
+            	border-color: @orange;
+            }
+        }
+        &.Allocated {
+            background-color: lighten(@dark-green, 25%);
+            .checkbox {
+                background-color: mix(@dark-green, #fff, 10%);
+            }
+            .checkbox label:after {
+            	border-color: @dark-green;
+            }
+        }
+        &.PreAllocated {
+            background-color: lighten(@light-green, 25%);
+            .checkbox {
+                background-color: mix(@light-green, #fff, 10%);
+            }
+            .checkbox label:after {
+                border-color: @light-green;
+            }
+        }
+        &.OnRoute {
+            background-color: lighten(@brand-primary, 25%);
+            .checkbox {
+                background-color: mix(@brand-primary, #fff, 10%);
+            }
+            .checkbox label:after {
+            	border-color: @brand-primary;
+            }
+        }
+        &.Arrived {
+            background-color: lighten(@brand-primary, 25%);
+            .checkbox {
+                background-color: mix(@brand-primary, #fff, 10%);
+            }
+            .checkbox label:after {
+            	border-color: @brand-primary;
+            }
+        }
+        &.InProgress {
+            background-color: lighten(@sky, 25%);
+            .checkbox {
+                background-color: mix(@sky, #fff, 10%);
+            }
+            .checkbox label:after {
+            	border-color: @sky;
+            }
+        }
+        &.OpenToBid {
+            background-color: lighten(@yellow, 25%);
+            .checkbox {
+                background-color: mix(@yellow, #fff, 10%);
+            }
+            .checkbox label:after {
+            	border-color: @yellow;
+            }
+        }
+        &.Completed {
+            background-color: lighten(@dark-blue, 25%);
+            .checkbox {
+                background-color: mix(@dark-blue, #fff, 10%);
+            }
+            .checkbox label:after {
+            	border-color: @dark-blue;
+            }
+        }
+    }
+}

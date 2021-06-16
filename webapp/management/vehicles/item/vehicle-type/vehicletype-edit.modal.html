@@ -1,0 +1,120 @@
+<div form-for="item" schema="VehicleType" mode="{{Mode}}">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" type="button" ng-click="close()"><i class="material-icons">clear</i></button>
+            <button class="info" type="button" ng-click="showhelp = !showhelp" title="Info!">
+                <i class="material-icons">info</i>
+            </button>
+            <h3 class="modal-title" ng-show="Mode == 'CREATE'">New Vehicle Type</h3>
+            <h3 class="modal-title" ng-show="Mode == 'EDIT'">Edit Vehicle Type</h3>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="section-title mt0">Details</h3>
+                    <small ng-show="showhelp" class="brand-secondary">Please enter name of the vehicle type you want to add.
+                    </small>
+                    <div field-for="Name"></div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="ClientLabel" display="Client Label"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div field-for="DriverLabel" display="Driver Label"></div>
+                        </div>
+                    </div>
+                    <small ng-show="showhelp" class="brand-secondary">Please enter Description of the vehicle type you want to add.
+                    </small>
+                    <div field-for="Description" textarea="3"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">
+                                Please enter <b>MAXIMUM PASSENGERS</b> allowed in the vehicle type you want to add.
+                            </small>
+                            <div field-for="MaxPax"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">
+                                Please enter <b>MAXIMUM BAGS</b> allowed in the vehicle type you want to add.
+                            </small>
+                            <div field-for="MaxBax"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">
+                                Please enter <b>PRIORITY</b> of the vehicle type you want to add starting from 1, where 1 being the highest priority.
+                            </small>
+                            <div field-for="Priority"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">
+                                Please enter <b>ORDER</b> value of the vehicle type for display where 1 means appearing first.
+                            </small>
+                            <div field-for="Order"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">
+                                Please enter a custom colour for the VehicleType. The colour will be the prefered colour for this Vehiche Type.
+                            </small>
+                            <div class="form-group mb0">
+                                <label class="control-label">Default Colour</label>
+                            </div>
+                            <color-picker ng-model="item.Colour"></color-picker>
+                        </div>
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">
+                                Please choose a default Tax type for this Vehicle Type.
+                            </small>
+                            <div field-for="TaxId" select-from="taxes" display="Default Tax"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">
+                                Enable <b>APP BOOKABLE</b> to allow this vehicle type to be visible and accessed through app for booking.
+                            </small>
+                            <div field-for="AppBookable"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label">Choose File:</label>
+                                <input type="file" class="form-control file-picker" file-picker file="import.file" style="border:0" />
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <h3 class="section-title">Mappings</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">Enter Mapping detail for <b>ONE TRANSPORT</b> bookings.</small>
+                            <div field-for="OTMapping"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">Enter Mapping detail for <b>INFINITY</b> bookings.</small>
+                            <div field-for="InfinityMapping" display="Infinity Mapping"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">Enter Mapping detail for <b>HereMaps</b> bookings.</small>
+                            <div field-for="HEREMapsMapping" display="Here Maps Mapping"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <small ng-show="showhelp" class="brand-secondary">Enter Mapping detail for <b>Gett</b> bookings.</small>
+                            <div field-for="GettMapping"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" ng-show="Mode == 'EDIT'" class="btn btn-xs btn-danger pull-left" ng-click="delete()"><i class="material-icons">delete</i>Delete</button>
+            <button type="button" class="btn btn-xs btn-warning" ng-click="close()" ng-disabled="saving"><i class="material-icons">clear</i>Close</button>
+            <button class="btn btn-xs btn-success" ng-click="save()" ng-disabled="formFor.form.$invalid || saving">
+                <span ng-show="!saving"><i class="material-icons">save</i> Submit</span>
+                <span ng-show="saving"><i class="material-icons animated spin">refresh</i> Saving</span>
+            </button>
+        </div>
+    </div>
+</div>

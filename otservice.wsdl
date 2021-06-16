@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.one-transport.co.uk/" xmlns:s1="http://www.one-transport.co.uk/VendorWebService/OTService" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.one-transport.co.uk/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.one-transport.co.uk/">
+      <s:import namespace="http://www.one-transport.co.uk/VendorWebService/OTService"/>
+      <s:element name="Order">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VndId" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="VendorGroupId" type="s:string"/>
+            <s:element minOccurs="0" maxOccurs="1" name="ContractCode" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:OrderResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderACK">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:objACK"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderACKResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:OrderACKResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.one-transport.co.uk/VendorWebService/OTService">
+      <s:element name="OrderResult">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="unbounded" name="OrderDetailInfo">
+              <s:complexType>
+                <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="Header">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SystemCode" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="ContractCode" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VendorID" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DateTime" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                  <s:element minOccurs="0" maxOccurs="1" name="GeneralInfo">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="OTRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="OTAcctRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="PaymentType" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VendorRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="MsgType" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="JourneyType" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="P_G_Flag" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="CabShare" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="AbleToReject" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                  <s:element minOccurs="0" maxOccurs="1" name="VehicleDrivInfo">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="CallSignRequested" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VehicleType" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VehicleClass" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="NumSeats" type="s:integer"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="NumWheelchairs" type="s:integer"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="SpecialRequirements" type="s1:ArrayOfOrderResponseOrderDetailInfoVehicleDrivInfoRequirement"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                  <s:element minOccurs="0" maxOccurs="1" name="Stops" type="s1:ArrayOfOrderResponseOrderDetailInfoStop"/>
+                  <s:element minOccurs="0" maxOccurs="1" name="Passengers" type="s1:ArrayOfOrderResponseOrderDetailInfoPassenger"/>
+                  <s:element minOccurs="0" maxOccurs="1" name="PriceInfo">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DistanceUnit" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="EstimatedRouteCharge" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="EstimatedRouteDistance" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="FixedPrice" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="SetPrice" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="QuotePrice" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="QuoteRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="CappedPrice" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="MileageTariff" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="HourlyRate" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DailyRate" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DriverGratuity" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DriverGratuityAmt" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+          <s:attribute name="MessageVersion" type="s:string"/>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfOrderResponseOrderDetailInfoVehicleDrivInfoRequirement">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Requirement">
+            <s:complexType>
+              <s:sequence>
+                <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Mandatory" type="s:string"/>
+              </s:sequence>
+            </s:complexType>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrderResponseOrderDetailInfoStop">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Stop">
+            <s:complexType>
+              <s:sequence>
+                <s:element minOccurs="0" maxOccurs="1" name="StopID" type="s:integer"/>
+                <s:element minOccurs="0" maxOccurs="1" name="BuildingName" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="BusinessName" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Apartment" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="StreetNumber" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="StreetName" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PAFLocality" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Town_City_Airport" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="County" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PostCode" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="FixedPickupNote" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="FixedDropNote" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Alias" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="LatLon" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="OSGridRef" type="s:string"/>
+              </s:sequence>
+            </s:complexType>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrderResponseOrderDetailInfoPassenger">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Passenger">
+            <s:complexType>
+              <s:sequence>
+                <s:element minOccurs="0" maxOccurs="1" name="PassID" type="s:integer"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PassType" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PassFName" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PassLName" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="BookerFName" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="BookerLName" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="BookerLandLine" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="BookerMobile" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PassLandLine" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PassMobile" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="AlternateContact" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="MaxWaitMinsArrive" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Comp_Ref1" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Comp_Ref2" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Comp_Ref3" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Comp_Ref4" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="BookerNotification" type="s1:Notification"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PassengerNotification" type="s1:Notification"/>
+                <s:element minOccurs="0" maxOccurs="1" name="PassengerStops" type="s1:ArrayOfOrderResponseOrderDetailInfoPassengerPassengerStop"/>
+                <s:element minOccurs="0" maxOccurs="1" name="StopNotes" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="KeyQuestion" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="DataCapture">
+                  <s:complexType>
+                    <s:sequence>
+                      <s:element minOccurs="0" maxOccurs="1" name="Arrived" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="POB" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="Via" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="Dropoff" type="s:string"/>
+                    </s:sequence>
+                  </s:complexType>
+                </s:element>
+              </s:sequence>
+            </s:complexType>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Notification">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DriverAccept" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="FirstArriveETA" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Arrived" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="POB" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DropoffETA" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="DroppedOff" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrderResponseOrderDetailInfoPassengerPassengerStop">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PassengerStop">
+            <s:complexType>
+              <s:sequence>
+                <s:element minOccurs="0" maxOccurs="1" name="StopId" type="s:integer"/>
+                <s:element minOccurs="0" maxOccurs="1" name="StopPurpose" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="AdditionalPassengers" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="LuggageItems" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="ReqDateTimeArrival" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="DriverInstructions" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="UserStopNotes" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="ProfileStopNotes" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="Direction" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="DataCaptureArrived" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="KeyQuestion" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="DataCaptureVia" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="DataCaptureDroppoff" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="DataCapturePOB" type="s:string"/>
+                <s:element minOccurs="0" maxOccurs="1" name="AirportStop">
+                  <s:complexType>
+                    <s:sequence>
+                      <s:element minOccurs="0" maxOccurs="1" name="Airline" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="FlightNumber" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="FromCity" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="FlightArrDate" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="FlightArrTime" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="Terminal" type="s:string"/>
+                      <s:element minOccurs="0" maxOccurs="1" name="On-LineCheckin" type="s:string"/>
+                    </s:sequence>
+                  </s:complexType>
+                </s:element>
+              </s:sequence>
+            </s:complexType>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="objACK">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="unbounded" name="OrderDetailInfo">
+              <s:complexType>
+                <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="Header">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SystemCode" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="ContractCode" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VendorID" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DateTime" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="ResponseType" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                  <s:element minOccurs="0" maxOccurs="1" name="Response">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="OTRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="AcceptRejectFlag" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="AcceptedVehicleID" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VehicleETA" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VendorJobRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="COAWaitMins" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderACKResult">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="unbounded" name="OrderDetailInfo">
+              <s:complexType>
+                <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="Response">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="OTRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="Flag" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OrderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="unbounded" name="OrderDetailInfo">
+              <s:complexType>
+                <s:sequence>
+                  <s:element minOccurs="0" maxOccurs="1" name="Header">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="SystemCode" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="ContractCode" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VendorID" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DateTime" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                  <s:element minOccurs="0" maxOccurs="1" name="GeneralInfo">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="OTRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="OTAcctRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="PaymentType" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VendorRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="MsgType" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="JourneyType" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="P_G_Flag" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="CabShare" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="AbleToReject" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                  <s:element minOccurs="0" maxOccurs="1" name="VehicleDrivInfo">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="CallSignRequested" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VehicleType" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="VehicleClass" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="NumSeats" type="s:integer"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="NumWheelchairs" type="s:integer"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="SpecialRequirements" type="s1:ArrayOfOrderResponseOrderDetailInfoVehicleDrivInfoRequirement"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                  <s:element minOccurs="0" maxOccurs="1" name="Stops" type="s1:ArrayOfOrderResponseOrderDetailInfoStop"/>
+                  <s:element minOccurs="0" maxOccurs="1" name="Passengers" type="s1:ArrayOfOrderResponseOrderDetailInfoPassenger"/>
+                  <s:element minOccurs="0" maxOccurs="1" name="PriceInfo">
+                    <s:complexType>
+                      <s:sequence>
+                        <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DistanceUnit" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="EstimatedRouteCharge" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="EstimatedRouteDistance" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="FixedPrice" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="SetPrice" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="QuotePrice" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="QuoteRef" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="CappedPrice" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="MileageTariff" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="HourlyRate" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DailyRate" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DriverGratuity" type="s:string"/>
+                        <s:element minOccurs="0" maxOccurs="1" name="DriverGratuityAmt" type="s:string"/>
+                      </s:sequence>
+                    </s:complexType>
+                  </s:element>
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+          <s:attribute name="MessageVersion" type="s:string"/>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="OrderSoapIn">
+    <wsdl:part name="parameters" element="tns:Order"/>
+  </wsdl:message>
+  <wsdl:message name="OrderSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderACKSoapIn">
+    <wsdl:part name="parameters" element="tns:OrderACK"/>
+  </wsdl:message>
+  <wsdl:message name="OrderACKSoapOut">
+    <wsdl:part name="parameters" element="tns:OrderACKResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderHttpGetIn">
+    <wsdl:part name="VndId" type="s:string"/>
+    <wsdl:part name="ContractCode" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="OrderHttpGetOut">
+    <wsdl:part name="Body" element="s1:OrderResponse"/>
+  </wsdl:message>
+  <wsdl:message name="OrderHttpPostIn">
+    <wsdl:part name="VndId" type="s:string"/>
+    <wsdl:part name="ContractCode" type="s:string"/>
+  </wsdl:message>
+  <wsdl:message name="OrderHttpPostOut">
+    <wsdl:part name="Body" element="s1:OrderResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="otserviceSoap">
+    <wsdl:operation name="Order">
+      <wsdl:input message="tns:OrderSoapIn"/>
+      <wsdl:output message="tns:OrderSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="OrderACK">
+      <wsdl:input message="tns:OrderACKSoapIn"/>
+      <wsdl:output message="tns:OrderACKSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="otserviceHttpGet">
+    <wsdl:operation name="Order">
+      <wsdl:input message="tns:OrderHttpGetIn"/>
+      <wsdl:output message="tns:OrderHttpGetOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="otserviceHttpPost">
+    <wsdl:operation name="Order">
+      <wsdl:input message="tns:OrderHttpPostIn"/>
+      <wsdl:output message="tns:OrderHttpPostOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="otserviceSoap" type="tns:otserviceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Order">
+      <soap:operation soapAction="http://www.one-transport.co.uk/Order" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderACK">
+      <soap:operation soapAction="http://www.one-transport.co.uk/OrderACK" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="otserviceSoap12" type="tns:otserviceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Order">
+      <soap12:operation soapAction="http://www.one-transport.co.uk/Order" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OrderACK">
+      <soap12:operation soapAction="http://www.one-transport.co.uk/OrderACK" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="otserviceHttpGet" type="tns:otserviceHttpGet">
+    <http:binding verb="GET"/>
+    <wsdl:operation name="Order">
+      <http:operation location="/Order"/>
+      <wsdl:input>
+        <http:urlEncoded/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="otserviceHttpPost" type="tns:otserviceHttpPost">
+    <http:binding verb="POST"/>
+    <wsdl:operation name="Order">
+      <http:operation location="/Order"/>
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded"/>
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="otservice">
+    <wsdl:port name="otserviceSoap" binding="tns:otserviceSoap">
+      <soap:address location="http://msghub.one-transport.co.uk:8102"/>
+    </wsdl:port>
+    <wsdl:port name="otserviceSoap12" binding="tns:otserviceSoap12">
+      <soap12:address location="http://msghub.one-transport.co.uk:8102"/>
+    </wsdl:port>
+    <wsdl:port name="otserviceHttpGet" binding="tns:otserviceHttpGet">
+      <http:address location="http://msghub.one-transport.co.uk:8102"/>
+    </wsdl:port>
+    <wsdl:port name="otserviceHttpPost" binding="tns:otserviceHttpPost">
+      <http:address location="http://msghub.one-transport.co.uk:8102"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

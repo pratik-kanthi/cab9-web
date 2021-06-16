@@ -1,0 +1,29 @@
+<input type="text" class="form-control search-box" ng-model="driverSearch.$" placeholder="Search anything..." />
+<div class="status-filter">
+    <div class="col-xs-4 Offline">Offline</div>
+    <div class="col-xs-4 Available">Available</div>
+    <div class="col-xs-4 OnJob">On Job</div>
+</div>
+<div class="sidebar-content-wrapper" style="top: 120px;">
+    <ul class="driver-list">
+        <li ng-repeat="d in drivers | filter:driverSearch | orderBy:driverOrder track by d.Id">
+            <img class="img-circle" ng-src="{{d._ImageUrl}}" />
+            <div class="driver-info">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <strong class="name">{{ d._Fullname }}</strong>
+                        <strong class="name">{{ d.Callsign }}</strong>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="status {{d.DriverStatus}} mt15">{{d.DriverStatus}}</div>
+                    </div>
+                    <div class="col-xs-3 text-center options">
+                        <i class="material-icons" ng-show="d.$marker" ng-click="select(null, d)" tooltip="Location" tooltip-placement="bottom">place</i>
+                        <i class="material-icons" ui-sref="root.drivers.viewer.dashboard({ Id: d.Id })" tooltip="Profile" tooltip-placement="bottom">perm_contact_calendar</i>
+                    </div>
+                </div>
+            </div>
+            <br class="clearfix" />
+        </li>
+    </ul>
+</div>

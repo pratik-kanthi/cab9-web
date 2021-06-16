@@ -1,0 +1,89 @@
+<div id="booking-validation" class="module">
+    <h3 class="section-title mt0">Bookings Validation</h3>
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            <div ng-include="'/webapp/management/bookings/validation/templates/bookings-filter.html'"></div>
+        </div>
+        <div class="col-lg-9 col-md-9">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <ul class="filters">
+                        <li ng-class="(filters.ValidFilter == 'NON')?'active':''" ng-click="setValidFilter('NON')">Pending</li>
+                        <li ng-class="(filters.ValidFilter == 'VAL')?'active':''" ng-click="setValidFilter('VAL')">Validated</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="pull-right">
+                        <ul class="summary">
+                            <li>
+                                <span class="heading">Bookings</span>
+                                <span class="value brand-primary" ng-show="!paging.loading" ng-bind="stats.Bookings | AbbrValue"></span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                            <li ng-if="bookings.length>0">
+                                <span class="heading">Client Invoice</span>
+                                <span class="value brand-primary" ng-show="!paging.loading" ng-bind="'£' + (stats.ClientInvoice | AbbrValue)"></span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                            <li ng-if="bookings.length>0">
+                                <span class="heading">Driver Payment</span>
+                                <span class="value brand-primary" ng-show="!paging.loading" ng-bind="'£' + (stats.DriverCost | AbbrValue)"></span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                            <li ng-if="bookings.length>0">
+                                <span class="heading">Profit Markup</span>
+                                <span class="value" ng-class="(stats.Profit > 0) ? 'green':'red'" ng-show="!paging.loading"><span ng-bind="stats.Profit | number:2"></span>%</span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                            <li ng-if="bookings.length>0">
+                                <span class="heading">Profit Margin</span>
+                                <span class="value" ng-class="(stats.ProfitMargin > 0) ? 'green':'red'" ng-show="!paging.loading"><span ng-bind="stats.ProfitMargin | number:2"></span>%</span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="no-booking" ng-if="paging.loading">
+                <h3 class="section-title">Fetching...</h3>
+            </div>
+            <div class="row" ng-if="!paging.loading">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="sort-options">
+                        <i class="material-icons" ng-click="showSort = !showSort">sort</i>
+                        <div class="sort-value">Sorted By
+                            <span ng-if="currentFilter().Filter=='BookedDateTime'">Booked Date Time</span>
+                            <span ng-if="currentFilter().Filter=='Profit'">Profit</span>
+                            <span ng-if="currentFilter().Filter=='EstimatedDistance'">Distance</span>
+                            <span ng-if="currentFilter().Filter=='ActualCost'">Cost</span>
+                            <span ng-if="currentFilter().Filter=='JourneyCommission'">Driver Commission</span>
+                            <span ng-if="currentFilter().Desc==true"> Descending</span>
+                        </div>
+                        <ul class="sort-list" ng-show="showSort">
+                            <li><i class="material-icons" ng-click="sortResult('BookedDateTime')">arrow_downward</i> Date/Time <i class="material-icons" ng-click="sortResult('BookedDateTime desc')">arrow_upward</i></li>
+                            <li><i class="material-icons" ng-click="sortResult('Profit')">arrow_downward</i> Profit <i class="material-icons" ng-click="sortResult('Profit desc')">arrow_upward</i></li>
+                            <li><i class="material-icons" ng-click="sortResult('EstimatedDistance')">arrow_downward</i> Distance <i class="material-icons" ng-click="sortResult('EstimatedDistance desc')">arrow_upward</i></li>
+                            <li><i class="material-icons" ng-click="sortResult('ActualCost')">arrow_downward</i> Cost <i class="material-icons" ng-click="sortResult('ActualCost desc')">arrow_upward</i></li>
+                            <li><i class="material-icons" ng-click="sortResult('JourneyCommission')">arrow_downward</i> Driver Commission <i class="material-icons" ng-click="sortResult('JourneyCommission desc')">arrow_upward</i></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div ng-if="bookings.length>0">
+                        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm pull-right mt0" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+                    </div>
+                </div>
+            </div>
+            <div class="bookings-wrapper" ng-if="!paging.loading">
+                <booking-validation-strip booking="booking" ng-repeat="booking in bookings"></booking-validation-strip>
+            </div>
+            <div class="bookings-wrapper" ng-if="!paging.loading && bookings.length ==0">
+                <h3 class="section-title">No bookings found for the selected filters.</h3>
+                <p class="brand-primary">Please note bookings only Completed/COA bookings which have not been processed for <b>Driver Payments</b> or <b>Invoice</b> will be shown here.</p>
+            </div>
+            <div ng-if="bookings.length>0">
+                <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm pull-right mt0" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="row mt20" ng-if="CARD_PAYMENTS_ENABLED">
+    <div class="col-sm-3">
+        <tabs data="tabDefs" vertical="true" type="pills"></tabs>
+    </div>
+    <div class="col-sm-9">
+        <ui-view class="tab-content"></ui-view>
+    </div>
+</div>
+<div class="row mt20" ng-if="!CARD_PAYMENTS_ENABLED">
+    <div class="col-sm-12">
+        <div class="alert alert-warning">Please enable a card payment provider before adding card details.</div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div ui-view name="options-area"></div>
+<hr />
+<div class="all-documents">
+    <div ng-repeat="group in groups" ng-show="documents.length>0">
+        <h3 class="section-title" ng-bind="group.title"></h3>
+        <div class="documents-wrapper grid js-masonry" ng-show="group.data.length>0">
+            <div class="document grid-item" ng-repeat="document in group.data | filter:searchTerm">
+                <document data="document" show-owner="true"></document>
+            </div>
+        </div>
+        <div ng-show="group.data.length==0">
+            <small>No Documents in the group!</small>
+        </div>
+    </div>
+</div>
+<div ng-show="documents.length==0">
+    <span class="t-l">No document has been uploaded yet.</span>
+</div>

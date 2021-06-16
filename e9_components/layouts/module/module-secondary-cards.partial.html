@@ -1,0 +1,28 @@
+<div class="cards-wrapper">
+    <div class="cards-view-options" ng-show="accessors.Group">
+        <div class="row">
+            <div class="col-sm-8 col-xs-8">
+                <div class="group-filters">
+                    <a class="group-options" ng-if="!selectGroups" ng-click="choosen.group = undefined" ng-class="(!choosen.group)?'active':''">All ({{(rawItems | filter:searchTerm).length }})</a>
+                    <a class="group-options" ng-if="!selectGroups" ng-click="choosen.group = title" ng-class="(choosen.group == title)?'active':''" ng-repeat="(title, items) in groups"><span ng-bind="(title=='true')?'Active':((title=='false')?'Inactive':title)"></span> ({{(items | filter:searchTerm).length }})</a>
+                    <select class="group-select" ng-if="selectGroups" ng-model="choosen.group">
+                        <option value="">All ({{(rawItems | filter:searchTerm).length }})</option>
+                        <option ng-repeat="(title, items) in groups" value="{{title}}">{{title}} ({{(items | filter:searchTerm).length }})</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-4 text-right pt5">
+                <a class="btn btn-primary btn-xs show-hide-score" ng-if="accessors.Score" ng-click="toggleScore()">
+                    <i class="material-icons">av_timer</i>Toggle Scores
+                </a>
+            </div>
+        </div>
+    </div>
+    <virtualised-repeater repeat="item in filteredItems" item-width="150" item-height="220">
+        <card showscore="{{showScore}}" id="{{rId}}" ng-class="!item.Active?'inactive':''"></card>
+    </virtualised-repeater>
+    <div ng-if="rawItems.length === 0">
+        No Items Added Yet.
+    </div>
+    <br class="clearfix" />
+</div>

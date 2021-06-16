@@ -1,0 +1,48 @@
+<div class="grid-item stats-panel drivers">
+    <div class="wrapper">
+        <div class="panel panel-default" promise-shadow promise="deferred.promise">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span><i class="material-icons">people_outline</i></span>Top 5 Drivers</h3>
+            </div>
+            <div class="panel-body no-padding pb0">
+                <div class="best-entity" ng-if="bestDriver">
+                    <!-- <img holder ng-src="{{bestDriver.ImageUrl}}" alt="{{bestDriver.Name}}" /> -->
+                    <div class="profile" style="background-image: url('{{bestDriver.ImageUrl}}')"></div>
+                    <div class="details">
+                        <strong class="best-label">Best Driver</strong>
+                        <strong class="best-name">({{bestDriver.Callsign}}) {{bestDriver.Name}}</strong>
+                        <strong>{{bestDriver.Bookings}}</strong>
+                    </div>
+                    <div class="best-chart">
+                        <div id="driver-sparkline"></div>
+                    </div>
+                </div>
+                <table class="table table-condensed table-hover mt0 mb0">
+                    <thead>
+                        <tr>
+                            <th style="width:70%">Drivers</th>
+                            <th class="text-right" style="width:30%">Bookings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in drivers | orderBy:'-Bookings' | limitTo:5">
+                            <td>
+                                <a ui-sref="root.drivers.viewer.dashboard({ Id: item.DriverId })" class="brand-primary">
+                                    <strong>({{item.Callsign}}) {{item.Name}}</strong>
+                                </a>
+                            </td>
+                            <td class="text-right bold">{{item.Bookings}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="drivers.length==0">
+                        <tr>
+                            <td colspan="2" class="text-center" style="height:80px;">
+                                No Stats for the time period.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

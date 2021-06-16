@@ -1,0 +1,102 @@
+<h2 class="page-title">
+    <i class="material-icons">phone</i>Telephony
+</h2>
+<div class="row aircall-integration">
+    <div class="col-sm-3">
+        <h3 class="section-title">Aircall Integration</h3>
+        <div class="mb20 mt20">
+            <img src="https://images.ctfassets.net/0kz5nrpxuzuo/Rkm5FQpYdhqBX20PW1RVs/d60c7e60d3b6be9c2da2c22de062cbe8/logo.svg" alt="">
+        </div>
+        <p class="description">
+            Aircall is a cloud based phone system and call center software all-in-one with Cloud Telephony Integrations (CTI) with your favorite CRM & Helpdesk software. Cab9 recommends users to use Aircall as their phone system.
+            <br /><br />
+            For more details <a href="https://aircall.io" target="_blank" class="bold brand-primary">click here</a>.
+        </p>
+    </div>
+    <div class="col-sm-3 col-sm-offset-1">
+        <h3 class="section-title">Details</h3>
+        <p class="description">Please provide your integration key and token. You can find these details within your Aircall portal located within <a href="https://dashboard-v2.aircall.io/company" target="_blank" class="bold">Accounts > API key section.</a></p>
+        <div ng-show="telephonyData">
+            <div form-for="telephonyData" schema="TelephonyIntegration" mode="{{viewMode}}">
+                <div field-for="AuthDetails1" display="Api Key"></div>
+                <div field-for="AuthDetails2" display="Api Token"></div>
+            </div>
+        </div>
+        <button class="btn btn-xs btn-success mr10" ng-click="saveDetails()" ng-disabled="savingDetails">
+            <span ng-show="!savingDetails">
+                <i class="material-icons">save</i>Save Details
+            </span>
+            <span ng-show="savingDetails">
+                <i class="fa fa-circle-o-notch fa-spin"></i>Saving...
+            </span>
+        </button>
+        <button class="btn btn-xs btn-danger mr10" ng-click="deleteDetails()" ng-disabled="deletingDetails" ng-show="telephonyData.Id">
+            <span ng-show="!deletingDetails">
+                <i class="material-icons">delete</i>Delete
+            </span>
+            <span ng-show="deletingDetails">
+                <i class="fa fa-circle-o-notch fa-spin"></i>Deleting...
+            </span>
+        </button>
+        <div class="mt10">
+            <button class="btn btn-xs btn-success mr10" ng-click="testDetails()" ng-disabled="testingDetails" ng-show="telephonyData.Id">
+                <span ng-show="!testingDetails">
+                    <i class="material-icons">link</i>Test Connection
+                </span>
+                <span ng-show="testingDetails">
+                    <i class="fa fa-circle-o-notch fa-spin"></i>Testing...
+                </span> 
+            </button>
+            <button class="btn btn-xs btn-success" ng-click="createWebhook()" ng-disabled="creatingWebhook" ng-show="telephonyData.Id">
+                <span ng-show="!creatingWebhook">
+                    <i class="material-icons">integration_instructions</i>Create Webhook
+                </span>
+                <span ng-show="creatingWebhook">
+                    <i class="fa fa-circle-o-notch fa-spin"></i>Creating...
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="col-sm-5" ng-if="staffExtensions">
+        <h3 class="section-title">Users & Extension</h3>
+        <p class="description">Use this area to manage the extensions and aircalls users. </p>
+        <h3 class="section-title" ng-if="fetchingStaffExtensions" class="pb20">
+            <i class="fa fa-circle-o-notch fa-spin"></i> Fetching Extension Information
+        </h3>
+        <table class="table table-condensed primary-table" id="staff-extensions">
+            <thead>
+                <tr>
+                    <th>
+                        Extension
+                    </th>
+                    <th>
+                        Staff
+                    </th>
+                </tr>
+            </thead>
+            <tbody ng-if="staffExtensions.length == 0">
+                <tr>
+                    <td colspan="2">
+                        No extension information found.
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-if="staffExtensions.length > 0">
+                <tr ng-repeat="data in staffExtensions" style="overflow: visible;">
+                    <td>
+                        <strong class="brand-primary">{{data.AircallUser.name}}</strong>
+                        <br />
+                        User Id: {{data.AircallUser.id}}
+                    </td>
+                    <td style="overflow: visible;">
+                        <div class="form-group">
+                            <div class="form-edit">
+                                <select class="form-control" ng-change="staffSelectedOnExtension(data.Staff.Id, data.AircallUser.id)" ng-options="item.Id as item._Fullname for item in listOfStaff" ng-model="data.Staff.Id"></select>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

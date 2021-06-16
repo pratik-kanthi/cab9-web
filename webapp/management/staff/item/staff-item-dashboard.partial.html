@@ -1,0 +1,119 @@
+<div class="row">
+	<div class="col-lg-4 col-md-6-col-sm-6">
+		<div class="panel panel-alert">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					Quick Info
+				</h3>
+			</div>
+			<div class="panel-body">
+				<strong>Contact Details:</strong>
+				<br />
+				<span ng-if="item.Phone"><i class="material-icons mr10">phone</i>{{item.Phone}}<br /></span>
+				<span ng-if="item.Mobile"><i class="material-icons mr10">phone_iphone</i>{{item.Mobile}}<br /></span>
+				<span ng-if="item.Email"><i class="material-icons mr10">email</i>{{item.Email}}<br /></span>
+			</div>
+        </div>
+        <div class="panel panel-default">
+			<div class="panel-heading">
+            	<h3 class="panel-title">Other Info</h3>
+        	</div>
+        	<div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong ng-if="item._FullAddress">Full Address:</strong>
+                        <pre ng-bind-html="item._FullAddress"></pre>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong ng-if="item._FullBillingAddress">Full Billing Address:</strong>
+                        <pre ng-bind-html="item._FullBillingAddress"></pre>
+                    </div>
+                </div>
+                <strong ng-if="item._FullAddress">Other:</strong><br />
+                <span ng-if="item.Active==true"><i class="material-icons mr10 brand-primary">check</i> Active<br /></span>
+            </div>
+		</div>
+	</div>
+	<div class="col-lg-4 col-md-6 col-sm-6">
+		<div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Documents</h3>
+            </div>
+            <div class="panel-body">
+                No Documents Uploaded for this staff.<br /><br />
+                <a class="btn btn-xs btn-primary" ui-sref="root.staff.viewer.documents" ng-if="PERMISSIONS.test('staff.viewer.documents')"><i class="material-icons">add_circle</i>Add Now</a>
+            </div>
+        </div>
+		<div class="panel panel-default">
+			<div class="panel-cloak">
+				<h3 class="cloak-title">Smart Scores are Coming Soon</h3>
+				<p>
+					They say a picture is worth a 1000 words. We say that Cab 9 Smart Scores are worth over 1000 assements a week. Yes, that's how many times Cab9 assesses the performance of your Driver, Clients, Passengers and Controllers. Cab9 compares them in the real time with each other to conclude a simple score that gives you an exact idea of how they have been performing.
+				</p>
+			</div>
+			<div class="panel-heading">
+                <h3 class="panel-title">
+                    staff Score
+                </h3>
+            </div>
+            <div class="panel-body">
+            	<div class="row">
+                    <div class="col-md-12 text-center mb30">
+                        <score size="100" show-score="3.7" value="74" stroke-width="10" class="mb5"></score>
+                        <strong>Overall Score</strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <score size="60" show-score="1.9" value="25" stroke-width="10" class="mb5"></score>
+                                    </div>
+                                    <div class="col-xs-8 lh60">
+                                        Bookings
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <score size="60" show-score="4.0" value="75" stroke-width="10" class="mb5"></score>
+                                    </div>
+                                    <div class="col-xs-8 lh60">
+                                        Revenue
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <score size="60" show-score="3.4" value="78" stroke-width="10" class="mb5"></score>
+                                    </div>
+                                    <div class="col-xs-8 lh60">
+                                        Acceptance
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <score size="60" show-score="2.4" value="42" stroke-width="10" class="mb5"></score>
+                                    </div>
+                                    <div class="col-xs-8 lh60">
+                                        Shifts
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+</div>

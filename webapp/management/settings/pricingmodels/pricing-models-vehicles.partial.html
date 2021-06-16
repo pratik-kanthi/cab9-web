@@ -1,0 +1,109 @@
+﻿<h3 class="section-title mt0">
+    <i class="material-icons">directions_car</i> Vehicle Overrides
+</h3>
+<p class="grey">
+    Please add any vehicle related override below. These will override the default value from Pricing Model. If no override is added for a <b>Vehicle Type</b> the default values from <b>Pricing Model</b> are used. 
+</p>
+
+<div class="vo-wrapper row">
+    <div ng-class="(COMPANY.ChauffeurModeActive)?'col-sm-12':'col-sm-8'" ng-repeat="vt in vehicleTypes">
+    
+    <div class="vo">
+        <h3 class="vt-name">{{vt.Name}}</h3>
+        <p class="vt-desc">{{vt.Description}}</p>
+        <div class="actions">
+            <a class="btn btn-xs icon btn-success" ng-show="!vt.$pricing" ng-click="viewMode = 'EDIT'; AddOverride(vt)"><i class="material-icons">add_circle</i> Add Override</a>
+                    <a class="btn btn-xs icon btn-warning" ng-show="vt.$pricing && editing == null" ng-click="viewMode = 'EDIT'; EditOverride(vt)"><i class="material-icons">create</i> Edit</a>
+                    <a class="btn btn-xs icon btn-danger" ng-show="vt.$pricing && editing == null" ng-click="DeleteOverride(vt)"><i class="material-icons">clear</i> Delete</a>
+                    <a class="btn btn-xs icon btn-success" ng-show="vt.$pricing && editing == vt" ng-click="viewMode = 'VIEW'; SaveOverride(vt)"><i class="material-icons">check_circle</i> Confirm</a>
+                    <a class="btn btn-xs icon btn-warning" ng-show="vt.$pricing && editing == vt" ng-click="viewMode = 'VIEW'; CancelOverride(vt)"><i class="material-icons">undo</i> Cancel</a>
+        </div>
+        <div ng-if="!vt.$pricing" class="text-muted">
+            <h4 class="none">No Override Configured</h4>
+        </div>
+        <div class="row" ng-if="vt.$pricing">
+            <div ng-class="(COMPANY.ChauffeurModeActive)?'col-sm-3':'col-sm-5'">
+                <h4>Default Options</h4>
+                <div class="form-group">
+                    <label for="" class="brand-primary">Minimum Charge</label>
+                    <p ng-show="editing !== vt && vt.$pricing.MinimumCharge">
+                        {{(vt.$pricing.MinimumCharge)?(vt.$pricing.MinimumCharge | currency): 'Default' }}
+                    </p>
+                    <p ng-show="editing !== vt && !vt.$pricing.MinimumCharge">Default</p>
+                    <input type="number" class="form-control" ng-model="vt.$pricing.MinimumCharge" ng-show="editing == vt" />
+                </div>
+                <div class="form-group">
+                    <label for="" class="brand-primary">Standing Charge</label>
+                    <br />
+                    <p ng-show="editing !== vt && vt.$pricing.StandingCharge">
+                        {{(vt.$pricing.StandingCharge)?(vt.$pricing.StandingCharge | currency): 'Default' }}
+                    </p>
+                    <input type="number" class="form-control" ng-model="vt.$pricing.StandingCharge" ng-show="editing == vt" />
+                </div>
+                <div class="form-group">
+                    <label for="" class="brand-primary">Waiting Charge/Min</label>
+                    <br />
+                    <p ng-show="editing !== vt && vt.$pricing.WaitTimeCharge">
+                        {{(vt.$pricing.WaitTimeCharge)?(vt.$pricing.WaitTimeCharge | currency): 'Default' }}
+                    </p>
+                    <input type="number" class="form-control" ng-model="vt.$pricing.WaitTimeCharge" ng-show="editing == vt" />
+                </div>
+                <div class="form-group">
+                    <label for="" class="brand-primary">Extra Stop Charge</label>
+                    <br />
+                    <p ng-show="editing !== vt && vt.$pricing.ExtraStopCharge">
+                        {{(vt.$pricing.ExtraStopCharge)?(vt.$pricing.ExtraStopCharge | currency): 'Default' }}
+                    </p>
+                    <input type="number" class="form-control" ng-model="vt.$pricing.ExtraStopCharge" ng-show="editing == vt" />
+                </div>
+            </div>
+            <div ng-class="(COMPANY.ChauffeurModeActive)?'col-sm-5':'col-sm-7'">
+                <h4>Fare Steps</h4>
+                <div class="form-group">
+                    <label for="" class="brand-primary">Fare/Mile</label>
+                    <br />
+                    <p ng-show="editing !== vt && vt.$pricing.FarePerMile">
+                        {{(vt.$pricing.FarePerMile)?(vt.$pricing.FarePerMile | currency): 'Default' }}
+                    </p>
+                    <input type="number" class="form-control" ng-model="vt.$pricing.FarePerMile" ng-show="editing == vt" />
+                </div>
+                <div mileage-step value="vt.$pricing.FarePerMileSteps"></div>
+            </div>
+            <div class="col-sm-4" ng-if="COMPANY.ChauffeurModeActive">
+                <h4>Chauffeuring Options</h4>
+                <div class="form-group">
+                    <label class="control-label">Chauffer Mode Active</label>
+                    <div>
+                        <input class="check" type="checkbox" id="ChaufferCheck{{vt.Id}}" ng-disabled="editing !== vt" ng-model="vt.$pricing.AllowChaffuering" />
+                        <label class="check-label" for="ChaufferCheck{{vt.Id}}"></label>
+                    </div>
+                </div>
+                <br class="clearfix" />
+                <div class="" ng-if="vt.$pricing.AllowChaffuering">
+                    <div class="form-group mt20">
+                    <label for="" class="brand-primary">Price/Hour</label>
+                    <br />
+                    <p ng-show="editing !== vt">{{vt.$pricing.PricePerHour ? (currency.Prepend + vt.$pricing.PricePerHour + '/hr') : 'Default'}}</p>
+                    <input type="number" class="form-control" ng-model="vt.$pricing.PricePerHour" ng-show="editing == vt" />
+                </div>
+
+                <div class="form-group">
+                    <label for="" class="brand-primary">Min Minutes</label>
+                    <br />
+                    <p ng-show="editing !== vt">{{vt.$pricing.MinMinutes ? (vt.$pricing.MinMinutes + ' Mins') : 'No Minimum'}}</p>
+                    <input type="number" class="form-control" ng-model="vt.$pricing.MinMinutes" ng-show="editing == vt" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="" class="brand-primary">Included Distance</label>
+                    <br />
+                    <p ng-show="editing !== vt">{{vt.$pricing.IncludedMiles ? (vt.$pricing.IncludedMiles + ((COMPANY.UseMetric == 1) ? ' Kms':' Miles')) : 'None'}}</p>
+                    <input type="number" class="form-control" ng-model="vt.$pricing.IncludedMiles" ng-show="editing == vt" />
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+

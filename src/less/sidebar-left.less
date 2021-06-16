@@ -1,0 +1,281 @@
+#sidebar-left {
+    position: relative;
+    color: #fff;
+    background-color: mix(@brand-primary, #000, 30%);
+    section {
+        .btn {
+            display: block;
+            margin: 16px auto;
+            width: 140px;
+            color: #fff;
+            background-color: @brand-secondary;
+        }
+        .menu-text {
+            padding: 8px 16px;
+            font-size: 12px;
+            display: block;
+            color: @brand-secondary;
+        }
+        &#brand {background-color: mix(#1E2850, #111, 50%);
+            width: 100%;
+            line-height: 32px;
+            position: relative;
+            padding: 4px;
+            overflow: auto;
+            position: relative;
+             h1 {
+                color: @inverse;
+                margin: 0 !important;
+                line-height: 32px;
+                padding-left: 10px;
+                font-size: 18px;
+                color: #455674;
+                span {
+                    margin-left: 5px;
+                    font-size: 17px;
+                }
+            }
+            small {
+                position: absolute;
+                right: 10px;
+                top: 2px;
+                color: @grey;
+            }
+            img {
+                width: 80%;
+                margin: 16px auto;
+                padding-bottom: 0px;
+                display: block;
+            }
+            .tagline {
+                float: right;
+                padding-right: 12px;
+                font-size: 12px;
+                margin-top: -8px;
+            }
+        }
+        &#company {
+            padding-top: 10px;
+            .profile-box {
+                text-align: center;
+                .logo {
+                    width: 60px;
+                    height: 60px;
+                }
+                h4 {
+                    font-size: 14px;
+                    color: lighten(@brand-primary, 30%);
+                }
+            }
+        }
+        &#profile {
+            background-color: mix(#1E2850, #111, 50%);
+            padding: 10px;
+            .subtitle {
+                a {
+                    color: #FF7F50;
+                }
+            }
+        }
+        &#security {
+            img {
+                .center-block();
+                margin-top: 24px;
+            }
+        }
+        &#navigation {
+            padding-top: 0px;
+            border-top: 2px solid @brand-primary;
+            border-bottom: 2px solid @brand-primary;
+            ul.main-nav {
+                list-style: none;
+                padding: 0;
+                margin-bottom: 0;
+                > li {
+                    //border-top: 1px solid #464f63;
+                    position: relative;
+                    font-size: 14px;
+                    display: block;
+                    overflow: hidden;
+                    &:first-child {
+                        border: 0;
+                    }
+                    > a {
+                        display: block;
+                        position: relative;
+                        padding: 5px 15px;
+                        text-decoration: none !important;
+                        border-radius: 0;
+                        font-weight: 400;
+                        color: lighten(@brand-primary, 30%);
+                        i {
+                            display: inline-block;
+                            width: 16px;
+                            font-size: 18px;
+                            text-align: center;
+                            margin-right: 8px;
+                            color: lighten(@brand-primary, 40%);
+                            vertical-align: top;
+                            margin-top: 3px;
+                            .transition(all 0.2s ease-out 0s);
+                        }
+                    }
+                    &.has-dropdown {
+                        > a {
+                            &::after {
+                                content: 'keyboard_arrow_down';
+                                font-family: 'Material Icons';
+                                font-size: 16px;
+                                font-weight: 400;
+                                color: #fff;
+                                position: absolute;
+                                top: 10px;
+                                right: 15px;
+                            }
+                        }
+                        ul.sub-nav {
+                            overflow: hidden;
+                            position: relative;
+                            height: 0;
+                            .transition(all 700ms);
+                            &.open {
+                                height: auto;
+                            }
+                            background-color: mix(#1E2850, #111, 50%);
+                            list-style: none;
+                            padding: 0;
+                            > li {
+                                margin-left: 24px;
+                                border-left: 1px solid @brand-secondary;
+                                display: block;
+                                > a {
+                                    display: block;
+                                    padding: 5px 0 5px 10px;
+                                    text-decoration: none !important;
+                                    color: #ddd;
+                                    position: relative;
+                                    .transition(all 0.2s ease-out 0s);
+                                    i {
+                                        margin-right: 5px;
+                                        color: #ddd;
+                                    }
+                                    &::before {
+                                        content: '';
+                                        position: absolute;
+                                        width: 5px;
+                                        height: 5px;
+                                        left: -3px;
+                                        top: 50%;
+                                        background-color: #9fa8bc;
+                                        margin-top: -3px;
+                                        border-radius: 50px;
+                                        .transition(all 0.2s ease-out 0s);
+                                    }
+                                    &::after {
+                                        content: '';
+                                        width: 30px;
+                                        height: 30px;
+                                        border: 1px solid @brand-secondary;
+                                        position: absolute;
+                                        left: -15px;
+                                        top: 50%;
+                                        margin-top: -15px;
+                                        border-radius: 50px;
+                                        opacity: 0;
+                                        .transition(all 0.2s ease-out 0s);
+                                    }
+                                    &:hover {
+                                        &::after {
+                                            opacity: 1;
+                                            border-color: @brand-secondary;
+                                            width: 11px;
+                                            height: 11px;
+                                            left: -6px;
+                                            margin-top: -6px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    &.active {
+                        background-color: @brand-primary;
+                        a {
+                            color: #fff;
+                            i {
+                                color: #fff;
+                            }
+                        }
+                        &:hover {
+                            > a {
+                                color: #fff !important;
+                            }
+                        }
+                        ul.sub-nav {
+                            &::before {
+                                border-top: 7px solid @brand-primary;
+                            }
+                        }
+                        &.has-dropdown {
+                            > a {
+                                &::after {
+                                    color: #fff;
+                                }
+                            }
+                        }
+                    }
+                    &:hover {
+                        > a {
+                            color: #818da7 !important;
+                        }
+                    }
+                }
+            }
+            .nav-tabs {
+                border: 0 !important;
+                > li {
+                    margin-bottom: 0;
+                    width: 20% !important;
+                    text-align: center;
+                    border: 0 !important;
+                    a {
+                        border: 0 !important;
+                        padding: 8px 0;
+                        min-width: inherit;
+                        i {
+                            font-size: 16px;
+                        }
+                    }
+                    &.active {
+                        a {
+                            background-color: @menu-light;
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+            .tab-content {
+                background-color: @menu-light;
+            }
+        }
+        &#support {
+            padding-top: 32px;
+            ul.support {
+                list-style: none;
+                padding: 0;
+                li {
+                    padding-left: 15px;
+                    i {
+                        margin-right: 8px;
+                        font-size: 16px;
+                        float: left;
+                        padding-top: 5px;
+                    }
+                    span {
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,21 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">Send Email</h3>
+</div>
+<div class="modal-body">
+    <form name="emailForm">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="EmailInput">To :</label>
+                    <div class="form-edit">
+                        <input class="form-control" type="text" name="EmailInput" ng-model="email" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+    <button class="btn btn-xs btn-success pull-right" ng-click="sendEmail()" ng-disabled="!emailForm.$valid"><i class="material-icons">send</i>Send</button>
+</div>

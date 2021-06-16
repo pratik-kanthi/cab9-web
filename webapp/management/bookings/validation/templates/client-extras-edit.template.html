@@ -1,0 +1,28 @@
+<div class="overlay" ng-if="overlay" ng-click="togglePopup('client','extras')"></div>
+<div class="popup-edit extras">
+    <div class="heading">
+        <div class="row">
+            <div class="col-md-6">
+                <label class="brand-primary">Extras</label>
+            </div>
+            <div class="col-md-6">
+                <label class="brand-primary">Cost(£)</label>
+            </div>
+        </div>
+    </div>
+    <div class="expenses" ng-if="booking.Extras.length > 0">
+        <div class="row" ng-repeat="extra in booking.Extras track by $index">
+            <div class="col-md-6">
+                <span class="expense-name" ng-bind="::extra.Expense"></span>
+            </div>
+            <div class="col-md-6">
+                <div class="currency-box">
+                    <input type="number" class="form-control" ng-model="extra.Amount" step="0.1">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="brand-primary t-m p10 mt10 mb10" ng-if="booking.Extras.length == 0">
+        No extras for client found
+    </div>
+</div>

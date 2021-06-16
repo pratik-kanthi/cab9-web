@@ -1,0 +1,37 @@
+﻿<div class="note-view">
+    <div class="options" ng-if="PERMISSIONS.test('staff.viewer.notes', 'W')">
+        <div ng-show="displayMode === 'VIEW'" >
+            <button class="btn btn-xs btn-primary" ng-click="addNote()" >
+                <i class="material-icons">add</i>Add Notes
+            </button>
+        </div>
+    </div>
+    <div class="notes-wrapper">
+        <div class="note" ng-repeat="note in notes" ng-show="notes.length>0">
+            <div class="content">
+                <div class="text">
+                    <strong class="brand-primary t-l" ng-bind="note.Subject"></strong>
+                    <pre ng-bind="note.Content"></pre>
+                </div>
+                <div class="time">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <span>Added by {{getUserName(note.CreationUserId)}} {{note.CreationTime | Countdown}}</span>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <span ng-if="note.ModificationTime">Edited by {{getUserName(note.ModificationUserId)}} {{note.ModificationTime | Countdown}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="options">
+                    <a href="" ng-click="editNote(note)" ng-if="PERMISSIONS.test('staff.viewer.notes', 'W')"><i class="material-icons">create</i></i>Edit</a>
+                    <a href="" ng-click="deleteNote(note)" ng-if="PERMISSIONS.test('staff.viewer.notes', 'D')"><i class="material-icons">delete</i>Delete</a>
+                </div>
+            </div>
+            <br class="clearfix" />
+        </div>
+    </div>
+</div>
+<div class="mt8" ng-show="notes.length==0">
+    <span class="t-l">No notes has been added for this driver.</span>
+</div>

@@ -1,0 +1,278 @@
+<div class="modal-header">
+    <h3 class="modal-title">Filter Bookings</h3>
+</div>
+<div class="modal-body" id="booking-filters">
+    <div class="row">
+        <div class="col-sm-6">
+            <h3 class="section-title mt10">Basic Filters</h3>
+            <div class="form-group mt30" ng-hide="hideClient">
+                <label class="control-label" for="ClientIdInput">Client <img src="/includes/images/preloader-fading.gif" ng-show="loadingClients" alt="" class="loader"></label>
+                <div class="form-edit">
+                    <ui-select multiple ng-model="filterOptions.ClientIds" theme="select2" style="width: 100%;" ng-change="saveSelected($select.selected,'Clients')">
+                        <ui-select-match placeholder="Start typing to search...">
+                            <div class="select-text">
+                                {{$item.Name}}
+                            </div>
+                        </ui-select-match>
+                        <ui-select-choices refresh="searchClients($select.search)" repeat="item.Id as item in clients">
+                            <div class="ui-select-box">
+                                <div class="option-details">
+                                    <div>{{item.Name}}</div>
+                                    <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.ClientIds = [];" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.ClientIds.length > 0" class="red">Clear</a>
+                </div>
+            </div>
+            <div class="form-group " ng-hide="hidePassenger || filterOptions.ClientIds.length !== 1">
+                <label class="control-label" for="ClientIdInput">Passengers<img src="/includes/images/preloader-fading.gif" ng-show="loadingPassengers" alt="" class="loader"></label>
+                <div class="form-edit">
+                    <ui-select multiple ng-model="filterOptions.LeadPassengerIds" theme="select2" style="width: 100%;" ng-change="saveSelected($select.selected,'Passengers')">
+                        <ui-select-match placeholder="Start typing to search...">
+                            <div class="select-text">
+                                {{$item.Firstname}} {{$item.Surname}}
+                            </div>
+                        </ui-select-match>
+                        <ui-select-choices refresh="searchPassengers($select.search)" repeat="item.Id as item in passengers">
+                            <div class="ui-select-box">
+                                <div class="option-details">
+                                    <div>{{item.Firstname}} {{item.Surname}}</div>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.LeadPassengerIds = [];" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.LeadPassengerIds.length > 0" class="red">Clear</a>
+                </div>
+            </div>
+            <div class="form-group " ng-hide="hideDriver">
+                <label class="control-label" for="DriverIdInput">Driver<img src="/includes/images/preloader-fading.gif" ng-show="loadingDrivers" alt="" class="loader"></label>
+                <div class="form-edit">
+                    <ui-select multiple ng-model="filterOptions.DriverIds" theme="select2" style="width: 100%;" ng-change="saveSelected($select.selected,'Drivers')">
+                        <ui-select-match placeholder="Start typing to search...">
+                            <div class="select-text">
+                                {{$item.Name}}
+                            </div>
+                        </ui-select-match>
+                        <ui-select-choices refresh="searchDrivers($select.search)" repeat="item.Id as item in drivers">
+                            <div class="ui-select-box">
+                                <div class="option-details">
+                                    <div>{{item.Name}}</div>
+                                    <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.DriverIds = [];" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.DriverIds.length > 0" class="red">Clear</a>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="control-label" for="VehicleTypeIdInput">Vehicles</label>
+                <div class="form-edit">
+                    <ui-select multiple ng-model="filterOptions.VehicleTypeIds" theme="select2" style="width: 100%;" ng-change="saveSelected($select.selected,'VehicleTypes')">
+                        <ui-select-match placeholder="Select...">
+                            <div class="select-text">
+                                {{$item.Name}}
+                            </div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in vehicleTypes|filter:$select.search">
+                            <div class="ui-select-box">
+                                <div class="option-details">
+                                    <div>{{item.Name}}</div>
+                                    <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.VehicleTypeIds = [];" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.VehicleTypeIds.length > 0" class="red">Clear</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="VehicleTypeIdInput">Booking Source</label>
+                <div class="form-edit">
+                    <ui-select class="edit" ng-model="filterOptions.BookingSource" theme="selectize" ng-disabled="false">
+                        <ui-select-match allow-clear="true" placeholder="Select...">
+                            <div class="select-text">{{$select.selected.Name}}</div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in bookingSources | filter: $select.search">
+                            <div class="select-text-option">
+                                <div ng-bind-html="item.Name"></div>
+                                <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.BookingSource = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.BookingSource" class="red">Clear</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="paymentMethodInput">Payment Method</label>
+                <div class="form-edit">
+                    <ui-select class="edit" ng-model="filterOptions.PaymentMethod" theme="selectize" ng-disabled="false">
+                        <ui-select-match allow-clear="true" placeholder="Select...">
+                            <div class="select-text">{{$select.selected.Name}}</div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in paymentMethods | filter: $select.search">
+                            <div class="select-text-option">
+                                <div ng-bind-html="item.Name"></div>
+                                <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.PaymentMethod = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.PaymentMethod" class="red">Clear</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="patnerTypeInput">Partner</label>
+                <div class="form-edit">
+                    <ui-select class="edit" ng-model="filterOptions.PartnerType" theme="selectize" ng-disabled="false">
+                        <ui-select-match allow-clear="true" placeholder="Select...">
+                            <div class="select-text">{{$select.selected.Name}}</div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in partnerTypes | filter: $select.search">
+                            <div class="select-text-option">
+                                <div ng-bind-html="item.Name"></div>
+                                <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.PartnerType = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.PartnerType" class="red">Clear</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="PartnerIdInput">Workshare Partners<img src="/includes/images/preloader-fading.gif" ng-show="loadingPartners" alt="" class="loader"></label>
+                <div class="form-edit">
+                    <ui-select multiple ng-model="filterOptions.PartnerIds" theme="select2" style="width: 100%;" ng-change="saveSelected($select.selected,'Partners')">
+                        <ui-select-match placeholder="Start typing to search...">
+                            <div class="select-text">
+                                {{$item.Name}}
+                            </div>
+                        </ui-select-match>
+                        <ui-select-choices refresh="searchPartners($select.search)" repeat="item.Id as item in worksharePartners">
+                            <div class="ui-select-box">
+                                <div class="option-details">
+                                    <div>{{item.Name}}</div>
+                                    <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.PartnerIds = [];" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.PartnerIds.length > 0" class="red">Clear</a>
+                </div>
+            </div>
+            <div class="mt30 amount-range">
+                <h3 class="section-title">Amount Range</h3>
+                <input type="number" min=0 placeholder="0" ng-model="filterOptions.Amount.from" style="width:35%" />
+                <span style="display:inline-block;height:2px;width:5px;background:#000" class="mb5"></span>
+                <input type="number" min="{{filterOptions.Amount.from}}" placeholder="∞" ng-model="filterOptions.Amount.to" style="width:35%" />
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <h3 class="section-title mt10">Date Range</h3>
+            <div class="time-controls pull-left" id="time-controls">
+                <a id="daterangepicker_bookings" href=""> <i class="material-icons">date_range</i></a><span class="current-period" ng-bind="filterOptions.date.selectedPeriod"></span>
+            </div>
+            <br />
+            <br />
+            <h3 class="section-title mt30">Status Filters</h3>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="status Incoming">
+                        <div class="checkbox">
+                            <input id="filter-Incoming" type="checkbox" ng-model="filterOptions.Status.Incoming" />
+                            <label for="filter-Incoming"></label>
+                        </div>
+                        Incoming
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="status OpenToBid">
+                        <div class="checkbox">
+                            <input id="filter-OpenToBid" type="checkbox" ng-model="filterOptions.Status.OpenToBid" />
+                            <label for="filter-OpenToBid"></label>
+                        </div>
+                        Open To Bid
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="status PreAllocated">
+                        <div class="checkbox">
+                            <input id="filter-PreAllocated" type="checkbox" ng-model="filterOptions.Status.PreAllocated" />
+                            <label for="filter-PreAllocated"></label>
+                        </div>
+                        Pre Allocated
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="status Allocated">
+                        <div class="checkbox">
+                            <input id="filter-Allocated" type="checkbox" ng-model="filterOptions.Status.Allocated" />
+                            <label for="filter-Allocated"></label>
+                        </div>
+                        Allocated
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="status OnRoute">
+                        <div class="checkbox">
+                            <input id="filter-OnRoute" type="checkbox" ng-model="filterOptions.Status.OnRoute" />
+                            <label for="filter-OnRoute"></label>
+                        </div>
+                        En-route
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="status InProgress">
+                        <div class="checkbox">
+                            <input id="filter-InProgress" type="checkbox" ng-model="filterOptions.Status.InProgress" />
+                            <label for="filter-InProgress"></label>
+                        </div>
+                        In Progress / Arrived
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="status Completed">
+                        <div class="checkbox">
+                            <input id="filter-Completed" type="checkbox" ng-model="filterOptions.Status.Completed" />
+                            <label for="filter-Completed"></label>
+                        </div>
+                        Completed
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="status Cancelled">
+                        <div class="checkbox">
+                            <input id="filter-Cancelled" type="checkbox" ng-model="filterOptions.Status.Cancelled" />
+                            <label for="filter-Cancelled"></label>
+                        </div>
+                        Cancelled
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="status Cancelled">
+                        <div class="checkbox">
+                            <input id="filter-COA" type="checkbox" ng-model="filterOptions.Status.COA" />
+                            <label for="filter-COA"></label>
+                        </div>
+                        COA
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt30">
+                <label class="control-label">Show Bookings With Client Services</label>
+                <div class="mt5">
+                    <input class="check" type="checkbox" id="ClientServicesCheck" ng-model="filterOptions.ShowClientServicesBookings" />
+                    <label class="check-label" for="ClientServicesCheck"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+    <button class="btn btn-xs btn-success pull-right" ng-click="confirmFilters()"><i class="material-icons">date_range</i>Filter</button>
+</div>

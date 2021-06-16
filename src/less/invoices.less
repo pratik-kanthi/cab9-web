@@ -1,0 +1,220 @@
+.invoice {
+    padding: 1.5cm;
+    border: 1px solid #eee;
+    .border-radius(2px);
+    .info-box {
+        margin-bottom: 20px;
+        .icon {
+            float: left;
+            margin-right: 10px;
+            img {
+                max-height: 38px;
+                &.rounded {
+                    border-radius: 20px;
+                    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+                }
+            }
+            i {
+                font-size: 16px;
+                width: 38px;
+                height: 38px;
+                display: block;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                text-align: center;
+                line-height: 38px;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
+        }
+        .title {
+            font-weight: 800;
+            margin-bottom: 0px;
+            color: @grey;
+        }
+        .content {
+            line-height: 20px;
+            a {
+                display: block;
+                font-size: 12px;
+                &.remove {
+                    color: @red !important;
+                }
+            }
+            .registration {
+                background: #fdca4d !important;
+                font-weight: 900;
+                padding: 8px 18px;
+                line-height: 48px;
+                border-radius: 4px;
+                color: #000 !important;
+            }
+        }
+    }
+}
+
+.invoice-payment {
+    .card-payment {
+        background-color: #e9e9e9;
+        .border-radius(4px);
+        padding: 16px;
+        h3 {
+            margin: 0;
+        }
+        margin-bottom: 20px;
+        .btn {
+            margin-top: 20px;
+            height: 30px;
+            padding-top: 4px;
+        }
+    }
+}
+
+#payment-table {
+    td {
+        overflow: visible !important;
+    }
+    td * {
+        overflow: visible !important;
+    }
+}
+
+#company-information {
+    img.company-logo {
+        width: 100px;
+        height: 100px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        border-radius: 50px;
+    }
+}
+
+td.date-group {
+    background-color: mix(@brand-primary, #fff, 20%);
+    font-weight: 600;
+}
+
+table.bookings-table {
+    td {
+        padding: 5px !important;
+        line-height: 16px !important;
+        strong {
+            color: @grey !important;
+        }
+        .form-control {
+            background-color: #eee;
+            border-radius: 3px;
+            padding: 0 10px 0 5px;
+            margin-top: 5px;
+            height: 25px !important;
+            border: 0;
+            line-height: 13px !important;
+        }
+    }
+}
+
+.table.invoice-table-all {
+    tbody {
+        td {
+            &.status.Unpaid {
+                background-color: @orange;
+                color: #fff;
+            }
+            &.status.Unsent {
+                background-color: @sky;
+                color: #fff;
+            }
+            &.status.Paid {
+                background-color: @green;
+                color: #fff;
+            }
+        }
+    }
+}
+
+#invoice-edit {
+    .form-group {
+        border: 0;
+        padding: 0;
+        background: transparent !important;
+    }
+    .booking-filter {
+        border-top: 1px dotted #ccc;
+        .fetch {
+            padding-top: 27px;
+            .btn {
+                .border-radius(2px);
+                padding: 3px 7px !important;
+            }
+        }
+    }
+    .invoice-status {
+        span.Paid {
+            color: @green;
+        }
+        span.Unpaid {
+            color: @orange;
+        }
+        span.Unsent {
+            color: @red;
+        }
+    }
+}
+
+#generate-invoice {
+    min-height: 700px;
+}
+
+#invoice-item {
+    h4 {
+        margin: 0 0 30px 0;
+        font-weight: 600;
+        font-size: 18px;
+        color: @brand-primary;
+    }
+    #invoice-summary {
+        font-size: 16px;
+        strong {
+            display: block;
+            margin-bottom: -5px;
+            color: @brand-secondary;
+        }
+    }
+}
+
+.invoices {
+    th {
+        .checkbox {
+            margin-bottom: -5px !important;
+            display: inline-block;
+        }
+    }
+    tr {
+        td {
+            .checkbox {
+                margin-bottom: 0 !important;
+                margin-top: -1px !important;
+                display: inline-block;
+            }
+        }
+    }
+    .bg-danger {
+        background-color: #d9534f !important;
+        border-left: 1px dashed #ddd !important;
+        border-right: 1px dashed #ddd !important;
+        color: #fff;
+        font-weight: 600;
+    }
+    .bg-warning {
+        background-color: @orange !important;
+        border-left: 1px dashed #ddd !important;
+        border-right: 1px dashed #ddd !important;
+        color: #fff;
+        font-weight: 600;
+    }
+    .bg-success {
+        background-color: @green !important;
+        border-left: 1px dashed #ddd !important;
+        border-right: 1px dashed #ddd !important;
+        color: #fff;
+        font-weight: 600;
+    }
+}

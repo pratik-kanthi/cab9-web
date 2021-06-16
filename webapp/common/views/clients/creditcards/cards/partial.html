@@ -1,0 +1,53 @@
+<div class="panel panel-default" id="credit-cards">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">account_balance_wallet</i> Credit/Debit Cards</h3>
+    </div>
+    <div class="panel-body">
+        <div class="add-card mb20 mt10">
+            <button class="btn btn-success" ng-click="addCard()"><i class="material-icons">note_add</i> Add Card</button>
+        </div>
+        <p class="brand-primary t-l bold" ng-if="cards.length == 0">
+            No Payment Cards Linked
+        </p>
+        <p class="brand-primary t-l bold" ng-if="cards.length > 0">
+            Below is the list of credit cards. You can delete a card or make it the default payment card on file.
+        </p>
+        <div class="cards-wrapper" ng-if="cards.length > 0">
+            <div class="table-responsive">
+                <table class="table table-bordered" style="min-width: 800px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 30%">Card Number</th>
+                            <th style="width: 15%">Name</th>
+                            <th style="width: 15%">Expiry</th>
+                            <th style="width: 15%">Provider</th>
+                            <th style="width: 25%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="card in cards">
+                            <td class="card-type">
+                                <div class="credit-card-type small" ng-class="card.Type"></div>
+                                <strong ng-bind="card.CardNumber"></strong>
+                                <div class="badge" ng-if="card.DefaultCard">Default</div>
+                            </td>
+                            <td>
+                                <span ng-bind="card.BillingName"></span>
+                            </td>
+                            <td>
+                                <span ng-bind="card.ExpirationMonth+'/'+card.ExpirationYear"></span>
+                            </td>
+                            <td class="provider-type">
+                                <div class="credit-card-provider-type small" ng-class="card.PlatformType"></div>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-xs btn-success" ng-disabled="card.DefaultCard" ng-click="makeDefault(card)"><i class="material-icons">offline_pin</i>Default</button>
+                                <button class="btn btn-xs btn-danger" ng-click="deleteCard(card.Id)"><i class="material-icons">delete</i>Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-sm-8 col-xs-8">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="">Client</label>
+                    <ui-select ng-model="filterOptions.ClientId" theme="selectize" ng-disabled="false" ng-change="filterItems($select.selected)">
+                        <ui-select-match style="padding:4px" allow-clear="true" placeholder="Select..">{{$select.selected.Name}}</ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in clients | filter: $select.search">
+                            <div ng-bind-html="item.Name | highlight: $select.search"></div>
+                            <div ng-bind-html="item.Description | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-xs-4 text-right pt5">
+        <a class="btn btn-primary btn-xs show-hide-score" ng-if="accessors.Score" ng-click="toggleScore()">
+            <i class="material-icons">av_timer</i>Toggle Scores
+        </a>
+    </div>
+</div>
+<card ng-repeat="item in items |limitTo:displayLimit" showscore="{{showScore}}"></card>
+<br class="clearfix" ng-show="items.length > 0" />
+<div ng-if="items.length === 0">
+    No Items Added Yet.
+</div>
+<br class="clearfix" />

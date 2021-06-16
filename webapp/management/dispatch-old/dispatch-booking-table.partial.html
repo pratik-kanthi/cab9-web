@@ -1,0 +1,39 @@
+﻿<table class="table table-bordered table-condensed">
+    <thead>
+        <tr>
+            <th style="width:110px">Date</th>
+            <th style="width:30%">From / To</th>
+            <th style="width:20%">Client / Passenger</th>
+            <th style="width:20%">Driver / Vehicle</th>
+            <th style="width:20%">Status</th>
+            <th style="width:48px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="b in bookings | orderBy:'-BookedDateTime'">
+            <td><b>{{ b.BookedDateTime | companyDate:'HH:mm'}}</b><br /><span class="text-muted">{{ b.BookedDateTime | companyDate:'DD/MM/YYYY' }}</span></td>
+            <td>{{ b._FromSummary }}<br /><span ng-if="b.AsDirected" class="text-muted">As Directed</span><span ng-if="!b.AsDirected" class="text-muted">{{ b._ToSummary }}</span></td>
+            <td>{{ b._ClientName }}<br /><span class="text-muted">{{ b._LeadPassengerName }}</span></td>
+            <td>
+                <div ng-if="b.DriverId">{{ b._DriverSummary}}<br /><span class="text-muted">{{ b._VehicleReg }}</span></div>
+                <div ng-if="!b.DriverId"><a ng-click="openOfferModel(b)" class="btn btn-default">Offer To Driver</a></div>
+            </td>
+            <td>
+                <div ng-if="b.$offer">
+                    <span class="label label-default" ng-if="b.$offer.ReadTime == null && b.$offer.Accepted == null">Unread</span>
+                    <span class="label label-info" ng-if="b.$offer.ReadTime && b.$offer.Accepted === null">Read</span>
+                    <span class="label label-success" ng-if="b.$offer.ReadTime && b.$offer.Accepted === true">Assigned</span>
+                    <span class="label label-danger" ng-if="b.$offer.ReadTime && b.$offer.Accepted === false">Rejected</span>
+                </div>
+                <br />
+                <span class="label label-info">{{b.BookingStatus}}</span>
+                <!--{{b.$offer}}-->
+                <!--<span class="label label-info">On Route</span><br /><span class="text-muted">18 mins to pickup</span>-->
+            </td>
+            <td>
+                <a class="icon icon-eye" ng-show="b.$marker" ng-click="onSelect(b, b.Driver)"></a><br />
+                <a class="icon icon-window" ui-sref="root.bookings.viewer({Id: b.Id})"></a>
+            </td>
+        </tr>
+    </tbody>
+</table>

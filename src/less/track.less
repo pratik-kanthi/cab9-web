@@ -1,0 +1,422 @@
+#track {
+    .allcorners();
+    position: fixed;
+    #loading,#not-found {
+        .allcorners();
+        position: fixed;
+        z-index: 3;
+        background-color: #fff;
+        padding-top: 80px;
+        > img {
+            display: block;
+            .center-block();
+            width: 64px;
+        }
+        h6 {
+            text-align: center;
+            color: @brand-primary;
+            font-weight: 400;
+            margin-top: 16px;
+        }
+    }
+    #not-found {
+        display: none;
+    }
+    #map-div {
+        .allcorners();
+        z-index: 1;
+    }
+    .booking-info {
+        .allcorners();
+        z-index: 2;
+        position: relative;
+        .company-info {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 64px;
+            background-color: #f8f8f8;
+            //.shadow();
+            border-bottom: 1px solid #ccc;
+            padding: 12px;
+            line-height: 64px;
+            img.company-logo {
+                float: left;
+                width: 40px;
+                height: 40px;
+                .border-radius(20px);
+                box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.38);
+            }
+            h4.company-name {
+                float: left;
+                font-size: 18px;
+                text-transform: capitalize;
+                padding-left: 16px;
+                line-height: 40px;
+                font-weight: 600;
+                margin: 0;
+                color: @brand-primary;
+            }
+            .status {
+                float: right;
+                color: #fff;
+                padding: 0 12px;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                .border-radius(3px);
+                background-color: @orange;
+                &.OnRoute {
+                    background-color: @brand-primary;
+                }
+                &.Arrived {
+                    background-color: @green;
+                }
+                &.InProgress {
+                    background-color: @sky;
+                }
+                &.OpenToBid {
+                    background-color: @yellow;
+                }
+                &.Completed {
+                    background-color: @blue;
+                }
+            }
+        }
+        .details {
+            position: fixed;
+            .border-radius(4px);
+            overflow: hidden;
+            left: 32px;
+            bottom: 32px;
+            width: 30%;
+            min-width: 432px;
+            line-height: 18px;
+            .shadow();
+            .transition(height 400ms);
+            .animate(1, slideInUp);
+            &.min {
+                height: 38px;
+                overflow: hidden;
+                .animate(1, slideInDown);
+            }
+            .header {
+                background: @brand-primary;
+                padding: 4px 12px;
+                color: #fff;
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 30px;
+                .border-radius(4px 4px 0 0);
+                a.min-max {
+                    float: right;
+                    i.material-icons {
+                        color: #fff !important;
+                        line-height: 30px;
+                    }
+                }
+            }
+            .driver-vehicle-eta {
+                padding: 16px 16px 8px;
+                border-bottom: 1px solid #ddd;
+                background-color: #f8f8f8;
+                .driver-image {
+                    width: 80px;
+                    height: 80px;
+                    .border-radius(40px);
+                    float: left;
+                    margin-right: 16px;
+                    margin-top: -6px;
+                    margin-bottom: 3px;
+                    background-size: cover;
+                    background-position: center;
+                }
+                .driver-name {
+                    color: @brand-primary;
+                    font-size: 16px;
+                }
+                .vehicle-type {
+                    colour: @grey;
+                }
+                .vehicle-desc {
+                    font-size: 12px;
+                    color: @grey;
+                }
+                .vehicle-reg {
+                    margin-top: 4px;
+                    background-color: @yellow;
+                    line-height: 22px;
+                    padding: 0 8px;
+                    float: left;
+                    display: block;
+                    .border-radius(2px);
+                    margin-right: 8px;
+                }
+                .vehicle-type {
+                    margin-top: 4px;
+                    line-height: 22px;
+                    padding: 0 8px;
+                    float: left;
+                    display: block;
+                    .border-radius(2px);
+                    background-color: @purple;
+                    max-width: 100px;
+                    color: #fff;
+                    &.Passenger {}
+                    &.Black.Taxi {
+                        background-color: white !important;
+                        color: black !important;
+                    }
+                    &.Estate, &.estate {
+                        background-color: @dark-blue !important;
+                        color: #fff !important;
+                    }
+                    &.Executive {
+                        background-color: @black;
+                    }
+                    &.Chauffeur {
+                        background-color: gold;
+                        color: #000;
+                    }
+                    &.EcoCar {
+                        background-color: @green;
+                    }
+                    &.MPV {
+                        background-color: #26ae90;
+                        &.Premium {
+                            background-color: gold !important;
+                            color: #000 !important;
+                        }
+                    }
+                }
+                #eta {
+                    .wrapper {
+                        &.complete {
+                            background: @green;
+                            text-align: center;
+                            .eta-mins {
+                                display: none;
+                            }
+                            i.material-icons {
+                                display: inline;
+                                font-size: 48px;
+                                line-height: 80px;
+                                color: #fff;
+                            }
+                        }
+                        height: 80px;
+                        width: 80px;
+                        background: @brand-primary;
+                        margin-top: -6px;
+                        border-radius: 50%;
+                        i.material-icons {
+                            display: none;
+                        }
+                        .eta-mins {
+                            text-align: center;
+                            .as-directed {
+                                line-height: 18px;
+                                padding-top: 18px;
+                                font-size: 12px !important;
+                            }
+                            span {
+                                color: #fff;
+                                font-weight: 300;
+                                font-size: 36px;
+                                padding-top: 10px;
+                                display: block;
+                                line-height: 36px;
+                                &.as-directed {
+                                    font-size: 12px;
+                                    text-transform: uppercase;
+                                    font-weight: 600;
+                                }
+                            }
+                            small {
+                                color: #ddd;
+                                font-size: 16px;
+                            }
+                            .loader {
+                                padding-top: 24px;
+                                text-align: center;
+                            }
+                            .loader span {
+                                display: inline-block;
+                                vertical-align: middle;
+                                width: 8px;
+                                height: 8px;
+                                margin: 10px auto;
+                                background: #fff;
+                                border-radius: 50px;
+                                -webkit-animation: loader 0.8s infinite alternate;
+                                -moz-animation: loader 0.8s infinite alternate;
+                            }
+                            .loader span:nth-of-type(2) {
+                                -webkit-animation-delay: 0.3s;
+                                -moz-animation-delay: 0.3s;
+                            }
+                            .loader span:nth-of-type(3) {
+                                -webkit-animation-delay: 0.6s;
+                                -moz-animation-delay: 0.6s;
+                            }
+                        }
+                        .circle {
+                            height: 74px;
+                            width: 74px;
+                            position: absolute;
+                            -webkit-animation-iteration-count: infinite;
+                            -webkit-animation-timing-function: linear;
+                            -webkit-animation-name: orbit;
+                            -webkit-animation-duration: 5s;
+                            border: 1px solid #fff;
+                            border-radius: 50%;
+                            top: -3px;
+                            left: 18px;
+                            .dot {
+                                position: absolute;
+                                top: -2px;
+                                left: 9px;
+                                width: 15px;
+                                height: 15px;
+                                background: #fff;
+                                border-radius: 50%;
+                                border: 4px solid @brand-primary;
+                            }
+                        }
+                    }
+                }
+            }
+            .pickup-dropoff {
+                background-color: #eee;
+                color: @grey;
+                .stop {
+                    padding: 4px 8px 6px;
+                    border-bottom: 1px solid #ddd;
+                }
+                small {
+                    font-weight: 600;
+                    color: @brand-primary;
+                }
+                h6 {
+                    font-size: 14px;
+                    margin: 0;
+                }
+            }
+            .actions {
+                background-color: #f7f7f7;
+                color: @grey;
+                padding: 8px;
+                .contact {
+                    i.material-icons {
+                        float: left;
+                        color: @brand-primary;
+                        margin-right: 8px;
+                        margin-top: 2px;
+                        font-size: 24px;
+                        margin-left: 4px;
+                    }
+                    small {
+                        font-weight: 600;
+                        color: @brand-primary;
+                        display: block;
+                        line-height: 12px;
+                    }
+                    span {
+                        display: block;
+                        font-weight: 600;
+                    }
+                    &.driver {
+                        i.material-icons,small {
+                            color: @green;
+                        }
+                    }
+                    &.control {
+                        i.material-icons,small {
+                            color: @sky;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @media(max-width: 767px) {
+        .booking-info {
+            .company-info {
+                height: 48px;
+                padding: 8px;
+                img.company-logo {
+                    width: 32px;
+                    height: 32px;
+                }
+                h4.company-name {
+                    font-size: 16px;
+                    line-height: 32px;
+                    padding-left: 6px;
+                    width: 130px;
+                    .text-ellipsis();
+                }
+                .status {
+                    font-size: 12px;
+                    height: 28px;
+                    line-height: 28px;
+                    margin-top: 2px;
+                    margin-right: 2px;
+                }
+            }
+            .details {
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                min-width: inherit;
+                .border-radius(0);
+                &.min {
+                    height: 32px;
+                    overflow: hidden;
+                }
+                .header {
+                    .border-radius(0);
+                    padding: 4px 4px 4px 8px;
+                    font-size: 14px;
+                    line-height: 24px;
+                    i.material-icons {
+                        line-height: 24px !important;
+                    }
+                }
+                .driver-vehicle-eta {
+                    padding: 10px 12px 8px;
+                    .driver-image {
+                        width: 56px;
+                        height: 56px;
+                        .border-radius(28px);
+                        margin-top: -3px;
+                        margin-right: 8px;
+                    }
+                    .driver-name {
+                        font-size: 14px;
+                    }
+                    .vehicle-desc {
+                        font-size: 12px;
+                        line-height: 9px;
+                    }
+                }
+                #eta {
+                    .wrapper {
+                        float: right;
+                        margin-top: 0 !important;
+                    }
+                    .circle {
+                        left: inherit !important;
+                        right: 18px;
+                        top:3px !important;
+                    }
+                }
+                .vehicle-reg,
+                .vehicle-type {
+                    font-size: 11px;
+                }
+            }
+        }
+    }
+}

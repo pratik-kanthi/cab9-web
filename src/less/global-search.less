@@ -1,0 +1,162 @@
+﻿.quick-navigate {
+    .background-wrapper {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow-y: auto;
+        z-index: 1000000000;
+        background: rgba(0,0,0,0.6);
+    }
+
+    .search-box {
+        position: absolute;
+        width: 720px;
+        height: 50px;
+        top: 10%;
+        margin: auto;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: white;
+        border-radius: 5px;
+        overflow: hidden;
+
+        .search-area {
+            > i {
+                padding: 20px 10px;
+                font-size: 45px;
+                line-height: 30px;
+                color: @brand-secondary;
+            }
+
+            input {
+                line-height: 30px;
+                font-size: 30px;
+                height: 70px;
+                position: relative;
+                top: -12px;
+                border: 0;
+                background: 0;
+                width: 597px;
+                outline: 0;
+            }
+
+            a.remove i {
+                padding: 20px 10px;
+                font-size: 30px;
+                line-height: 30px;
+                position: relative;
+                top: -7px;
+            }
+        }
+
+        hr {
+            margin-top: -15px;
+            margin-bottom: 0;
+        }
+
+        .results-area {
+            height: 324px;
+
+            .results-list {
+                padding-right: 0;
+
+                .list-group {
+                    height: 324px;
+                    overflow-y: auto;
+
+                    .list-group-item {
+                        cursor: pointer;
+                        font-size: 12px;
+                        border: 0;
+                        border: 1px solid #eee !important;
+                        padding: 4px 14px;
+
+                        a {
+                            color: @brand-secondary;
+                            font-weight: 600;
+                        }
+
+                        &.group-header {
+                            border-top-left-radius: 0;
+                            border-top-right-radius: 0;
+                            border: 0 !important;
+                            padding: 0px 8px;
+                            font-size: 11px;
+                            font-weight: 400 !important;
+                            color: @base !important;
+                            text-transform: uppercase;
+                            background: @silver;
+                            color: white;
+
+                            .badge {
+                                background-color: transparent;
+                                padding: 0 !important;
+                                line-height: 19px;
+                                color: @base !important
+                            }
+                        }
+                    }
+                }
+            }
+
+            .selected-result {
+                .result-summary {
+                    //border-top: 1px solid lightgray;
+                    .img {
+                        width: 66px;
+                        height: 66px;
+                    }
+
+                    .result-title {
+                        height: 24px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        font-size: 18px;
+                        color: #385978;
+                    }
+
+                    .score {
+                        padding-top: 12px;
+
+                        b {
+                            font-size: 32px;
+                            padding: 10px;
+                        }
+                    }
+                }
+
+                .result-details {
+                    border-top: 1px solid #eee;
+                    line-height: 29px;
+                    padding-top: 8px;
+
+                    b {
+                        color: #385978;
+                    }
+
+                    .result-info {
+                        color: #385978;
+
+                        span {
+                            color: @light-grey;
+                        }
+
+                        div.address-container {
+                            line-height: 18px;
+                        }
+                    }
+
+                    .result-navigation {
+                        a b {
+                            color: @brand-secondary;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

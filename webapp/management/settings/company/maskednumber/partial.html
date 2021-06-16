@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <i class="material-icons">description</i> Masked Number</h3>
+    </div>
+    <div class="panel-body">
+        <div id="settings-maskednumber">
+            <div form-for="maskedNumberProviderDetail" schema="MaskedNumberProviderDetail" mode="{{viewMode}}">
+                <div class="mt10 mb10">
+                    <button class="btn btn-primary" ng-show="viewMode == 'VIEW' && !existing" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.maskednumber','W')">
+                                <i class="material-icons">create</i>Add</button>
+                    <button class="btn btn-primary" ng-show="viewMode == 'VIEW' && existing" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.maskednumber','W')">
+                        <i class="material-icons">create</i>Edit</button>
+                        <button class="btn btn-danger" ng-show="viewMode == 'VIEW' && existing" ng-click="delete()" ng-if="PERMISSIONS.test('settings.maskednumber','D')">
+                        <i class="material-icons">delete</i>Delete</button>
+                    <button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()">
+                        <i class="material-icons">save</i>Save</button>
+                    <button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()">
+                        <i class="material-icons">undo</i>Cancel</button>
+                </div>
+                <div class="row mt20">
+                    <div class="col-md-5 col-sm-6">
+                        <img src="/includes/images/twilio-logo-red.png" style="width:200px" />
+                        <br />
+                        <br />
+                        <small>Cab9 uses Twilio Proxy to provide Masked Number Functionality. With Twilio Proxy create conversations between customers and drivers without revealing personal phone numbers. Once you sign up for a Twilio account, please activate Twilio Proxy and create a service. Also purchase a phone number of your choice and enter the details below:</small>
+                    </div>
+                    <div class="col-md-6 col-md-offset-1 col-sm-6">
+                        <div class="form-group">
+                        <div>
+                            <h3 class="section-title">Twilio Settings</h3>
+                            <div field-for="AccountSID" display="Account SID"></div>
+                            <div field-for="AuthToken" display="Auth Token"></div>
+                            <div field-for="ServiceSID" display="Service SID"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

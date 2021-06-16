@@ -1,0 +1,66 @@
+<div class="grid-item weather">
+    <div class="wrapper">
+        <h3 class="city-name" ng-bind="$root.COMPANY.TownCity"></h3>
+        <div class="today">
+            <div class="row">
+                <div class="col-xs-6">
+                    <canvas id="canvas-icon-today" width="64" height="64" />
+                </div>
+                <div class="col-xs-6 text-center pt20">
+                    <h3 id="weather-today" ng-bind="weatherWithFormat(weather.currently.temperature)"></h3>
+                    <p id="weather-text-today" ng-bind="weather.currently.summary"></p>
+                </div>
+            </div>
+            <div class="row max-min">
+                <div class="col-xs-6">
+                    <strong>MIN: </strong><span ng-bind="weatherWithFormat(weather.daily.data[0].temperatureMin)"></span>
+                </div>
+                <div class="col-xs-6">
+                    <strong>MAX: </strong><span ng-bind="weatherWithFormat(weather.daily.data[0].temperatureMax)"></span>
+                </div>
+            </div>
+        </div>
+        <div class="next-days">
+            <div class="row">
+                <div class="col-xs-4">Tomorrow</div>
+                <div class="col-xs-2">
+                    <canvas id="canvas-icon-tomorrow" width="24" height="24" />
+                </div>
+                <div class="col-xs-3"><span ng-bind="weatherWithFormat(weather.daily.data[2].temperatureMax)"></span></div>
+                <div class="col-xs-3"><span ng-bind="weatherWithFormat(weather.daily.data[2].temperatureMin)"></span></div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">Day After</div>
+                <div class="col-xs-2">
+                    <canvas id="canvas-icon-dayafter" width="24" height="24" />
+                </div>
+                <div class="col-xs-3"><span ng-bind="weatherWithFormat(weather.daily.data[3].temperatureMax)"></span></div>
+                <div class="col-xs-3"><span ng-bind="weatherWithFormat(weather.daily.data[3].temperatureMin)"></span></div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4">{{weather.daily.data[4]._DateTime}}</div>
+                <div class="col-xs-2">
+                    <canvas id="canvas-icon-dayafter1" width="24" height="24" />
+                </div>
+                <div class="col-xs-3"><span ng-bind="weatherWithFormat(weather.daily.data[4].temperatureMax)"></span></div>
+                <div class="col-xs-3"><span ng-bind="weatherWithFormat(weather.daily.data[4].temperatureMin)"></span></div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-xs-3 today">
+                
+                <br />
+                
+            </div>
+            <div class="col-xs-2 visible-lg">
+                <canvas id="canvas-icon-tomorrow" width="40" height="40" />
+                <br />
+                <small id="weather-tomorrow"></small>
+            </div>
+            <div class="col-xs-2 visible-lg">
+                <canvas id="canvas-icon-dayafter" width="40" height="40" />
+                <br />
+                <small id="weather-dayafter"></small>
+            </div>
+        </div> -->
+    </div>

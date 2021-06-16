@@ -1,0 +1,156 @@
+<div form-for="driver" schema="Driver" mode="{{displayMode}}">
+    <div class="row">
+        <div class="col-xs-12" style="padding: 8px 15px;">
+            <div ng-if="displayMode === 'VIEW'">
+                <button class="btn btn-warning" ng-click="startEditing()" ng-if="PERMISSIONS.test('drivers.viewer','W')"><i class="material-icons">create</i>Edit</button>
+            </div>
+            <div ng-if="displayMode === 'EDIT' || displayMode === 'CREATE'">
+                <button class="btn btn-success" ng-click="saveEdits()" ng-disabled="formFor.form.$invalid || saving">
+                    <span ng-show="!saving"><i class="material-icons">save</i> Submit</span>
+                    <span ng-show="saving"><i class="material-icons animated spin">refresh</i> Saving</span>
+
+                </button>
+                <button class="btn btn-warning mr30" ng-click="cancelEditing()"> <i class="material-icons">undo</i> Cancel</button>
+                <button class="btn btn-primary" ng-click="chooseImage()" ng-show="displayMode=='EDIT'">
+                    <i class="material-icons">add_a_photo</i>Upload Photo
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <h3 class="section-title">Basic Details</h3>
+            <div class="row" ng-show="displayMode === 'EDIT'">
+                <div class="col-xs-12">
+                    <div field-for="Firstname"></div>
+                    <div field-for="Surname"></div>
+                </div>
+            </div>
+            <div ng-show="displayMode === 'VIEW' || displayMode === 'CREATE'">
+                <div field-for="Firstname"></div>
+                <div field-for="Surname"></div>
+            </div>
+            <div field-for="Callsign"></div>
+            <div field-for="SupplierNo"></div>
+            <div field-for="SubContractor"></div>
+            <div field-for="DriverTypeId" select-from="driverTypes" display="Driver Type"></div>
+            <div field-for="Nationality"></div>
+            <div field-for="DateOfBirth" display="Date Of Birth"></div>
+            <div field-for="CurrentVehicleId" select-from="vehicles" display="Current Vehicle"></div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <h3 class="section-title">Contact Details</h3>
+            <div field-for="Phone"></div>
+            <div field-for="Mobile"></div>
+            <div field-for="Fax"></div>
+            <div field-for="Email"></div>
+            <div class="form-group" ng-if="displayMode === 'VIEW' && driver._FullAddress">
+                <label class="control-label">Full Address</label>
+                <p class="form-control-static pre">{{driver._FullAddress}}</p>
+            </div>
+            <div ng-show="displayMode === 'EDIT' || displayMode === 'CREATE'">
+                <address-populate object="driver"></address-populate>
+                <div field-for="Address1"></div>
+                <div field-for="Address2"></div>
+                <div field-for="Area"></div>
+                <div field-for="TownCity"></div>
+                <div field-for="Postcode"></div>
+                <div field-for="County"></div>
+                <div field-for="Country"></div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div field-for="Latitude"></div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div field-for="Longitude"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <h3 class="section-title">Other Details</h3>
+            <div class="row mb20">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">VAT Registered</label>
+                        <div class="mt5">
+                            <input class="check" type="checkbox" id="VatCheck" ng-disabled="displayMode === 'VIEW'" ng-model="driver.VATRegistered" />
+                            <label class="check-label" for="VatCheck"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div field-for="VATNumber"></div>
+                </div>
+            </div>
+            <div class="row mb20">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">Active</label>
+                        <div class="mt5">
+                            <input class="check" type="checkbox" id="ActiveCheck" ng-disabled="displayMode === 'VIEW'" ng-model="driver.Active" />
+                            <label class="check-label" for="ActiveCheck"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">VIP</label>
+                        <div class="mt5">
+                            <input class="check" type="checkbox" id="VIPCheck" ng-disabled="displayMode === 'VIEW'" ng-model="driver.VIP" />
+                            <label class="check-label" for="VIPCheck"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb20">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label class="control-label">Auto Dispatch</label>
+                        <div class="mt5">
+                            <input class="check" type="checkbox" id="AutoDispatchCheck" ng-disabled="displayMode === 'VIEW'" ng-model="driver.AutoDispatch" />
+                            <label class="check-label" for="AutoDispatchCheck"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div field-for="InactiveReason"></div>
+            <div field-for="StartDate"></div>
+            <div ng-show="displayMode === 'EDIT' || displayMode === 'CREATE' || driver.EndDate">
+                <div field-for="EndDate"></div>
+            </div>
+            <div field-for="DefaultDriverPaymentModelId" select-from="paymentModels" display="Default Payment Model"></div>
+            <div field-for="MinimumInvoiceAmount"></div>
+            <div field-for="DriverStatus"></div>
+            <h3 class="section-title">Driver Tags</h3>
+            <small class="help-block" ng-show="displayMode !== 'VIEW'">
+                Please click on the box to add driver tags.
+            </small>
+            <small class="text-muted" ng-show="driver.Tags.length == 0 && displayMode == 'VIEW'">No Tags Selected</small>
+            <ui-select multiple ng-model="driver.Tags" theme="select2" ng-disabled="displayMode === 'VIEW'" class="tags-edit">
+                <ui-select-match placeholder="Select Driver Tags">
+                    {{$item.Name}}
+                </ui-select-match>
+                <ui-select-choices repeat="item as item in driverTags | filter: alreadySelected | filter: $select.search">
+                    <div>
+                        <strong ng-bind-html="item.Name | highlight: $select.search"></strong>
+                    </div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </div>
+    <div class="mt20">
+        <h3 class="section-title">Bank Details</h3>
+        <div class="row">
+            <div class="col-sm-4">
+                <div field-for="BankName"></div>
+            </div>
+            <div class="col-sm-4">
+                <div field-for="BankSortCode"></div>
+            </div>
+            <div class="col-sm-4">
+                <div field-for="BankAC"></div>
+            </div>
+        </div>
+    </div>
+</div>

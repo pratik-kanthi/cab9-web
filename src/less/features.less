@@ -1,0 +1,27 @@
+.features-wrapper {
+	.feature {
+		margin-bottom: 10px;
+		padding:10px;
+		background-color: @lighter-grey;
+		border-left: 5px solid @grey;
+		.title {
+			font-size: 16px;
+			font-weight: 600;
+			color: @brand-primary;
+			i {
+				margin-right: 10px;
+				font-size: 18px;
+			}
+		}
+		.description {
+			color: @grey;
+			font-size: 12px;
+		}
+		&.bug {
+			background-color: mix(@red, @lighter-grey, 10%);
+		}
+		&.release {
+			background-color: mix(@green, @lighter-grey, 10%);
+		}
+	}
+}

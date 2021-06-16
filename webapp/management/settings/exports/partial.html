@@ -1,0 +1,41 @@
+<h2 class="page-title">
+    <i class="material-icons">settings</i>Exports
+</h2>
+<div class="row">
+    <div class="col-sm-3">
+        <tabs data="tabDefs" vertical="true" type="pills"></tabs>
+    </div>
+    <div class="col-sm-9">
+        <div ng-show="!report.preview">
+            <ui-view class="tab-content"></ui-view>
+        </div>
+        <div class="panel panel-default" ng-if="report.preview">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="material-icons">description</i> Preview Results</h3>
+                <button class="btn btn-warning pull-right" ng-click="report.preview = null;"><i class="material-icons">replay</i> Go Back</button>
+            </div>
+            <div class="panel-body">
+                <p>Preview the results and if you are happy with them download them in CSV form below</p>
+                <table-for datasource="report.preview" class="table table-condensed table-hover" schema="{{report.schema}}" filtering="searchTerm" grouping="grouping">
+                    <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+                    <table-heading sorting="true">
+                        <!--<table-cell column=""></table-cell>--> <!-- for overriding -->
+                    </table-heading>
+                    <table-data-rows>
+                        <table-selection></table-selection>
+                        <!--<table-cell column=""></table-cell>--> <!-- for overriding -->
+                        <!--<table-expand-template></table-expand-template>--> <!-- for expanding -->
+                    </table-data-rows>
+                    <table-footer paging="true">
+
+                    </table-footer>
+                </table-for>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-warning" ng-click="report.preview = null;"><i class="material-icons">replay</i> Go Back</button>
+                <button type="button" class="btn btn-success" ng-disabled="formFor.form.$invalid" ng-click="downloadReport()"><i class="material-icons">play_for_work</i> Download Report</button>
+            </div>
+        </div>
+        <!--<pre>{{report | json}}</pre>-->
+    </div>
+</div>

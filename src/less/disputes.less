@@ -1,0 +1,167 @@
+#disputes.module {
+	h3 {
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+	.open-disputes-wrapper {
+		.open-dispute {
+			width: 350px;
+			height: 370px;
+			border:1px solid #ddd;
+			border-top: 2px solid orange;
+			padding:15px;
+			font-size: 12px;
+			color: #aaa;
+			background: #fff;
+			float: left;
+			margin-right: 15px;
+			overflow: hidden;
+			h4 {
+				margin:0 0 10px 0;
+				font-weight: 600;
+				font-size: 18px;
+				color: @brand-secondary;
+			}
+			h5 {
+				margin:0 0 10px 0;
+				font-weight: 600;
+				font-size: 14px;
+				color: @brand-primary;
+			}
+			small {
+				font-size: 12px;
+				color: #aaa;
+				line-height: 20px !important;
+				display: block;
+				margin-bottom: 10px;
+				height: 60px;
+			}
+			.id,.date {
+				font-weight: 600;
+				color: #000;
+			}
+			.journey {
+				background-image: url('/includes/images/journey.png');
+				background-repeat: no-repeat;
+				background-position: left;
+				background-size: 12px;
+				padding-left: 20px;
+				line-height: 26px;
+				margin-bottom: 20px;
+				strong {
+					color: #000;
+				}
+			}
+			.driver,.client {
+				margin-bottom: 10px;
+				img {
+					width: 50px;
+					float: left;
+					margin-right:10px;
+					.border-radius(25px);
+					.box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+				}
+				strong {
+					display: block !important;
+					margin-bottom: 3px;
+					margin-top: 3px;
+					color: #000;
+					line-height: 32px;
+
+				}
+				strong, span {
+					.text-ellipsis();
+					line-height: 20px;
+				}
+			}
+		}
+	}
+}
+#disputes-viewer.module {
+
+	h2 {
+		color: @brand-secondary;
+		font-size: 22px;
+		margin-top: 0;
+	}
+	p {
+		color: #777;
+		margin-bottom: 20px;
+	}
+	.booking-details {
+		h6 {
+			color: @brand-secondary;
+			font-size: 16px;
+			margin-bottom: 5px;
+		}
+		.journey {
+			line-height: 30px;
+			margin-bottom: 30px;
+			strong {
+				color: @brand-primary;
+			}		
+		}
+		.driver,.client {
+			margin-bottom: 10px;
+			img {
+				width: 50px;
+				float: left;
+				margin-right:10px;
+				.border-radius(25px);
+			}
+			strong {
+				display: block !important;
+				margin-bottom: 3px;
+				margin-top: 3px;
+				color: #000;
+				line-height: 32px;
+
+			}
+			strong, span {
+				.text-ellipsis();
+				line-height: 20px;
+			}
+		}
+		.vehicle {
+			padding-top: 1px;
+			.registration {
+				background: #fdca4d;
+			   	font-weight: 900;
+			   	display: block;
+			   	max-width: 150px;
+			   	padding: 8px 18px;
+			   	text-align: center;
+			   	line-height: 25px;
+			   	border-radius:4px;
+			   	color: #000 !important;
+			}
+		}
+	}
+	.conversations {
+		.panel-footer {
+			height: 100px;
+			padding:0;
+			textarea {
+				border:0;
+				border-bottom: 1px solid #ddd;
+				width: 100%;
+				outline: 0;
+				padding:5px 10px;
+				margin-bottom: 2px;
+				font-size: 12px;
+				height: 60px;
+				font-weight: 600;
+				color: @brand-grey;
+			}
+		}
+		.panel-body {
+			padding: 0;
+			height: calc(~"100% - 100px - 48px");
+			.conversation {
+				background: #fff;
+				height: 100%;
+			}
+		}
+	}
+}

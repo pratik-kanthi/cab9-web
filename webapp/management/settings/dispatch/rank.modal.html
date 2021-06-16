@@ -1,0 +1,69 @@
+<div form-for="item" schema="DispatchOverrides">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">close</i></button>
+        <h3 class="modal-title">Dispatch Rank</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label" for="ClientIdInput">Rank</label>
+                    <div class="form-edit">
+                        <ui-select class="edit" ng-model="item.ZoneId" theme="selectize" name="ClientInput" tabindex="1" ng-model-options="{ debounce: 100 }">
+                            <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                <div class="select-text">{{$select.selected.Name}}</div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="item.Id as item in zones | filter: $select.search">
+                                <div class="select-text-option">
+                                    {{item.Name}}<br ng-show="item.Description" />
+                                    <small class="text-muted" ng-show="::item.Description">{{item.Description}}</small>
+                                </div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="control-label">Days</label>
+                    <div class="row days">
+                        <div class="col-xs-3 day" ng-repeat="day in week">
+                            <div class="checkbox" style="display:inline-block;margin-bottom:0;margin-right:10px;">
+                                <input id="filter-{{day.day}}" name="{{day.day}}" type="checkbox" value="{{day.value}}" ng-model="day.selected" />
+                                <label for="filter-{{day.day}}"></label>
+                            </div>
+                            {{day.full}}
+                        </div>
+                        <br class="clearfix" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-3">
+                <div field-for="$startTime"></div>
+            </div>
+            <div class="col-xs-3">
+                <div field-for="$endTime"></div>
+            </div>
+            <div class="col-xs-6"></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col-xs-6 text-left">
+            </div>
+            <div class="col-xs-6 text-right">
+                <button class="btn btn-success btn-fix" ng-click="save()">Save</button>
+                <button class="btn btn-warning btn-fix" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

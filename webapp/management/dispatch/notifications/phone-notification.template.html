@@ -1,0 +1,17 @@
+<div class="pn-container">
+	<div class="close-box" ng-click="removeNotification()">
+		<i class="material-icons">close</i>
+	</div>
+	<div class="caller-info">
+		<i class="material-icons icon">call_received</i>
+		<h4 class="pn-type">{{callData.label}}</h4>
+		<h2 class="pn-caller">{{callData.value}}</h2>
+	</div>
+	<div class="existing-booking" ng-if="callData.existingBooking">
+		Booking <strong ng-click="chooseBookingFromCall(callData.existingBooking.LocalId)">{{callData.existingBooking.LocalId}}</strong> at 
+		{{callData.existingBooking.BookedDateTime | date:'HH:mm'}} is {{callData.existingBooking.BookingStatus}}.
+	</div>
+	<div class="actions answered" ng-if="callData.status == 'ANSWERED'">
+		<button ng-click="handleNewBooking(callData)">New Booking</button>
+	</div>
+</div>

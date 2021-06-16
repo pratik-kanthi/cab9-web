@@ -1,0 +1,88 @@
+<!-- <div class="grid-item double abc">
+    <div class="wrapper">
+        <div class="left">
+            <h2><small>Welcome </small><br class="hidden-xs" /><span ng-bind="USER.Name"></span></h2>
+            <div class="quick-stat">
+                <div class="number">
+                    <i class="material-icons">person_pin</i><span ng-bind="driverCount"></span>
+                </div>
+                <div class="description">Registered Drivers</div>
+            </div>
+            <div class="quick-stat">
+                <div class="number">
+                    <i class="material-icons">local_taxi</i><span ng-bind="vehicleCount"></span>
+                </div>
+                <div class="description">Registered Vehicles</div>
+            </div>
+        </div>
+        <div class="right" promise-shadow promise="deferred.promise">
+            <flot dataset="bookingGraph.data" options="bookingGraph.options"></flot>
+        </div>
+    </div>
+</div> -->
+<div class="grid-item intro-panel">
+    <div class="wrapper">
+        <h2><small>Hello, </small><span ng-bind="USER.Name+'!'"></span></h2>
+        <div class="graph" promise-shadow promise="deferred1.promise" style="width:61%;">
+            <h4>Showing bookings from <span>{{filters.from|date}}</span> to <span>{{filters.to|date}}</span></h4>
+            <flot dataset="bookingGraph.data" options="bookingGraph.options"></flot>
+        </div>
+        <div class="stats">
+            <div class="number-stats-wrapper" promise="deferred2.promise">
+                <div class="number-stats">
+                    <div class="stats-wrapper">
+                        <div class="icon brand-secondary-bg">
+                        </div>
+                        <div class="data">
+                            <small>Bookings Count</small>
+                            <i class="material-icons">assignment</i><strong class="brand-secondary" ng-bind="totalBookings | number:0"></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-stats">
+                    <div class="stats-wrapper">
+                        <div class="icon sky-bg">
+                        </div>
+                        <div class="data">
+                            <small>Unique Drivers</small>
+                            <i class="material-icons">person_pin</i><strong class="sky" ng-bind="uniqueDrivers | number:0"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="number-stats-wrapper" promise="deferred2.promise">
+                <div class="number-stats" ng-if="$root.CLIENT.ShowPriceInPortal">
+                    <div class="stats-wrapper">
+                        <div class="icon green-bg">
+                        </div>
+                        <div class="data">
+                            <small>Bookings Value</small>
+                            <i class="material-icons">account_balance</i><strong class="green" ng-bind="'£' + (totalAmount | AbbrValue)"></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-stats" ng-if="!$root.CLIENT.ShowPriceInPortal">
+                    <div class="stats-wrapper">
+                        <div class="icon green-bg">
+                        </div>
+                        <div class="data">
+                            <small>Bookings Per/Day</small>
+                            <i class="material-icons">assignment</i><strong class="brand-secondary" ng-bind="bookingsPerDay | number:0"></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-stats">
+                    <div class="stats-wrapper">
+                        <div class="icon orange-bg">
+                        </div>
+                        <div class="data">
+                            <small>Unique Passengers</small>
+                            <i class="material-icons ng-binding">people_outline</i><strong class="orange" ng-bind="uniquePassengers | number:0"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br class="clearfix">
+    </div>
+</div>

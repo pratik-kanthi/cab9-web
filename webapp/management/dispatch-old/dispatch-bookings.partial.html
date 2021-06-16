@@ -1,0 +1,51 @@
+﻿<div ng-mouseover="verticalSlider.show = true" ng-mouseleave="verticalSlider.show = false">
+    <input type="text" class="form-control search-box" ng-model="bookingSearch.$" placeholder="Search anything..." />
+    <div class="status-filter">
+        <div ng-style="{ 'opacity': activeStatus(1) ? '1' : '0.3' }" class="col-xs-4 Incoming" ng-click="toggleBookingStatus(1)">Incoming</div>
+        <div ng-style="{ 'opacity': activeStatus(10) ? '1' : '0.3' }" class="col-xs-4 Allocated" ng-click="toggleBookingStatus(10)">Allocated</div>
+        <div ng-style="{ 'opacity': activeStatus(20) ? '1' : '0.3' }" class="col-xs-4 OnRoute" ng-click="toggleBookingStatus(20)">En-Route</div>
+        <div ng-style="{ 'opacity': activeStatus(40) ? '1' : '0.3' }" class="col-xs-4 InProgress" ng-click="toggleBookingStatus(40, 80, 30)">In Progress</div>
+        <div ng-style="{ 'opacity': activeStatus(100) ? '1' : '0.3' }" class="col-xs-4 Completed" ng-click="toggleBookingStatus(100)">Completed</div>
+        <div ng-style="{ 'opacity': activeStatus(-1) ? '1' : '0.3' }" class="col-xs-4 Cancelled" ng-click="toggleBookingStatus(-1)">Cancelled</div>
+    </div>
+    <div class="booking-time-slider" ng-show="verticalSlider.show && !showHelper">
+        <rzslider rz-slider-model="verticalSlider.value" rz-slider-options="verticalSlider.options"></rzslider>
+    </div>
+    <div class="sidebar-content-wrapper" style="top: 145px;">
+        <div class="booking {{b.BookingStatus}}" ng-repeat="b in bookings | filter:bookingSearch | filter:bookingSearchFn | orderBy:'-$timestamp' track by b.Id" ng-class="(selectedBooking == b)? 'active':''" ng-click="select(b, null)">
+            <div class="content-wrapper">
+                <div class="top">
+                    <div class="id">{{ ::b.LocalId }}<span class="source"> | {{ ::b.BookingSource }}</span></div>
+                    <div class="source"></div>
+                    <div class="time {{b.BookingStatus}}" tooltip="{{ b.BookedDateTime | companyDate:'DD/MM/YYYY HH:mm'}} &#013; Booked {{b.CreationTime | Countdown}}" tooltip-placement="left">{{ b.BookedDateTime | companyDate:'HH:mm'}}</div>
+                </div>
+                <div class="middle">
+                    <div class="location">
+                        <i class="icon-position orange"></i>
+                        <div class="location-summary">{{ b._FromSummary }}</div>
+                        <div class="passenger">
+                            {{ ::b.LeadPassenger._Fullname }}<strong ng-if="b.Client"> from {{ ::b.Client.Name }}</strong>
+                        </div>
+                    </div>
+                    <div class="location" ng-show="selectedBooking == b">
+                        <i class="icon-position brand-primary"></i>
+                        <div class="location-summary">{{ b._ToSummary }}</div>
+                    </div>
+                    <!-- <div class="offer-status {{b.$offer.Status}}" ng-show="b.$offer">{{b.$offer.Status}}</div>
+                    <div class="status {{ b.BookingStatus }}">{{ b.BookingStatus }}</div> -->
+                </div>
+                <div class="bottom">
+                    <div class="driver" ng-show="b.Driver">
+                        <img ng-src="{{b.Driver._ImageUrl}}" alt="" class="profile" /> {{::b.Driver._Fullname}}
+                    </div>
+                    <div class="driver" ng-show="!b.Driver">
+                        <img src="/includes/images/add-icon.png" alt="" class="profile" />
+                        <a href="" ng-click="openOfferModel(b)">Add Driver</a>
+                    </div>
+                    <div class="offer-status {{b.$offer.Status}}" ng-show="b.$offer">{{b.$offer.Status}}</div>
+                    <div class="status {{ b.BookingStatus }}">{{ b.BookingStatus }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,217 @@
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-6 section">
+            <div class="wrapper">
+                <h3 class="section-title">
+                    <i class="material-icons">person_pin</i>Drivers
+                </h3>
+                <div class="list-wrapper">
+                    <div class="search">
+                        <input type="text" id="allocate-search" ng-model="searchTerm" placeholder="Search driver..." ng-model-options="{ debounce: 400 }">
+                    </div>
+                    <div class="offline">
+                        <div class="checkbox">
+                            <input type="checkbox" id="driver-check0" ng-model="includeOffline">
+                            <label for="driver-check0"></label>
+                        </div>
+                        <label for="driver-check0">Include Offline Drivers</label>
+                    </div>
+                    <div class="list">
+                        <div ng-if="drivers == null">
+                            <div class="driver-status" style="background:gray;">
+                                <span>Fetching...</span>
+                            </div>
+                        </div>
+                        <div ng-if="drivers && drivers.length == 0">
+                            <div class="driver-status" style="background:indianred;">
+                                <span>No Drivers</span>
+                            </div>
+                        </div>
+
+                        <div ng-if="biddeddrivers.length > 0">
+                            <div class="driver-status">
+                                <span>BIDS</span>
+                            </div>
+                            <div class="driver-wrapper" ng-repeat="item in biddeddrivers" ng-click="chooseDriver(item)"
+                                 ng-class="(choosen.driver == item)? 'chosen':''">
+                                <div class="driver">
+                                    <div class="driver-image" style="background-image: url({{item._ImageUrl}})"></div>
+                                    <a href="">
+                                        <strong>({{item.Callsign}}) {{item.Firstname + ' ' + item.Surname}}</strong>
+                                    </a>
+                                    <div class="rating">
+                                        <span class="rate">
+                                            <i class="material-icons">near_me</i>
+                                            <span ng-bind="(item.Distance)? item.Distance + ' mi' : 'N/A'"></span>
+                                        </span>
+                                        <span class="rate">
+                                            <i class="material-icons">account_balance_wallet</i>
+                                            <span ng-bind="item.Amount | currency"></span>
+                                        </span>
+                                        <span class="rate" popover-template="'tags-popover.html'" popover-trigger="mouseenter" popover-append-to-body="true" popover-placement="bottom" ng-init="item.TagsCount = item.MissingTags.length + item.HasTags.length">
+                                            <i class="material-icons" ng-style="{'color': item.TagsCount == 0 ? '#777777' : (item.HasTags.length == item.TagsCount ? '#27ae60' : '#a94442')}">label</i>
+                                            <span ng-show="item.TagsCount > 0">{{item.HasTags.length}} / {{item.MissingTags.length + item.HasTags.length}}</span>
+                                            <span ng-show="item.TagsCount == 0">N/A</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div ng-repeat="(key, value) in drivers | filter: searchTerm | groupBy:'DriverStatus'">
+                            <div class="driver-status">
+                                <span>{{ key }}</span>
+                            </div>
+                            <div class="driver-wrapper" ng-repeat="item in value" ng-click="chooseDriver(item)" ng-class="(choosen.driver == item)? 'chosen':''">
+                                <div class="driver">
+                                    <div class="driver-image" style="background-image: url({{item._ImageUrl}})"></div>
+                                    <a href="">
+                                        <strong>({{item.Callsign}}) {{item.Firstname + ' ' + item.Surname}}</strong>
+                                    </a>
+                                    <div class="rating">
+                                        <span class="rate">
+                                            <i class="material-icons">stars</i>
+                                            <span ng-bind="item.Score.FinalScore?(item.Score.FinalScore| number:1)+'%':'N/A'"></span>
+                                        </span>
+                                        <span class="rate">
+                                            <i class="material-icons">near_me</i>
+                                            <span ng-bind="(item.Distance)? item.Distance + ' mi.' : 'N/A'"></span>
+                                        </span>
+                                        <span class="rate" popover-template="'tags-popover.html'" popover-trigger="mouseenter" popover-append-to-body="true" popover-placement="bottom" ng-init="item.TagsCount = item.MissingTags.length + item.HasTags.length">
+                                            <i class="material-icons" ng-style="{'color': item.TagsCount == 0 ? '#777777' : (item.HasTags.length == item.TagsCount ? '#27ae60' : '#a94442')}">label</i>
+                                            <span ng-show="item.TagsCount > 0">{{item.HasTags.length}} / {{item.MissingTags.length + item.HasTags.length}}</span>
+                                            <span ng-show="item.TagsCount == 0">N/A</span>
+                                        </span>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-xs PreAllocated" ng-click="confirm('SOFT', false)" ng-disabled="!choosen.driver || choosen.pre || inprogress || choosenFromBidded">Soft Allocate</button>
+                        <button class="btn btn-xs Allocated" ng-click="confirm('HARD', false)" ng-disabled="!choosen.driver || inprogress">Hard Allocate</button>
+                        <button class="btn btn-xs OnRoute" ng-click="confirm('HARD', true)" ng-disabled="!choosen.driver || inprogress || choosen.driver.DriverStatus == 'Offline' || choosen.driver.CurrentBookingId != null">Notify Driver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 section">
+            <div class="wrapper">
+                <h3 class="section-title">
+                    <i class="material-icons">swap_horizontal_circle</i>Infi9ity Partners
+                </h3>
+                <div class="list-wrapper">
+                    <div class="driver-status p15" style="background:#ddd;" ng-if="(!fetchingWorkshare && booking.BookingSource != 'WORKSHARE' && (!worksharePartnerQuotes || worksharePartnerQuotes.length==0)) && (!fetchingPartners && (!partners || partners.length==0))">
+                        <div>
+                            <strong>Currently you do not have any partners to work with or they currently have no availability.</strong>
+                            <br> Grow your fleet virtually and access 1000's of drivers by using Workshare. Get started here:
+                            <br>
+                            <button ng-click="$dismiss()" ng-if="(!fetchingWorkshare && booking.BookingSource != 'WORKSHARE' && (!worksharePartnerQuotes || worksharePartnerQuotes.length==0)) && (!fetchingPartners && (!partners || partners.length==0))" class="btn btn-primary mt5"
+                                    ui-sref="root.workshare.discover-partner"><i
+                                   class="material-icons">explore</i>Discover Partners
+                            </button>
+                        </div>
+                    </div>
+                    <div class="driver-status p15" style="background:#ddd;" ng-if="booking.BookingSource == 'WORKSHARE'">
+                        <strong>Workshare bookings cannot be allocated to partners.</strong>
+                    </div>
+                    <div ng-if="booking.BookingSource != 'WORKSHARE'">
+                        <div class="list" ng-if="!fetchingPartners && partners  && partners.length != 0">
+                            <div class="driver-status">
+                                <span>GettUK</span>
+                            </div>
+                            <div class="driver-wrapper" ng-repeat="item in partners" ng-click="choosePartner(item)" ng-class="(choosen.partner == item)? 'chosen':''">
+                                <div class="driver">
+                                    <div class="driver-image gett" style="background-image: url({{item.ImageUrl}})"></div>
+                                    <a href="">
+                                        <strong ng-bind="item.Name"></strong>
+                                    </a>
+                                    <div class="rating">
+                                        <span ng-show="item.ETA != -1" class="rate">
+                                            <i class="material-icons">av_timer</i>
+                                            <span ng-bind="(item.ETA/60) | number:0"></span> mins
+                                        </span>
+                                        <span ng-show="item.ETA == -1" class="rate">
+                                            <i class="material-icons">av_timer</i>Unavailable
+                                        </span>
+                                        <span ng-show="item.Estimate > 0" class="rate">
+                                            <i class="material-icons">account_balance_wallet</i>
+                                            <span ng-bind="item.Estimate | currency"></span>
+                                        </span>
+                                        <span ng-show="item.Estimate == 0" class="rate">
+                                            <i class="material-icons">account_balance_wallet</i>
+                                            Unavailable
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list" ng-repeat="partner in worksharePartnerQuotes track by $index" ng-if="!fetchingWorkshare">
+                            <div ng-if="!fetchingWorkshare">
+                                <div class="driver-status">
+                                    <span ng-bind="partner.PartnerName"></span>
+                                </div>
+                                <span class="text-muted pl10" ng-if="partner.Products.length==0">No vehicles available</span>
+                                <div class="driver-wrapper" ng-repeat="item in partner.Products| orderBy:'-Available'" ng-click="chooseWorkshareProduct(partner,item)" ng-class="(choosen.workshareProduct.VehicleTypeId == item.VehicleTypeId && choosen.workshareProduct.Service == item.Service)? 'chosen':''">
+                                    <div class="driver">
+                                        <img ng-src='{{::item.ImageUrl|formatImage}}' class="driver-image workshare" />
+                                        <a href="">
+                                            <strong ng-bind="item.Service"></strong>
+                                            <span class="available" ng-if="item.Available">Available</span>
+                                            <span class="pre" ng-if="!item.Available">PRE</span>
+                                        </a>
+                                        <div class="rating">
+                                            <span class="rate">
+                                                <i class="material-icons">av_timer</i>
+                                                <span ng-bind="item.ETA+' mins'" ng-if="item.ETA"></span>
+                                                <span ng-if="!item.ETA">N/A</span>
+                                            </span>
+                                            <span ng-show="item.Estimate > 0" class="rate">
+                                                <i class="material-icons">account_balance_wallet</i>
+                                                <span ng-bind="item.Estimate | currency"></span>
+                                            </span>
+                                            <span class="rate">
+                                                <i class="material-icons">directions_car</i>
+                                                <span ng-bind="item.VehicleTypeName"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list" ng-if="fetchingWorkshare || fetchingPartners">
+                            <div class="driver-status" style="background:gray;">
+                                <span>Fetching...</span>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-xs btn-success full" ng-disabled="(!choosen.worksharePartner && !choosen.partner) || inprogress" ng-click="allocatePartner()">Allocate Partner</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt20 text-center">
+        <button class="btn btn-warning" ng-click="$dismiss()">
+            <i class="material-icons">close</i>Close</button>
+    </div>
+
+    <script type="text/ng-template" id="tags-popover.html">
+        <div>
+            <div ng-show="item.MissingTags.length > 0">
+                <b class="text-danger">Missing Tags:</b><br />
+                <span ng-repeat="tag in item.MissingTags" class="label label-danger">{{tag}}</span><br />
+            </div>
+            <div ng-show="item.HasTags.length > 0">
+                <b class="text-success">Has Tags:</b><br />
+                <span ng-repeat="tag in item.HasTags" class="label label-success">{{tag}}</span><br />
+            </div>
+            <div ng-show="item.HasTags.length == 0 && item.MissingTags.length == 0">
+                <small class="text-muted">No Tags on Booking</small>
+            </div>
+        </div>
+    </script>
+</div>

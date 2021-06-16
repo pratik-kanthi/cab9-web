@@ -1,0 +1,43 @@
+<div id="documents">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Documents</h3>
+        </div>
+        <div class="panel-body">
+            <div class="documents-wrapper">
+                <div ng-show="documents.length==0">
+                    <span class="text-muted">No documents have been added.</span>
+                </div>
+                <div class="active-grid" ng-show="documents.length>0">
+                    <div class="document grid-item active-docs" ng-repeat="d in documents">
+                        <div class="document-content">
+                            <div class="hero">
+                                <img ng-src="{{getImagePath(d.ThumbnailPath)}}" alt="{{d.Name}}" />
+                            </div>
+                            <div class="options">
+                                <i class="material-icons" ng-click="previewDocument(d)">find_in_page</i>
+                            </div>
+                            <div class="info">
+                                <div class="document-label">
+                                    <small>{{d.DocumentType.Name}} ({{d.Active?'Active':'Inactive'}})</small>
+                                    <h3>{{d.Name}}</h3>
+                                </div>
+                                <div class="date-info">
+                                    <span ng-if="d.ExpiryDate">
+                                        Expiring in {{d.ExpiryDate | Countdown}}
+                                    </span>
+                                    <span ng-if="d.IssueDate && !d.ExpiryDate">
+                                        Issued {{d.IssueDate | Countdown}}
+                                    </span>
+                                    <span ng-if="!d.IssueDate && !d.ExpiryDate">
+                                        No Date Info
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

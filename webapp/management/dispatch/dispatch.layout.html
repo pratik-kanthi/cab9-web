@@ -1,0 +1,91 @@
+﻿<div id="dispatch">
+    <div class="nav-options" style="z-index:1000;">
+        <ul class="nav" style="margin-right:0;">
+            <li ui-sref-active="active"><a ui-sref="dispatch.newbooking"><i class="material-icons">note_add</i>New</a></li>
+            <li ui-sref-active="active"><a ui-sref="dispatch.bookings"><i class="material-icons">storage</i>Bookings</a></li>
+            <!--<li ui-sref-active="active"><a ui-sref="dispatch.unconfirmed"><i class="material-icons">storage</i>External <span class="badge red-bg" ng-if="dispatchObj.unconfirmed.items.length > 0">{{dispatchObj.unconfirmed.items.length}}</span></a></li>-->
+            <li ng-class="('dispatch.workshare' | isState)?'active':''">
+                <a ng-click="openWorkshareTab()"><i class="material-icons">share</i>Workshare
+                    <span class="badge red-bg" ng-if="dispatchObj.workshare.bookings" ng-bind="(dispatchObj.workshare.bookings.length||'')"></span>
+                </a>
+            </li>
+            <li ui-sref-active=" active"><a ui-sref="dispatch.drivers"><i class="material-icons">person_pin</i>Drivers</a></li>
+        </ul>
+        <div class="search" style="margin-right:0;">
+            <input type="text" ng-model="dispatchObj.bookingSearch.$" class="search" placeholder="Search..." ng-show="('dispatch.bookings' | isState) || ('dispatch.workshare' | isState)" ng-model-options="{ 'debounce': 200 }" />
+            <input type="text" ng-model="dispatchObj.driverSearch.$" class="search" placeholder="Search..." ng-show="'dispatch.drivers' | isState" />
+        </div>
+        <div class="options">
+            <a href="" class="option" ng-click="showFilterModal()"><i class="material-icons">wrap_text</i>Filter</a>
+            <!-- <a href="" class="option"><i class="material-icons">settings</i>Config</a> -->
+            <!-- <a href="" class="option"><i class="material-icons">directions_car</i>Dispatch</a> -->
+            <a href="" class="option" ng-switch="SIGNALR.status">
+                <i class="material-icons text-danger" ng-switch-when="0">highlight_off</i>
+                <i class="material-icons text-warning" ng-switch-when="1">cached</i>
+                <i class="material-icons text-warning" ng-switch-when="2">cached</i>
+                <i class="material-icons text-warning" ng-switch-when="3">info</i>
+                <i class="material-icons text-success" ng-switch-when="4">check_circle</i>
+                Connection
+            </a>
+        </div>
+        <div class="options">
+            <a href="" class="option" ng-click="dispatchObj.bookings.startBid()"><i class="material-icons">supervisor_account</i>Bid</a>
+        </div>
+        <div class="status-update">
+            <div ng-class="h.status" ng-repeat="h in dispatchObj.history" ng-if="$first"><b>{{h.time}}</b>: {{h.text}}</div>
+        </div>
+        <div class="options right">
+            <a href="" ng-click="dispatchObj.workshare.toggleDrivers()" ng-switch="dispatchObj.workshare.driverStatus">
+                <i class="material-icons text-success" style="font-size:18px;display:block;" ng-switch-when="true">visibility</i>
+                <i class="material-icons text-warning" style="font-size:18px;display:block;" ng-switch-when="false">visibility_off</i>
+                Partner Drivers
+            </a>
+            <a href="" ng-click="dispatchObj.dispatch.toggleDispatch()" ng-switch="dispatchObj.dispatch.status">
+                <i class="material-icons text-warning" style="font-size:18px;display:block;" ng-switch-when="false">sentiment_very_dissatisfied</i>
+                <i class="material-icons text-success" style="font-size:18px;display:block;" ng-switch-when="true">sentiment_very_satisfied</i>
+                {{dispatchObj.dispatch.status ? 'Dispatch On' : 'Dispatch Off'}}
+            </a>
+            <a href="" ng-click="dispatchObj.sound.toggleSound()" ng-switch="dispatchObj.sound.status">
+                <i class="material-icons text-warning" style="font-size:18px;display:block;" ng-switch-when="false">volume_off</i>
+                <i class="material-icons text-success" style="font-size:18px;display:block;" ng-switch-when="true">volume_up</i>
+                {{dispatchObj.sound.status ? 'Sound On' : 'Sound Off'}}
+            </a>
+            <!--<a href="" ng-click="dispatchObj.live.toggleLive()" ng-switch="dispatchObj.live.status">
+                <i class="material-icons text-warning" style="font-size:18px;display:block;" ng-switch-when="false">watch_later</i>
+                <i class="material-icons text-success" style="font-size:18px;display:block;" ng-switch-when="true">flash_on</i>
+                {{dispatchObj.live.status ? 'Live Locations' : '20s Locations'}}
+            </a>-->
+            <a href="" ng-click="dispatchObj.map.toggleTrafficLayer(!dispatchObj.map.displayOptions.traffic)" ng-switch="dispatchObj.map.displayOptions.traffic">
+                <i class="material-icons text-success" style="font-size:18px;display:block;" ng-switch-when="true">traffic</i>
+                <i class="material-icons text-warning" style="font-size:18px;display:block;" ng-switch-when="false">traffic</i>
+                {{dispatchObj.map.displayOptions.traffic ? 'Traffic On' : 'Traffic Off'}}
+            </a>
+            <a class="option" ng-click="exit()" tooltip="Exit" tooltip-placement="bottom"><i class="material-icons">exit_to_app</i>Exit</a>
+        </div>
+        <a class="options-mobile-toggle" href="" tooltip-placement="bottom"><i class="material-icons">menu</i>More</a>
+    </div>
+    <div class="content-area">
+        <div class="wrapper">
+            <div ui-view ng-show="'dispatch.newbooking' | isState" name="newbooking"></div>
+            <div ui-view ng-show="'dispatch.bookings' | isState" name="bookings"></div>
+            <div ui-view ng-if="'dispatch.workshare' | isState" name="workshare"></div>
+            <div ui-view ng-show="'dispatch.drivers' | isState" name="drivers"></div>
+            <div ui-view ng-show="'dispatch.unconfirmed' | isState" name="unconfirmed"></div>
+        </div>
+    </div>
+    <div class="map-area">
+        <ui-view name="map"></ui-view>
+    </div>
+</div>
+
+<script type="text/ng-template" id="expense_notification_template.html">
+    <div id="dispatch-driver-expenses">
+        <div ng-include="'/webapp/management/drivers/expenses/expense-widget.template.html'"></div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="phone_notification_template.html">
+    <div class="pn-wrapper">
+        <div ng-include="'/webapp/management/dispatch/notifications/phone-notification.template.html'"></div>
+    </div>
+</script>

@@ -1,0 +1,166 @@
+<div class="booking-strip">
+    <div class="booking">
+        <div class="info">
+            <div class="row">
+                <div class="col-lg-3 col-md-2 col-sm-3 id date-time">
+                    #{{booking.LocalId}} | <span class="date">{{::booking.BookedDateTime | companyDate: 'DD/MM/YYYY'}}</span>
+                    <span class="time">{{::booking.BookedDateTime | companyDate: 'HH:mm'}}</span>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-4 from-to">
+                    <strong class="black">{{::booking._FromSummary}}</strong>
+                    <br />
+                    <span>{{::booking._ToSummary}}</span>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-3 passenger hidden-xs">
+                    <img ng-src="{{::booking.Client._ImageUrl}}" ng-if="booking.Client" />
+                    <img ng-src="{{::booking.LeadPassenger._ImageUrl}}" ng-if="!booking.Client" />
+                    <strong ng-class="(!booking.Client)? 'lh50':''" class="black">{{::booking._LeadPassengerName}}</strong>
+                    <br />
+                    <span ng-if="booking.Client">{{::booking.Client.Name}}</span>
+                </div>
+                <div class="col-lg-2 hidden-md hidden-sm vehicle hidden-xs">
+                    <span class="registration" ng-if="booking.Vehicle">{{::booking.Vehicle.Registration}}</span>
+                    <div class="text-center" ng-if="!booking.Vehicle">
+                        <strong class="lh50">Not Assigned</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <a class="btn btn-primary" ng-show="!$expanded" ng-click="$expanded = true;"><i class="material-icons">expand_more</i></a>            
+            <a class="btn" ng-class="(booking.BookingStatus=='Completed')?'btn-gradient':'btn-primary'" ng-show="!$expanded"><i class="material-icons">check</i></a>
+        </div>
+    </div>
+    <div class="expanded-area" ng-if="$expanded">
+        <div class="row">
+            <div class="col-sm-3 journey-map">
+                <h6>Map</h6>
+                <img ng-src="{{::booking._ImageUrl}}" class="booking-map" alt="{{::booking.LocalId}}">
+            </div>
+            <div class="col-sm-3 journey-details">
+                <h6>Journey</h6>
+                <div class="info-box">
+                    <div class="title">From</div>
+                    <div class="content">
+                        {{::booking._FromSummary}}
+                    </div>
+                </div>
+                <div class="info-box" ng-repeat="stop in booking.BookingStops" ng-show="!$last && !$first">
+                    <div class="title">Via {{$index}}</div>
+                    <div class="content">
+                        {{stopSummary(stop)}}
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="title">To</div>
+                    <div class="content">
+                        {{::booking._ToSummary}}
+                    </div>
+                </div>
+                <div class="info-box">
+                    <div class="title">Passengers &amp; Bags</div>
+                    <div class="content">
+                        <div class="passengers">
+                            <i class="material-icons">person</i>{{::booking.Pax}}
+                        </div>
+                        <div class="bags">
+                            <i class="material-icons">work</i>{{::booking.Bax}}
+                        </div>
+                    </div>
+                    <br class="clearfix" />
+                </div>
+            </div>
+            <div class="col-sm-4 booking-details">
+                <h6>Information</h6>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="info-box">
+                            <div class="title">Vehicle Info</div>
+                            <div class="content">
+                                <div ng-if="booking.Vehicle">
+                                    {{::booking.Vehicle.Make}} {{::booking.Vehicle.Model}} {{::booking.Vehicle.Colour}}
+                                    <br /> {{::booking.Vehicle.Registration}}
+                                    <a class="remove" ng-click="removeVehicle(booking)" ng-if="PERMISSIONS.test('bookings.assign')"><i class="material-icons">clear</i> Remove Vehicle</a>
+                                </div>
+                                <div ng-if="!booking.Vehicle">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            Not Assigned
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="info-box">
+                            <div class="title">Passenger Info</div>
+                            <div class="content">
+                                {{::booking.LeadPassenger._Fullname}}
+                                <br /> {{::booking.LeadPassenger.Mobile}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="info-box" ng-show="booking.Client">
+                            <div class="title">Client Info</div>
+                            <div class="content">
+                                {{::booking.Client.Name}}
+                                <br /> {{::booking.Client.Phone}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="info-box">
+                            <div class="title">Office Notes</div>
+                            <div class="content">
+                                <span class="text-muted">{{::booking.OfficeNotes || 'No Notes Added' }}</span>
+                            </div>
+                        </div>
+                        <div class="info-box">
+                            <div class="title">Driver Notes</div>
+                            <div class="content">
+                                <span class="text-muted">{{::booking.DriverNotes || 'No Notes Added' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="info-box">
+                            <div class="title">Passenger Notes</div>
+                            <div class="content">
+                                <span class="text-muted">{{::booking.PassengerNotes || 'No Notes Added' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h6>Email</h6>
+                    <div class="row">
+                        <div class="col-xs-4" ng-if="booking.DriverId">
+                            <a class="btn btn-primary btn-xs" ng-click="emailTo(booking)"><i class="material-icons">mail</i> Email</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2 journey-cost">
+                <h6>Fare</h6>
+                <strong class="cost">{{::booking.ActualCost * booking.CurrencyRate | currency:booking.Currency.Prepend}}</strong>
+                <div ng-if="booking.CurrencyRate != 1">
+                    <small class="text-muted">{{::booking.ActualCost | Convert | number | Format }}</small> <br />
+                </div>
+            </div>
+            <div class="expanded-actions">
+                <a class="btn btn-primary" ng-click="$parent.$expanded = false;">
+                    <i class="material-icons collapse">expand_less</i>
+                </a>
+                <a class="btn" ng-class="(booking.BookingStatus=='Completed')?'btn-gradient':'btn-primary'">
+                    <i class="material-icons">check</i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+.notes-wrapper {
+    margin-top: 32px;
+    .note {
+        position: relative;
+        min-height: 120px;
+        margin-bottom: 16px;
+        .authors {
+            float: left;
+            width: 92px;
+            min-height: 96px;
+            .creator {
+                margin-bottom: 8px;
+                margin-left: 4px;
+                img {
+                    width: 64px;
+                    height: 64px;
+                    .border-radius(50%);
+                }
+            }
+            .editor {
+                margin-top: -28px;
+                img {
+                    width: 40px;
+                    height: 40px;
+                    border: 4px solid #fff;
+                    .border-radius(50%);
+                }
+            }
+        }
+        .content {
+            float: left;
+            position: relative;
+            width: calc(~"100% - 92px");
+            padding: 8px 12px;
+            max-width: 780px;
+            background-color: #eee;
+            .border-radius(2px);
+            .text {
+                padding-bottom: 8px;
+                border-bottom: 1px dotted #bbb;
+                strong {
+                    display: block;
+                    margin-bottom: 8px;
+                }
+                pre {
+                    font-size: 14px;
+                }
+            }
+            .time {
+                padding-top: 4px;
+                color: #999;
+                font-size: 12px;
+            }
+            .options {
+                position: absolute;
+                top: 8px;
+                right: 0;
+                display: none;
+                margin-right: 8px;
+                i {
+                    font-size: 16px;
+                    color: #fff;
+                    width: 28px;
+                    height: 28px;
+                    .border-radius(50%);
+                    background-color: @brand-secondary;
+                    text-align: center;
+                    line-height: 28px;
+                }
+            }
+        }
+        &:hover {
+            .content {
+                .options {
+                    display: block;
+                    .animate(0.4, fadeIn);
+                }
+            }
+        }
+    }
+}

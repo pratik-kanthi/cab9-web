@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html xmlns="https://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Cab 9</title>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link href="includes/css/style.min.css" rel="stylesheet" />
+    <script src="includes/js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div style="height:100%"> 
+        <div class="login-wrapper">
+            <div class="hero">
+                <div id="background"></div>
+                <div class="logo">
+                    <!-- <img src="/includes/images/cab9-logo.png" alt="Cab 9" /> -->
+                    <div class="brand">
+                        CAB <span class="red">9</span>
+                    </div>
+                    <div class="client-logo">
+                        <img src="" alt="" />
+                    </div>
+                </div>
+                <div class="features hidden-xs hidden-sm">
+                    <div class="row">
+                        <div class="col-md-12 feature">
+                            <i class="icon-users2"></i>
+                            <div class="desc">
+                                <span class="tag-line" id="login-title">
+                                </span>
+                                <span id="login-description">The most advanced, feature rich taxi system available. Cab9 is a cloud based business management tool for taxi and chauffeuring firms.The innovative design &amp; powerful capability allows you to communicate with your business in a seamless manner. The solution includes a simple yet sophisticated automated dispatch system, business management, reporting and invoice production capabilities.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="login-container">
+                <form class="login-box">
+                    <p class="pt35 hidden-xs">Sign into your <strong id="company-name"></strong> account.</p>
+                    <!--<form id="login-form">-->
+                    <div class="form-group">
+                        <label>Login</label>
+                        <div class="controls">
+                            <input type="text" name="username" placeholder="User Name or Email" id="username" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="controls">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password" required />
+                        </div>
+                    </div>
+                    <small class="red" id="loginFailed">Incorrect Login Details</small>
+                    <div class="text-right"><a onclick="redirecttoresetlink()"><b class="red">Forgot password?</b></a></div>
+                    <div class="">
+                        <button type="submit" id="login-button" class="btn mt10 pull-right" onclick="login(event)">
+                            <i class="fa fa-lock"></i> Log in to Your Account
+                        </button>
+                    </div>
+                </form>
+                <!--<div class="cims-info">
+                    <div class="row">
+                        <div class="col-md-2 col-sm-3 no-padding">
+                            <img src="/includes/images/e9ine-circle.png" id="tenant-logo" />
+                        </div>
+                        <div class="col-md-10 col-sm-9 info">
+                            <strong class="brand-primary" id="tenant-name">e9ine</strong>.
+                            <br />
+                            <span id="tenant-message">Contact e9ine for account details.</span>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+    <script src="/webapp/config.js"></script>
+    <script type="text/javascript">
+        var usernameInput = $('#username');
+        var passwordInput = $('#password');
+        $("#loginFailed").hide();
+        setupLoginPage();
+
+        function setupLoginPage() {
+            var _clientDomain = location.hostname;
+            $.get(window.endpoint + 'api/client/webbookerdomainsettings?clientDomain=' + _clientDomain,
+            function (response, status, xhr) {
+                if (xhr.status == 200) {
+                    $(".logo .brand").hide();
+                    $(".logo img").attr("src", window.resourceEndpoint + response.Client.LogoUrl);
+                    $(".logo img").show();
+                    $("#company-name").html(response.Client.Name + " Web Booking");
+                    $("#login-title").html(response.ClientDomainSettings.WelcomeMessage);
+                    $("#login-description").html(response.ClientDomainSettings.WelcomeDescription);
+                    $("#background").css("background-image", "url(" + window.resourceEndpoint + response.ClientDomainSettings.WelcomeHeroImage + ")");
+                    $("#tenant-logo").attr("src", window.resourceEndpoint + response.Tenant.LogoUrl);
+                    $("#tenant-name").html(response.Tenant.Name);
+                    $("#tenant-message").html("Please call " + response.Tenant.Phone + " in case of any issues");
+                }
+            }).fail(function (err) {
+                if (err.status == 404) {
+                    $(".logo .brand").show();
+                    $("#login-title").html("Powerful, Simple and Innovative way to manage your Taxi Business.");
+                    $("#company-name").html("Cab9");
+                    $("#login-description").html("The most advanced, feature rich taxi system available. Cab9 is a cloud based business management tool for taxi and chauffeuring firms.The innovative design & powerful capability allows you to communicate with your business in a seamless manner. The solution includes a simple yet sophisticated automated dispatch system, business management, reporting and invoice production capabilities.");
+                    $("#background").css("background-image", "url('/includes/images/background.jpg'");
+                }
+            })
+        }
+
+        function login(event) {
+            event.preventDefault();
+            var username = usernameInput.val();
+            var password = passwordInput.val();
+
+            $('#login-button').removeClass('animated shake');
+            $('#login-button').addClass('animated bounceIn');
+
+            $("#login-button").html("<i class='fa fa-circle-o-notch fa-spin'></i> Logging In...");
+
+            $.post(window.endpoint + 'Token', {
+                username: username,
+                password: password,
+                grant_type: 'password'
+            }, function (tokenInfo) {
+                sessionStorage.removeItem('SkipDisclaimer');
+                var currentSession = tokenInfo;
+                if (tokenInfo.Claims) {
+                    currentSession.Claims = _parseClaims(tokenInfo.Claims);
+                }
+                localStorage.setItem('AUTH_TKN', JSON.stringify(currentSession));
+                if (currentSession.Claims.PassengerId && currentSession.Claims.PassengerId.length > 0)
+                    location.href = 'webapp/passenger/index.html';
+                if (currentSession.Claims.ClientId && currentSession.Claims.ClientId.length > 0) {
+                    var found = false;
+                    if(currentSession.Claims.TenantId.toLowerCase() == '50f56597-c049-e611-80c7-14187728d133' && currentSession.Claims.ClientId.some(function(val) { return window.newPortalClients.indexOf(val.toLowerCase()) == -1 })) {
+                        location.href = 'webapp/client/index.html';
+                    } else {
+                        location.href = window.customerPortalEndpoint + '/app/index.html?token=' + tokenInfo.access_token;
+                    }
+                }
+                if (currentSession.Claims.StaffId && currentSession.Claims.StaffId.length > 0)
+                    location.href = 'webapp/management/index.html';
+                if (currentSession.Claims.DriverId && currentSession.Claims.DriverId.length > 0)
+                    location.href = 'webapp/driver/index.html';
+            }).fail(function (error) {
+                $('#login-button').removeClass('animated bounceIn');
+                $('#login-button').addClass('animated shake');
+                $("#login-button").html("<i class='fa fa-lock'></i> Log in to Your Account");
+                $("#loginFailed").html(error.responseJSON.error_description);
+                $("#loginFailed").show();
+            });
+        }
+
+        function _parseClaims(claimString) {
+            var claimSplit = claimString.split("|");
+            var result = {};
+            for (var i = 0; i < claimSplit.length; i++) {
+                var c = claimSplit[i].split(":");
+                if (result[c[0]]) {
+                    result[c[0]].push(c[1]);
+                } else {
+                    result[c[0]] = [c[1]];
+                }
+            }
+            return result;
+        };
+
+        function redirecttoresetlink(){
+            location.href = window.origin + '/resetpasswordlink.html'; 
+        }
+    </script>
+</body>
+
+</html>

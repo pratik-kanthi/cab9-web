@@ -1,0 +1,201 @@
+<div>
+    <div class="modal-header">
+        <div>
+            <button class="close" type="button" title="Close!" ng-click="$dismiss()">
+                <i class="material-icons">close</i>
+            </button>
+            <button class="info" type="button" ng-click="showhelp = !showhelp" title="Info!">
+                <i class="material-icons">info</i>
+            </button>
+            <h3 class="modal-title">Booking Bidding</h3>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Select Driver Type</label>
+                        <small ng-show="showhelp" class="brand-secondary ">Filter Drivers on the basis of
+                  <b>TYPES OF DRIVERS</b> from the list. By default showing all the drivers.</small>
+                        <div class="form-edit mt5">
+                            <ui-select ng-model="selectedCategory" placeholder="Select from list..." theme="selectize" ng-change="fetchDrivers($select.selected)" class="edit">
+                                <ui-select-match placeholder="Select from list...">
+                                </ui-select-match>
+                                <ui-select-choices repeat="item in driverTypes | filter: $select.search">
+                                    <div class="select-text-option">
+                                        <div ng-bind-html="item.Name | highlight: $select.search"></div>
+                                    </div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">Search Callsigns</label>
+                        <small ng-show="showhelp" class="brand-secondary ">Looking for specific driver using their
+                  <b>CALLSIGN</b>? Please enter callsign of the driver, we will find it for you.</small>
+                        <input type="text" class="form-control mt5" ng-model="searchTerm.$callsign" placeholder="Type to search...">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label">Search Drivers</label>
+                        <small ng-show="showhelp" class="brand-secondary ">Looking for specific driver using their
+                  <b>Name</b>? Please enter name of the driver, we will find it for you.</small>
+                        <ui-select class="mt5" multiple ng-model="selected.DriverIds" theme="select2" ng-change="selectDrivers()" ng-disabled="false" style="width: 100%;">
+                            <ui-select-match placeholder="Type to search...">
+                                <div class="select-text">
+                                    {{::$item.Callsign}}
+                                </div>
+                            </ui-select-match>
+                            <ui-select-choices refresh="searchTerm.$=$select.search" ng-hide="true" repeat="item.Id as item in filteredDrivers">
+                                <div class="ui-select-box">
+                                    <div class="option-details">
+                                        <strong>{{::item._Fullname}}</strong>
+                                        <small class="text-muted" ng-show="item.DriverType.Name">{{::item.DriverType.Name}}</small>
+                                    </div>
+                                </div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <small ng-show="showhelp" class="text-muted" ng-show="selected.DriverIds.length>0">{{selected.DriverIds.length}} driver(s) selected.</small>
+                    </div>
+                </div>
+            </div>
+            <p class="fetching" ng-show="filteredDrivers==null">
+                <img src="/includes/images/preloader.gif" style="width: 30px;height: 30px;" />
+            Fetching Drivers...
+         </p>
+                <div class="form-group" ng-show="filteredDrivers.length>0 || searchedDrivers.length > 0">
+                    <div class="row">
+                        <div ng-class="(multiBooking==false)?'col-sm-6':'col-sm-12'">
+                            <label class="control-label">Select Driver(s)</label>
+                            </br>
+                            <small ng-show="showhelp" class="brand-secondary">Below is list of drivers who are not invited for bidding for selected booking. Select drivers from
+                  list to
+                  <b>INVITE THEM TO BID</b>
+                  </small>
+                            <div class="bid-driver mt5">
+                                <div class="bid-drivers">
+                                    <div class="header">
+                                        <div class="row">
+                                            <div class="col-xs-1">
+                                                <input type="checkbox" id="driver-checkall" ng-click="selectAllDrivers()" ng-checked="allDriversSelected">
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <strong>Callsign</strong>
+                                            </div>
+                                            <div class="col-xs-7">
+                                                <strong>Name</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="body" ng-show="filteredDrivers.length == 0 || searchedDrivers.length ==  0">
+                                        <div class="no-steps">
+                                            No Drivers found.
+                                        </div>
+                                    </div>
+                                    <div class="body scroll" ng-show="filteredDrivers.length>0">
+                                        <div class="step" ng-repeat="item in getFilteredDrivers()">
+                                            <div class="row">
+                                                <div class="col-xs-1">
+                                                    <div class="checkbox" ng-init="index=$index">
+                                                        <input type="checkbox" id="driver-check{{index}}" ng-model="item.$checked" ng-change="modifyDriverList(item)">
+                                                        <label for="driver-check{{index}}"></label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="wrap">
+                                                        <span ng-bind="::item.Callsign"> </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-7">
+                                                    <div class="wrap">
+                                                        <span ng-bind="::item._Fullname"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" ng-if="multiBooking == false">
+                            <label class="control-label">Invited Driver(s)</label>
+                            </br>
+                            <small ng-show="showhelp" class="brand-secondary">Below is list of drivers who are already invited for bidding for selected booking.</small>
+                            <div class="bid-driver">
+                                <div class="bid-drivers">
+                                    <div class="header">
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <strong>Callsign</strong>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <strong>Name</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="body" ng-show="filteredBiddedDrivers.length == 0">
+                                        <div class="no-steps">
+                                            No open Biddings found.
+                                        </div>
+                                    </div>
+                                    <div class="body scroll" ng-show="filteredBiddedDrivers.length > 0">
+                                        <div class="step" ng-repeat="item in filteredBiddedDrivers">
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <div class="wrap">
+                                                        <span ng-bind="::item.Callsign"> </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-8">
+                                                    <div class="wrap">
+                                                        <span ng-bind="::item._Fullname"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label mb5">Bid Max Value</label>
+                        <small ng-show="showhelp" class="brand-secondary mb5">Enter amount to specify to drivers as the commission on the booking. This is an optional field. In case no amount is entered, commission as per booking will be taken in account.</small>
+                        <input type="number" class="form-control mt5" class="control-label" ng-model="bidConfig.amount"></input>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-if="COMPANY.EnableAuctionBidding">
+                    <div class="form-group">
+                        <label class="control-label" for="driver-check0">Enable Driver Bidding</label>
+                        <small ng-show="showhelp" class="brand-secondary ">To allow drivers to bid on booking with amount enable this field, in case field is disabled please enable settings in <b>AUCTION CONFIG</b> settings in company settings to allow driver bids.</small>
+                        <div class="mt5">
+                            <input class="check" type="checkbox" tabindex="" id="enableAuctionBidding_01" name="enableAuctionBidding_01" ng-model="bidConfig.enableAuctionBidding">
+                            <label class="check-label mt0" for="enableAuctionBidding_01"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success pull-right ml10" ng-click="SendBidding(false)" ng-disabled="selected.DriverIds.length==0">
+        <i class="material-icons">supervisor_account</i>Send Bidding</button>
+
+    <button class="btn btn-success pull-right" ng-click="SendBidding(true)" ng-disabled="selected.DriverIds.length==0">
+        <i class="material-icons">supervisor_account</i>Send Bidding Notification</button>
+
+    <button class="btn btn-success pull-right animated bounceIn" ng-show="sending"><i class='fa fa-circle-o-notch fa-spin'></i>Sending..</span></button>
+    <button class="btn btn-danger pull-left" ng-click="CancelBidding()">
+        <i class="material-icons">cancel</i>Cancel Open Biddings</button>
+</div>

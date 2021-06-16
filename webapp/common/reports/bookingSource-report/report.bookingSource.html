@@ -1,0 +1,44 @@
+<div class="panel panel-default reports" promise-shadow promise="deferred.promise">
+    <div class="panel-heading">
+        <h3 class="panel-title">Booking Source Report</h3>
+        <i ng-show="!printReportPage && bookingSourceGroupData.length>0" class="material-icons small pull-right" ng-click="bookingSourceDownload()">file_download</i>
+        <!-- <ng-include src="'webapp/common/panel-options.partial.html'"></ng-include> -->
+    </div>
+    <div class="panel-body pb0" ng-if="bookingSourceData.length>0">
+        <flot dataset="bookingSourceData" options="bookingSourceChartOptions" width="100%" height="175px"></flot>
+        <div ng-show="bookingSourceGroupData.length>0" class="mt30">
+            <div class='table-responsive'>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="width:30%">Name</th>
+                            <th style="width:20%" class="text-center">Bookings</th>
+                            <th style="width:25%" class="text-right">Actual Cost</th>
+                            <th style="width:25%" class="text-right">Invoice Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="data in bookingSourceGroupData | orderBy:'-Bookings'">
+                            <td>
+                                <span ng-bind="data.Name"></span>
+                            </td>
+                            <td class="text-center">
+                                <span ng-bind="data.Bookings"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.ActualCost | Format"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.InvoiceCost | Format"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" ng-if="bookingSourceData.length==0">
+        No data available!
+    </div>
+</div>

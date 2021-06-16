@@ -1,0 +1,59 @@
+<div class="grid-item stats-panel staff">
+    <div class="wrapper">
+        <div class="panel panel-default" promise-shadow promise="deferred.promise">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span><i class="material-icons">people_outline</i></span>Top 5 Staff</h3>
+            </div>
+            <div class="panel-body no-padding pb0">
+                <div class="best-entity" ng-if="bestStaff">
+                <div class="profile" style="background-image: url('{{bestStaff.ImageUrl}}')"></div>
+                    <div class="details">
+                        <strong class="best-label">Best Driver</strong>
+                        <strong class="best-name">{{bestStaff.Name}}</strong>
+                        <strong>{{bestStaff.Bookings}}</strong>
+                    </div>
+                   <!--  <div class="image-name">
+                        <div class="row">
+                            <div class="col-xs-3 text-center">
+                                <img holder ng-src="{{bestStaff.ImageUrl}}" alt="{{bestStaff.Name}}" class="rounded50" />
+                            </div>
+                            <div class="col-xs-9">
+                                <strong class="best-label">Best Staff</strong>
+                                <strong class="best-name">{{bestStaff.Name}}</strong>
+                                <strong>{{bestStaff.Bookings}} Booking<span ng-show="bestStaff.Bookings > 1">s</span></strong>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="best-chart">
+                        <div id="staff-sparkline"></div>
+                    </div>
+                </div>
+                <table class="table table-condensed table-hover mt0 mb0">
+                    <thead>
+                        <tr>
+                            <th style="width:70%">Staff</th>
+                            <th class="text-right" style="width:30%">Bookings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in staff | orderBy:'-Bookings' | limitTo:5">
+                            <td>
+                                <a ng-click='openStaff(item)' class="brand-primary">
+                                    <strong>{{item.Name}}</strong>
+                                </a>
+                            </td>
+                            <td class="text-right bold">{{item.Bookings}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="staff.length==0">
+                        <tr>
+                            <td colspan="2" class="text-center" style="height:80px;">
+                                No Stats for the time period.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="row">
+    <div class="col-xs-6 module-options">
+    </div>
+    <div class="col-xs-6 view-options">
+        <a href="" ng-click="">
+            <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+            <br />
+            <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" />
+        </a>
+    </div>
+</div>
+<div class="mt15">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Profile Management
+            </h3>
+        </div>
+        <div class="panel-body">
+            Use this area to merge duplicate passenger infomation. Select a passenger to view, and choose which other passengers should be merged into the chosen passenger.
+
+            <table class="table table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Bookings</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="pax in passengers | filter:searchTerm">
+                        <td>{{::pax.Firstname}} {{::pax.Surname}}</td>
+                        <td>{{::pax.Phone}}</td>
+                        <td>{{::pax.Mobile}}</td>
+                        <td>{{::pax.Email}}</td>
+                        <td>{{pax.Bookings}}</td>
+                        <td>
+                            <a class="btn btn-xs btn-primary" ng-click="toggleRow(pax)" style="padding-left:12px;">Expand Primary</a>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end ng-show="pax.$expand">
+                        <td colspan="6" style="padding:0;background:#3d3d3d">
+                            <table class="table table-bordered table-condensed" ng-if="pax.dupes && pax.dupes.length > 0" style="margin:15px;width:calc(100% - 30px)">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Phone</th>
+                                        <th>Mobile</th>
+                                        <th>Email</th>
+                                        <th>Bookings</th>
+                                        <th style="width:110px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="d in pax.dupes">
+                                        <td ng-class="{ 'bg-success': (d.Firstname && d.Firstname == pax.Firstname) || (d.Surname && d.Surname == pax.Surname) }">{{::d.Firstname}} {{::d.Surname}}</td>
+                                        <td ng-class="{ 'bg-success': d.Phone && d.Phone == pax.Phone }">{{::d.Phone}}</td>
+                                        <td ng-class="{ 'bg-success': d.Mobile && d.Mobile == pax.Mobile }">{{::d.Mobile}}</td>
+                                        <td ng-class="{ 'bg-success': d.Email && d.Email == pax.Email }">{{::d.Email}}</td>
+                                        <td>{{d.Bookings}}</td>
+                                        <td>
+                                            <a class="btn btn-xs btn-primary" ng-click="merge(pax, d)" ng-if="PERMISSIONS.test('clients.viewer.profiles', 'W')" style="padding-left:12px;">Merge</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="alert alert-info" style="margin:6px;" ng-show="pax.dupes.length == 0">No Duplicates Detected</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+   
+</div>

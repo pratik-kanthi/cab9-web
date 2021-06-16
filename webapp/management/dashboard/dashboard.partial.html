@@ -1,0 +1,52 @@
+<div id="dashboard">
+    <div class="grid">
+        <!-- <div class="loading-div" ng-hide="dataRequestsCount == 0">
+    <div class="loader">
+        <div class="loader-inner ball-clip-rotate-multiple">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div> -->
+        <div id="width-sizer" style="width:25%"></div>
+        <booking-report filters="reportFilters" order="1"></booking-report>
+        <!-- <booking-report filters="reportFilters" order="1"></booking-report> -->
+        <!-- <booking-revenue filters="reportFilters" order="2"></booking-revenue> -->
+        <!-- <unique-driver-passenger filters="reportFilters" order="3"></unique-driver-passenger> -->
+        <driver-report filters="reportFilters" order="2"></driver-report>
+        <client-report filters="reportFilters" order="3"></client-report>
+        <passenger-report filters="reportFilters" order="4"></passenger-report>
+        <booking-source-report filters="reportFilters" order="5"></booking-source-report>
+        <bookings-heatmap filters="reportFilters" order="6"></bookings-heatmap>
+        <twitter order="7" height="400"></twitter>
+        <weather-report order="8"></weather-report>
+    </div>
+</div>
+<!-- <div class="row" id="dashboard">
+    <div class="grid">
+        <div class="loading-div" ng-hide="dataRequestsCount == 0">
+            <div class="loader">
+                <div class="loader-inner ball-clip-rotate-multiple">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <booking-report filters="reportFilters" order="1"></booking-report>
+        </div>
+        <div class="col-md-3">
+            <booking-revenue filters="reportFilters" order="2"></booking-revenue>
+        </div>
+        <div class="col-md-3">
+            <unique-driver-passenger filters="reportFilters" order="3"></unique-driver-passenger>
+        </div>
+        <driver-report filters="reportFilters" order="4"></driver-report>
+        <client-report filters="reportFilters" order="5"></client-report>
+        <passenger-report filters="reportFilters" order="6"></passenger-report>
+        <booking-source-report filters="reportFilters" order="7"></booking-source-report>
+        <bookings-heatmap filters="reportFilters" order="8"></bookings-heatmap>
+        <twitter order="9" height="400"></twitter>
+        <weather-report order="10"></weather-report>
+    </div>
+</div> -->

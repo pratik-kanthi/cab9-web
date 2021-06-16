@@ -1,0 +1,100 @@
+﻿<div class="three-panel-layout">
+    <div class="sidebar" ng-class="panel.currentConfig.class">
+        <div class="options">
+            <ul class="nav">
+                <li ui-sref-active="active"><a ui-sref="dispatch.newbooking">New</a></li>
+                <li ui-sref-active="active"><a ui-sref="dispatch.bookings">Bookings</a></li>
+                <li ui-sref-active="active"><a ui-sref="dispatch.drivers">Drivers</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-content">
+            <ui-view name="panel"></ui-view>
+        </div>
+    </div>
+    <div class="details-section" ng-if="showHelper">
+        <ui-view name="details"></ui-view>
+    </div>
+    <div class="main-section" ng-class="(showHelper)?'compress':''">
+        <div class="map-area">
+            <div class="page-options">
+                <a class="button pull-right" ui-sref="root.bookings" tooltip="Exit" tooltip-placement="bottom">
+                    <i class="material-icons">exit_to_app</i>
+                </a>
+                <a class="button pull-right" tooltip="Map Options" tooltip-placement="bottom" ng-click="showMapOptions = !showMapOptions">
+                    <i class="material-icons">map</i>
+                </a>
+                <ul class="map-options-menu" ng-show="showMapOptions">
+                    <li>
+                        <strong class="header">Drivers</strong>
+                        <label>
+                            <input type="radio" ng-model="driverMarkerMode" value="0"> Off
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="driverMarkerMode" value="1"> Scattered
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="driverMarkerMode" value="2"> Clustered
+                        </label>
+                    </li>
+                    <li>
+                        <strong class="header">Bookings</strong>
+                        <label>
+                            <input type="radio" ng-model="bookingMarkerMode" value="0"> Off
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="bookingMarkerMode" value="1"> Scattered
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="bookingMarkerMode" value="2"> Clustered
+                        </label>
+                    </li>
+                    <li>
+                        <strong class="header">Fit Map</strong>
+                        <label>
+                            <input type="radio" ng-model="mapFit" value="1"> Drivers
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="mapFit" value="2"> Bookings
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="mapFit" value="3"> Both
+                        </label>
+                    </li>
+                    <li>
+                        <div class="toggle">
+                            <div class="control">
+                                <input class="check" type="checkbox" id="TrafficCheck" ng-model="trafficLayerVisibile" />
+                                <label class="check-label" for="TrafficCheck"></label>
+                            </div>
+                            <strong class="info">Traffic</strong>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="toggle">
+                            <div class="control">
+                                <input class="check" type="checkbox" id="HeatmapCheck" ng-model="heatmapLayerVisible" />
+                                <label class="check-label" for="HeatmapCheck"></label>
+                            </div>
+                            <strong class="info">Heatmap</strong>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div id="dispatch-map"></div>
+            <div class="journey-stats" ng-if="selected.directions">
+                <h3 class="section-title">Journey Information</h3>
+                <div class="row stats">
+                    <div class="col-sm-4 text-center">
+                        <strong>{{selected.booking.BookingStops.length}}</strong><span>Stops</span>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <strong>{{selected.directions.routes[0].legs[0].distance.text}}</strong><span>Distance</span>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <strong>{{selected.directions.routes[0].legs[0].duration.text}}</strong><span>Duration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

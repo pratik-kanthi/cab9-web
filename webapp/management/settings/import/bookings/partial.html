@@ -1,0 +1,472 @@
+<div class="panel panel-default" ng-if="import.stage == 'UPLOAD'">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Bookings Import - Import</h3>
+    </div>
+    <div class="panel-body" style="overflow:visible;">
+        <p>
+            Use this page to import external bookings into Cab9.<br />
+            Bookings will first be validated to ensure they conform to validation rules and a summary will be presented on the next page.
+        </p>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label">Choose File:</label>
+                    <input type="file" class="form-control" file-picker file="import.file" />
+                </div>
+            </div>
+            <div class="col-xs-4">
+
+            </div>
+            <div class="col-xs-4">
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button type="button" class="btn btn-success" ng-click="validateFile()" ng-show="!import.status"><i class="material-icons">play_arrow</i> Validate File</button>
+        <div ng-show="import.percent && import.status != 'Processing'">
+            {{import.status}} {{import.percent}}%
+        </div>
+        <div ng-show="import.status == 'Processing'">
+            Please wait.. Processing file.
+        </div>
+        <div ng-show="import.status == 'Error Uploading'">
+            An Error has occured!
+        </div>
+        <a type="button" class="btn btn-info pull-right" download="BookingImportTemplate.csv" href="/Uploads/Imports/Templates/BookingImportTemplate.csv"><i class="material-icons">play_arrow</i> Download Template</a>
+        <br class="clearfix" />
+    </div>
+</div>
+<div class="panel panel-default" ng-if="import.stage == 'VALIDATE'">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Bookings Import - Validate</h3>
+    </div>
+    <div class="panel-body" style="overflow:visible;">
+        <p>
+            Check the data below.
+        </p>
+    </div>
+    <table class="table table-condensed table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Row Number</th>
+                <th>Errors</th>
+                <th>Warnings</th>
+                <th style="width:128px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="row in import.preview">
+                <td><b class="text-primary">Row {{row.Row}}</b></td>
+                <td>
+                    <div ng-show="::row.Errors.length > 0">
+                        <i class="material-icons text-danger">error</i> Errors: {{::row.Errors.length}}
+                    </div>
+                    <div ng-show="::row.Errors.length == 0">
+                        <i class="material-icons text-success">thumb_up</i> Ready to Import
+                    </div>
+                </td>
+                <td>
+                    <div ng-show="::row.Warnings.length > 0">
+                        <i class="material-icons text-warning">warning</i> Warnings: {{::row.Warnings.length}}
+                    </div>
+                </td>
+                <td>
+                    <a class="btn btn-primary" ng-show="!row.$expanded" ng-click="row.$expanded = !row.$expanded"><i class="material-icons">expand_more</i> Expand</a>
+                </td>
+            </tr>
+            <tr ng-repeat-end ng-if="row.$expanded">
+                <td colspan="3">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="section-title">Values</h3>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Field:</th>
+                                        <th>Value:</th>
+                                        <th style="width:100px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Booking Status</td>
+                                        <td>{{row.BookingStatus}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingStatus')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingStatus')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Booking Date</td>
+                                        <td>{{row.BookingDate}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingDate')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingDate')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Booking Time</td>
+                                        <td>{{row.BookingTime}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingTime')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingTime')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Client Account No</td>
+                                        <td>{{row.ClientReference}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'ClientReference')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'ClientReference')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Vehicle Type</td>
+                                        <td>{{row.VehicleTypeName}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'VehicleTypeName')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'VehicleTypeName')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pax</td>
+                                        <td>{{row.BookingPax}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingPax')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingPax')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bax</td>
+                                        <td>{{row.BookingBax}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingBax')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingBax')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>AsDirected?</td>
+                                        <td>{{row.BookingAsDirected}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingAsDirected')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingAsDirected')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Passenger Name</td>
+                                        <td>{{row.PassengerName}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'PassengerName')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'PassengerName')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Passenger Mobile</td>
+                                        <td>{{row.PassengerMobile}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'PassengerMobile')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'PassengerMobile')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Passenger Email</td>
+                                        <td>{{row.PassengerEmail}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'PassengerEmail')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'PassengerEmail')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Driver Callsign</td>
+                                        <td>{{row.DriverCallsign}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'DriverCallsign')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'DriverCallsign')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Vehicle Registration</td>
+                                        <td>{{row.VehicleRegistration}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'VehicleRegistration')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'VehicleRegistration')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Passenger Notes</td>
+                                        <td>{{row.BookingPassengerNotes}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingPassengerNotes')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingPassengerNotes')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Driver Notes</td>
+                                        <td>{{row.BookingDriverNotes}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingDriverNotes')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingDriverNotes')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Office Notes</td>
+                                        <td>{{row.BookingOfficeNotes}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingOfficeNotes')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingOfficeNotes')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Actual Cost</td>
+                                        <td>{{row.BookingActualCost}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingActualCost')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingActualCost')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Driver Cost</td>
+                                        <td>{{row.BookingDriverCost}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingDriverCost')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingDriverCost')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Invoice Cost</td>
+                                        <td>{{row.BookingInvoiceCost}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingInvoiceCost')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingInvoiceCost')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wait And Return</td>
+                                        <td>{{row.BookingWaitAndReturn}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingWaitAndReturn')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingWaitAndReturn')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Passenger Notification Phone</td>
+                                        <td>{{row.BookingPassengerNotificationPhone}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingPassengerNotificationPhone')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingPassengerNotificationPhone')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Booker Name</td>
+                                        <td>{{row.BookerName}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookerName')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookerName')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Booking Reference</td>
+                                        <td>{{row.BookingReference}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'BookingReference')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'BookingReference')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 1 Address</td>
+                                        <td>{{row.Stop1Address}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop1Address')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop1Address')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 1 Postcode</td>
+                                        <td>{{row.Stop1Postcode}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop1Postcode')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop1Postcode')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 1 Latitude</td>
+                                        <td>{{row.Stop1Latitude}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop1Latitude')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop1Latitude')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 1 Longitude</td>
+                                        <td>{{row.Stop1Longitude}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop1Longitude')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop1Longitude')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 2 Address</td>
+                                        <td>{{row.Stop2Address}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop2Address')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop2Address')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 2 Postcode</td>
+                                        <td>{{row.Stop2Postcode}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop2Postcode')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop2Postcode')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 2 Latitude</td>
+                                        <td>{{row.Stop2Latitude}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop2Latitude')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop2Latitude')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 2 Longitude</td>
+                                        <td>{{row.Stop2Longitude}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop2Longitude')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop2Longitude')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 3 Address</td>
+                                        <td>{{row.Stop3Address}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop3Address')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop3Address')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 3 Postcode</td>
+                                        <td>{{row.Stop3Postcode}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop3Postcode')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop3Postcode')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 3 Latitude</td>
+                                        <td>{{row.Stop3Latitude}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop3Latitude')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop3Latitude')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 3 Longitude</td>
+                                        <td>{{row.Stop3Longitude}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop3Longitude')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop3Longitude')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 4 Address</td>
+                                        <td>{{row.Stop4Address}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop4Address')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop4Address')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 4 Postcode</td>
+                                        <td>{{row.Stop4Postcode}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop4Postcode')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop4Postcode')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 4 Latitude</td>
+                                        <td>{{row.Stop4Latitude}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop4Latitude')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop4Latitude')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Stop 4 Longitude</td>
+                                        <td>{{row.Stop4Longitude}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Stop4Longitude')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Stop4Longitude')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>OT Reference</td>
+                                        <td>{{row.OTRef}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'OTRef')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'OTRef')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>WaitingTime</td>
+                                        <td>{{row.WaitingTime}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'WaitingTime')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'WaitingTime')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>OverrideCommission</td>
+                                        <td>{{row.OverrideCommission}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'OverrideCommission')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'OverrideCommission')">warning</i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-6">
+                            <div ng-show="::row.Errors.length > 0">
+                                <h3 class="section-title">
+                                    Errors ({{row.Errors.length}})
+                                </h3>
+                                <ul>
+                                    <li ng-repeat="e in row.Errors">
+                                        <span class="text-danger" style="display:inline;">{{e.Error}}</span><br />
+                                        <small class="text-muted">{{e.Guidence}}</small>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div ng-show="::row.Errors.length == 0">
+                                <h3 class="section-title">
+                                    <i class="material-icons text-success">thumb_up</i> Ready to Import
+                                </h3>
+                            </div>
+                            <div ng-show="::row.Warnings.length > 0">
+                                <h3 class="section-title">
+                                    Warnings ({{row.Warnings.length}})
+                                </h3>
+                                <ul>
+                                    <li ng-repeat="e in row.Warnings">
+                                        <span class="text-warning" style="display:inline;">{{e.Error}}</span><br />
+                                        <small class="text-muted">{{e.Guidence}}</small>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style="vertical-align:top;">
+                    <a class="btn btn-warning" ng-click="row.$expanded = !row.$expanded" ><i class="material-icons">expand_less</i> Close</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="panel-footer">
+        <button type="button" class="btn btn-success" ng-click="importFile()" ng-disabled="import.hasErrors || import.pressed"><i class="material-icons">play_arrow</i> Confirm</button>
+    </div>
+</div>

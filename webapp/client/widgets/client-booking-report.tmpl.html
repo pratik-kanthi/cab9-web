@@ -1,0 +1,22 @@
+<div class="grid-item double intro-panel">
+    <div class="wrapper">
+        <div class="left">
+            <h2><small>Welcome</small><br /><span ng-bind="$root.USER.Name"></span></h2>
+            <div class="quick-stat">
+                <div class="number">
+                    <i class="material-icons">person_pin</i><span ng-bind="bookerCount"></span>
+                </div>
+                <div class="description">Bookers</div>
+            </div>
+            <div class="quick-stat">
+                <div class="number">
+                    <i class="material-icons">local_taxi</i><span ng-bind="passengerCount"></span>
+                </div>
+                <div class="description">Passengers</div>
+            </div>
+        </div>
+        <div class="right" promise-shadow promise="deferred.promise">
+            <flot dataset="bookingGraph.data" options="bookingGraph.options"></flot>
+        </div>
+    </div>
+</div>

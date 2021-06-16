@@ -1,0 +1,53 @@
+<div id="partner-card{{partner.Id}}" class="partner-card panel panel-default">
+    <div class="panel-heading">
+        <div class="partner-info">
+            <img ng-src="{{::partner.LogoUrl}}" alt="" />
+            <div>
+                <h3 class="panel-title" ng-bind="::partner.Name"></h3>
+                <!-- <div star-rating rating-value="4" max="5"></div> -->
+            </div>
+        </div>
+        <div class="actions" ng-if="showActions">
+            <strong ng-if="partner.AlreadyPartner">
+                <span class="partnership-status Accepted"><i class="material-icons">thumb_up</i>Partner</span>
+            </strong>
+            <div ng-if="!partner.AlreadyPartner">
+                <div ng-if="partner.PartnerRequestStatus && !partner.RequestStatus">
+                    <div ng-if="partner.PartnerRequestStatus=='Requested'">
+                        <span class="partnership-status" ng-class="partner.PartnerRequestStatus"><i class="material-icons">pending_actions</i>Request Pending</span>
+                    </div>
+                    <div ng-if="partner.PartnerRequestStatus!='Requested'">
+                        <span class="partnership-status" ng-class="partner.PartnerRequestStatus"><i class="material-icons">highlight_off</i>Rejected (Self)</span>
+                    </div>
+                </div>
+                <div ng-if="partner.RequestStatus">
+                    <span class="partnership-status" ng-class="partner.RequestStatus">
+                        <i ng-if="partner.RequestStatus!='Rejected'" class="material-icons">check</i>
+                        <i ng-if="partner.RequestStatus=='Rejected'" class="material-icons">highlight_off</i>
+                        {{partner.RequestStatus}}</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="bio">
+            <p class="grey" ng-bind="::partner.CompanyDescription | Truncate:256">
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 partner-stat">
+                <i class="material-icons">person_pin</i>
+                <p><strong ng-bind="::partner.DriversCount | AbbrValue"></strong>Drivers</p>
+            </div>
+            <div class="col-xs-4 partner-stat">
+                <i class="material-icons">drive_eta</i>
+                <p><strong ng-bind="::partner.VehiclesCount | AbbrValue"></strong>Vehicles</p>
+            </div>
+            <div class="col-xs-4 partner-stat">
+                <i class="material-icons">dns</i>
+                <p><strong ng-bind="::partner.BookingsCount | AbbrValue"></strong>Bookings</p>
+            </div>
+        </div>
+    </div>
+</div>

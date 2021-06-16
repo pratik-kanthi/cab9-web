@@ -1,0 +1,1414 @@
+.warning {
+    &.Low {
+        background-color: @sky !important;
+    }
+
+    &.Medium {
+        background-color: @yellow !important;
+    }
+
+    &.High {
+        background-color: @red !important;
+    }
+
+    i {
+        animation: blink-animation 1s steps(2, start) infinite;
+    }
+}
+
+#dispatch {
+    #dispatch-bookings,
+    #dispatch-workshare {
+        .header {
+            background-color: @brand-primary;
+            height: 32px;
+            padding: 0 4px;
+            line-height: 32px;
+            margin: 4px;
+            margin-bottom: 0;
+            color: #fff;
+            padding-left: 12px;
+            font-weight: 600;
+
+            .content-wrapper {
+                .journey {
+                    float: left;
+                    width: 30%;
+                }
+
+                .passenger {
+                    float: left;
+                    width: 15%;
+                    padding-left: 10px;
+                }
+                .driver {
+                    float: left;
+                    width: 17%;
+                    height: 32px;
+                }
+
+                .time,
+                .status {
+                    float: left;
+                    text-align: center;
+                    width: 12.5%;
+                }
+            }
+        }
+
+        .bookings-wrapper {
+            padding: 0 4px;
+
+            .no-bookings {
+                padding: 16px;
+                text-align: center;
+
+                h4 {
+                    color: @grey;
+                    margin: 0;
+                    margin-bottom: 8px;
+                    font-size: 20px;
+                }
+            }
+
+            .booking {
+                cursor: pointer; // height: 42px;
+                margin-top: 4px;
+                padding: 3px 0 2px;
+                padding-left: 8px;
+                font-size: 13px;
+                color: #444;
+                font-weight: 400;
+
+                &.selected {
+                    border: 2px dashed #999;
+                }
+
+                .content-wrapper {
+                    height: 50px;
+
+                    .text {
+                        display: block;
+                        width: 100%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        -ms-text-overflow: ellipsis;
+                        -o-text-overflow: ellipsis;
+                        text-overflow: ellipsis;
+                        line-height: 22px;
+                        position: relative;
+
+                        .tooltip {
+                            white-space: pre-wrap; // z-index: 10000;
+                        }
+                    }
+
+                    .journey {
+                        float: left;
+                        width: 30%;
+                        overflow: hidden;
+                        font-size: 12px;
+                        .indicators {
+                            line-height: 10px;
+                            overflow: hidden;
+                            white-space: nowrap;
+
+                            .tag {
+                                // float: left;
+                                margin-right: 4px;
+                                max-width: 120px;
+                                color: #fff;
+                                padding: 0px 8px 1px;
+                                .border-radius(2px);
+                                font-weight: 600;
+                                line-height: 17px;
+                                font-size: 11px;
+                                .text-ellipsis();
+                                margin-top: 6px;
+                                text-transform: uppercase;
+                                &.icon {
+                                    background-color: darken(@purple, 10%);
+                                    padding: 0 4px;
+                                    i {
+                                        margin: 0 !important;
+                                        line-height: 18px;
+                                    }
+                                }
+                                &.booking-source {
+                                    background-color: @brand-primary;
+                                    &.WEB {
+                                        background-color: @sky;
+                                    }
+
+                                    &.OTHER {
+                                        background-color: @grey;
+                                    }
+
+                                    &.PHONE {
+                                        background-color: darken(@black, 10%);
+                                    }
+                                    &.CLIENT_PORTAL {
+                                        background-color: darken(@purple, 10%);
+                                    }
+                                    &.APP {
+                                        background-color: darken(@green, 10%);
+                                    }
+
+                                    &.ONETRANSPORT {
+                                        background-color: darken(@blue, 10%);
+                                    }
+                                }
+                                &.cost {
+                                    background-color: @grey;
+                                }
+
+                                &.pax {
+                                    background-color: @blue;
+                                }
+
+                                &.flight {
+                                    background-color: #9c27b0;
+                                    color: #fff;
+                                    text-transform: uppercase;
+                                    line-height: 19px;
+                                    i {
+                                        float: left;
+                                        font-size: 11px;
+                                        margin-top: 1px !important;
+                                        margin-right: 2px !important;
+                                    }
+                                }
+
+                                &.vehicle {
+                                    background-color: @purple;
+                                    max-width: 100px;
+
+                                    &.Passenger {
+                                    }
+
+                                    &.Unit.Car {
+                                        background-color: @cyan !important;
+                                        color: #fff !important;
+                                    }
+                                    &.Estate,
+                                    &.estate {
+                                        background-color: @dark-blue !important;
+                                        color: #fff !important;
+                                    }
+
+                                    &.Black.Taxi {
+                                        background-color: white !important;
+                                        color: black !important;
+                                    }
+
+                                    &.Executive {
+                                        background-color: @black;
+                                    }
+
+                                    &.Chauffeur {
+                                        background-color: gold;
+                                        color: #000;
+                                    }
+
+                                    &.EcoCar {
+                                        background-color: @green;
+                                    }
+
+                                    &.MPV {
+                                        background-color: #26ae90;
+
+                                        &.Premium {
+                                            background-color: gold !important;
+                                            color: #000 !important;
+                                        }
+                                    }
+                                }
+
+                                &.pre {
+                                    background-color: @brand-primary;
+                                }
+
+                                &.new {
+                                    background-color: yellow;
+                                    color: #000;
+                                }
+
+                                &.notes {
+                                    background-color: @red !important;
+                                }
+
+                                i {
+                                    font-size: 13px;
+                                    float: left;
+                                    margin-top: 2px;
+                                    margin-right: 4px;
+                                }
+                            }
+                        }
+
+                        .pickup {
+                            width: 100%;
+                            display: block !important;
+                            .text-ellipsis();
+                        }
+                    }
+
+                    .passenger {
+                        float: left;
+                        width: 15%;
+                        padding-left: 8px;
+                    }
+
+                    .accept-reject {
+                        padding-top: 12px;
+                        width: 17%;
+                        float: left;
+                        .btn {
+                            padding-left: 12px;
+                            i {
+                                display: none;
+                                line-height: 22px;
+                            }
+                        }
+                        @media (max-width: 888px) {
+                            padding-top: 0;
+                            .btn {
+                                margin-bottom: 4px;
+                                height: 22px;
+                                line-height: 21px;
+                            }
+                        }
+                        @media (min-width: 1025px) and (max-width: 1184px) {
+                            padding-top: 0;
+                            .btn {
+                                margin-bottom: 4px;
+                                height: 22px;
+                                line-height: 21px;
+                            }
+                        }
+                    }
+
+                    .driver {
+                        float: left;
+                        width: 17%;
+
+                        i {
+                            float: left;
+                            margin-right: 4px;
+                            font-size: 16px;
+                            line-height: 24px;
+                            &.add {
+                                line-height: 42px;
+                                font-size: 18px;
+                            }
+                        }
+                    }
+
+                    .allocation-options {
+                        .btn {
+                            border-radius: 50%;
+                            height: 25px;
+                            width: 25px;
+                            padding: 0;
+                            text-align: center;
+
+                            i {
+                                position: relative;
+                                top: -9px;
+                                left: -1px;
+                                width: 25px;
+                            }
+                        }
+                    }
+
+                    .time,
+                    .status {
+                        float: left;
+                        width: 12.5%;
+                        text-align: center;
+
+                        strong {
+                            text-transform: capitalize;
+                            width: 90px;
+                            .center-block();
+                            margin-top: 7px;
+                        }
+
+                        span {
+                            font-size: 12px;
+                        }
+                    }
+
+                    p {
+                        line-height: 42px;
+                        margin: 0 !important;
+                        font-weight: 600;
+                    }
+
+                    .action {
+                        width: 13%;
+                        float: left;
+                        padding-top: 12px;
+                        text-align: center;
+
+                        .expand {
+                            border: 0;
+                            cursor: pointer;
+                            display: inline-block;
+                            height: 24px;
+                            width: 24px;
+                            margin-right: 4px;
+                            .border-radius(50%);
+                            line-height: 24px;
+                            background-color: @brand-primary;
+                            color: #fff;
+                            text-align: center;
+                        }
+
+                        @media (max-width: 1024px) {
+                            .select {
+                                display: none;
+                            }
+                        }
+                    }
+
+                    .badge {
+                        .border-radius(3px);
+                    }
+
+                    .profile {
+                        margin-top: 2px;
+                        float: left;
+                        height: 32px;
+                        width: 32px;
+                        .border-radius(50%);
+                        background-color: #fff;
+                        margin-right: 8px;
+                    }
+
+                    &:after {
+                        content: "";
+                        display: block;
+                        clear: both;
+                    }
+                }
+
+                .expand-wrapper {
+                    background-color: #fff;
+                    margin-left: -13px;
+                    margin-bottom: -6px;
+                    padding-left: 32px;
+
+                    .expanded {
+                        table.info-table {
+                            th {
+                                padding: 4px !important;
+                            }
+
+                            tbody {
+                                tr {
+                                    td {
+                                        padding: 4px !important;
+                                        background: #eee !important;
+                                    }
+                                }
+                            }
+                        }
+
+                        .actions {
+                            margin-bottom: 10px;
+                            margin-top: 8px;
+
+                            > ul {
+                                list-style: none;
+                                padding-left: 0;
+
+                                > li {
+                                    float: left;
+                                    margin-right: 10px;
+                                }
+                            }
+                        }
+
+                        .btn-group {
+                            a {
+                                &.btn {
+                                    color: #fff !important;
+                                }
+                            }
+
+                            ul.dropdown-menu {
+                                left: 0;
+                                right: 0;
+                                top: 24px;
+                                min-width: inherit;
+                                .border-radius(4px);
+                                overflow: hidden;
+
+                                li {
+                                    height: 30px;
+
+                                    a {
+                                        min-width: inherit;
+                                        height: 30px;
+                                        text-align: center;
+                                        line-height: 30px;
+                                        padding: 0;
+                                        color: #fff !important;
+
+                                        i {
+                                            line-height: 30px;
+                                            color: #fff !important;
+                                        }
+
+                                        &.Incoming {
+                                            background-color: mix(@orange, #fff, 80%);
+                                            border-bottom: 1px solid mix(@orange, #fff, 90%);
+
+                                            &:hover {
+                                                background-color: mix(@orange, #fff, 90%);
+                                            }
+                                        }
+
+                                        &.Allocated {
+                                            background-color: mix(@dark-green, #fff, 80%);
+                                            border-bottom: 1px solid mix(@dark-green, #fff, 90%);
+
+                                            &:hover {
+                                                background-color: mix(@dark-green, #fff, 90%);
+                                            }
+                                        }
+
+                                        &.OnRoute {
+                                            background-color: mix(@brand-primary, #fff, 70%);
+                                            border-bottom: 1px solid mix(@brand-primary, #fff, 80%);
+
+                                            &:hover {
+                                                background-color: mix(@brand-primary, #fff, 80%);
+                                            }
+                                        }
+
+                                        &.Arrived {
+                                            background-color: mix(@purple, #fff, 80%);
+                                            border-bottom: 1px solid mix(@purple, #fff, 90%);
+
+                                            &:hover {
+                                                background-color: mix(@purple, #fff, 90%);
+                                            }
+                                        }
+
+                                        &.InProgress {
+                                            background-color: mix(@sky, #fff, 80%);
+                                            border-bottom: 1px solid mix(@sky, #fff, 90%);
+
+                                            &:hover {
+                                                background-color: mix(@sky, #fff, 90%);
+                                            }
+                                        }
+
+                                        &.OpenToBid {
+                                            background-color: mix(@yellow, #fff, 80%);
+                                            border-bottom: 1px solid mix(@yellow, #fff, 90%);
+
+                                            &:hover {
+                                                background-color: mix(@yellow, #fff, 90%);
+                                            }
+                                        }
+
+                                        &.Completed {
+                                            background-color: mix(@blue, #fff, 80%);
+                                            border-bottom: 1px solid mix(@blue, #fff, 90%);
+
+                                            &:hover {
+                                                background-color: mix(@blue, #fff, 90%);
+                                            }
+                                        }
+
+                                        &.Cancelled {
+                                            background-color: mix(@red, #fff, 80%);
+                                            border-bottom: 1px solid mix(@red, #fff, 90%);
+
+                                            &:hover {
+                                                background-color: mix(@red, #fff, 90%);
+                                            }
+                                        }
+
+                                        &.COA {
+                                            background-color: mix(@red, #fff, 60%);
+                                            border-bottom: 1px solid mix(@red, #fff, 80%);
+
+                                            &:hover {
+                                                background-color: mix(@red, #fff, 80%);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        border-left: 1px solid @orange;
+                        padding: 4px 16px 12px;
+
+                        h3.section-title {
+                            margin-top: 12px !important;
+                            font-size: 15px;
+                            font-weight: 600;
+                            margin-bottom: 8px !important;
+                            color: inherit;
+                            padding-bottom: 4px;
+                            border-bottom: 1px dotted #ddd;
+                        }
+
+                        .form-box {
+                            margin-bottom: 8px;
+
+                            label {
+                                color: inherit !important;
+                                font-size: 14px;
+                            }
+
+                            .info {
+                                font-size: 14px;
+                                color: inherit !important;
+                                font-weight: 400;
+                            }
+                        }
+                    }
+                }
+
+                &.COA {
+                    &:focus {
+                        outline: 2px solid mix(@red, #fff, 60%);
+                    }
+
+                    border-left: 5px solid mix(@red, #fff, 60%);
+                    background-color: lighten(mix(@red, #fff, 60%), 25%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(mix(@red, #fff, 60%), 30%);
+                            border-left: 1px solid mix(@red, #fff, 60%);
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: mix(@red, #fff, 60%);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(mix(@red, #fff, 60%), 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: mix(@red, #fff, 60%);
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: mix(@red, #fff, 60%);
+                        }
+                    }
+                }
+
+                &.Cancelled {
+                    &:focus {
+                        outline: 2px solid mix(@red, #fff, 60%);
+                    }
+
+                    border-left: 5px solid mix(@red, #fff, 60%);
+                    background-color: lighten(mix(@red, #fff, 60%), 25%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(mix(@red, #fff, 60%), 30%);
+                            border-left: 1px solid mix(@red, #fff, 60%);
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: mix(@red, #fff, 60%);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(mix(@red, #fff, 60%), 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: mix(@red, #fff, 60%);
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: mix(@red, #fff, 60%);
+                        }
+                    }
+                }
+
+                &.Incoming {
+                    &:focus {
+                        outline: 2px solid @orange;
+                    }
+
+                    border-left: 5px solid @orange;
+                    background-color: lighten(@orange, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@orange, 49%);
+                            border-left: 1px solid @orange;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @orange;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@orange, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @orange;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @orange;
+                        }
+                    }
+                }
+
+                &.Unconfirmed {
+                    &:focus {
+                        outline: 2px solid @yellow;
+                    }
+
+                    border-left: 5px solid @yellow;
+                    background-color: lighten(@yellow, 20%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@yellow, 40%);
+                            border-left: 1px solid @yellow;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @yellow;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: #444;
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @yellow;
+                            color: #444;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: #444;
+                        }
+                    }
+                }
+
+                &.Allocated {
+                    &:focus {
+                        outline: 2px solid @dark-green;
+                    }
+
+                    border-left: 5px solid @dark-green;
+                    background-color: lighten(@dark-green, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@dark-green, 60%);
+                            border-left: 1px solid @dark-green;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @dark-green;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@dark-green, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @dark-green;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @dark-green;
+                        }
+                    }
+                }
+
+                &.PreAllocated {
+                    &:focus {
+                        outline: 2px solid @light-green;
+                    }
+
+                    border-left: 5px solid @light-green;
+                    background-color: lighten(@light-green, 30%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@light-green, 49%);
+                            border-left: 1px solid @light-green;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @light-green;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@light-green, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @light-green;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @light-green;
+                        }
+                    }
+                }
+
+                &.OnRoute {
+                    &:focus {
+                        outline: 2px solid @brand-primary;
+                    }
+
+                    border-left: 5px solid @brand-primary;
+                    background-color: lighten(@brand-primary, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@brand-primary, 49%);
+                            border-left: 1px solid @brand-primary;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @brand-primary;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@brand-primary, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @brand-primary;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @brand-primary;
+                        }
+                    }
+                }
+
+                &.Arrived {
+                    &:focus {
+                        outline: 2px solid @purple;
+                    }
+
+                    border-left: 5px solid @purple;
+                    background-color: lighten(@purple, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@purple, 49%);
+                            border-left: 1px solid @purple;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @purple;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@purple, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @purple;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @purple;
+                        }
+                    }
+                }
+
+                &.InProgress {
+                    &:focus {
+                        outline: 2px solid @sky;
+                    }
+
+                    border-left: 5px solid @sky;
+                    background-color: lighten(@sky, 30%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@sky, 35%);
+                            border-left: 1px solid @sky;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @sky;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@sky, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @sky;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @sky;
+                        }
+                    }
+                }
+
+                &.OpenToBid {
+                    &:focus {
+                        outline: 2px solid @yellow;
+                    }
+
+                    border-left: 5px solid @yellow;
+                    background-color: lighten(@yellow, 30%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@yellow, 35%);
+                            border-left: 1px solid @yellow;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @yellow;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@yellow, 30%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: darken(@yellow, 30%);
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @yellow;
+                        }
+                    }
+                }
+
+                &.Clearing {
+                    &:focus {
+                        outline: 2px solid @brand-primary;
+                    }
+
+                    border-left: 5px solid @brand-primary;
+                    background-color: lighten(@brand-primary, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@brand-primary, 49%);
+                            border-left: 1px solid @brand-primary;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @brand-primary;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@brand-primary, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @brand-primary;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @brand-primary;
+                        }
+                    }
+                }
+
+                &.Completed {
+                    &:focus {
+                        outline: 2px solid @dark-blue;
+                    }
+
+                    border-left: 5px solid @dark-blue;
+                    background-color: lighten(@dark-blue, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@dark-blue, 49%);
+                            border-left: 1px solid @dark-blue;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @dark-blue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@dark-blue, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @dark-blue;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @dark-blue;
+                        }
+                    }
+                }
+
+                &.Sent {
+                    &:focus {
+                        outline: 2px solid @dark-grey;
+                    }
+
+                    border-left: 5px solid @dark-grey;
+                    background-color: lighten(@dark-grey, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@dark-grey, 49%);
+                            border-left: 1px solid @dark-grey;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @dark-grey;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@dark-grey, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @dark-grey;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @dark-grey;
+                        }
+                    }
+                }
+
+                &.Read {
+                    &:focus {
+                        outline: 2px solid @blue;
+                    }
+
+                    border-left: 5px solid @blue;
+                    background-color: lighten(@blue, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@blue, 49%);
+                            border-left: 1px solid @blue;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @blue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@blue, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @blue;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @blue;
+                        }
+                    }
+                }
+
+                &.Accepted {
+                    &:focus {
+                        outline: 2px solid @green;
+                    }
+
+                    border-left: 5px solid @green;
+                    background-color: lighten(@green, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@green, 49%);
+                            border-left: 1px solid @green;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @green;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@green, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @green;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @green;
+                        }
+                    }
+                }
+
+                &.Rejected {
+                    &:focus {
+                        outline: 2px solid @red;
+                    }
+
+                    border-left: 5px solid @red;
+                    background-color: lighten(@red, 40%);
+
+                    .expand-wrapper {
+                        .expanded {
+                            background-color: lighten(@red, 49%);
+                            border-left: 1px solid @red;
+
+                            .actions {
+                                .btn-group {
+                                    .btn {
+                                        background-color: @red;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    color: darken(@red, 10%);
+
+                    .time,
+                    .status {
+                        strong.badge {
+                            background-color: @red;
+                        }
+                    }
+
+                    .action {
+                        .expand {
+                            background-color: @red;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.driver-selection {
+    .selectize-control {
+        .selectize-input {
+            height: auto !important;
+        }
+    }
+}
+
+.allocation-modal {
+    .modal-dialog {
+        width: 800px;
+        .modal-content {
+            background: transparent;
+            .modal-body {
+                .section {
+                    .wrapper {
+                        position: relative;
+                        background: #fff;
+                        overflow: hidden;
+                        height: 558px;
+                        .border-radius(4px);
+                        .section-title {
+                            padding: 12px 8px;
+                            margin-top: 0;
+                            margin-bottom: 0px;
+                            color: @brand-primary;
+                            i {
+                                color: @brand-primary;
+                            }
+                            font-weight: 600;
+                        }
+                        .list-wrapper {
+                            height: 465px;
+                            overflow: auto;
+                            .search {
+                                input {
+                                    padding: 4px 8px;
+                                    padding-left: 16px;
+                                    width: 100%;
+                                    font-size: 14px;
+                                    border: 0;
+                                    outline: none;
+                                    border-bottom: 1px solid #ddd;
+                                    border-top: 1px solid #ddd;
+                                    background-image: url("data:image/png;base64,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");
+                                    background-size: 24px;
+                                    background-repeat: no-repeat;
+                                    background-position: left 8px top 3px;
+                                    padding-left: 38px;
+                                }
+                            }
+                            .offline {
+                                border-bottom: 1px solid #ddd;
+                                padding: 0px 12px 0 12px;
+                                .checkbox {
+                                    margin-bottom: 0;
+                                    display: inline-block;
+                                    label {
+                                        &:after {
+                                            top: 2px;
+                                            left: -4px;
+                                        }
+                                    }
+                                }
+                                label {
+                                    display: inline-block;
+                                    margin-left: 8px;
+                                    position: relative;
+                                    top: -2px;
+                                }
+                            }
+                            .list {
+                                .driver-status {
+                                    padding: 2px 8px;
+                                    background: @brand-secondary;
+                                    span {
+                                        color: #fff;
+                                        text-transform: uppercase;
+                                        font-weight: 600;
+                                        font-size: 12px;
+                                    }
+                                }
+                                .driver-wrapper {
+                                    position: relative;
+                                    padding: 4px 8px;
+                                    border-bottom: 1px solid #ddd;
+                                    line-height: 14px;
+                                    cursor: pointer;
+                                    &:hover {
+                                        background: lighten(@brand-primary, 55%);
+                                    }
+                                    &.chosen {
+                                        background: lighten(@brand-primary, 50%);
+                                    }
+                                    .driver {
+                                        .text-ellipsis();
+                                        .available,
+                                        .pre {
+                                            top: 0;
+                                            right: 0;
+                                            position: absolute;
+                                            font-size: 12px;
+                                            padding: 2px 4px;
+                                            text-align: center;
+                                            color: white;
+                                        }
+                                        .available {
+                                            background-color: @green;
+                                        }
+                                        .pre {
+                                            background-color: @orange;
+                                        }
+                                        width: 100%;
+                                        a {
+                                            font-size: 13px;
+                                        }
+                                        .driver-image {
+                                            float: left;
+                                            width: 32px;
+                                            height: 32px;
+                                            margin-right: 12px;
+                                            margin-top: 3px;
+                                            background-repeat: no-repeat;
+                                            background-position: center;
+                                            background-size: cover;
+                                            .border-radius(16px);
+                                            .shadow();
+                                            &.gett {
+                                                background-color: #f8b631;
+                                                background-size: 28px;
+                                            }
+                                            &.workshare {
+                                                background-color: #eeeeee;
+                                                background-size: 28px;
+                                            }
+                                        }
+                                        .rating {
+                                            display: flex;
+                                            font-size: 13px;
+                                            line-height: 15px;
+                                            font-weight: 600;
+                                            color: #777;
+                                            span.rate {
+                                                flex-grow: 1;
+                                                flex-basis: 0;
+                                                margin-right: 12px;
+                                            }
+                                            i {
+                                                font-size: 18px;
+                                                position: relative;
+                                                top: 4px;
+                                                margin-right: 1px;
+                                                color: @green;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .actions {
+                                position: absolute;
+                                bottom: 0;
+                                left: 0;
+                                right: 0;
+                                .btn {
+                                    width: 33.33%;
+                                    display: inline-block;
+                                    margin: 0;
+                                    float: left;
+                                    .border-radius(0);
+                                    line-height: 15px;
+                                    padding: 8px 8px;
+                                    height: 36px;
+                                    &.full {
+                                        width: 100%;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.booking-info-modal {
+    ul.nav.nav-tabs {
+        margin: -15px -30px;
+        background-color: #ddd;
+        li {
+            border-bottom: 2px solid #ddd;
+            a {
+                padding: 14px;
+                line-height: 20px;
+                text-transform: capitalize;
+                font-size: 16px;
+            }
+            &.active {
+                border-bottom: 2px solid @brand-primary;
+                background-color: @brand-primary;
+                a {
+                    color: #fff;
+                }
+            }
+        }
+    }
+}

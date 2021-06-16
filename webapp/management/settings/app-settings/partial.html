@@ -1,0 +1,163 @@
+﻿<div id="pricing-zone-pm">
+    <h3 class="section-title mt0">Customer App Configuration</h3>
+    <div class="row mt30">
+        <div class="col-sm-4">
+            <div ng-show="!selectedAppConfig">
+                <a class="btn btn-success" ng-click="addNewAppConfig()"><i class="material-icons">playlist_add</i>Add New</a>
+                <div class="pricing-zones-wrapper mt20">
+                    <div class="pricing-zone info-card" ng-show="AppConfigs.length==0">
+                        <div class="name">No App Configuration Found</div>
+                        <div class="description mt5">Please add an <b>App Configuration</b>. Without an App Configuration, passengers won't be able to book a vehicle.</div>
+                    </div>
+                    <div class="pricing-zone info-card" ng-repeat="ac in AppConfigs">
+                        <div class="name">{{ac.Name}}</div>
+                        <div class="expanded" ng-if="$expanded">
+                            <div class="mt10">
+                                <small class="brand-secondary">Below settings apply when a passenger is requesting a pickup in the selected area. <b>Maximum Distance</b> will set the value of maximum journey distance out of the selected zone. Passengers will not be able to book a vehicle outside this mileage.</small>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="stat">
+                                        <div class="label">Maximum Distance</div>
+                                        <div class="number" ng-if="ac.MaximumDistance">{{ac.MaximumDistance}} mi.</div>
+                                        <div class="number" ng-if="!ac.MaximumDistance">N/A</div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="stat">
+                                        <div class="label">Min ETAp</div>
+                                        <div class="number" ng-if="ac.DriverMinETA">{{ac.DriverMinETA}} mins</div>
+                                        <div class="number" ng-if="!ac.DriverMinETA">N/A</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt10">
+                                <small class="brand-secondary"><b>Driver ETA Cap</b> will set the maximum duration which will be shown to customer, <b>Driver ETA Unavailable</b> will set the maximum duration after which no vehicle will not be available to the customer.</small>
+                            </div>
+                            <div class="row mt0">
+                                <div class="col-xs-6">
+                                    <div class="stat">
+                                        <div class="label">Driver ETA Cap</div>
+                                        <div class="number" ng-if="ac.DriverETACap">{{ac.DriverETACap}} mins</div>
+                                        <div class="number" ng-if="!ac.DriverETACap">N/A</div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="stat">
+                                        <div class="label">Driver ETA Unavailable</div>
+                                        <div class="number" ng-if="ac.DriverETAUnavailable">{{ac.DriverETAUnavailable}} mins</div>
+                                        <div class="number" ng-if="!ac.DriverETAUnavailable">N/A</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt10">
+                                <small class="brand-secondary"><b>Lead Time</b> will set the time duration after which a customer can book cab, in case there is no driver available currently. <b>Time Multiplier</b> will set the time multiplier factor that you want to update actual ETA with considering traffic and other factors.</small>
+                            </div>
+                            <div class="row mt0">
+                                <div class="col-xs-6">
+                                    <div class="stat">
+                                        <div class="label">Booking Lead Time</div>
+                                        <div class="number" ng-if="ac.LeadTime">{{ac.LeadTime}} mins</div>
+                                        <div class="number" ng-if="!ac.LeadTime">N/A</div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="stat">
+                                        <div class="label">Time Multiplier</div>
+                                        <div class="number" ng-if="ac.TimeMultiplier">{{ac.TimeMultiplier}}</div>
+                                        <div class="number" ng-if="!ac.TimeMultiplier">N/A</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt10">
+                                <small class="brand-secondary">Below settings apply when a passenger is requesting a pickup in the selected area. <b>Visible Driver Setting</b> will set the settings to show available, none or all drivers in the selected area.</small>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                        <div class="stat">
+                                        <div class="label">Visible Driver Setting</div>
+                                        <div class="number" ng-if="ac.VisibleDriverSetting">Drivers shown - {{ac.VisibleDriverSetting}}</div>
+                                        <div class="number" ng-if="!ac.VisibleDriverSetting">N/A</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <a ng-click="startEditAppConfig(ac)"><i class="material-icons">create</i></a>
+                            <a ng-click="$expanded = !$expanded">
+                                <i ng-show="($expanded)" class="material-icons">expand_less</i>
+                                <i ng-show="(!$expanded)" class="material-icons">expand_more</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default" ng-show="selectedAppConfig">
+                <div class="panel-heading">
+                    <h3 class="panel-title">App Configs</h3>
+                </div>
+                <div class="panel-body">
+                    <div form-for="selectedAppConfig" schema="AppConfig" mode="CREATE">
+                        <small class="brand-secondary">Please fill the details below and create your desired area on the map provided.</small>
+                        <div class="mt10" field-for="Name"></div>
+                        <div class="mb10">
+                            <small class="brand-secondary"><b>Maximum Distance</b> will set the value of maximum journey distance out of the selected zone. Passengers will not be able to book a vehicle outside this mileage.</small>
+                        </div>
+                        <div field-for="MaximumDistance" display="Maximum Journey Distance (miles)"></div>
+                        <div field-for="DriverMinETA"></div>
+                        <div class="mb10">
+                            <small class="brand-secondary"><b>Driver ETA Cap</b> will set the maximum duration which will be shown to customer and will set the maximum duration after which no vehicle will not be available to the customer.</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div field-for="DriverETACap"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div field-for="DriverETAUnavailable"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt10">
+                            <small class="brand-secondary"><b>Lead Time</b> will set the time duration after which a customer can book cab, in case there is no driver available currently. <b>Time Multiplier</b> will set the time multiplier factor that you want to update actual ETA with considering traffic and other factors.</small>
+                        </div>
+                        <div class="row mt0">
+                            <div class="col-xs-6">
+                                <div field-for="LeadTime"></div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div field-for="TimeMultiplier"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb10">
+                                <small class="brand-secondary">Below settings apply when a passenger is requesting a pickup in the selected area. <b>Visible Driver Setting</b> will set the settings to show available, none or all drivers in the selected area.</small>
+                            </div>
+                            <div field-for="VisibleDriverSetting" display="Visible Driver Setting (Drivers to be shown in area)"></div>
+                    </div>
+                    <div ng-show="selectedAppConfigMode == 'CREATE'">
+                    </div>
+                </div>
+                <div class="panel-footer" ng-show="selectedAppConfigMode == 'CREATE'">
+                    <button class="btn btn-success" ng-click="saveNewAppConfig()" ng-disabled="!(selectedAppConfig.EncodedPath)"><i class="material-icons">save</i>Save App Config</button>
+                    <button class="btn btn-warning" ng-click="cancelNewAppConfig()"><i class="material-icons">undo</i>Cancel</button>
+                </div>
+                <div class="panel-footer" ng-show="selectedAppConfigMode == 'EDIT'">
+                    <button class="btn btn-success" ng-click="editAppConfig()"><i class="material-icons">save</i>Save</button>
+                    <button class="btn btn-warning" ng-click="cancelEditAppConfigs()"><i class="material-icons">undo</i>Cancel</button>
+                    <button class="btn btn-danger pull-right" ng-click="deleteEditAppConfig()"><i class="material-icons">delete</i>Delete</button>
+                </div>
+            </div>
+        </div>
+        <!-- Map on right -->
+        <div class="col-sm-8 map-div">
+            <address-map-search object="map.center"></address-map-search>
+            <ui-gmap-google-map center="map.center" zoom="map.zoom" pan="true" control="map.control" styles="map.styles" options="map.options" bounds="mapBounds">
+                <ui-gmap-drawing-manager options="drawingManager.options" control="drawingManager.control"></ui-gmap-drawing-manager>
+                <ui-gmap-polygons models="configPolygons" path="'path'" editable="'editable'" draggable="'draggable'" stroke="'stroke'" fit="true" events="'events'" static="false"></ui-gmap-polygons>
+                <ui-gmap-marker idKey='2' coords="companyMarker.coords" options="companyMarker.options"></ui-gmap-marker>
+            </ui-gmap-google-map>
+        </div>
+    </div>
+</div>

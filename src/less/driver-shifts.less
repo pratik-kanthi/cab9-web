@@ -1,0 +1,123 @@
+#driver-shifts {
+  .week-selector {
+    i {
+      float: right;
+      width: 24px;
+      height: 24px;
+      background-color: @brand-primary;
+      color: #fff;
+      line-height: 24px;
+      text-align: center;
+      margin-left: 12px;
+      .border-radius(12px);
+      cursor: pointer;
+    }
+
+    strong {
+      margin-left: 12px;
+      float: right;
+    }
+  }
+
+  #driver-shift-lists {
+    .table-responsive {
+      overflow: scroll;
+    }
+  }
+
+    .table-search {
+      float: right;
+      border: 0;
+      -webkit-apperance: none;
+      border: 1px solid @light-grey;
+      margin: 0;
+      .border-radius(4px);
+      height: 30px;
+      line-height: 30px;
+      outline: none;
+      box-shadow: none;
+      background-image: url("/includes/images/search.png");
+      background-repeat: no-repeat;
+      background-position: left 10px center;
+      background-size: 20px;
+      padding-left: 40px;
+      margin-bottom: 2px;
+      &:focus {
+        outline: none;
+        border-color: inherit;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+      }
+    }
+
+    .shifts-table {
+      width: 100%;
+      table-layout: fixed;
+
+      th {
+        background-color: @brand-primary;
+        color: #fff;
+        text-align: right;
+      }
+
+      td {
+        &:first-child {
+          background-color: @lighter-grey;
+          color: @brand-primary;
+          font-weight: 700;
+        }
+
+        &.shift-cell {
+          position: relative;
+          text-align: right;
+
+          a {
+            display: none;
+            position: absolute;
+            top: 2px;
+            left: 6px;
+          }
+
+          .commission {
+            display: inline;
+            font-weight: 800;
+          }
+
+          .time {
+            display: inline;
+            margin-right: 4px;
+          }
+
+          &.off {
+            //background-color: lighten(@red, 45%);
+            text-align: center;
+            color: @red;
+            font-weight: 800;
+          }
+
+          &:hover {
+            a {
+              display: block;
+            }
+          }
+        }
+
+        &.expanded {
+          padding: 32px;
+          background-color: mix(@brand-primary, #fff, 30%);
+
+          td {
+            &:first-child {
+              background-color: #fff;
+            }
+          }
+
+          th {
+            text-align: left !important;
+            padding-left: 16px;
+            border-top: 0 !important;
+          }
+        }
+      }
+    }
+  }

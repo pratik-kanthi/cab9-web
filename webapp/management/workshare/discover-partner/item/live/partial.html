@@ -1,0 +1,29 @@
+<div id="live-location">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Recent Bookings and Live Drivers</h3>
+        </div>
+        <div class="panel-body">
+            <img src="/includes/images/spinner.gif" width="40" ng-if="fetching" />
+            <div ng-if="!fetching">
+                <p class="text-muted mt0 mb10" ng-if="!profile.ShowLiveDrivers">
+                    You have not opted in for Live drivers. <br />
+                    If you would like to see live drivers of prospective partners please enable the feature in <strong>Workshare->Company Profile->Live Drivers.</strong> </p>
+                <p class="text-muted mt0 mb10" ng-if="profile.ShowLiveDrivers && !companyProfile.ShowLiveDrivers">
+                    This partner has not opted in for live drivers feature.<br />
+                    Showing recent bookings.
+                </p>
+                <p class="text-muted mt0 mb10" ng-if="profile.ShowLiveDrivers && companyProfile.ShowLiveDrivers">
+                    Showing recent bookings and live drivers.
+                </p>
+            </div>
+            <div class="heat-map" ng-if="!fetching && mapBounds">
+                <ui-gmap-google-map center="map.center" maxZoom="map.zoom" zoom="map.zoom" events="map.events" bounds="mapBounds" options="map.options" styles="map.styles">
+                    <ui-gmap-marker ng-repeat="m in markers" coords="m.coords" idkey="m.id" options="m.mapOptions"></ui-gmap-marker>
+                    <ui-gmap-layer namespace="visualization" type="HeatmapLayer" show="map.showHeat" onCreated="map.heatLayerCallback"></ui-gmap-layer>
+                </ui-gmap-google-map>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

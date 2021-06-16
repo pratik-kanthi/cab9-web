@@ -1,0 +1,377 @@
+﻿<!DOCTYPE html>
+<html ng-app="cab9.export">
+
+<head>
+    <title>Invoice Receipt</title>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+    <link href="../common/css/style.min.css" rel="stylesheet" />
+    <style>
+    tr {
+        page-break-inside: avoid !important;
+        page-break-before: always !important;
+    }
+    
+    tbody td {
+        border-right: 1px dashed #ddd;
+        vertical-align: top !important;
+    }
+    
+    tbody td:last-child {
+        border-right: 0 !important;
+    }
+    
+    thead th {
+        border: 0 !important;
+        border-top: 1px solid #ddd !important;
+        border-bottom: 2px solid #ddd !important;
+    }
+    </style>
+    <script type="text/javascript">
+        //setting up headers and footers for html2pdf
+        var html2pdf = {
+            footer: {
+                height: "1cm",
+                contents: '<div class="text-center t-s" style="font-size:12px; text-align: center; background-color: #fff; margin: 0 -20px;">This is not a VAT Invoice.</div>'
+            }
+        };
+    </script>
+</head>
+
+<body ng-controller="DriverPaymentController" id="invoice">
+    <div class="container text-center" ng-if="!paymentId || error">
+        Error Fetching Payment
+    </div>
+    <div class="container" ng-if="dp">
+        <div class="row mt30" id="company-information">
+            <div class="col-xs-2">
+                <img ng-src="{{ dp.Company.LogoUrl }}" alt="" class="company-logo" />
+            </div>
+            <div class="col-xs-4">
+                <h4 ng-bind="dp.Company.Name" class="brand-primary"></h4>
+                <small ng-bind="dp.Company.Address"></small>
+                <br />
+                <small>Phone: </small><small ng-bind="dp.Company.Phone"></small>
+                <br />
+                <small ng-bind="dp.Company.Website"></small>
+            </div>
+            <div class="col-xs-6 text-right pt20">
+                <h3>Weekely Payment Report</h3>
+            </div>
+        </div>
+        <div class="row mt50">
+            <div class="col-xs-6">
+                For the attention of:
+                <br /><br />
+                <span class="bold">{{dp.Driver.Firstname}} {{dp.Driver.Surname}}</span> (<span class="bold" ng-bind="dp.Driver.Callsign"></span>)
+                <p ng-bind="dp.Driver.Address"></p>
+                <span>P: {{dp.Driver.Mobile}}</span>
+                <br />
+                <span>E: {{dp.Driver.Email}}</span>
+            </div>
+            <div class="col-xs-6 text-right">
+                <div class="mb20">
+                    <strong class="upper brand-primary">Driver Callsign</strong>
+                    <br />{{dp.Driver.Callsign}}
+                </div>
+                <div class="mb20">
+                    <strong class="upper brand-primary">Supplier No</strong>
+                    <br />{{dp.Driver.SupplierNo}}
+                </div>
+                <div class="mb20">
+                    <strong class="upper brand-primary">Reference</strong>
+                    <br />{{dp.Reference}}
+                </div>
+            </div>
+        </div>
+        <!--<div class="invoice-table" style="overflow:visible;">
+            <span class="bold brand-primary upper">Payment Summary</span>
+            <table class="mt20 invoice-summary">
+                <tbody>
+                    <tr>
+                        <td>
+                            Bookings
+                            <br /><small>{{dp.Totals.Bookings}} Bookings</small>
+                        </td>
+                        <td class="text-right">
+                            {{dp.Totals.Commissions | currency:'£'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Adjustments
+                        </td>
+                        <td class="text-right">
+                            - {{dp.Totals.Adjustments | currency:'£'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            VAT
+                        </td>
+                        <td class="text-right">
+                            0.00
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            Total
+                        </td>
+                        <td class="text-right">
+                            {{ (dp.Totals.Commissions-dp.Totals.Adjustments) | currency:'£'}}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>-->
+        <div class="invoice-table mt50">
+            <span class="bold brand-primary upper">Account Bookings</span>
+            <table class="mt20 table table-hover table-condensed bookings-table">
+                <thead style="display:table-header-group;">
+                    <tr>
+                        <th style="width:15%">Item</th>
+                        <th style="width:42%">Description</th>
+                        <th style="width:10%" class="text-right">Commission</th>
+                        <th style="width:10%" class="text-right">Waiting</th>
+                        <th style="width:10%" class="text-right">Extras</th>
+                        <th style="width:10%" class="text-right">Tax</th>
+                        <th style="width:13%" class="text-right">Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="booking in dp.InvoiceBookings | orderBy:'BookedDateTime'" ng-init="booking.Price = 0">
+                        <td>
+                            <strong>#{{booking.LocalId}}</strong>
+                            <br />{{booking.BookedDateTime | date:'dd/MM/yyyy' }} {{booking.BookedDateTime | date:'HH:mm'}}
+                        </td>
+                        <td style="overflow:hidden;">
+                            <strong>From: </strong>{{booking.BookingStops[0].StopSummary}}
+                            <br />
+                            <strong>To: </strong>{{booking.BookingStops[1].StopSummary}}
+                            <br/>
+                            <strong ng-show="booking.BookingExpense.length>0">Extras:<br /></strong>
+                            <span ng-show="booking.BookingExpense.length>0" ng-repeat="ex in booking.BookingExpense">{{ex.BookingExpenseType.Name}}: {{ex.Amount | currency:'£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{booking.JourneyCommission | currency:'£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{booking.WaitingCommission || 0 | currency:'£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{booking.ExtrasCommission | currency:'£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{0.00 | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{booking.JourneyCommission + booking.WaitingCommission + booking.ExtrasCommission | currency:'£'}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-right">
+                            <strong>Sub Totals</strong>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Bill.BookingsSubTotal | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Bill.WaitingSubTotal | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Bill.ExtrasSubTotal | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Bill.TaxAmount | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Bill.BookingsSubTotal + dp.Bill.WaitingSubTotal + dp.Bill.ExtrasSubTotal | currency: '£'}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-right">
+                            <h6 class="grey">Total</h6>
+                        </td>
+                        <td class="text-right">
+                            <h6 class="grey">{{dp.Bill.BookingsSubTotal + dp.Bill.WaitingSubTotal + dp.Bill.ExtrasSubTotal | currency: '£'}}</h6>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+        <div class="invoice-table mt50">
+            <span class="bold brand-primary upper">Cash Bookings</span>
+            <table class="mt20 table table-hover table-condensed bookings-table">
+                <thead style="display:table-header-group;">
+                    <tr>
+                        <th style="width:15%">Item</th>
+                        <th style="width:42%">Description</th>
+                        <th style="width:10%" class="text-right">Commission</th>
+                        <th style="width:10%" class="text-right">Waiting</th>
+                        <th style="width:10%" class="text-right">Extras</th>
+                        <th style="width:10%" class="text-right">Tax</th>
+                        <th style="width:13%" class="text-right">Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="booking in dp.BillBookings | orderBy:'BookedDateTime'" ng-init="booking.Price = 0">
+                        <td>
+                            <strong>#{{booking.LocalId}}</strong>
+                            <br />{{booking.BookedDateTime | date:'dd/MM/yyyy' }} {{booking.BookedDateTime | date:'HH:mm'}}
+                        </td>
+                        <td style="overflow:hidden;">
+                            <strong>From: </strong>{{booking.BookingStops[0].StopSummary}}
+                            <br />
+                            <strong>To: </strong>{{booking.BookingStops[1].StopSummary}}
+                            <br />
+                            <strong ng-show="booking.BookingExpense.length>0">Extras:<br /></strong>
+                            <span ng-show="booking.BookingExpense.length>0" ng-repeat="ex in booking.BookingExpense">{{ex.BookingExpenseType.Name}}: {{ex.Amount | currency:'£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{booking.JourneyCommission | currency:'£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{booking.WaitingCommission || 0 | currency:'£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{booking.ExtrasCommission | currency:'£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{0.00 | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{booking.JourneyCommission + booking.WaitingCommission + booking.ExtrasCommission | currency:'£'}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-right">
+                            <strong>Sub Totals</strong>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Invoice.BookingsSubTotal | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Invoice.WaitingSubTotal | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Invoice.ExtrasSubTotal | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Invoice.TaxAmount | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Invoice.BookingsSubTotal + dp.Invoice.WaitingSubTotal + dp.Invoice.ExtrasSubTotal | currency: '£'}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-right">
+                            <h6 class="grey">Total</h6>
+                        </td>
+                        <td class="text-right">
+                            <h6 class="grey">{{dp.Invoice.BookingsSubTotal + dp.Invoice.WaitingSubTotal + dp.Invoice.ExtrasSubTotal | currency: '£'}}</h6>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+
+        <div class="invoice-table mt50">
+            <span class="bold brand-primary upper">Adjustments</span>
+            <table class="mt20 table table-hover table-condensed bookings-table">
+                <thead style="display:table-header-group;">
+                    <tr>
+                        <th style="width:42%">Description</th>
+                        <th style="width:10%" class="text-right">Amount</th>
+                        <th style="width:10%" class="text-right">Tax</th>
+                        <th style="width:13%" class="text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="credits.length > 0">
+                        <td colspan="4">
+                            <b>Credits</b>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="ad in dp.Adjustments | filter:{'Type':'Credit'} as credits">
+                        <td>
+                            {{(ad.DriverAdjustment || ad.DriverPaymentModelAdjustment).Reference}}
+                        </td>
+                        <td style="overflow:hidden;">
+                            {{(ad.DriverAdjustment || ad.DriverPaymentModelAdjustment).Amount | currency:'£'}}
+                        </td>
+                        <td class="text-right">
+                            <span>{{0.00 | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{(ad.DriverAdjustment || ad.DriverPaymentModelAdjustment).Amount | currency:'£'}}</span>
+                        </td>
+                    </tr>
+                    <tr ng-show="credits.length > 0">
+                        <td colspan="3" class="text-right">
+                            <strong>Credits</strong>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Bill.AdjustmentsSubTotal | currency: '£'}}</span>
+                        </td>
+                    </tr>
+                    <tr ng-show="debits.length > 0">
+                        <td colspan="4">
+                            <b>Debits</b>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="ad in dp.Adjustments | filter:{'Type':'Debit'} as debits">
+                        <td>
+                            {{(ad.DriverAdjustment || ad.DriverPaymentModelAdjustment).Reference}}
+                        </td>
+                        <td style="overflow:hidden;">
+                            {{(ad.DriverAdjustment || ad.DriverPaymentModelAdjustment).Amount | currency:'£'}}
+                        </td>
+                        <td class="text-right">
+                            <span>{{0.00 | currency: '£'}}</span>
+                        </td>
+                        <td class="text-right">
+                            <span>{{(ad.DriverAdjustment || ad.DriverPaymentModelAdjustment).Amount | currency:'£'}}</span>
+                        </td>
+                    </tr>
+                    <tr ng-show="debits.length > 0">
+                        <td colspan="3" class="text-right">
+                            <strong>Charges</strong>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Invoice.AdjustmentsSubTotal | currency: '£'}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right">
+                            <strong>Total </strong>
+                        </td>
+                        <td class="text-right">
+                            <span>{{dp.Bill.AdjustmentsSubTotal - dp.Invoice.AdjustmentsSubTotal | currency: '£'}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right">
+                            <strong>Tax Amount </strong>
+                        </td>
+                        <td class="text-right">
+                            <span>{{0.00 | currency: '£'}}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right">
+                            <h6 class="grey">Total</h6>
+                        </td>
+                        <td class="text-right">
+                            <h6 class="grey">{{dp.Bill.AdjustmentsSubTotal - dp.Invoice.AdjustmentsSubTotal | currency: '£'}}</h6>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+    </div>
+    <script src="/Exports/common/jquery/jquery.min.js"></script>
+    <script src="/Exports/common/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/Exports/common/angular/angular.min.js"></script>
+    <script src="/Exports/common.js"></script>
+    <script src="/Exports/DriverPayment/controller.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<div id="date-picker-wide">
+    <h4>{{selected.from.format("dddd, DD MMM YYYY")}} <span ng-if="selected.span != 'day'">- {{selected.to.format("dddd, DD MMM YYYY")}}</span></h4>
+    <a class="datepicker-toggle" ng-click="dateShow=!dateShow" ng-show="showToggle">
+        <i class="material-icons">date_range</i>
+    </a>
+    <div class="date-picker mt20" ng-show="dateShow">
+        <div class="row">
+            <div class="col-xs-5">
+                <div class="shadow-left"></div>
+                <div class="years-wrapper">
+                    <div class="years">
+                        <a href="" ng-click="selectYear(year.value)" ng-repeat="year in years" ng-class="{ active: selected.from.year() == year.value }">
+                            <small><span ng-if="selected.from.year() == year.value">•</span></small>
+                            <span ng-bind="year.title" class="value"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="shadow-right"></div>
+            </div>
+            <div class="col-xs-7">
+                <div class="shadow-left"></div>
+                <div class="months-wrapper">
+                    <div class="months">
+                        <a href="" ng-repeat="month in months" ng-click="selectMonth(month.value)" ng-hide="!month.show" ng-class="{ active: selected.from.month() == month.value || selected.span == 'year' }">
+                            <small><span ng-if="selected.from.month() == month.value || selected.span == 'year'">•</span></small>
+                            <span ng-bind="month.title" class="{{month.status}} value"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="shadow-right"></div>
+            </div>
+        </div>
+        <div class="days" ng-if="days">
+            <div class="shadow-left"></div>
+            <div class="weeks-wrapper">
+                <div class="weeks" ng-if="!hideDates && !(selected.span == 'year')">
+                    <div ng-repeat="week in weeks" class="week">
+                        <div class="days">
+                            <a href="" ng-repeat="day in week.days track by day.value" ng-click="selectDay(day.value)" ng-class="{ active: (selected.from.date() == day.value && selected.span == 'day') || selected.span == 'month'}">
+                                <small ng-bind="day.name"></small>
+                                <span ng-bind="day.title" class="{{day.status}}"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="shadow-right"></div>
+        </div>
+    </div>
+</div>

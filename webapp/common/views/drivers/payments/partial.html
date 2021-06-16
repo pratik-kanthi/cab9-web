@@ -1,0 +1,29 @@
+<div class="module">
+    <div class="row mb20" ng-hide="hideOptions">
+        <div class="col-xs-6 module-options">
+            <a ng-click="openPaymentModal()" class="btn btn-success" ng-if="PERMISSIONS.test('driverpayments','W')"><i class="material-icons">receipt</i>Create Driver Payment</a>
+        </div>
+        <div class="col-xs-6 view-options">
+            <a href="" ng-click="exportSummary()"><i class="material-icons">receipt</i> Summary</a>
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" />
+            </a>
+        </div>
+    </div>
+    <date-picker-wide start="start" end="end" selected="selected" range="false" dateshow="true" show-toggle="false"></date-picker-wide>
+    <table-for datasource="payments" class="table table-condensed table-hover" schema="DriverPayment" filtering="searchTerm" sorting="" paging="paging" grouping="grouping" wrapper-class="" table-class="mt20">
+        <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+        <table-heading sorting="true">
+        </table-heading>
+        <table-data-rows>
+            <table-selection></table-selection>
+            <table-actions>
+                <a class="btn btn-xs btn-primary" ui-sref="root.driverpayments.viewer.summary({ Id: $row.Id})" ng-if="PERMISSIONS.test('driverpayments.viewer')"><i class="material-icons">chrome_reader_mode</i> View</a>
+            </table-actions>
+        </table-data-rows>
+        <table-footer paging="true">
+        </table-footer>
+    </table-for>
+</div>

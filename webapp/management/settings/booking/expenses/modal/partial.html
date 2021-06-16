@@ -1,0 +1,22 @@
+<form name="bookingExpenseTypeForm" form-for="bookingExpenseType" schema="BookingExpenseType" mode="CREATE">
+    <div class="modal-header">
+        <h3 class="modal-title" ng-hide="edit">New Expense</h3>
+        <h3 class="modal-title" ng-show="edit">Update Expense</h3>
+    </div>
+    <div class="modal-body">
+        <div field-for="Name"></div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div field-for="AvailableToDriver"></div>
+            </div>
+            <div class="col-sm-6">
+                <div field-for="TaxId" display="Tax" select-from="Taxes"></div>  
+            </div>
+        </div>   
+        <div field-for="Description"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success pull-right" ng-click="save()" ng-disabled="formFor.form.$invalid"><i class="material-icons">save</i>Save</button>
+        <button class="btn btn-danger pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Close</button>
+    </div>
+</form>

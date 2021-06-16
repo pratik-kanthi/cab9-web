@@ -1,0 +1,18 @@
+﻿<div class="basic-table">
+    <table ng-class="classes.table">
+        <thead ng-class="classes.head">
+            <tr>
+                <th ng-repeat="col in columns" width="{{col.$$width}}" ng-class="col.classes.heading">
+                    {{ col.name }}
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-class="classes.body">
+            <tr ng-repeat="row in rows">
+                <td ng-repeat="col in columns">
+                    {{ ::getValue(row, col) }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

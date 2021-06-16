@@ -1,0 +1,18 @@
+<div class="overlay" ng-if="overlay" ng-click="togglePopup('driver','waiting')"></div>
+<div class="popup-edit">
+    <div class="row" ng-repeat="stop in booking.Stops track by $index">
+        <div class="col-sm-8">
+            <div class="form-group">
+                <label class="control-label">{{$index == 0 ? 'Pickup': 'Via'}}</label>
+                <input class="form-control form-control-icon" ng-model="::stop.StopSummary" disabled>
+                <i class="material-icons">location_on</i>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label">Waiting (mins)</label>
+                <input type="number" class="form-control" ng-model="stop.WaitTime">
+            </div>
+        </div>
+    </div>
+</div>

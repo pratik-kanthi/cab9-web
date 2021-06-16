@@ -1,0 +1,26 @@
+<div class="grid-item number-stats-panel" promise-shadow promise="deferred.promise">
+    <div class="wrapper">
+        <div class="number-stats">
+            <div class="stats-wrapper">
+                <div class="icon sky-bg">
+                    <i class="material-icons">person_pin</i>
+                </div>
+                <div class="data">
+                    <small>Unique Drivers</small>
+                    <strong class="sky" ng-bind="uniqueDrivers | number:0"></strong>
+                </div>
+            </div>
+        </div>
+        <div class="number-stats">
+            <div class="stats-wrapper">
+                <div class="icon orange-bg">
+                    <i class="material-icons ng-binding">people_outline</i>
+                </div>
+                <div class="data">
+                    <small>Unique Passengers</small>
+                    <strong class="orange" ng-bind="uniquePassengers | number:0"></strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

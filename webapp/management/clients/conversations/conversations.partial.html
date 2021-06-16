@@ -1,0 +1,23 @@
+﻿<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <input type="text" class="form-control" placeholder="Search.." ng-model="searchText" />
+            </div>
+            <div class="panel-body">
+                <div>
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="booking in bookings | filter: searchText">
+                            <div ng-click="selectBooking(booking)">
+                                <span class="bold">{{booking.Client.Name}}</span>
+                                <span style="float:right">#{{booking.LocalId}}</span>
+                                <div class="max-lines">{{booking.Conversations[booking.Conversations.length-1].Body}}</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7" ui-view name="conversations-right"></div>   
+</div>

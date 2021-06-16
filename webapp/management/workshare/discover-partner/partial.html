@@ -1,0 +1,30 @@
+<div id="discover-partner">
+    <div class="partners">
+        <div class="page-details row">
+            <div class="col-sm-6">
+                <h2 class="page-title"><i class="material-icons">group_work</i>Cab9 Partners</h2>
+            </div>
+            <div class="col-sm-6" style="display:flex">
+                <div class="search">
+                    <input type="text" ng-model="searchTerm.$" class="search" placeholder="Search by name..." ng-model-options=" { 'debounce' : 500 }" />
+                </div>
+                <div class="view-options pull-right">
+                    <a ng-click="showFilterModal()"><i class="material-icons">filter_list</i>Filter</a>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper row" ng-if="(partners && partners.length>0) && !fetching" ng-style="{height:height}">
+            <a class="partner-data col-sm-6" ng-repeat="p in partners | filter: {Name:searchTerm.$}" ng-click="partnerDetails(p.TenantId)">
+                <partner-card partner="p" show-actions="true"></partner-card>
+            </a>
+        </div>
+        <p class="text-muted" ng-if="(!partners || partners.length==0) && !fetching">No partners found.</p>
+        <img src="/includes/images/spinner.gif" width="40" ng-if="fetching" />
+    </div>
+    <div class="map">
+        <ui-gmap-google-map center="map.center" zoom="map.zoom" events="map.events" bounds="mapBounds" options="map.options">
+            <ui-gmap-marker ng-repeat="m in markers | filter: {name:searchTerm.$}" coords="m.coords" idkey="m.id" options="m.mapOptions" click="onMarkerClick(e, m)">
+            </ui-gmap-marker>
+        </ui-gmap-google-map>
+    </div>
+</div>

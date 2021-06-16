@@ -1,0 +1,46 @@
+<div class="panel panel-default panel-alert">
+	<div class="panel-heading">
+		<h3 class="panel-title">Quick stats</h3>
+	</div>
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-xs-4 text-center">
+				<h5 class="mb0">{{quickStats.total}}</h5>
+				<div class="lh15 t-s mt5">Total Staff</div>
+			</div>
+			<div class="col-xs-4 text-center">
+				<h5 class="mb0">{{quickStats.active}}</h5>
+				<div class="lh15 t-s mt5">Active Staff</div>
+			</div>
+			<div class="col-xs-4 text-center">
+				<h5 class="mb0">{{quickStats.recent}}</h5>
+				<div class="lh15 t-s mt5">Recently Added</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="recentStaff.length">
+	<div class="panel-heading">
+		<h3 class="panel-title">Added This Week</h3>
+	</div>
+	<div>
+		<table class="table table-condensed table-hover mt0 mb0">
+			<thead>
+				<tr>
+					<th style="width:70%">Staff</th>
+					<th class="text-right" style="width:70%">Town/City</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="d in recentStaff">
+					<td class="" style="">
+						<img holder ng-src="{{d._ImageUrl}}" alt="{{d.Firstname}}" class="rounded30 mr10" />
+                        <a ui-sref="root.staff.viewer.dashboard({ Id: d.Id })"><span class="brand-primary">{{d.Firstname}} {{d.Surname}}</span></a>
+					</td>
+					<td class="text-right brand-secondary bold" style="width:40%">{{d.TownCity}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

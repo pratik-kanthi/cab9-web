@@ -1,0 +1,43 @@
+﻿<h6>History</h6>
+<div class="events-wrapper">
+    <div class="empty" ng-if="noHistory">
+        <h4 ng-bind="today" class="day"></h4>
+        <div class="event">
+            <i class="material-icons EDIT">timeline</i>
+            <div class="content">
+                No events have been recorded yet.
+            </div>
+        </div>
+    </div>
+    <div class="day" ng-repeat="(date, items) in history">
+        <h4 class="day">{{::date}}</h4>
+        <div class="event" ng-repeat="_ev in items">
+            <i class="material-icons" ng-class="::coloursIndex[_ev.Action]">{{::iconsIndex[_ev.Action]}}</i>
+            <img ng-src='{{::_ev.User._ImageUrl}}' alt='{{_ev.User.Name}}' class='event-owner-icon' />
+            <div class="content">
+                <div>
+                    <span><b>{{_ev.User.Name}}</b> {{_ev.Action}} the <b>{{_ev.EntityType}} <span ng-if="_ev.EntityName">- {{_ev.EntityName}}</span></b> at {{_ev.Timestamp | date: 'HH:mm'}}</span>
+                    <br />
+                    <p ng-if="_ev.Properties.length > 0">
+                        <span ng-repeat="p in _ev.Properties">
+                            <b>{{p.PropertyName}}</b>
+                            <span ng-if="p.OldValue && p.NewValue">
+                                was changed from <b>{{p.OldValue}}</b> to <b>{{p.NewValue}}</b>
+                            </span>
+                            <span ng-if="p.OldValue && !p.NewValue && _ev.Action != 'Deleted'">
+                                was removed.
+                            </span>
+                            <span ng-if="p.OldValue && !p.NewValue && _ev.Action == 'Deleted'">
+                                was {{p.OldValue}}.
+                            </span>
+                            <span ng-if="!p.OldValue && p.NewValue">
+                                was set to <b>{{p.NewValue}}</b>
+                            </span>
+                            <br />
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

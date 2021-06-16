@@ -1,0 +1,93 @@
+.chart-options {
+    margin: 10px 0;
+    text-align: right;
+
+    .btn {
+        display: inline-block;
+        margin-right: 5px;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        min-width: inherit;
+
+        &:last-child {
+            margin-right: 20px;
+        }
+    }
+}
+
+flot {
+    display: block;
+}
+
+.legendLabel {
+    padding-left: 5px;
+}
+
+#flotTip {
+    background-color: rgba(0, 0, 0, 0.8);
+    .border-radius(5px);
+    color: #fff;
+    padding: 5px;
+    z-index: 1000000000000;
+
+    strong {
+        color: @brand-secondary;
+    }
+
+    small {
+        color: #eee;
+    }
+}
+
+.flot-tick-label {
+    .panel-alert & {
+        color: #fff;
+    }
+}
+
+.jqstooltip {
+    width: auto !important;
+    height: 35px;
+    border: 0 !important;
+    background-color: @brand-secondary  !important;
+    .border-radius(3px);
+
+    span {
+        font-size: 12px !important;
+    }
+
+
+}
+
+.stat-image {
+    width: 100%;
+}
+
+.stat {
+    text-align: right;
+    margin-bottom: 10px;
+
+    .stat-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        display: block;
+        line-height: 8px;
+        color: @brand-secondary;
+    }
+
+    .stat-data {
+        font-size: 24px;
+        font-weight: 600;
+        color: @brand-primary;
+        display: block;
+        line-height: 32px;
+    }
+
+    .stat-increment {
+        font-weight: 600;
+    }
+}
+
+.stat-icon {
+    font-size: 48px;
+}

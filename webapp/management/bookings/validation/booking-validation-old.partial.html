@@ -1,0 +1,53 @@
+<div id="booking-validation" class="module">
+    <div class="row">
+        <div class="col-xs-6">
+            <h3 class="section-title mt0">Bookings Validation</h3>
+        </div>
+        <div class="col-xs-6 view-options">
+            <a ng-click="showFilterModal()"><i class="material-icons">filter_list</i>Filter</a>
+        </div>
+    </div>
+    <div class="bookings-wrapper">
+        <div class="booking-strip header hidden-xs">
+            <div class="booking">
+                <div class="info">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-3 col-sm-4 date-time">
+                            Date
+                        </div>
+                        <div class="col-lg-4 col-md-3 hidden-sm col-xs-8 journey">
+                            Journey
+                        </div>
+                        <div class="col-lg-2 col-md-2 hidden-sm col-xs-8 journey">
+                            Passenger
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-8 vehicle">
+                            Cost
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 vehicle">
+                            Driver
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 vehicle">
+                            Extras
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-2 vehicle">
+                            Adjustment
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="no-booking" ng-if="bookingGroups == null">
+            <h3 class="section-title">Fetching...</h3>
+        </div>
+        <div class="no-booking" ng-if="bookingGroups && bookingGroups.length==0">
+            <h3 class="section-title">No bookings for this period.</h3>
+        </div>
+        <div ng-repeat="bg in bookingGroups" ng-init="groupIndex = $index">
+            <booking-validation-strip ng-repeat="booking in bg.bookings | orderBy:'BookedDateTime'" booking="booking"></booking-validation-strip>
+        </div>
+    </div>
+    <div class="mt20">
+        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+    </div>
+</div>

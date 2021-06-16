@@ -1,0 +1,47 @@
+<div class="grid-item stats-panel clients">
+    <div class="wrapper">
+        <div class="panel panel-default" promise-shadow promise="deferred.promise">
+            <div class="panel-heading">
+                <h3 class="panel-title"> <span><i class="material-icons">people_outline</i></span>Top 5 Clients</h3>
+            </div>
+            <div class="panel-body no-padding pb0">
+                <div class="best-entity" ng-if="bestClient">
+                    <div class="profile" style="background-image: url('{{bestClient.ImageUrl}}')"></div>
+                    <div class="details">
+                        <strong class="best-label">Best Client</strong>
+                        <strong class="best-name">({{bestClient.AccountNo}}) {{bestClient.Name}}</strong>
+                        <strong>{{bestClient.Bookings}}</strong>
+                    </div>
+                    <div class="best-chart">
+                        <div id="client-sparkline"></div>
+                    </div>
+                </div>
+                <table class="table table-condensed table-hover mt0 mb0">
+                    <thead>
+                        <tr>
+                            <th style="width:70%">Clients</th>
+                            <th class="text-right" style="width:30%">Bookings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in clients | orderBy:'-Bookings' | limitTo:5">
+                            <td>
+                                <a ui-sref="root.clients.viewer.dashboard({ Id: item.ClientId })" class="brand-primary">
+                                    <strong>({{item.AccountNo}}) {{item.Name}}</strong>
+                                </a>
+                            </td>
+                            <td class="text-right bold">{{item.Bookings}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="clients.length==0">
+                        <tr>
+                            <td colspan="2" class="text-center" style="height:80px;">
+                                No Stats for the time period.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

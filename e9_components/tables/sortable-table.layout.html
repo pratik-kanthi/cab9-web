@@ -1,0 +1,20 @@
+﻿<div class="basic-table">
+    <input type="text" ng-model="searchTerm" />
+    <table ng-class="classes.table">
+        <thead>
+            <tr>
+                <th ng-repeat="col in columns" width="{{::col.$$width}}">
+                    {{ ::col.name }}
+                    <i class="fa" ng-class="currentSort.column === col ? (currentSort.reverse ? 'fa-sort-amount-desc' : 'fa-sort-amount-asc') : 'fa-sort-amount-asc text-muted' " ng-click="sortBy(col, $event)"></i>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in rows | filter:currentSearch | orderBy:currentSort.value:currentSort.reverse">
+                <td ng-repeat="col in columns">
+                    {{ ::getValue(row, col) }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

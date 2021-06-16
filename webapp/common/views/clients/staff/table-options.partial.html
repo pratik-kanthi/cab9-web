@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-xs-6 module-options" ng-if="PERMISSIONS.test('clients.viewer.staff', 'W') || true">
+        <a ng-click="openStaffCreate('Staff')" class="btn btn-success" ng-show="staff.length>0">
+            <i class="material-icons">add_circle</i>Create New Staff
+        </a>
+        <a ng-click="openStaffCreate('SuperAdmin')" class="btn btn-xs btn-primary" ng-show="staff.length==0">
+            <i class="material-icons">add_circle</i>Create Super Admin Staff
+        </a>
+    </div>
+    <div class="col-xs-6">
+        <div class="view-options">
+            <a ui-sref={{navCards}} ui-sref-active-eq="current-view"><i class="material-icons">view_module</i>Cards</a>
+            <a ui-sref={{navTable}} ui-sref-active-eq="current-view"><i class="material-icons">view_headline</i>Table</a>
+            <a href="" ng-click="">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="serverSearchTerm.$" id="searchTerm" ng-show="showSearch" />
+            </a>
+        </div>
+    </div>
+</div>

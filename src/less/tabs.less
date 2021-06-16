@@ -1,0 +1,146 @@
+/* Tabs : Simple 
+------------------------------------
+*/
+
+.nav-tabs {
+    border-bottom: 0px;
+    border-bottom: none;
+    margin-bottom: 0;
+    & > li {
+        margin-bottom: 0;
+        width: 130px;
+        text-align: center;
+        border-bottom: 2px solid #eee;
+        a {
+            background: transparent !important;
+            border-bottom: 0 !important;
+            overflow: visible;
+            -webkit-transition: color 0.2s ease 0s;
+            transition: color 0.2s ease 0s;
+            span {
+                font-size: 1em;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            &:hover,
+            &:focus {
+                overflow: visible;
+                -webkit-transition: color 0.2s ease 0s;
+                transition: color 0.2s ease 0s;
+            }
+        }
+        &.active {
+            border-bottom: 2px solid @brand-primary;
+            a {
+                background: transparent;
+                box-shadow: none;
+                border-color: transparent;
+                &:hover,
+                &:focus,
+                &:active {
+                    border-color: transparent !important;
+                    background-color: transparent !important;
+                }
+                &:after,
+                &:before {
+                    border: medium solid transparent;
+                    content: "";
+                    height: 0;
+                    left: 50%;
+                    pointer-events: none;
+                    position: absolute;
+                    width: 0;
+                    z-index: 1;
+                    top: 100%;
+                }
+                &:after {
+                    border-top-color: @brand-primary;
+                    border-width: 10px;
+                    margin-left: -10px;
+                }
+                &:before {
+                    border-top-color: @brand-primary;
+                    border-width: 11px;
+                    margin-left: -11px;
+                }
+            }
+        }
+        &:after {
+            -webkit-transition: all 0.1s linear 0s;
+            transition: all 0.1s linear 0s;
+            -webkit-backface-visibility: hidden;
+            width: 100%;
+            display: block;
+            height: 0px;
+            content: '';
+            z-index: 125;
+        }
+    }
+    .panel-body & {
+        li {
+            a {
+                padding: 15px;
+                font-size: 12px;
+                &:hover {
+                    background-color: transparent !important;
+                }
+            }
+        }
+    }
+    &.nav-justified {
+        > .active {
+            > a {
+                border: 0
+            }
+        }
+    }
+}
+
+.simple-tabs {
+    .nav-tabs {
+        li {
+            width: auto;
+            border: 0 !important;
+            &.active {
+                background-color: @brand-secondary;
+                a {
+                    color: #ffffff;
+                }
+            }
+            a {
+                text-transform: capitalize;
+                font-size: 14px;
+                font-weight: 700;
+                &::before, &::after {
+                    border: 0 !important;
+                }
+            }
+        }
+    }
+}
+
+.tab-content {
+    border: 0 !important;
+}
+
+#booking-edit {
+    ul.passenger-tab {
+        li {
+            width: 50%;
+            float: left;
+            font-size: 14px;
+            cursor: pointer;
+            &.active {
+                background-color: @brand-primary;
+                color: #fff;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 58em) {
+    .nav-tabs {
+        font-size: 0.6em;
+    }
+}

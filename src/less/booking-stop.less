@@ -1,0 +1,92 @@
+.booking-stop {
+    position: relative;
+    .close-suggestions {
+        position: absolute;
+        right: -10px;
+        top: 32px;
+        display: none;
+        width: 30px;
+        height: 30px;
+        color: @brand-primary;
+        cursor: pointer;
+    }
+}
+
+.booking-stop-directive {
+    position: relative;
+    .edit-stop {
+        position: absolute;
+        right: 20px;
+        top: 24px;
+        z-index: 1000;
+        display: none;
+        i {
+            color: @grey;
+        }
+    }
+    &:hover {
+        .edit-stop {
+            display: block;
+            .animate(1, fadeInRight);
+        }
+    }
+}
+
+.location-suggestions {
+    position: absolute;
+    z-index: 10000;
+    margin: 0px;
+    top: 55px;
+    .border-radius(4px);
+    left: 0;
+    width: 100% !important;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #eee;
+    max-height: 364px;
+    /*-webkit-box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.30);
+        -moz-box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.30);
+        box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.30);*/
+    ul.autocomplete-result {
+        list-style: none;
+        padding-left: 0;
+        padding-bottom: 0px;
+        max-height: 364px;
+        overflow: scroll;
+        .hide-scrollbars();
+        .shadow();
+        li {
+            padding: 8px 8px;
+            float: left;
+            margin: 0 !important;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+            font-weight: 600;
+            color: @brand-primary;
+            .text-ellipsis();
+            a {
+                font-size: 14px;
+                line-height: 18px;
+                font-weight: 400;
+            }
+            img {
+                width: 20px;
+                margin-right: 0px;
+            }
+        }
+    }
+    &::after {
+        content: ' ';
+        width: 100%;
+        display: block;
+        position: absolute;
+        bottom: 0;
+        height: 96px;
+        left: 0;
+        pointer-events: none;
+        /*background: -webkit-linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            background: -o-linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            background: linear-gradient(rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 );*/
+    }
+}

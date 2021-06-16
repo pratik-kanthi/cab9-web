@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h3 class="modal-title" ng-hide="edit">New Payment Card</h3>
+    <h3 class="modal-title" ng-show="edit">Update Booker</h3>
+    <div class="arrow"></div>
+</div>
+<div class="modal-body">
+    <div class="col-md-10" ng-show="mode == 'CREATE'" style="width: 800px;">
+        <div class="col-md-8">
+            <div class="dispatch-creditcard">
+                <div>
+                    <form data-width="300" name="cardForm" data-card="" data-width="500" data-card-container="#card-container" data-placeholders="cardPlaceholders" data-options="cardOptions" data-messages="cardMessages" class="ng-pristine ng-valid">
+                        <div id="card-container"></div>
+                            <div class="addcreditcardbooking">
+                                <div>
+                                    <input placeholder="Card number" required type="text" name="CardNumber" card-number="" data-ng-model="card.CardNumber" class="ng-pristine ng-untouched ng-valid">
+                                    <input placeholder="Full name" required type="text" name="CardName" card-name="" data-ng-model="card.BillingName" class="ng-pristine ng-untouched ng-valid">
+                                </div>
+                                <div>
+                                    <input placeholder="MM/YYYY" required type="text" card-expiry="" name="CardExpiryMonth" data-ng-model="card.ExpirationMonth" class="ng-pristine ng-valid ng-isolate-scope ng-touched">
+                                    <input placeholder="CVC" required type="text" name="CardCvc" card-cvc="" data-ng-model="card.Cvc" class="ng-pristine ng-untouched ng-valid ng-isolate-scope">
+                                </div>
+                                <h3 style="font-size: 14px;color: #455674;margin: 5px 0px 5px 15px;">Billing Address Details</h3>
+                                <div class="address">
+                                    <input placeholder="Address" required type="text" name="CardBillingAddress" data-ng-model="card.billingaddress" class="ng-pristine ng-valid ng-isolate-scope ng-touched" style="width: 55%;">
+                                    <input placeholder="Postcode" required type="text" pattern="^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$" required name="cardPostcode" data-ng-model="card.BillingPostcode" class="ng-pristine ng-untouched ng-valid ng-isolate-scope" style="width: 41%;">
+                                </div>
+                            </div>
+                         </div>                
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" ng-if="!showLoader">
+    <button class="btn btn-success pull-right"  ng-disabled="!card.CardNumber || !card.BillingName || !card.ExpirationMonth || !card.Cvc || !card.billingaddress || !card.BillingPostcode && formFor.form.$invalid" ng-click="addCard(card, false)"><i class="material-icons">save</i>Pay and Save</button>
+    <button class="btn btn-danger pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Close</button>
+</div>
+<div class="modal-footer" ng-if="showLoader">
+    <button class="btn btn-success pull-right"  ng-disabled="!card.CardNumber || !card.BillingName || !card.ExpirationMonth || !card.Cvc || !card.billingaddress || !card.BillingPostcode && formFor.form.$invalid" ng-click="addCard(card)"><i class="fa fa-circle-o-notch fa-spin"></i> Saving...</button>
+</div>

@@ -1,0 +1,88 @@
+.sidebar-content-wrapper {
+    .new-booking,
+    .booking-edit {
+        margin-top: 15px;
+        .actions {
+            padding-top: 25px;
+            // text-align: right;
+        }
+        .form-group {
+            border: 0;
+            padding: 0;
+            background: transparent;
+            label {
+                text-transform: capitalize;
+                font-size: 14px;
+            }
+            .form-control {
+                margin-top: 2px;
+            }
+        }
+        .quick-links {
+            margin-top: -5px;
+            margin-bottom: 10px;
+            a {
+                color: mix(@orange, #fff, 40%);
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 12px;
+                margin-right: 5px;
+                border: 1px solid mix(@orange, #fff, 40%);
+                padding: 2px 4px;
+                .border-radius(2px);
+                cursor: pointer;
+                &:hover {
+                    color: @orange;
+                    border: 1px solid @orange;
+                }
+            }
+        }
+        .passenger-tab {
+            margin: 10px 0 15px;
+            li {
+                border: 0;
+                background: none;
+                .border-radius(2px);
+                padding: 0 8px;
+                width: auto;
+                font-size: 12px !important;
+                text-transform: uppercase !important;
+                cursor: pointer;
+                color: #777;
+            }
+            li.active {
+                background-color: @brand-primary;
+                color: #fff;
+            }
+        }
+        .add-passenger {
+            padding-top: 30px;
+        }
+    }
+}
+
+.booking-stop {
+    position: relative;
+    .stop-button {
+        position: absolute;
+        top: 21px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        color: #fff;
+        cursor: pointer;
+        i {
+            line-height: 30px;
+            font-size: 16px;
+        }
+        &.add {
+            right: 0;
+            .border-radius(0 2px 2px 0);
+            background-color: @green;
+        }
+        &.sub {
+            right: 30px;
+            background-color: mix(@red, #fff, 80%);
+        }
+    }
+}

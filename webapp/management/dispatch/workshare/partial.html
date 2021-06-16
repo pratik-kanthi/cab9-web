@@ -1,0 +1,36 @@
+<div ng-show="'dispatch.workshare' | isState" id="dispatch-workshare">
+    <div class="header">
+        <div class="content-wrapper">
+            <div class="journey">Journey</div>
+            <div class="passenger">Passenger</div>
+            <div class="driver">Driver</div>
+            <div class="time">Time</div>
+            <div class="status">Status</div>
+            <div class="action"></div>
+        </div>
+    </div>
+    <div class="bookings-wrapper" id="workshare-wrapper">
+        <img src="/includes/images/spinner.gif" width="40" style="margin:0 auto;display: block;" ng-if="fetching"/>
+        <div class="no-bookings" ng-show="!fetching && (!dispatchObj.workshare.bookings || dispatchObj.workshare.bookings.length == 0)">
+            <h4>No workshare bookings available</h4> Please change your search criteria or create a new booking by clicking the button below.
+        </div>
+        <react-booking bookings="dispatchObj.workshare.bookings"
+                       open-booking="dispatchObj.bookings.openBooking(booking)"
+                       edit-booking="dispatchObj.bookings.editBooking(booking)"
+                       enable-bidding="$root.COMPANY.EnableBidding"
+                       bid-queue="dispatchObj.bookings.addToBidQueue(booking)"
+                       select-booking="dispatchObj.bookings.selectBooking(booking)"
+                       remove-completed="dispatchObj.bookings.removeCompleted(booking)"
+                       remove-cancelled="dispatchObj.bookings.removeCancelled(booking)"
+                       approve-changes="approveChanges(booking)"
+                       allocate-driver="dispatchObj.bookings.allocateDriver(booking,driverId,misc)"
+                       loading="workshareLoading"
+                       accept-booking="dispatchObj.unconfirmed.acceptBooking(booking)"
+                       reject-booking="dispatchObj.unconfirmed.rejectBooking(booking)"
+                       confirm="confirm(type,notify)"
+                       reload="dispatchObj.bookings.reload"
+                       ng-if="!fetching &&(dispatchObj.workshare.bookings && dispatchObj.workshare.bookings.length>0)"
+                      >
+        </react-booking>
+    </div>
+</div>

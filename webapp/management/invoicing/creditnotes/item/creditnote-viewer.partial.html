@@ -1,0 +1,154 @@
+﻿<div class="module" id="invoice-edit" form-for="creditNote" schema="CreditNote" mode="{{displayMode}}">
+    <h2 class="page-title">Credit Note Details</h2>
+    <div class="row">
+        <div class="col-sm-6">
+            <div ng-if="displayMode === 'VIEW'">
+                <button class="btn btn-xs btn-warning" ng-click="startEditing()" ng-if="PERMISSIONS.test('creditnotes.viewer','W')"> <i class="material-icons">create</i> Edit</button>
+            </div>
+            <div ng-if="displayMode === 'EDIT'">
+                <button class="btn btn-xs btn-success" ng-click="saveEdits()" ng-disabled="formFor.form.$invalid"> <i class="material-icons">save</i> Save</button>
+                <button class="btn btn-xs btn-warning" ng-click="cancelEditing()"> <i class="material-icons">undo</i> Cancel</button>
+            </div>
+        </div>
+        <div class="col-sm-6 text-right" ng-if="displayMode === 'VIEW'">
+            <button class="btn btn-xs btn-info" ng-click="exportReceipt()"> <i class="material-icons">insert_drive_file</i> Export</button>
+            <button class="btn btn-xs btn-info" ng-click="emailTo()"> <i class="material-icons">mail</i> Email</button>
+            <button class="btn btn-xs btn-success" ng-click="markPaid()"> <i class="material-icons">mail</i> Mark Paid</button>
+        </div>
+        <div class="col-sm-6 text-right" ng-if="displayMode === 'EDIT'">
+            <button class="btn btn-xs btn-danger" ng-click="deleteInvoice()" ng-if="PERMISSIONS.test('creditnotes.viewer','D')"> <i class="material-icons">delete</i> Delete</button>
+        </div>
+    </div>
+    <div class="mt30" >
+        <div class="viewer">
+            <div class="invoice">
+                <div class="row" id="company-information">
+                    <div class="col-sm-2">
+                        <card class="module-item-card" allow-click="false" show-score="false" show-title="false" show-subtitle="false"></card>
+                    </div>
+                    <div class="col-sm-3">
+                        <h4 ng-bind="COMPANY.Name" class="grey thin"></h4>
+                        <p ng-bind-html="COMPANY._FullAddress"></p>
+                    </div>
+                    <div class="col-sm-7 text-right">
+                        <h2 class="grey thin">CREDIT NOTE</h2>
+                    </div>
+                </div>
+                <div class="row mt50">
+                    <div class="col-md-6">
+                        <small class="text-muted">For the attention of:</small>
+                        <br />
+                        <span class="bold" ng-bind-html="creditNote.Client.Name"></span>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <p ng-bind-html="creditNote.Client._FullBillingAddress"></p>
+                            </div>
+                        </div>
+                        <span>P: {{creditNote.Client.BillingPhone}}</span>
+                        <br />
+                        <span>M: {{creditNote.Client.BillingMobile}}</span>
+                        <br />
+                        <span>E: {{creditNote.Client.BillingEmail}}</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <div class="mb20">
+                            <div class="form-group">
+                                <strong class="upper brand-primary">Account Number:</strong>
+                                <br />{{creditNote.Client.AccountNo}}
+                            </div>
+                        </div>
+                        <div class="mb20">
+                            <strong class="upper brand-primary">Credit Ref: </strong>
+                            <br />
+                            {{creditNote.Reference}}
+                        </div>
+                        <div class="mb20">
+                            <strong class="upper brand-primary">Created On: </strong>
+                            <br />{{creditNote.CreationTime | companyDate:'DD/MM/YYYY'}}
+                        </div>
+                        <div class="mb20">
+                            <strong class="upper brand-primary">Tax Date: </strong>
+                            <br />{{creditNote.DueDate | companyDate:'DD/MM/YYYY'}}
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="displayMode === 'VIEW'">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive mt20">
+                                <table class="table table-bordered table-hover table-condensed bookings-table">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:50%">
+                                                <h6 class="grey">Description</h6>
+                                            </td>
+                                            <td>
+                                                <b class="grey">{{creditNote.Description}}</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:50%">
+                                                <h6 class="grey">Subtotal</h6>
+                                            </td>
+                                            <td>
+                                                <h6 class="grey">{{creditNote.Amount | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:50%">
+                                                <h6 class="grey">Tax</h6>
+                                            </td>
+                                            <td>
+                                                <h6 class="grey">{{creditNote.$taxAmount | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:50%">
+                                                <h6 class="grey">Total Amount</h6>
+                                            </td>
+                                            <td>
+                                                <h6 class="grey">{{creditNote.$totalAmount | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <!--<tr>
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Paid</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{calculatePaidAmount() | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Outstanding Amount</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{invoice.AdjustmentsSubTotal + invoice.ExtrasTaxAmount + ((invoice.BookingsSubTotal + invoice.ExtrasSubTotal + invoice.WaitingSubTotal) * 1.2) - calculatePaidAmount() | Format}}</h6>
+                                            </td>
+                                        </tr>-->
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="displayMode == 'EDIT'">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div field-for="Reference"></div>
+                            <div field-for="Description" text-area="3"></div>
+                            <div field-for="Amount"></div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div field-for="TaxDate"></div>
+                            <div field-for="TaxId" select-from="taxes"></div>
+                            <div field-for="Status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

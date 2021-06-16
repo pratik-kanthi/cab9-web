@@ -1,0 +1,13 @@
+﻿<div form-for="adjustment" schema="DriverPaymentAdjustment">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+        <h3 class="modal-title">Adjustment</h3>
+    </div>
+    <div class="modal-body" id="driverpayments">
+        <div field-for="Amount"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+        <button class="btn btn-xs btn-primary" ng-click="proceed()" ng-show="viewMode!='CREATE'" ng-disabled="formFor.form.$invalid "><i class="material-icons">save</i>Save</button>
+    </div>
+</div>

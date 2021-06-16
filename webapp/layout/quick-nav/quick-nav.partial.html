@@ -1,0 +1,299 @@
+<div class="quick-navigate">
+    <div class="content-wrapper background-wrapper">
+        <div class="search-box" ng-style="{ 'height': (searchValue && searchValue.length > 2) ? '400px' : '70px' }">
+            <div class="search-area">
+                <i class="material-icons">search</i>
+                <input type="text" ng-model="searchValue" ng-model-options="{'debounce': 700}" id="search-box" placeholder="search..." />
+                <a class="remove" ng-click="quickNavigateRemove()"><i class="material-icons">clear</i></a>
+            </div>
+            <hr ng-show="searchValue.length > 2" />
+            <div class="results-area" ng-show="searchValue.length > 2">
+                <div class="row">
+                    <div class="col-xs-5 results-list">
+                        <ul class="list-group">
+                            <li class="list-group-item group-header" ng-show="localResults.length > 0">
+                                <span class="badge">{{localResults.length}}</span>
+                                <b>Navigate</b>
+                            </li>
+                            <li class="list-group-item" ng-repeat="item in localResults" ng-mouseenter="chose(item, false)" ng-click="chose(item, true)">
+                                {{item.name}}
+                            </li>
+                            <li class="list-group-item group-header" ng-repeat-start="(types, values) in groups">
+                                <span class="badge">{{values.length}}</span>
+                                <b>{{types}}s</b>
+                            </li>
+                            <li style="padding: 4px 14px;" class="list-group-item" ng-repeat="item in values | limitTo:values.limit" ng-mouseenter="chose(item, false)" ng-click="chose(item, true)">
+                                {{item.Name}}
+                            </li>
+                            <li class="list-group-item" ng-repeat-end="" ng-show="values.limit < values.length">
+                                <a ng-click="values.limit = values.limit + 10">Show More</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-7 selected-result" ng-show="choosen.item">
+                        <div ng-show="choosen.item.Type == 'Driver'">
+                            <div class="row result-summary">
+                                <div class="col-xs-2" style="padding:8px;">
+                                    <img ng-src="{{formatImage(choosen.item)}}" class="img img-circle" />
+                                </div>
+                                <div class="col-xs-7" style="padding:16px;">
+                                    <div class="result-title">
+                                        {{choosen.item.$data.Firstname}} {{choosen.item.$data.Surname}}
+                                    </div>
+                                    <small class="text-muted">{{choosen.item.$data.Callsign}}</small>
+                                </div>
+                                <div class="col-xs-3 score {{getScoreClass(choosen.item.$data.ScoreOverall)}}">
+                                    <b>{{choosen.item.$data.ScoreOverall | number:1}}</b>
+                                </div>
+                            </div>
+                            <div class="row result-details">
+                                <div class="col-xs-7 result-info">
+                                    <b>Quick Info</b><br />
+                                    <span>Mobile:</span> {{choosen.item.$data.Mobile}}<br />
+                                    <span>Email:</span> {{choosen.item.$data.Email}}<br />
+                                    <span>Address:</span> <br />
+                                    <div class="address-container">
+                                        {{choosen.item.$data.Address1}}<br ng-if="choosen.item.$data.Address1" />
+                                        {{choosen.item.$data.Address2}}<br ng-if="choosen.item.$data.Address2" />
+                                        {{choosen.item.$data.Area}}<br ng-if="choosen.item.$data.Area" />
+                                        {{choosen.item.$data.TownCity}}<br ng-if="choosen.item.$data.TownCity" />
+                                        {{choosen.item.$data.County}}<br ng-if="choosen.item.$data.County" />
+                                        {{choosen.item.$data.Postcode}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 result-navigation">
+                                    <b>Quick Links</b><br />
+                                    <a ui-sref="root.drivers.viewer.dashboard({ Id: choosen.item.Id })"><b>Dashboard</b></a><br />
+                                    <a ui-sref="root.drivers.viewer.info({ Id: choosen.item.Id })"><b>Details</b></a><br />
+                                    <a ui-sref="root.drivers.viewer.bookings({ Id: choosen.item.Id })"><b>Bookings</b></a><br />
+                                    <a ui-sref="root.drivers.viewer.vehicles({ Id: choosen.item.Id })"><b>Vehicles</b></a><br />
+                                    <a ui-sref="root.drivers.viewer.documents({ Id: choosen.item.Id })"><b>Documents</b></a><br />
+                                    <a ui-sref="root.drivers.viewer.payments({ Id: choosen.item.Id })"><b>Payments</b></a><br />
+                                    <a ui-sref="root.drivers.viewer.notes({ Id: choosen.item.Id })"><b>Notes</b></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="local-result text-center" style="padding:30px;" ng-show="choosen.item.Type == 'Local'">
+                            <a ng-click="goTo(choosen.item)">
+                                <i class="material-icons" style="font-size:50px;">{{choosen.item.icon}}</i><br />
+                                <b style="font-size:20px;">{{choosen.item.name}}</b>
+                            </a>
+                        </div>
+                        <div ng-show="choosen.item.Type == 'Client'">
+                            <div class="row result-summary">
+                                <div class="col-xs-2" style="padding:8px;">
+                                    <img ng-src="{{formatImage(choosen.item)}}" class="img img-circle" />
+                                </div>
+                                <div class="col-xs-7" style="padding:16px;">
+                                    <div class="result-title">
+                                        {{choosen.item.$data.Name}}
+                                    </div>
+                                    <small class="text-muted">{{choosen.item.$data.AccountNo}}</small>
+                                </div>
+                                <div class="col-xs-3 score {{getScoreClass(choosen.item.$data.ScoreOverall)}}">
+                                    <b>{{choosen.item.$data.ScoreOverall | number:1}}</b>
+                                </div>
+                            </div>
+                            <div class="row result-details">
+                                <div class="col-xs-7 result-info">
+                                    <b>Quick Info</b><br />
+                                    <span>Phone:</span> {{choosen.item.$data.Phone}}<br />
+                                    <span>Email:</span> {{choosen.item.$data.Email}}<br />
+                                    <span>Address:</span> <br />
+                                    <div class="address-container">
+                                        {{choosen.item.$data.Address1}}<br ng-if="choosen.item.$data.Address1" />
+                                        {{choosen.item.$data.Address2}}<br ng-if="choosen.item.$data.Address2" />
+                                        {{choosen.item.$data.Area}}<br ng-if="choosen.item.$data.Area" />
+                                        {{choosen.item.$data.TownCity}}<br ng-if="choosen.item.$data.TownCity" />
+                                        {{choosen.item.$data.County}}<br ng-if="choosen.item.$data.County" />
+                                        {{choosen.item.$data.Postcode}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 result-navigation">
+                                    <b>Quick Links</b><br />
+                                    <a ui-sref="root.clients.viewer.dashboard({ Id: choosen.item.Id })"><b>Dashboard</b></a><br />
+                                    <a ui-sref="root.clients.viewer.info({ Id: choosen.item.Id })"><b>Details</b></a><br />
+                                    <a ui-sref="root.clients.viewer.bookings({ Id: choosen.item.Id })"><b>Bookings</b></a><br />
+                                    <a ui-sref="root.clients.viewer.staff({ Id: choosen.item.Id })"><b>Staff</b></a><br />
+                                    <a ui-sref="root.clients.viewer.documents({ Id: choosen.item.Id })"><b>Documents</b></a><br />
+                                    <a ui-sref="root.clients.viewer.invoices({ Id: choosen.item.Id })"><b>Invoices</b></a><br />
+                                    <a ui-sref="root.clients.viewer.notes({ Id: choosen.item.Id })"><b>Notes</b></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="choosen.item.Type == 'Passenger'">
+                            <div class="row result-summary">
+                                <div class="col-xs-2" style="padding:8px;">
+                                    <img ng-src="{{formatImage(choosen.item)}}" class="img img-circle" />
+                                </div>
+                                <div class="col-xs-7" style="padding:16px;">
+                                    <div style="height: 24px;overflow: hidden;text-overflow: ellipsis;font-size: 18px;color: #385978;">
+                                        {{choosen.item.$data.Firstname}} {{choosen.item.$data.Surname}}
+                                    </div>
+                                    <small class="text-muted">{{choosen.item.$data.Client.Name}}</small>
+                                </div>
+                                <div class="col-xs-3 score {{getScoreClass(choosen.item.$data.ScoreOverall)}}">
+                                    <!--<b style="font-size: 32px;padding: 10px;">{{choosen.item.$data.ScoreOverall | number:1}}</b>-->
+                                </div>
+                            </div>
+                            <div class="row result-details">
+                                <div class="col-xs-7 result-info">
+                                    <b>Quick Info</b><br />
+                                    <span>Mobile:</span> {{choosen.item.$data.Mobile}}<br />
+                                    <span>Email:</span> {{choosen.item.$data.Email}}<br />
+                                    <span>Address:</span> <br />
+                                    <div class="address-container">
+                                        {{choosen.item.$data.Addresses[0].Address1}}<br ng-if="choosen.item.$data.Addresses[0].Address1" />
+                                        {{choosen.item.$data.Addresses[0].Address2}}<br ng-if="choosen.item.$data.Addresses[0].Address2" />
+                                        {{choosen.item.$data.Addresses[0].Area}}<br ng-if="choosen.item.$data.Addresses[0].Area" />
+                                        {{choosen.item.$data.Addresses[0].TownCity}}<br ng-if="choosen.item.$data.Addresses[0].TownCity" />
+                                        {{choosen.item.$data.Addresses[0].County}}<br ng-if="choosen.item.$data.Addresses[0].County" />
+                                        {{choosen.item.$data.Addresses[0].Postcode}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 result-navigation">
+                                    <b>Quick Links</b><br />
+                                    <a ui-sref="root.passengers.viewer.dashboard({ Id: choosen.item.Id })"><b>Dashboard</b></a><br />
+                                    <a ui-sref="root.passengers.viewer.info({ Id: choosen.item.Id })"><b>Details</b></a><br />
+                                    <a ui-sref="root.passengers.viewer.addresses({ Id: choosen.item.Id })"><b>Addresses</b></a><br />
+                                    <a ui-sref="root.passengers.viewer.notes({ Id: choosen.item.Id })"><b>Notes</b></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div ng-show="choosen.item.Type == 'ClientStaff'">
+                            <div class="row result-summary">
+                                <div class="col-xs-2" style="padding:8px;">
+                                    <img ng-src="{{formatImage(choosen.item)}}" class="img img-circle" />
+                                </div>
+                                <div class="col-xs-7" style="padding:16px;">
+                                    <div style="height: 24px;overflow: hidden;text-overflow: ellipsis;font-size: 18px;color: #385978;">
+                                        {{choosen.item.$data.Firstname}} {{choosen.item.$data.Surname}}
+                                    </div>
+                                    <small class="text-muted">{{choosen.item.$data.Client.Name}}</small>
+                                </div>
+                                <div class="col-xs-3 score {{getScoreClass(choosen.item.$data.ScoreOverall)}}">
+                                    <!--<b style="font-size: 32px;padding: 10px;">{{choosen.item.$data.ScoreOverall | number:1}}</b>-->
+                                </div>
+                            </div>
+                            <div class="row result-details">
+                                <div class="col-xs-7 result-info">
+                                    <b>Quick Info</b><br />
+                                    <span>Mobile:</span> {{choosen.item.$data.Mobile}}<br />
+                                    <span>Email:</span> {{choosen.item.$data.Email}}<br />
+                                    <!--<span>Address:</span> <br />
+                                    <div class="address-container">
+                                        {{choosen.item.$data.Addresses[0].Address1}}<br ng-if="choosen.item.$data.Addresses[0].Address1" />
+                                        {{choosen.item.$data.Addresses[0].Address2}}<br ng-if="choosen.item.$data.Addresses[0].Address2" />
+                                        {{choosen.item.$data.Addresses[0].Area}}<br ng-if="choosen.item.$data.Addresses[0].Area" />
+                                        {{choosen.item.$data.Addresses[0].TownCity}}<br ng-if="choosen.item.$data.Addresses[0].TownCity" />
+                                        {{choosen.item.$data.Addresses[0].County}}<br ng-if="choosen.item.$data.Addresses[0].County" />
+                                        {{choosen.item.$data.Addresses[0].Postcode}}
+                                    </div>-->
+                                </div>
+                                <div class="col-xs-5 result-navigation">
+                                    <b>Quick Links</b><br />
+                                    <a ui-sref="root.clients.viewer.staff.viewer.details({ Id: choosen.item.$data.ClientId, sId: choosen.item.Id })"><b>Details</b></a><br />
+                                    <a ui-sref="root.clients.viewer.staff.viewer.user({ Id: choosen.item.$data.ClientId, sId: choosen.item.Id })"><b>User</b></a><br />
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="choosen.item.Type == 'Vehicle'">
+                            <div class="row result-summary">
+                                <div class="col-xs-2" style="padding:8px;">
+                                    <img ng-src="{{formatImage(choosen.item)}}" class="img img-circle" />
+                                </div>
+                                <div class="col-xs-7" style="padding:16px;">
+                                    <div class="result-title">
+                                        {{choosen.item.$data.Registration}}
+                                    </div>
+                                    <small class="text-muted">{{choosen.item.$data.Type.Name}}</small>
+                                </div>
+                                <div class="col-xs-3 score {{getScoreClass(choosen.item.$data.ScoreOverall)}}">
+                                    <b>{{choosen.item.$data.ScoreOverall | number:1}}</b>
+                                </div>
+                            </div>
+                            <div class="row result-details">
+                                <div class="col-xs-7 result-info">
+                                    <b>Quick Info</b><br />
+                                    <span>Make:</span> {{choosen.item.$data.Make}}<br />
+                                    <span>Model:</span> {{choosen.item.$data.Model}}<br />
+                                    <span>Colour:</span> {{choosen.item.$data.Colour}}<br />
+                                    <span>Year:</span> {{choosen.item.$data.RegYear}}<br />
+                                    <span>Owner:</span> ({{choosen.item.$data.Driver.Callsign}}) {{choosen.item.$data.Driver.Firstname}} {{choosen.item.$data.Driver.Surname}} <br />
+                                </div>
+                                <div class="col-xs-5 result-navigation">
+                                    <b>Quick Links</b><br />
+                                    <a ui-sref="root.vehicles.viewer.dashboard({ Id: choosen.item.Id })"><b>Dashboard</b></a><br />
+                                    <a ui-sref="root.vehicles.viewer.info({ Id: choosen.item.Id })"><b>Details</b></a><br />
+                                    <a ui-sref="root.vehicles.viewer.documents({ Id: choosen.item.Id })"><b>Documents</b></a><br />
+                                    <a ui-sref="root.vehicles.viewer.notes({ Id: choosen.item.Id })"><b>Notes</b></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="choosen.item.Type == 'Booking'">
+                            <div class="row result-summary">
+                                <div class="col-xs-2" style="padding:8px;">
+                                    <img ng-src="{{formatImage(choosen.item)}}" class="img img-circle" />
+                                </div>
+                                <div class="col-xs-7" style="padding:16px;">
+                                    <div class="result-title">
+                                        {{choosen.item.$data.LocalId}}
+                                    </div>
+                                    <span class="label {{choosen.item.$data.BookingStatus}}">{{choosen.item.$data.BookingStatus}}</span><small class="text-muted"> {{choosen.item.$data.BookedDateTime | date:'dd/MM/yyyy HH:mm'}}</small>
+                                </div>
+                                <div class="col-xs-3 score {{getScoreClass(choosen.item.$data.EstimatedDistance)}}" style="padding-top:12px;">
+                                    <!--<b style="font-size: 32px;padding: 10px;">{{choosen.item.$data.EstimatedDistance | number:1}} m</b>-->
+                                </div>
+                            </div>
+                            <div class="row result-details">
+                                <div class="col-xs-7 result-info">
+                                    <b>Quick Info</b><br />
+                                    <div ng-if="!!choosen.item.$data.Client"><span>Client:</span> ({{choosen.item.$data.Client.AccountNo}}) {{choosen.item.$data.Client.Name}}</div>
+                                    <span>Passenger:</span> {{choosen.item.$data.LeadPassenger.Firstname}} {{choosen.item.$data.LeadPassenger.Surname}}<br />
+                                    <span>Stops:</span>
+                                    <div class="address-container">
+                                        <ol style="-webkit-padding-start: 16px;">
+                                            <li ng-repeat="s in choosen.item.$data.BookingStops | orderBy:s.StopOrder">
+                                                {{s.StopSummary}}
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="col-xs-5 result-navigation">
+                                    <b>Quick Links</b><br />
+                                    <a ui-sref="root.bookings.search({ localId: choosen.item.$data.LocalId })"><b>View In Bookings</b></a><br />
+                                    <a ng-click="openBooking(choosen.item)"><b>Edit</b></a><br />
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="choosen.item.Type == 'Invoice'">
+                            <div class="row result-summary">
+                                <div class="col-xs-2" style="padding:8px;">
+                                    <img ng-src="{{formatImage(choosen.item)}}" class="img img-circle" />
+                                </div>
+                                <div class="col-xs-7" style="padding:16px;">
+                                    <div class="result-title">
+                                        {{choosen.item.$data.Reference}}
+                                    </div>
+                                    <span class="label {{choosen.item.$data.Status}}">{{choosen.item.$data.Status}}</span><small class="text-muted"> {{choosen.item.$data.DueDate | date:'dd/MM/yyyy'}}</small>
+                                </div>
+                            </div>
+                            <div class="row result-details">
+                                <div class="col-xs-7 result-info">
+                                    <b>Quick Info</b><br />
+                                    <div ng-if="!!choosen.item.$data.Client"><span>Client:</span> ({{choosen.item.$data.Client.AccountNo}}) {{choosen.item.$data.Client.Name}}</div>
+                                </div>
+                                <div class="col-xs-5 result-navigation">
+                                    <b>Quick Links</b><br />
+                                    <a ui-sref="root.invoices.viewer({ Id: choosen.item.Id })"><b>View Invoice</b></a><br />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

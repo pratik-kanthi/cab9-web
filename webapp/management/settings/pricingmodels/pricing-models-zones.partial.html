@@ -1,0 +1,167 @@
+﻿<div id="pricing-zone-pm">
+   <h3 class="section-title mt0">Pricing Zones</h3>
+   <div class="row mt30">
+      <div class="col-sm-4">
+         <div ng-show="!selected.pricing">
+            <a class="btn btn-success" ng-click="startNewZone()"><i class="material-icons">playlist_add</i>Add New</a>
+            <div class="pricing-zones-wrapper mt20">
+               <div class="pricing-zone info-card" ng-repeat="zone in zones">
+                  <div class="name">{{zone.$zoneName}}</div>
+                  <div class="description">{{zone.$zoneDescription}}</div>
+                  <div class="expanded" ng-if="zone.$expanded">
+                    <div class="row">
+                        <div class="col-xs-6">
+                           <div class="stat">
+                              <div class="label">{{metricText}}</div>
+                              <div class="number" ng-if="zone.FarePerMile">{{zone.FarePerMile | Format}}</div>
+                              <div class="number" ng-if="!zone.FarePerMile">N/A</div>
+                           </div>
+                        </div>
+                    </div>
+                    <div class="mt20">
+                        <strong class="brand-primary">Zone Charges</strong><br />
+                        <small class="brand-secondary">Below will be charged if vehicle enters/leaves/passes the zone. This <b>WILL NOT</b> be paid to the driver</small>
+                    </div>
+                     <div class="row mt10">
+                        <div class="col-xs-6">
+                           <div class="stat">
+                              <div class="label">Pickup Charge</div>
+                              <div class="number" ng-if="zone.PickupCharge">{{zone.PickupCharge | Format}}</div>
+                              <div class="number" ng-if="!zone.PickupCharge">N/A</div>
+                           </div>
+                        </div>
+                        <div class="col-xs-6">
+                           <div class="stat">
+                              <div class="label">DropOff Charge</div>
+                              <div class="number" ng-if="zone.DropoffCharge">{{zone.DropoffCharge | Format}}</div>
+                              <div class="number" ng-if="!zone.DropoffCharge">N/A</div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-xs-6">
+                           <div class="stat">
+                              <div class="label">Entry Charge</div>
+                              <div class="number" ng-if="zone.EntryCharge">{{zone.EntryCharge | Format}}</div>
+                              <div class="number" ng-if="!zone.EntryCharge">N/A</div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="mt20">
+                        <strong class="brand-primary">Zone Expenses</strong><br />
+                        <small class="brand-secondary">Below will be added as expenses to the booking if vehicle enters/leaves/passes the zone. This <b>WILL</b> be paid to the driver.</small>
+                    </div>
+                     <div class="row mt10">
+                        <div class="col-xs-6">
+                           <div class="stat">
+                              <div class="label">Pickup Expense</div>
+                              <div class="number" ng-if="zone.PickupExclusion">{{zone.PickupExclusion | Format}}</div>
+                              <div class="number" ng-if="!zone.PickupExclusion">N/A</div>
+                           </div>
+                        </div>
+                        <div class="col-xs-6">
+                           <div class="stat">
+                              <div class="label">DropOff Expense</div>
+                              <div class="number" ng-if="zone.DropoffExclusion">{{zone.DropoffExclusion | Format}}</div>
+                              <div class="number" ng-if="!zone.DropoffExclusion">N/A</div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-xs-6">
+                           <div class="stat">
+                              <div class="label">Entry Expense</div>
+                              <div class="number" ng-if="zone.EntryExclusion">{{zone.EntryExclusion | Format}}</div>
+                              <div class="number" ng-if="!zone.EntryExclusion">N/A</div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="mt20">
+                        <strong class="brand-primary">Mileage Steps</strong><br />
+                        <small class="brand-secondary">Below steps apply just to this zone and will take priority over any other pricing.</small>
+                        <div mileage-step value="zone.FarePerMileSteps"></div>
+                     </div>
+                  </div>
+                  <div class="actions">
+                     <a ng-click="startEditZone(zone)"><i class="material-icons">create</i></a>
+                     <a ng-click="zone.$expanded = !zone.$expanded">
+                         <i class="material-icons">{{ zone.$expanded ? 'expand_less' : 'expand_more' }}</i>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="panel panel-default" ng-show="selected.pricing">
+            <div class="panel-heading">
+               <h3 class="panel-title">Zones</h3>
+            </div>
+            <div class="panel-body">
+                <div form-for="selected.pricing" schema="ZoneInPricingModel" mode="CREATE">
+                    <div ng-show="viewMode == 'CREATE'">
+                        <div field-for="ZoneId" select-from="allZones" select-filter="{'$inUse': false}" display="Zone" required="true"></div>
+                    </div>
+                    <div ng-show="viewMode == 'EDIT'">
+                        <div field-for="ZoneId" select-from="allZones" display="Zone" editable="false"></div>
+                    </div>
+
+                    <div class="mt20">
+                        <strong class="brand-primary">Zone Charges</strong><br />
+                        <small class="brand-secondary">Below will be charged if vehicle enters/leaves/passes the zone. This <b>WILL NOT</b> be paid to the driver</small>
+                    </div>
+                    <div class="row mt10">
+                        <div class="col-xs-6">
+                            <div field-for="PickupCharge" display="Pickup Charge (£)"></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div field-for="DropoffCharge" display="Drop Charge (£)"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div field-for="EntryCharge" display="Entry Charge (£)"></div>
+                        </div>
+                        <div class="col-xs-6">
+                        </div>
+                    </div>
+                    <div class="mt20">
+                        <strong class="brand-primary">Zone Expenses</strong><br />
+                        <small class="brand-secondary">Below will be added as expenses to the booking if vehicle enters/leaves/passes the zone. This <b>WILL</b> be paid to the driver.</small>
+                    </div>
+                    <div class="row mt10">
+                        <div class="col-xs-6">
+                            <div field-for="PickupExclusion" display="Pickup Expense (£)"></div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div field-for="DropoffExclusion" display="Drop Expense (£)"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div field-for="EntryExclusion" display="Entry Expense (£)"></div>
+                        </div>
+                    </div>
+                    <div class="mt20">
+                        <strong class="brand-primary">Mileage Steps</strong><br />
+                        <small class="brand-secondary">Below steps apply just to this zone and will take priority over any other pricing.</small>
+                        <div mileage-step value="selected.pricing.FarePerMileSteps"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer" ng-show="viewMode == 'CREATE'">
+               <button class="btn btn-xs btn-success" ng-click="saveNewZone()" ng-disabled="formFor.form.$invalid"><i class="material-icons">save</i>Save zone</button>
+               <button class="btn btn-xs btn-warning" ng-click="cancelNewZone()"><i class="material-icons">undo</i>Cancel</button>
+            </div>
+            <div class="panel-footer" ng-show="viewMode == 'EDIT'">
+               <button class="btn btn-xs btn-success" ng-click="saveEditZone()"><i class="material-icons">save</i>Save</button>
+               <button class="btn btn-xs btn-warning" ng-click="cancelEditZone()"><i class="material-icons">undo</i>Cancel</button>
+               <button class="btn btn-xs btn-danger pull-right" ng-click="deleteEditZone()"><i class="material-icons">delete</i>Delete</button>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-8 map-div">
+          <div class="map-container" style="height:600px;">
+            <div id="zone-map" style="height:600px;"></div>
+          </div>
+      </div>
+   </div>
+</div>

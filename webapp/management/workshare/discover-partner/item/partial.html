@@ -1,0 +1,172 @@
+<div id="add-partner">
+    <div class="row">
+        <div class="col-md-3">
+            <div id="profile-summary">
+                <div class="panel panel-default profile">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Profile Summary</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="bio">
+                            <img ng-src="{{ companyProfile._ImageUrl }}" alt="" />
+                            <h4 ng-bind="companyProfile.Name"></h4>
+                            <h6 ng-bind="fullAddress"></h6>
+                            <div class="social">
+                                <a ng-href="{{ companyProfile.FacebookLink }}" ng-if="companyProfile.FacebookLink"><img src="/includes/images/facebook.png" alt="" /></a>
+                                <a ng-href="{{ companyProfile.TwitterLink }}" ng-if="companyProfile.TwitterLink"><img src="/includes/images/twitter.png" alt="" /></a>
+                                <a ng-href="{{ companyProfile.LinkedInLink }}" ng-if="companyProfile.LinkedInLink"><img src="/includes/images/linkedin.png" alt="" /></a>
+                                <a target="_blank" ng-href="{{ companyProfile.Website }}" ng-if="companyProfile.Website"><img src="/includes/images/website.png" alt="" /></a>
+                            </div>
+                            <p ng-bind="companyProfile.CompanyDescription"></p>
+                        </div>
+                        <div class="section">
+                            <h4 class="section-subtitle">Partnership Status</h4>
+                            <img ng-if="fetchingProfile" src="/includes/images/spinner.gif" width="40" />
+                            <span ng-if="!fetchingProfile && !myProfile">Please setup your profile to send partnership request</span>
+                            <button ng-if="!fetchingProfile && !myProfile" class="btn btn-primary mt5" ui-sref="root.workshare.company"><i class="material-icons">add_circle</i>Create Profile</button>
+                            <div ng-if="myProfile && !fetchingProfile">
+
+                                <div ng-if="!companyProfile.AlreadyPartner">
+                                    <div ng-if="companyProfile.PartnerRequestStatus && !companyProfile.RequestStatus ">
+                                        <div ng-if="companyProfile.PartnerRequestStatus=='Requested'">
+                                            <p class="mb0">Company has requested for partnership</p>
+                                            <button ng-click="acceptRequest()" ng-disabled="showRejectLoader" class="btn btn-xs btn-success mt10">Accept</button>
+                                            <button ng-click="showRejectBox()" ng-disabled="showRejectLoader" id="reject-request-btn" class="btn btn-xs btn-danger mt10">Reject</button>
+                                            <div id="reject-box" ng-show="showReject" class="reject-box panel panel-default">
+                                                <div class="panel-heading">
+                                                    Reject Reason
+                                                </div>
+                                                <div class="panel-body">
+                                                    <textarea rows="5" cols="32" ng-model="reject.Reason" placeholder="Type the reason for rejection"></textarea>
+                                                </div>
+                                                <div class="panel-footer">
+                                                    <button type="button" class="btn btn-danger pull-right" style="display:inline-block" ng-click="rejectRequest()" ng-disabled="!reject.Reason || showRejectLoader"><i class="material-icons">save</i>Reject</button>
+                                                    <button type="button" class="btn btn-warning pull-left" style="display:inline-block" ng-click="cancelReject()"><i class="material-icons">cancel</i>Cancel</button>
+                                                    <br class="clearfix">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div ng-if="companyProfile.PartnerRequestStatus!='Requested'">
+                                            <span class="red">You have rejected the partnership request</span>
+                                            <p ng-bind="'Reason:' + companyProfile.RejectReason"></p>
+                                            <div class="add-partner-box">
+                                                <div class="form-group">
+                                                    <select class="form-control pull-left" ng-model="addPartnerObj.PartnerDriverVisibilityConfig" ng-options="o as o.Value for o in driverVisibilityOptions">
+                                                    </select>
+                                                </div>
+                                                <p class="visibility-desc" ng-bind="addPartnerObj.PartnerDriverVisibilityConfig.Description" ng-if="addPartnerObj.PartnerDriverVisibilityConfig.Description!='Select Driver Visibility'"></p>
+                                                <a ng-click="addPartner()" id="add-partner-btn" ng-disabled="addPartnerObj.PartnerDriverVisibilityConfig.Value=='Select Driver Visibility'" class="btn btn-primary mb10 pull-right mt10"><i class="material-icons">send</i>Send Request</a>
+                                            </div>
+                                            <br class="clearfix">
+                                        </div>
+                                    </div>
+                                    <div ng-if="companyProfile.RequestStatus">
+                                        <strong class="partner-request-status" ng-class="companyProfile.RequestStatus" ng-bind="companyProfile.RequestStatus"></strong>
+                                        <br>
+                                        <p ng-bind="'Reason: ' + companyProfile.RejectReason" ng-if="companyProfile.RequestStatus=='Rejected'"></p>
+                                        <button href="" class="btn btn-xs mt10" ng-class="companyProfile.RequestStatus=='Rejected'?'btn-danger':'btn-warning'" ng-click="removeRequest()">
+                                            {{companyProfile.RequestStatus=='Rejected'?'Delete':'Withdraw'}} Request
+                                        </button>
+                                    </div>
+                                    <div ng-if="!companyProfile.PartnerRequestStatus && !companyProfile.RequestStatus">
+                                        <div class="add-partner-box">
+                                            <div class="form-group">
+                                                <select class="form-control pull-left" ng-model="addPartnerObj.PartnerDriverVisibilityConfig" ng-options="o as o.Value for o in driverVisibilityOptions">
+                                                </select>
+                                            </div>
+                                            <p class="visibility-desc" ng-bind="addPartnerObj.PartnerDriverVisibilityConfig.Description" ng-if="addPartnerObj.PartnerDriverVisibilityConfig.Description!='Select Driver Visibility'"></p>
+                                            <a ng-click="addPartner()" id="add-partner-btn" ng-disabled="addPartnerObj.PartnerDriverVisibilityConfig.Value=='Select Driver Visibility'" class=" btn btn-primary mb10 pull-right mt10"><i class="material-icons">send</i>Send Request</a>
+                                        </div>
+                                        <br class="clearfix">
+                                    </div>
+                                </div>
+                                <div ng-if="companyProfile.AlreadyPartner">
+                                    <strong class="green"> Already a partner</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h4 class="section-subtitle">Contact Details</h4>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="info-row">
+                                        <div class="info-label">Primary Contact</div>
+                                        <div class="info-value">
+                                            <strong ng-bind="companyProfile.PrimaryContactName"></strong>
+                                            <br />
+                                            <span style="word-break:break-all" ng-bind="companyProfile.PrimaryContactPhone"></span>
+                                            <br />
+                                            <span style="word-break:break-all" ng-bind="companyProfile.PrimaryContactEmail"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-row">
+                                        <div class="info-label">Service Manager</div>
+                                        <div class="info-value">
+                                            <strong ng-bind="companyProfile.ServiceManagerName"></strong>
+                                            <br />
+                                            {{companyProfile.ServiceManagerPhone}}
+                                            <br />
+                                            {{companyProfile.ServiceManagerEmail}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt20">
+                                <div class="col-sm-6">
+                                    <div class="info-row">
+                                        <div class="info-label">Finance</div>
+                                        <div class="info-value">
+                                            <strong ng-bind="companyProfile.AccountManagerName||'-'"></strong>
+                                            <br />
+                                            {{companyProfile.AccountManagerPhone||'-'}}
+                                            <br />
+                                            {{companyProfile.AccountManagerEmail||'-'}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h4 class="section-subtitle">Operator Details</h4>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="info-row">
+                                        <div class="info-label">License Number</div>
+                                        <div class="info-value">
+                                            <strong ng-bind="companyProfile.OperatorLicenseNumber"></strong>
+                                            <br />
+                                            <span ng-bind="companyProfile.OperatorLicenseExpiryDate | companyDate:'DD/MM/YYYY'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="info-row">
+                                        <div class="info-label">Licensing Authority</div>
+                                        <div class="info-value">
+                                            <strong ng-bind="companyProfile.OperatorLicensingAuthority"></strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div>
+                <!-- <tabset class="simple-tabs">
+                    <tab heading="Details" ui-sref="root.workshare.partner.details"></tab>
+                    <tab heading="Pricing" ui-sref="root.workshare.partner.pricing"></tab>
+                    <tab heading="Live" ui-sref="root.workshare.partner.live"></tab>
+                    <tab heading="Fleet" ui-sref="root.workshare.partner.fleet"></tab>
+                    <tab heading="Documents" ui-sref="root.workshare.partner.documents"></tab>
+                </tabset> -->
+                <tabs data="tabDefs" type="pills"></tabs>
+            </div>
+            <ui-view name="tab-content" class="tab-content"></ui-view>
+        </div>
+    </div>
+</div>

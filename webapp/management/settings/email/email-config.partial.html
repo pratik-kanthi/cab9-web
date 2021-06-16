@@ -1,0 +1,82 @@
+<div id="settings-email">
+    <!--<h2 class="page-title">
+        <i class="material-icons">email</i>Email Settings
+    </h2>-->
+    <div form-for="config" schema="EmailConfig" mode="{{viewMode}}">
+        <div class="mt10 mb10" ng-if="!!config">
+            <button class="btn btn-primary" ng-show="viewMode == 'VIEW'" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.email','W')"><i class="material-icons">create</i>Edit</button>
+            <button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+            <button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+        </div>
+        <div class="mt10 mb10" ng-if="!config">
+            <button class="btn btn-primary" ng-show="viewMode == 'VIEW'" ng-click="addNew()" ng-if="PERMISSIONS.test('settings.email','W')"><i class="material-icons">create</i>Add Email Settings</button>
+        </div>
+        <div class="row mt20" ng-if="!config">
+            <div class="col-md-12">
+                <div class="alert alert-warning">
+                    No Email Settings Configured.
+                </div>
+            </div>
+        </div>
+        <div class="row mt20"  ng-show="!!config">
+            <div class="col-md-5 col-sm-6">
+                <img src="/includes/images/mailgun.png" style="width:200px" />
+                <br />
+                <br />
+                <small>By default, Cab9 recommends users to use <a href="http://www.mailgun.com/" target="_blank"><strong class="brand-primary">Mailgun</strong></a> to send emails. Mailgun by Rackspace is a powerful set of APIs to send, receive, and track email in your websites and apps. When you use Mailgun to send your transactional and marketing emails, they'll be delivered, fast. And you can track everything so you know exactly what happened to every email. Mailgun is free for upto 10,000 emails a month. You can signup by <a href="https://mailgun.com/signup" target="_blank"><strong>clicking here</strong></a>. Once you sign up for a Mailgun account, please keep your API key handy and enter it in the box below:</small>
+            </div>
+            <div class="col-md-6 col-md-offset-1 col-sm-6">
+                <div>
+                    <h3 class="section-title">Email Settings</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="Mode"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="SenderName"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div field-for="BccAddress"></div>
+                        </div>
+                    </div>
+                </div>
+                <br class="clearfix" />
+                <div ng-show="config.Mode == 'SMTP'">
+                    <h3 class="section-title">SMTP Settings</h3>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="SMTPServer" display="Server"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div field-for="SMTPEmail" display="Email"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="SMTPUsername" display="Username"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div field-for="SMTPPassword" display="Password"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="SMTPPort" display="Port"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div field-for="SMTPSecure" display="TLS/SSL"></div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="config.Mode == 'Mailgun'">
+                    <h3 class="section-title">Mailgun Settings</h3>
+                    <div field-for="MailgunFromEmail" display="Sender Email"></div>
+                    <div field-for="MailgunDomain" display="Domain"></div>
+                    <div field-for="MailgunKey" display="Api Key"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

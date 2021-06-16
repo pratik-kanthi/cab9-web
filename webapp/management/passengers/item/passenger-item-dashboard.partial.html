@@ -1,0 +1,155 @@
+﻿<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="panel panel-alert">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Quick Info
+                </h3>
+            </div>
+            <div class="panel-body">
+                <strong>Contact Details:</strong>
+                <br />
+                <span ng-if="item.Phone"><i class="material-icons mr10">phone</i>{{item.Phone}}<br /></span>
+                <span ng-if="item.Mobile"><i class="material-icons mr10">phone_iphone</i>{{item.Mobile}}<br /></span>
+                <span ng-if="item.Email"><i class="material-icons mr10">email</i>{{item.Email}}<br /></span>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Passenger Tags</h3>
+            </div>
+            <div class="panel-body">
+                <div tagsinput tagsdata="{{[]}}" displaymode="VIEW" model="item.Tags"></div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Other Info</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong ng-if="item._FullHomeAddress">Full Home Address:</strong>
+                        <pre ng-bind-html="item._FullHomeAddress"></pre>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong ng-if="item._FullWorkAddress">Full Work Address:</strong>
+                        <pre ng-bind-html="item._FullWorkAddress"></pre>
+                    </div>
+                </div>
+                <strong ng-if="item._FullHomeAddress">Other:</strong><br />
+                <span ng-if="item.Active==true"><i class="material-icons mr10 brand-primary">check</i> Active<br /></span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Passenger Score
+                </h3>
+            </div>
+            <div class="panel-body" style="min-height:220px;">
+                <div class="row">
+                    <div class="col-md-4 text-center mb10">
+                        <score size="100" show-score="{{passenger.ScoreOverall | number:1}}" value="{{passenger.ScoreOverall * 20}}" stroke-width="10" class="mb5"></score>
+                        <strong>Overall Score</strong>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <score size="60" show-score="{{passenger.ScoreBooking | number:1}}" value="{{passenger.ScoreBooking * 20}}" stroke-width="10" class="mb5"></score>
+                                    </div>
+                                    <div class="col-xs-8 lh60">
+                                        Bookings
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <score size="60" show-score="{{passenger.ScoreRevenue | number:1}}" value="{{passenger.ScoreRevenue * 20}}" stroke-width="10" class="mb5"></score>
+                                    </div>
+                                    <div class="col-xs-8 lh60">
+                                        Revenue
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Bookings</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-4 text-center">
+                        <h5 class="mb0 brand-primary">{{quickStats.today}}</h5>
+                        <small>Today</small>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <h5 class="mb0 brand-primary">{{quickStats.week}}</h5>
+                        <small>This Week</small>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                        <h5 class="mb0 brand-primary">{{quickStats.month}}</h5>
+                        <small>This Month</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-12 col-sm-12">
+        <div class="row">
+            <div class="col-lg-12 col-md-6 col-sm-6">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Booking Trends</h3>
+                    </div>
+                    <div class="panel-body">
+                        <!--<div class="chart-options">
+                            <a href="" class="btn btn-xs btn-primary">1W</a>
+                            <a href="" class="btn btn-xs btn-primary">1M</a>
+                            <a href="" class="btn btn-xs btn-primary">½Y</a>
+                            <a href="" class="btn btn-xs btn-primary">1Y</a>
+                        </div>-->
+                        <flot dataset="bookingGraph.data" options="bookingGraph.options" width="100%" height="180px"></flot>
+                    </div>
+                    <div class="panel-body no-padding pb0">
+                        <div class="">
+                            <table class="table table-condensed table-hover mt0 mb0">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3" class="text-center">
+                                            Last 7 Days
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center b-b b-dashed light-grey-bd" style="width:40%">Day</th>
+                                        <th class="text-right b-b b-dashed light-grey-bd" style="width:30%">Bookings</th>
+                                        <th class="text-right b-b b-dashed light-grey-bd brand-primary bold" style="width:30%">Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="day in lastWeekData">
+                                        <td class="text-center bold" style="width:40%" ng-if="$index == 0">Today</td>
+                                        <td class="text-center bold" style="width:40%" ng-if="$index == 1">Yesterday</td>
+                                        <td class="text-center bold" style="width:40%" ng-if="$index > 1">{{ day.Date | companyDate:'DD/MM/YYYY' }}</td>
+                                        <td class="text-right" style="width:30%">{{ day.CountBookings }}</td>
+                                        <td class="text-right brand-primary bold" style="width:30%">{{ day.TotalFare | Format }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

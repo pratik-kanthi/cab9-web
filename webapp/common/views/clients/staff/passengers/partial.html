@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-sm-6">
+        <!-- <h3 class="section-title mt0"><i class="material-icons">beenhere</i>Passengers</h3> -->
+        <span ng-if="PERMISSIONS.test('vendors', 'W')"> You can click on "<span ng-bind="(staff.Passengers.length > 0)?'Edit':'Add'"></span> Passengers" to manage the passengers.</span>
+        <div class="options mt15 mb30" ng-if="PERMISSIONS.test('vendors', 'W')||true">
+            <button class="btn btn-primary" ng-click="startEdit()" ng-show="viewMode === 'VIEW'">
+                <i class="material-icons">create</i><span ng-bind="(staff.Passengers.length > 0)?'Edit':'Add'"></span> Passengers
+            </button>
+            <button class="btn btn-warning" ng-click="cancelEdit()" ng-show="viewMode != 'VIEW'">
+                <i class="material-icons">undo</i>Cancel
+            </button>
+            <button class="btn btn-success" ng-click="saveChanges()" ng-disabled="formFor.form.$invalid" ng-show="viewMode != 'VIEW'">
+                <i class="material-icons">save</i>Save
+            </button>
+        </div>
+        <table class="table table-condensed table-hover mb10 table-bordered">
+            <thead>
+                <tr>
+                    <th><strong class="brand-secondary">Linked Passengers</strong></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="staff.Passengers.length==0">
+                    <td>
+                        <span class="text-muted">No Passengers added.</span>
+                    </td>
+                </tr>
+                <tr ng-repeat="item in staff.Passengers">
+                    <td>
+                        <strong class="brand-primary">{{item._Fullname}}</strong>
+                        <a href="" class="red pull-right ml8" ng-click="removePassenger(item)" ng-show="viewMode!='VIEW'">
+                            <i class="material-icons">remove_circle</i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row mt30">
+            <div class="col-sm-6" style="height: 400px;" ng-show="viewMode != 'VIEW'">
+                <div class="form-group">
+                    <label for="">Add Passenger <img src="/includes/images/preloader-fading.gif" ng-show="loadingPassengers" alt="" class="loader"></label>
+                    <ui-select ng-model="selected.Passenger" theme="selectize" title="Choose a Passenger" ng-change="addPassenger($select.selected)" class="edit">
+                        <ui-select-match placeholder="Type to search..."></ui-select-match>
+                        <ui-select-choices refresh= "searchPassengers($select.search)" repeat="passenger in unlinkedPassengers">
+                            <div class="ui-select-box">
+                                <div class="option-details">
+                                    <div>{{passenger.Firstname}} {{passenger.Surname}}</div>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6"></div>
+</div>

@@ -1,0 +1,110 @@
+<div class="module" id="client-profitability">
+    <h3 class="section-title mt0">Client Profitability Report</h3>
+    <div class="panel">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-3">
+                    <div class="form-group">
+                        <label class="control-label">Search Client:</label>
+                        <input type="text" ng-model="searchTerm.Account" class="form-control" ng-model-options="{ 'debounce': 500 }" placeholder="e.g. KKR" />
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="form-group">
+                        <label class="control-label">Minimum Bookings:</label>
+                        <input type="number" ng-model="searchTerm.Bookings" class="form-control" ng-model-options="{ 'debounce': 500 }" placeholder="e.g. 50" />
+                    </div>
+                </div>
+                <div class="col-xs-3">
+                    <div class="form-group">
+                        <label class="control-label">Margin / Profit:</label>
+                            <input class="check" type="checkbox" id="viewMode" ng-model="searchTerm.ViewMode" />
+                            <label class="check-label" for="viewMode" style="margin-top:0;"></label>
+                        <small class="text-muted" style="line-height:28px;margin-left:9px;" ng-show="searchTerm.ViewMode">Showing Profit Margin</small>
+                        <small class="text-muted" style="line-height:28px;margin-left:9px;" ng-show="!searchTerm.ViewMode">Showing Profit Amount</small>
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info text-center" ng-show="clients === null">
+                Fetching Data...
+            </div>
+            <div ng-hide="clients === null">
+                <pagination class="pagination-sm" style="margin: 0;" total-items="paging.totalItems" ng-model="paging.currentPage" items-per-page="paging.maxPerPage" boundary-links="true" max-size="5"></pagination>
+                <div class="table-responsive">
+                    <table class="table table-default table-responsive table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th style="width:350px;padding-bottom:0;">
+                                    <ul class="pagination pagination-sm" style="margin:0;">
+                                        <li class="pagination-first" ng-click="move('-')"><a>< Week</a></li>
+                                        <li class="pagination-last" ng-click="move('+')" ng-disabled="$scope.offset == 0"><a>Week ></a></button>
+                                    </ul>
+                                </th>
+                                <th ng-repeat="(k, v) in periods" colspan="{{v.NumberOfWeeks}}">
+                                    {{::k | date:'MMMM yyyy'}}
+                                </th>
+                                <th style="width:110px;">
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Client
+                                </th>
+                                <th ng-repeat-start="(k, v) in periods" style="display:none;">
+
+                                </th>
+                                <th ng-repeat-end ng-repeat="(key, value) in v.Weeks" style="border-right:{{(($last) ? '1px solid #3d3d3d !important' : '0 !important')}};border-left:{{(($first) ? '1px solid #3d3d3d !important' : '0 !important')}};">
+                                    <a ng-click="setOrdering(k, key)" href=""> WC: {{::key | date:'dd'}}</a>
+                                </th>
+                                <th>
+                                    <a ng-click="setOrdering('Total')" href="">
+                                        <span ng-show="searchTerm.ViewMode">
+                                            Average
+                                        </span>
+                                        <span ng-show="!searchTerm.ViewMode">
+                                            Profit
+                                        </span>
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="c in clients track by c.ClientAccount">
+                                <td>
+                                    {{::c.ClientAccount}} - {{::c.ClientName}}
+                                </td>
+                                <td ng-repeat-start="(k, v) in periods" style="display:none;border-left:1px solid black !important;border-right:1px solid black !important;background-color:{{::getColour(c.Months[k].Average,v.MaxChange)}}"></td>
+                                <td ng-repeat-end ng-repeat="(key, value) in v.Weeks" style="background-color:{{::getColour(c.Months[k].Weeks[key].Change,value.MaxChange,value.MinChange)}}">
+                                    <div ng-show="searchTerm.ViewMode">
+                                        {{::c.Months[k].Weeks[key].Change}}
+                                        <span class="text-muted" ng-show="::c.Months[k].Weeks[key].Change === null">&infin;</span>
+                                    </div>
+                                    <div ng-show="!searchTerm.ViewMode">
+                                        {{::c.Months[k].Weeks[key].TotalProfit | currency}}
+                                    </div>
+                                    <!--<span class="text-muted" ng-show="::c.Months[k].Weeks[key] == null">n/a</span>-->
+                                </td>
+                                <td ng-style="{ 'background-color': c.style.backgroundColor  }">
+                                    <div ng-show="searchTerm.ViewMode">
+                                        {{::c.Average | number:2}}
+                                        <span class="text-muted" ng-show="::c.Average === null">&infin;</span>
+                                    </div>
+                                    <div ng-show="!searchTerm.ViewMode">
+                                        {{::c.TotalProfit | currency}}
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <pagination class="pagination-sm" style="margin: 0;" total-items="paging.totalItems" ng-model="paging.currentPage" items-per-page="paging.maxPerPage" boundary-links="true" max-size="5"></pagination>
+            </div>        </div>
+    </div>
+</div>

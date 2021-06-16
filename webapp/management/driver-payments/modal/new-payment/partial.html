@@ -1,0 +1,93 @@
+<div class="modal-header">
+    <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+    <h3 class="modal-title">New Driver Payment</h3>
+</div>
+<div class="modal-body" id="driverpayments">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label">Payment From</label>
+                <div class="form-edit">
+                    <div class="input-group mb5">
+                        <input class="form-control" type="text" ng-model="payment.PaymentFrom" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.From" placeholder="{{DATETIME_FORMAT}}" ng-disabled="generated" show-weeks="false" show-button-bar="false" />
+                        <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="openCalendar($event, 'From')" ng-disabled="generated"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label">Payment To</label>
+                <div class="form-edit">
+                    <div class="input-group mb5">
+                        <input class="form-control" type="text" ng-model="payment.PaymentTo" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.To" placeholder="{{DATETIME_FORMAT}}" ng-disabled="generated" show-weeks="false" show-button-bar="false">
+                        <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="openCalendar($event, 'To')" ng-disabled="generated"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label">Driver Type</label>
+                <select class="form-control" ng-model="selected.DriverType" ng-change="allDriverSelected=false" ng-options="option.Id as option.Name for option in driverTypes">
+                    <option value="">All</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="control-label">Search</label>
+                <input class="form-control" type="text" ng-model="payment.$search" />
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="control-label">Selected Drivers Count</label>
+                <p ng-bind="getSelectedDriversCount()"></p>
+            </div>
+        </div>
+    </div>
+    <strong class="brand-primary">Select Drivers</strong>
+    <div class="form-group driver-table">
+        <table class="table table-condensed mt20">
+            <thead>
+                <tr>
+                    <th style="width:10%">
+                        <div class="checkbox">
+                            <input type="checkbox" id="driver-checkall" ng-click="selectAllDrivers()" ng-checked="allDriverSelected">
+                            <label for="driver-checkall"></label>
+                        </div>
+                    </th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Bookings</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in drivers|filter:driverFilter|filter:payment.$search|orderBy:'-$bookings'">
+                    <td style="width:5%">
+                        <div class="checkbox" ng-init="index=$index">
+                            <input type="checkbox" id="driver-check{{index}}" ng-model="item.$checked">
+                            <label for="driver-check{{index}}"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <img ng-src="{{item.ImageUrl}}" height="20" width="20" style="border-radius:10px" ng-if="item.ImageUrl" /> {{item.Name}}
+                    </td>
+                    <td>
+                        <span ng-bind="item.Description"> </span>
+                    </td>
+                    <td>
+                        <span ng-bind="item.$bookings"> </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+    <button class="btn btn-xs btn-primary" ng-click="proceed()" ng-show="viewMode!='CREATE'" ng-disabled="formFor.form.$invalid "><i class="material-icons">save</i>Proceed</button>
+</div>

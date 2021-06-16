@@ -1,0 +1,50 @@
+<div class="row driver-adjustments-options">
+    <div class="col-xs-6 module-options">
+        <div ng-if="PERMISSIONS.test('driver.viewer.adjustments', 'W')">
+            <a ng-click="openAdjustmentCreate()" class="btn btn-primary mb20">
+                <i class="material-icons">add_circle</i>Add Adjustment
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-6" ng-show="!recurring">
+        <div class="view-options pull-right">
+            <a ng-click="showFilters=!showFilters">
+                <i class="material-icons">build</i>Filter
+            </a>
+            <div class="filter-options" ng-class="(showFilters)?'show-filter':'hide-filter'">
+                <div class="form-group">
+                    <label for="">Choose Approval State</label>
+                    <select class="form-control" ng-change="filterAdjustments()" ng-model="filters.Approved" ng-options="option as option for option in ['Approved','UnApproved']">
+                        <option value="">All</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="">Choose Source</label>
+                    <select class="form-control" ng-change="filterAdjustments()" ng-model="filters.Source" ng-options="option as option for option in ['PaymentModel','Driver']">
+                        <option value="">All</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="">Choose Type</label>
+                    <select class="form-control" ng-change="filterAdjustments()" ng-model="filters.Type" ng-options="option as option for option in ['Debit','Credit']">
+                        <option value="">All</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table-for datasource="adjustments" class="table table-condensed table-hover driver-adjustments-table" schema="{{schema}}" filtering="searchTerm" sorting="" paging="" grouping="grouping" wrapper-class="table-responsive table-striped-double" table-class="" ng-if="schema">
+    <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+    <table-heading sorting="true">
+    </table-heading>
+    <table-data-rows>
+        <table-selection></table-selection>
+        <table-actions>
+            <a class="btn btn-xs btn-warning" ng-click="openAdjustmentEdit($row)" ng-if="PERMISSIONS.test('driver.viewer.adjustments', 'W')"><i class="material-icons">create</i>Edit</a>
+            <a class="btn btn-xs btn-danger" ng-click="deleteAdjustment($row)" ng-if="PERMISSIONS.test('driver.viewer.adjustments', 'W')"><i class="material-icons">delete_forever</i>Delete</a>
+        </table-actions>
+    </table-data-rows>
+    <table-footer paging="true">
+    </table-footer>
+</table-for>

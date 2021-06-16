@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h3 class="modal-title">Booking Conversation #{{booking.LocalId}}</h3>
+</div>
+<div ng-if="fetched==0" class="fetching">
+    <img src="/includes/images/loading-chat.gif" />
+</div>
+<div class="modal-body">
+    <div class="booking-details">
+        <div class="row">
+            <div class="col-xs-7"><strong>Booking Details</strong></div>
+            <div class="col-xs-5 text-right">{{booking.BookedDateTime | companyDate: 'DD/MM/YYYY HH:mm'}}</div>
+        </div>
+        <div class="journey">
+            <i class="material-icons">person_pin</i> {{booking._FromSummary | Truncate:32}}
+            <br />
+            <i class="material-icons">person_pin</i> {{booking._ToSummary | Truncate:32}}
+        </div>
+    </div>
+    <div ng-if="fetched!=0" class="conversations-area">
+        <div ng-if="fetched!=0" class="conversations">
+            <div ng-if="fetched!=0" class="wrapper">
+                <div class="comment" id="comment{{$index}}" ng-class="(item.Sender.Id == $root.USER.UserId)?'self':''" ng-repeat="item in booking.Conversations | orderBy:'CreationTime'">
+                    <div class="user-icon">
+                        <img ng-src="{{item.Sender._ImageUrl}}" alt="" />
+                    </div>
+                    <div class="text">
+                        <small ng-bind="item.Sender.Name"></small><small ng-show="item.Sender.UserType=='Client'" ng-bind="'('+item.Booking.Client.ClientType.Name+')'+','+item.Booking.Client.Name"></small>
+                        <p ng-bind="item.Body"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <textarea class="message-area" ng-model="newMessage.Body"></textarea>
+    <button class="btn btn-xs btn-danger pull-left ml15" ng-click="$dismiss()"><i class="material-icons">close</i>Close</button>
+    <!-- <input type="button" class="btn btn-xs btn-danger pull-left ml15" ng-click="$dismiss()" value="Close" /> -->
+    <button class="btn btn-xs btn-success pull-right mr15" ng-click="sendMessage()"><i class="material-icons">send</i>Send</button>
+    <!-- <input type="button" class="btn btn-xs btn-success pull-right mr15" ng-click="sendMessage()" value="Send" /> -->
+</div>

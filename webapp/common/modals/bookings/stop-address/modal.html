@@ -1,0 +1,38 @@
+<form form-for="stop" schema="BookingStop" mode="EDIT" class="reference-modal">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+        <h3 class="modal-title">Update Address</h3>
+    </div>
+    <div class="modal-body" id="bookingstop">
+        <div class="form-group">
+            <label class="control-label">
+                Address Finder
+            </label>
+            <div class="form-edit booking-stop">
+                <div tab-index="6" stop-edit model="stop" hide-edit="true"></div>
+            </div>
+        </div>
+        <div class="alert alert-warning">
+            <small><b>Please be careful with modifying the address below</b>. Modifying the address though any of the fields below will <b>not change the latitude and longitude</b> of the location and will not effect quoting/driver route. To be safe always try to modify the address with the field above.</small>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div required="false" field-for="Address1"></div>
+                <div required="false" field-for="Address2"></div>
+                <div required="false" field-for="Area" editable="false"></div>
+                <div required="false" field-for="TownCity" editable="false"></div>
+            </div>
+            <div class="col-md-6">
+                <div required="false" field-for="Postcode" editable="false"></div>
+                <div required="false" field-for="County" editable="false"></div>
+                <div required="false" field-for="Country" editable="false"></div>
+                <div required="false" editable="false" field-for="Latitude"></div>
+                <div required="false" editable="false" field-for="Longitude"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-success" ng-disabled="formFor.form.$invalid" ng-click="update()"> <i class="material-icons">save</i> Submit</button>
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"> <i class="material-icons">undo</i> Cancel</button>
+    </div>
+</form>

@@ -1,0 +1,62 @@
+<div class="module">
+    <h2 class="page-title">
+        <i class="material-icons">local_taxi</i>Vehicle Types
+    </h2>
+    <p class="grey">
+        List of vehicle types are shown below. To <b>EDIT OR DELETE</b> any vehicle type click on vehicle type, which will open up a pop up on your screen to edit/delete respective vehicle type. To <b>ADD NEW VEHICLE TYPE</b> click on add button which will open up the popup to enter details, add vehicle type image.
+    </p>
+
+    <div class="row">
+        <div class="col-md-6">
+            <a class="btn btn-success" ng-show="!addNew && !showDeleteCheckbox" ng-click="saveVehicleType()">
+                <i class="material-icons">playlist_add</i>Add New Vehicle Type
+            </a>
+        </div>
+    </div>
+
+    <div>
+        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true"
+            items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6" ng-repeat="v in vehicleTypes | orderBy: 'Priority || 99'" >
+            <div class="vehicles-wrapper" ng-click="EditVehicleType(v.Id)">
+                <div class="vehicle" ng-class="{selected : selectedVehicle.Id === v.Id}">
+                    <div class="fixed-badge" ng-show="v.AppBookable == true">App Bookable</div>
+                    <div class="col-sm-3">
+                        <div class="vehicle-image">
+                            <img ng-show="v.ImageUrl != null" ng-src="{{v._ImageUrl}}" alt="">
+                            <img ng-show="v.ImageUrl == null" src="/includes/images/add-car.png" alt="">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="vehicle-info">
+                            <h4 class="vehicle-title" ng-bind="v.Name" style="background-color: {{v.Colour}}" ng-class="(v.Colour)?'has-colour':''"></h4>
+                            <br ng-if="v.Colour" />
+                            <span class="vehicle-description wrap-description">
+                                {{v.Description}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="capacity">
+                            <div class="pax">
+                                <i class="material-icons">people</i>{{v.MaxPax}}
+                            </div>
+                            <div class="bax">
+                                <i class="material-icons">card_travel</i>{{v.MaxBax}}
+                            </div>
+                            <div class="priority">
+                                <i class="material-icons">sort</i>{{v.Priority}}
+                            </div>
+                            <div class="bax" style="margin-left:8px;">
+                                <i class="material-icons">format_list_numbered</i>{{v.Order}}
+                            </div>
+                            <br class="clearfix">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

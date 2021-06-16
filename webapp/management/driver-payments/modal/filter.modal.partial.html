@@ -1,0 +1,82 @@
+<div class="modal-header">
+    <h3 class="modal-title">Filter Invoices</h3>
+</div>
+<div class="modal-body" id="booking-filters">
+    <div class="row">
+        <div class="col-sm-6">
+            <h3 class="section-title mt0">Basic Filters</h3>
+            <div class="form-group mt30">
+                <label class="control-label" for="ClientIdInput">Client</label>
+                <div class="form-edit">
+                    <ui-select class="edit" ng-model="filterOptions.DriverId" theme="selectize">
+                        <ui-select-match allow-clear="true" placeholder="Select...">
+                            <div class="select-text">{{$select.selected.Name}}</div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in drivers | filter: $select.search">
+                            <div class="select-text-option">
+                                <div>{{item.Name}}</div><br />
+                                <small class="text-muted">{{item.Description}}</small>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.DriverId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filterOptions.DriverId" class="red">Clear</a>
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="mt30 amount-range">
+                <h3 class="section-title">Amount Range</h3>
+                <input type="number" min=0 placeholder="0" ng-model="filterOptions.Amount.from" style="width:45%" />
+                <span style="display:inline-block;height:2px;width:5px;background:#000" class="mb5"></span>
+                <input type="number" min="{{filterOptions.Amount.from}}" placeholder="∞" ng-model="filterOptions.Amount.to" style="width:45%"/>
+            </div>
+
+        </div>
+        <div class="col-sm-6">
+            <h3 class="section-title mt10">Date Range</h3>
+            <div class="time-controls pull-left" id="time-controls">
+                <a id="daterangepicker_bookings" href=""> <i class="material-icons">date_range</i></a><span class="current-period" ng-bind="filterOptions.date.selectedPeriod"></span>
+            </div>
+            <br />
+            <br />
+            <h3 class="section-title mt10">Status Filters</h3>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="status InProgress">
+                        <div class="checkbox">
+                            <input id="filter-InProgress" type="checkbox" ng-model="filterOptions.Status.Draft" />
+                            <label for="filter-InProgress"></label>
+                        </div>
+                        Draft
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="status Incoming">
+                        <div class="checkbox">
+                            <input id="filter-Incoming" type="checkbox" ng-model="filterOptions.Status.Approved" />
+                            <label for="filter-Incoming"></label>
+                        </div>
+                        Approved
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="status PreAllocated">
+                        <div class="checkbox">
+                            <input id="filter-PreAllocated" type="checkbox" ng-model="filterOptions.Status.Settled" />
+                            <label for="filter-PreAllocated"></label>
+                        </div>
+                        Settled
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+    <button class="btn btn-xs btn-success pull-right" ng-click="confirmFilters()"><i class="material-icons">date_range</i>Filter</button>
+</div>

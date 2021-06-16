@@ -1,0 +1,496 @@
+#cc-bookings {
+    .bookings {
+        .panel {
+            .panel-body {
+                padding: 0 !important;
+
+                .stats {
+                    padding: 15px 15px 10px;
+
+                    .bookings-progress {
+                        margin-top: 10px;
+
+                        .progress {
+                            margin-bottom: 10px;
+                        }
+                    }
+
+                    ul {
+                        padding-left: 0px;
+                        list-style: none;
+
+                        &.summary {
+                            margin-bottom: 0;
+                            float: right;
+
+                            li {
+                                display: inline-block;
+                                position: relative;
+                                margin-right: 10px;
+
+                                .heading {
+                                    color: @grey;
+                                    display: block;
+                                    font-size: 12px;
+                                    font-weight: 600;
+                                    line-height: 12px;
+                                }
+
+                                .value {
+                                    display: block;
+                                    font-size: 20px;
+                                    font-weight: 700;
+                                    line-height: 24px;
+
+                                    &.loading {
+                                        background-image: url('/includes/images/preloader-fading.gif');
+                                        width: 20px;
+                                        height: 20px;
+                                        background-size: cover;
+                                        margin: 0 auto;
+                                        margin-top: 5px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                table {
+                    tr {
+                        &.Completed {
+                            background-color: mix(@blue,
+                                #fff,
+                                10%);
+
+                            .booking-status {
+                                background-color: mix(@blue, #fff, 90%);
+                                color: #fff;
+                            }
+                        }
+
+                        &.COA {
+                            background-color: mix(@red,
+                                #fff,
+                                10%);
+
+                            .booking-status {
+                                background-color: mix(@red, #fff, 80%);
+                                color: #fff;
+                            }
+                        }
+                    }
+
+                    th {
+                        background-color: @brand-primary;
+                        color: #fff;
+                        font-size: 12px;
+                        padding: 4px 4px;
+
+                        .checkbox {
+                            background: #fff;
+                            margin-left: 10px;
+                        }
+                    }
+
+                    td {
+                        padding: 2px 4px 0;
+                        font-size: 12px;
+                        text-transform: capitalize;
+
+                        .checkbox {
+                            margin-left: 10px;
+                        }
+
+                        audio {
+                            height: 24px;
+                            width: 100%;
+                        }
+
+                        &.expanded {
+                            background: #f9f9f9;
+                            padding: 0;
+                            position: relative;
+                            padding: 16px 32px;
+                            .info-box {
+                                margin-bottom: 8px;
+                                .content {
+                                    span {
+                                        font-size: 16px;
+                                        font-weight: 600;
+                                    }
+                                }
+                                table {
+                                    margin-bottom: 0;
+                                }
+                            }
+                            #credit-cards-transactions {
+                                table {
+                                    margin-bottom: 15px;
+                                    background: #fff;
+
+                                    th {
+                                        background-color: @brand-primary;
+                                        color: #fff;
+                                    }
+
+                                    td {
+                                        &:first-child {
+                                            border-left: 1px solid #ddd !important;
+                                        }
+
+                                        &:last-child {
+                                            border-right: 1px solid #ddd !important;
+                                        }
+                                    }
+
+                                    tr {
+                                        &:last-child {
+                                            td {
+                                                border-bottom: 1px solid #ddd !important;
+                                            }
+                                        }
+                                    }
+                                }
+                                .transaction-details {
+                                    pre {
+                                        white-space: pre;
+                                    }
+                                }
+                            }
+                        }
+
+                        .btn-xs.expand-booking {
+                            width: 24px !important;
+                            height: 24px !important;
+                            line-height: 24px !important;
+                            text-align: center !important;
+                            padding: 0;
+
+                            i {
+                                left: -4px;
+                            }
+                        }
+
+                        .booking-status {
+                            float: right;
+                            padding: 0 4px;
+                            .border-radius(2px);
+                            font-size: 11px;
+                            margin-top: -1px;
+                            font-weight: 600;
+                        }
+
+                        &.card-type {
+                            padding-bottom: 0px;
+
+                            .credit-card-type.xs {
+                                width: 24px;
+                                height: 15px;
+                                background-size: 24px 15px;
+                                margin-right: 0px;
+                                margin-top: -4px;
+                            }
+
+                            .card-status {
+                                text-align: left;
+                                font-weight: 700;
+                                font-size: 12px;
+                                .border-radius(2px);
+
+                                &.Success {
+                                    color: @green;
+                                }
+
+                                &.PreauthTaken {
+                                    color: lighten(@green, 20%);
+                                }
+                            }
+                        }
+
+                        &.finance {
+                            line-height: 18px;
+                        }
+
+                        table.finance-details {
+                            margin: 0px -4px -1px;
+                            width: ~"calc(100% + 8px)";
+
+                            td {
+                                padding: 0 2px 2px 4px;
+                                border: 0;
+                                line-height: 14px;
+                                border-top: 1px solid #e9e9e9;
+                                //background: lighten(@brand-primary, 60%);
+                                font-size: 11px;
+                                color: @brand-primary;
+                                font-weight: 600;
+
+                                b {
+                                    color: lighten(@brand-primary, 20%)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+#credit-cards,
+#credit-cards-transactions {
+
+    td.card-type,
+    td.provider-type {
+        padding: 4px;
+        padding-left: 12px;
+        padding-top: 11px;
+        line-height: 32px;
+        position: relative;
+        overflow: hidden;
+
+        .credit-card-type {
+            float: left;
+            margin-right: 12px;
+        }
+
+        .badge {
+            position: absolute;
+            top: 9px;
+            left: -22px;
+            padding: 3px 20px;
+            .border-radius(0 0 0 0);
+            transform: rotate(-45deg);
+            background-color: @green;
+        }
+    }
+}
+
+#all-transactions {
+    .tg-wrapper {
+        table {
+            thead tr {
+                th {
+                    background-color: @brand-primary;
+                    color: #fff;
+                }
+            }
+        }
+
+        .nav-tabs {
+            margin-bottom: 20px;
+
+            li {
+                width: 50%;
+                border-bottom: 0;
+
+                a {
+                    text-transform: capitalize;
+                    font-weight: 600;
+                    font-size: 16px;
+
+                    &::before,
+                    &::after {
+                        display: none;
+                    }
+                }
+
+                &.active {
+                    background-color: @brand-primary;
+
+                    a {
+                        color: #fff !important;
+                    }
+                }
+            }
+        }
+
+        .tg {
+            margin-bottom: 16px;
+
+            .head {
+                background: @brand-primary;
+                line-height: 40px;
+                color: #fff;
+                padding: 0 8px;
+                font-size: 16px;
+            }
+
+            .body {
+                background: #f4f4f4;
+                padding: 16px;
+
+                .summary {
+                    background: #fff;
+                    padding: 8px 16px;
+                    margin-bottom: 16px;
+                    border: 1px solid #ddd;
+                }
+
+                .info-box {
+                    margin-bottom: 0;
+
+                    .title {
+                        font-size: 14px;
+                    }
+
+                    .content {
+                        font-weight: 600;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+#credit-cards-transactions {
+    .panel-heading {
+        .btn {
+            position: absolute;
+            top: 12px;
+            right: 19px;
+        }
+    }
+
+    td {
+        padding: 0px 8px;
+        vertical-align: middle;
+
+        &.card-type {
+            padding-top: 2px;
+        }
+
+        &.transaction-type {
+            padding: 0 8px;
+        }
+    }
+
+    td.status {
+        line-height: 28px;
+
+        &.SUCCESS {
+            background-color: mix(@green, #fff, 10%);
+
+            strong {
+                color: mix(@green, #000, 70%) !important;
+            }
+        }
+
+        &.FAILURE {
+            background-color: mix(@red, #fff, 10%);
+
+            strong {
+                color: mix(@red, #000, 70%) !important;
+            }
+        }
+    }
+
+    pre {
+        font-family: monospace;
+        background-color: #222;
+        color: #fff;
+        margin-top: 8px;
+        padding: 0.5em;
+        border-radius: .25em;
+        height: 400px;
+        overflow: scroll; //counter-reset: line;
+        max-width: 400px;
+    }
+}
+
+.credit-card-type,
+.credit-card-provider-type {
+    display: inline-block;
+    width: 160px;
+    height: 100px;
+    background-size: 160px 100px;
+    background-image: url('/includes/images/cc/card-logo-unknown.svg');
+
+    &.small {
+        width: 53.33333333px;
+        height: 33.33333333px;
+        background-size: 53.33333333px 33.33333333px;
+    }
+
+    &.large {
+        width: 240px;
+        height: 150px;
+        background-size: 240px 150px;
+    }
+
+    &.visa {
+        background-image: url('/includes/images/cc/card-logo-visa.svg');
+    }
+
+    &.mastercard {
+        background-image: url('/includes/images/cc/card-logo-mastercard.svg');
+    }
+
+    &.amex {
+        background-image: url('/includes/images/cc/card-logo-amex.svg');
+    }
+
+    &.Judopay,
+    &.JUDOPAY,
+    &.judopay,
+    &.judo,
+    &.JUDO {
+        background-image: url('/includes/images/cc/provider-judo.jpg');
+    }
+
+    &.Stripe {
+        background-image: url('/includes/images/cc/provider-stripe.svg');
+    }
+
+    &.None {
+        background-image: url('');
+    }
+}
+
+.add-payment-card-modal-wrapper {
+    .modal-dialog {
+        width: 400px;
+    }
+}
+
+form#add-payment-card-modal {
+    .jp-card-number {
+        font-size: 21px;
+    }
+
+    .card-wrapper {
+        margin: 10px 0 20px 0;
+    }
+
+    .form-container {
+        width: 350px;
+        margin: 0 auto;
+        margin-bottom: 10px;
+
+        .row {
+            margin-top: 8px;
+        }
+    }
+
+    input {
+        width: 100%;
+        .border-radius(3px);
+        height: 30px;
+        border: 1px solid #d9d9d9;
+        color: #000;
+        padding: 3px 8px;
+        font-size: 15px;
+        line-height: 20px;
+        .box-shadow(none);
+        -webkit-appearance: none;
+
+        &:focus {
+            outline: none;
+            border-color: #08f;
+            box-shadow: 0 0 4px #08f;
+        }
+    }
+}

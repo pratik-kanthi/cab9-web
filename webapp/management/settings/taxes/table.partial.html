@@ -1,0 +1,28 @@
+﻿<div id="settings-taxes">
+    <h2 class="page-title">
+        <i class="material-icons">account_balance</i>Tax Settings
+    </h2>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Tax Type</th>
+                            <th>Rate</th>
+                            <!-- <th></th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="tax in taxes">
+                            <td>{{tax.Name}}</td>
+                            <td>{{tax._TaxType}}</td>
+                            <td>{{tax._TaxRate}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

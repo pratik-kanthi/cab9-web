@@ -1,0 +1,157 @@
+<div class="row summary" ng-if="displayMode == 'CREATE'">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Pay to Driver</h3>
+            </div>
+            <div class="panel-body">
+                <p class="brand-primary">Amount company owes to the driver. These are the bookings for which company has collected the money from the clients and owes commision to the driver.</p>
+                <h4 class="mt20">Total Bookings Value: {{BookingsTotal('Bill') | Format}}</h4>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4>Total Due: {{calculateDue('Bill') | Format}}</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <h4>Total Bonus: {{selectedItem.Bonus | Format}}</h4>
+                    </div>
+                </div>
+                <div class="mt20">
+                    <a href="" class="btn btn-primary" ng-click="details('Bill')" ng-if="PERMISSIONS.test('driverpayments.viewer.bill')"><i class="material-icons">chrome_reader_mode</i>Show Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Collect From Driver - Invoices</h3>
+            </div>
+            <div class="panel-body">
+                <p class="brand-primary">Amount driver owes to the company. These are the bookings for which driver has collected the money from the passengers and owes commision to the company.</p>
+                <h4 class="mt20">Total Bookings Value: {{BookingsTotal('Invoice') | Format}}</h4>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4>Total Due: {{calculateDue('Invoice') | Format}}</h4>
+                    </div>
+                    <div class="col-sm-6">
+                    </div>
+                </div>
+                <div class="mt20">
+                    <a href="" class="btn btn-primary" ng-click="details('Invoice')" ng-if="PERMISSIONS.test('driverpayments.viewer.invoice')"><i class="material-icons">chrome_reader_mode</i>Show Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row summary" ng-if="displayMode != 'CREATE'">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Pay to Driver</h3>
+            </div>
+            <div class="panel-body">
+                <p class="brand-primary">Amount company owes to the driver. These are the bookings for which company has collected the money from the clients and owes commision to the driver.</p>
+                <div class="panel-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60%">Details</th>
+                                <th style="width: 40%" class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong class="brand-primary">Bookings Total</strong></td>
+                                <td class="text-right">{{payment.Bill.BookingsSubTotal | Format}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="brand-primary">Waiting Total</strong></td>
+                                <td class="text-right">{{payment.Bill.WaitingSubTotal | Format}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="brand-primary">Extras Total</strong></td>
+                                <td class="text-right">{{payment.Bill.ExtrasSubTotal | Format}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="brand-primary">Adjustments Total</strong></td>
+                                <td class="text-right">{{payment.Bill.AdjustmentsSubTotal | Format}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-right"><strong class="brand-primary">Sub Total</strong></td>
+                                <td class="text-right">{{ (payment.Bill.BookingsSubTotal + payment.Bill.WaitingSubTotal + payment.Bill.ExtrasSubTotal + payment.Bill.AdjustmentsSubTotal) | Format }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><strong class="brand-primary">Tax</strong></td>
+                                <td class="text-right">{{ payment.Bill.TaxAmount | Format }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><strong class="brand-primary">Bonus Total</strong></td>
+                                <td class="text-right">{{payment.BonusAmount | Format}}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><strong class="brand-primary">Total Due</strong></td>
+                                <td class="text-right">{{ payment.Bill.TotalAmount + payment.BonusAmount | Format }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="mt0">
+                    <a href="" class="btn btn-xs btn-primary" ng-click="details('Bill')" ng-if="PERMISSIONS.test('driverpayments.viewer.bill')"><i class="material-icons">chrome_reader_mode</i>Show Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Collect From Driver</h3>
+            </div>
+            <div class="panel-body">
+                <p class="brand-primary">Amount driver owes to the company. These are the bookings for which driver has collected the money from the passengers and owes commision to the company.</p>
+                <div class="panel-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60%">Details</th>
+                                <th style="width: 40%" class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong class="brand-primary">Bookings Total</strong></td>
+                                <td class="text-right">{{payment.Invoice.BookingsSubTotal | Format}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="brand-primary">Waiting Total</strong></td>
+                                <td class="text-right">{{payment.Invoice.WaitingSubTotal | Format}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong class="brand-primary">Adjustments Total</strong></td>
+                                <td class="text-right">{{payment.Invoice.AdjustmentsSubTotal | Format}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-right"><strong class="brand-primary">Sub Total</strong></td>
+                                <td class="text-right">{{ (payment.Invoice.BookingsSubTotal + payment.Invoice.WaitingSubTotal + payment.Invoice.AdjustmentsSubTotal) | Format }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><strong class="brand-primary">Tax</strong></td>
+                                <td class="text-right">{{ payment.Invoice.TaxAmount | Format }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-right"><strong class="brand-primary">Total Due</strong></td>
+                                <td class="text-right">{{ payment.Invoice.TotalAmount | Format }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="mt0">
+                    <a href="" class="btn btn-xs btn-primary" ng-click="details('Invoice')" ng-if="PERMISSIONS.test('driverpayments.viewer.invoice')"><i class="material-icons">chrome_reader_mode</i>Show Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

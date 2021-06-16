@@ -1,0 +1,181 @@
+<div class="row advanced">
+    <div class="col-md-3">
+        <ul class="nav nav-pills nav-stacked">
+            <li ng-class="{'active': view.current == 'REPRICE'}">
+                <a ng-click="view.switchTo('REPRICE')">Bulk Repricing</a>
+            </li>
+            <li ng-class="{'active': view.current == 'PRICE_LIST'}">
+                <a ng-click="view.switchTo('PRICE_LIST')">Price List</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-9">
+        <div class="panel" ng-show="view.current == 'REPRICE'">
+            <div class="panel-heading">
+                <h3 class="panel-title">Bulk Repricing</h3>
+            </div>
+            <div class="panel-body" style="overflow:visible;">
+                <form name="repricingForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">From Date:</label>
+                                <div class="input-group">
+                                    <input type="text" name="fromDate" class="form-control" ng-model="repricing.fromDate" datepicker-popup="shortDate" is-open="repricing.fromDateOpen" show-weeks="false" show-button-bar="false" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="repricing.fromDateOpen = true">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">From Time:</label>
+                                <div class="input-group" dropdown is-open="repricing.fromTimeOpen" auto-close="outsideClick">
+                                    <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched" type="time" name="fromTime" ng-model="repricing.fromTime" placeholder="HH:MM">
+                                    <ul class="dropdown-menu timepicker">
+                                        <li>
+                                            <timepicker ng-model="repricing.fromTime" hour-step="1" minute-step="1" show-meridian="false"></timepicker>
+                                        </li>
+                                    </ul>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="openCalendar($event, 'fromTimeOpen')">
+                                            <i class="glyphicon glyphicon-time"></i>
+                                        </button>
+                                    </span>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">To Date:</label>
+                                <div class="input-group">
+                                    <input type="text" name="toDate" class="form-control" ng-model="repricing.toDate" datepicker-popup="shortDate" is-open="repricing.toDateOpen" show-weeks="false" show-button-bar="false" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="repricing.toDateOpen = true">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">To Time:</label>
+                                <div class="input-group" dropdown is-open="repricing.toTimeOpen" auto-close="outsideClick">
+                                    <input class="form-control ng-pristine ng-valid ng-valid-required ng-touched" type="time" name="toTime" ng-model="repricing.toTime" placeholder="HH:MM">
+                                    <ul class="dropdown-menu timepicker">
+                                        <li>
+                                            <timepicker ng-model="repricing.toTime" hour-step="1" minute-step="1" show-meridian="false"></timepicker>
+                                        </li>
+                                    </ul>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="openCalendar($event, 'toTimeOpen')">
+                                            <i class="glyphicon glyphicon-time"></i>
+                                        </button>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Email:</label>
+                                <input type="email" name="email" class="form-control" ng-model="repricing.email" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning">
+                                Submitting this form will recalculate prices for all non-invoiced bookings between the selected period.
+                                <br />
+                                This will override any manual prices you have previously set with calculated ones.
+                                <br />
+                                Repricing will be queued in the background and an email will be sent out once completed.
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-success btn-fix" ng-click="repricing.send()" ng-disabled="!repricing.from || !repricing.to || !repricing.email">Submit</button>
+            </div>
+        </div>
+        <div class="panel" ng-show="view.current == 'PRICE_LIST'">
+            <div class="panel-heading">
+                <h3 class="panel-title">Price List</h3>
+            </div>
+            <div class="panel-body">
+                <form name="listForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">Vehicle Type:</label>
+                                <select class="form-control" ng-model="query.vehicleTypeId" ng-options="option.Id as option.Name for option in vehicleTypes"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">From Postcodes:</label>
+                                <textarea rows="5" class="form-control" ng-model="query.from" required /></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label">To Postcodes:</label>
+                                <textarea rows="5" class="form-control" ng-model="query.to" required></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-success btn-fix" ng-click="query.submit()" ng-disabled="!query.from || !query.to || !query.vehicleTypeId">Submit</button>
+                <button class="btn btn-primary btn-fix" ng-click="query.download()" ng-disabled="!query.results">Download</button>
+            </div>
+        </div>
+        <div class="col-md-12 price-list-table" ng-if="view.current == 'PRICE_LIST' && query.results">
+            <h3 class="section-title mt0">{{query.progressString}}</h3>
+            <div class="table-responsive mt0">
+                <table class="table table-bordered table-condensed primary-table">
+                    <thead>
+                        <tr>
+                            <th style="">Form</th>
+                            <th style="">To</th>
+                            <th style="" class="text-right">Estimated Distance</th>
+                            <th style="" class="text-center">Estimated Time</th>
+                            <th style="" class="text-right">Cost (&pound;)</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-if="query.results && query.results.length>0">
+                        <tr ng-repeat="item in query.results track by $index">
+                            <td><span ng-bind="::item.from"></span></td>
+                            <td><span ng-bind="::item.to"></span></td>
+                            <td class="text-right"><span ng-bind="::((item.EstimatedDistance | number:2) + ' mi.')"></span></td>
+                            <td class="text-center"><span ng-bind="::(item.EstimatedMins + ' mins')"></span></td>
+                            <td class="text-right"><strong ng-bind="::item.FinalCost | currency"></strong></td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="query.results.length==0">
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                No Data found.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

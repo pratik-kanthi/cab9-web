@@ -1,0 +1,96 @@
+<div class="time">
+            <div class="Id"><i class="material-icons">attach_file</i>{{ b.LocalId }}</div>
+            <div class="bt">
+                <i class="material-icons">access_time</i>{{ b.BookedDateTime | companyDate:'DD/MM/YYYY HH:mm'}}
+            </div>
+        </div>
+        <br class="clearfix" />
+        <div class="journey">
+            <div class="from"><i class="material-icons">place</i>{{ b._FromSummary }}</div>
+            <!-- <div class="to"><i class="material-icons">place</i>{{ b._ToSummary }}</div> -->
+        </div>
+        <div class="lower">
+            <div class="row">
+                <div class="col-xs-5">
+                    <div class="passenger">
+                        <img ng-src="{{b.LeadPassenger._ImageUrl}}" alt="" class="profile" /> {{ ::b.LeadPassenger._Fullname }}
+                        <!-- <br /> {{ ::b.LeadPassenger.Mobile }} -->
+                    </div>
+                </div>
+                <div class="col-xs-5">
+                    <div class="driver" ng-show="b.Driver">
+                        <img ng-src="{{b.Driver._ImageUrl}}" alt="" class="profile" /> {{::b.Driver._Fullname}}
+                    </div>
+                    <div class="no-driver" ng-show="!b.Driver">
+                        <img src="/includes/images/add-icon.png" alt="" class="profile" /> Add Driver
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                  <div class="mode"></div>
+                </div>
+            </div>
+        </div>
+        <div class="actions"></div>
+
+
+<table class="table table-bordered table-condensed">
+    <thead>
+        <tr>
+            <th ng-style="{'width': ((panel.mode === 'L') ? '60px' : '110px') }">Date</th>
+            <th style="width:30%"><span ng-show="panel.mode === 'L'">Passenger /</span> From / To</th>
+            <th style="width:20%" ng-show="panel.mode === 'B'">Client / Passenger</th>
+            <th style="width:20%" ng-show="panel.mode === 'B'">Driver / Vehicle</th>
+            <th style="width:20%" ng-show="panel.mode === 'B'">Status</th>
+            <th style="width:48px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="b in bookings | filter:bookingSearch | orderBy:'-BookedDateTime'">
+            <td>
+                <b>{{ b.BookedDateTime | companyDate:'HH:mm'}}</b><br />
+                <span class="text-muted">{{ b.BookedDateTime | companyDate:'DD/MM/YYYY' }}</span>
+                <br />
+                <span class="label" ng-show="panel.mode === 'L'" ng-class="{
+                      'label-default': b.BookingStatus == 'Provisional' || b.BookingStatus == 'Confirmed',
+                      'label-success': b.BookingStatus == 'Completed' || b.BookingStatus == 'Clearing' || b.BookingStatus == 'POB',
+                      'label-warning': b.BookingStatus == 'Allocated',
+                      'label-danger': b.BookingStatus == 'Cancelled',
+                      'label-info': b.BookingStatus == 'Waiting' || b.BookingStatus == 'OnRoute' || b.BookingStatus == 'PickingUp'
+                      }">{{ b.BookingStatus }}</span>
+            </td>
+            <td>
+                <b ng-show="panel.mode === 'L'">{{ b._LeadPassengerName }}<br /></b>
+                {{ b._FromSummary }}<br />
+                <span ng-if="b.AsDirected" class="text-muted">As Directed</span>
+                <span ng-if="!b.AsDirected" class="text-muted">{{ b._ToSummary }}</span>
+            </td>
+            <td ng-show="panel.mode === 'B'">{{ b._ClientName }}<br /><span class="text-muted">{{ b._LeadPassengerName }}</span></td>
+            <td ng-show="panel.mode === 'B'">
+                <div ng-if="b.DriverId">{{ b._DriverSummary}}<br /><span class="text-muted">{{ b._VehicleReg }}</span></div>
+                <div ng-if="!b.DriverId"><a ng-click="openOfferModel(b)" class="btn btn-default">Offer To Driver</a></div>
+            </td>
+            <td ng-show="panel.mode === 'B'">
+                <div ng-if="b.$offer">
+                    <span class="label label-default" ng-if="b.$offer.ReadTime == null && b.$offer.Accepted == null">Unread</span>
+                    <span class="label label-info" ng-if="b.$offer.ReadTime && b.$offer.Accepted === null">Read</span>
+                    <span class="label label-success" ng-if="b.$offer.ReadTime && b.$offer.Accepted === true">Assigned</span>
+                    <span class="label label-danger" ng-if="b.$offer.ReadTime && b.$offer.Accepted === false">Rejected</span>
+                </div>
+                <br />
+                <span class="label" ng-class="{
+                      'label-default': b.BookingStatus == 'Provisional' || b.BookingStatus == 'Confirmed',
+                      'label-success': b.BookingStatus == 'Completed' || b.BookingStatus == 'Clearing' || b.BookingStatus == 'POB',
+                      'label-warning': b.BookingStatus == 'Allocated',
+                      'label-danger': b.BookingStatus == 'Cancelled',
+                      'label-info': b.BookingStatus == 'Waiting' || b.BookingStatus == 'OnRoute' || b.BookingStatus == 'PickingUp'
+                      }">{{b.BookingStatus}}</span>
+                <!--{{b.$offer}}-->
+                <!--<span class="label label-info">On Route</span><br /><span class="text-muted">18 mins to pickup</span>-->
+            </td>
+            <td>
+                <a class="icon icon-eye" ng-show="b.$marker" ng-click="select(b, null)"></a><br />
+                <a class="icon icon-window" ui-sref="root.bookings.viewer.details({Id: b.Id})"></a>
+            </td>
+        </tr>
+    </tbody>
+</table>

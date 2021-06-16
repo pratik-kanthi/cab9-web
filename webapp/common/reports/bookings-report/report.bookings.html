@@ -1,0 +1,108 @@
+﻿<div class="panel panel-default reports" promise-shadow promise="deferred.promise">
+    <div class="panel-heading">
+        <h3 class="panel-title">Bookings</h3>
+        <i ng-show="!printReportPage && bookingsGroupData.length>0" class="material-icons small pull-right" ng-click="bookingsDownload()">file_download</i>
+    </div>
+    <div class="panel-body pb0" ng-if="totals.TotalBookings>0">
+        <div class="row">
+            <div class="col-xs-2">
+                <i class="material-icons">&#xE0AF;</i>
+            </div>
+            <div class="col-xs-10">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="stat pt20">
+                            <span class="stat-label">Total Bookings</span>
+                            <span class="stat-data" ng-bind="totals.TotalBookings | number"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="stat pt20">
+                            <span class="stat-label">Total Booking Cost</span>
+                            <span class="stat-data" ng-bind="totals.TotalActualCost | Format"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="stat pt20">
+                            <span class="stat-label">Total Invoice Cost</span>
+                            <span class="stat-data" ng-bind="totals.TotalInvoiceCost | Format"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="section-title mb20">Bookings Chart</h3>
+        <flot dataset="bookingsData" options="bookingsOptions" width="100%" height="200px"></flot>
+        <div ng-show="totals.TotalBookings>0" class="mt30">
+            <div class='table-responsive'>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th class="text-center">Bookings</th>
+                            <th class="text-center">Actual Cost</th>
+                            <th class="text-center">Invoice Cost</th>
+                            <th class="text-center">Cash Bookings</th>
+                            <th class="text-center">Cash Bookings Cost</th>
+                            <th class="text-center">Acc. Bookings</th>
+                            <th class="text-center">Acc. Bookings Cost</th>
+                            <th class="text-center">Canc. Bookings</th>
+                            <th class="text-center">Canc. Bookings Cost</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th class="text-center">Totals</th>
+                            <th class="text-right" ng-bind="totals.Bookings"></th>
+                            <th class="text-right" ng-bind="totals.TotalActualCost | Format"></th>
+                            <th class="text-right" ng-bind="totals.TotalInvoiceCost| Format"></th>
+                            <th class="text-right" ng-bind="totals.TotalCashBookings"></th>
+                            <th class="text-right" ng-bind="totals.TotalCashBookingsCost| Format"></th>
+                            <th class="text-right" ng-bind="totals.TotalAccountBookings"></th>
+                            <th class="text-right" ng-bind="totals.TotalAccountBookingsCost| Format"></th>
+                            <th class="text-right" ng-bind="totals.TotalCancelledBookings"></th>
+                            <th class="text-right" ng-bind="totals.TotalCancelledBookingsCost| Format"></th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <tr ng-repeat="data in bookingsGroupData| orderBy:'-Period'">
+                            <td>
+                                <strong ng-bind="data.Period|periodFormatFilter:periodFormat"></strong>
+                            </td>
+                            <td class="text-center">
+                                <span ng-bind="data.Bookings|number"></span>
+                            </td>
+                            <td class="text-center">
+                                <span ng-bind="data.ActualCost | Format"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.InvoiceCost| Format"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.CashBookingsCount"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.CashBookingsCost| Format"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.AccountBookingsCount"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.AccountBookingsCost| Format"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.CancelBookingsCount"></span>
+                            </td>
+                            <td class="text-right">
+                                <span ng-bind="data.CancelBookingsCost| Format"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body" ng-if="!totals.TotalBookings || totals.TotalBookings==0">
+        No data available!
+    </div>
+</div>

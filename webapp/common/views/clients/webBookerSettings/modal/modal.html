@@ -1,0 +1,15 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" aria-hidden="true" ng-click="$dismiss()">&times;</button>
+    <h3 class="modal-title">Choose Image</h3>
+</div>
+<div class="modal-body">
+    <input type="file" file-picker file="upload.choosen" accept="image/*" />
+    <div ng-if="upload.src">
+        <img style="width:100%;" ng-src="{{upload.src}}" alt="img" />
+        <div class="mt10">
+            <button class="btn btn-xs btn-success" ng-show="!upload.dimensions" ng-click="upload.uploadFull()">
+                <i class="material-icons">file_upload</i> Upload
+            </button>
+        </div>
+    </div>
+</div>

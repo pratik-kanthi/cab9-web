@@ -1,0 +1,147 @@
+.profile-set {
+    border-bottom: 1px solid @lighter-grey;
+}
+
+.advanced {
+    .panel {
+        border: 0;
+        .panel-heading {
+            background: @brand-primary;
+            .panel-title {
+                color: #fff !important;
+            }
+        }
+    }
+}
+
+.fixed-prices-options {
+    position: relative;
+    z-index: 1000;
+}
+
+.fixed-prices {
+    position: relative;
+    z-index: 10;
+    .table-striped-double {
+        max-height: 600px;
+        overflow: auto;
+        table {
+            table-layout: fixed;
+            width: 1600px;
+            &:first-child {
+                th {
+                    border-right: 1px dashed mix( #fff, @brand-primary, 20%) !important;
+                    &:first-child {
+                        border-top-left-radius: 3px;
+                    }
+                    &:last-child {
+                        border-top-right-radius: 3px;
+                        border: 0 !important;
+                    }
+                }
+
+            }
+            &:nth-child(2) {
+                th {
+                    // border-right: 1px dashed #354054 !important;
+                    &:first-child {
+                        border-bottom-left-radius: 3px;
+                    }
+                    &:last-child {
+                        border-bottom-right-radius: 3px;
+                        border: 0 !important;
+                    }
+                }
+            }
+        }
+        thead {
+            tr {
+                background: @brand-primary;
+                th {
+                    padding: 8px 5px;
+                    border: 0;
+                    color: #fff;
+                    font-size: 12px;
+                    text-transform: uppercase; // display: inline-block;
+                    border-right: 1px dotted #fff;
+                    white-space: nowrap;
+                    vertical-align: middle;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+        tbody {
+            tr {
+                &:hover {
+                    td {
+                        background: #eceef1 !important;
+                    }
+                }
+            }
+            td {
+                white-space: nowrap;
+                vertical-align: middle;
+                text-overflow: ellipsis;
+                span {
+                    display: inline-block;
+                }
+                .selectize-input {
+                    background: #eceef1;
+                }
+                .form-control {
+                    // background: #fff;
+                    box-shadow: none;
+                    // border: 1px solid #ddd;
+                }
+            }
+            .profile {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                background-color: #ddd;
+            }
+            .driver-name {
+                color: @purple;
+                font-size: 13px;
+                font-weight: 600;
+                text-transform: uppercase;
+                line-height: 16px;
+            }
+            .label {
+                position: relative;
+                top: -2px;
+            }
+            .reason {
+                color: #555;
+                display: inline-block;
+                font-size: 12px;
+            }
+            .vehicle {
+                font-weight: 600;
+                line-height: 15px;
+                .registration {
+                    text-align: center;
+                    background: #fdca4d;
+                    font-weight: 900;
+                    padding: 2px 12px;
+                    line-height: 16px;
+                    border-radius: 2px;
+                    margin-top: 4px;
+                    color: #000!important;
+                    font-size: 12px;
+                    width: 100px;
+                    .text-ellipsis();
+                    &.na {
+                        background-color: #ddd !important;
+                    }
+                }
+            }
+        }
+    }
+}

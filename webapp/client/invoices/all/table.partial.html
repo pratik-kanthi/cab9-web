@@ -1,0 +1,16 @@
+﻿<div class="module">
+    <date-picker-wide start="start" end="end" selected="selected" range="false" dateshow="true" hide-dates="false" show-toggle="false"></date-picker-wide>
+    <table-for datasource="invoices" class="table table-condensed table-hover" schema="Invoice" filtering="searchTerm" sorting="" paging="" grouping="grouping" wrapper-class="table-responsive table-striped-double" table-class="">
+        <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+        <table-heading sorting="true">
+        </table-heading>
+        <table-data-rows>
+            <table-selection></table-selection>
+            <table-actions>
+                <a class="btn btn-xs btn-primary" ng-click="viewItem($row)"><i class="material-icons">chrome_reader_mode</i> View</a>
+            </table-actions>
+        </table-data-rows>
+        <table-footer paging="true">
+        </table-footer>
+    </table-for>
+</div>

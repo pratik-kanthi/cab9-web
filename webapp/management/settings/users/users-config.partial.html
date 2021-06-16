@@ -1,0 +1,51 @@
+<div id="settings-users">
+    <h2 class="page-title">
+        <i class="material-icons">supervisor_account</i>Manage Users
+    </h2>
+    <div class="row">
+        <div class="col-xs-6 view-options">
+            <button class="btn btn-success" ng-click="addnewUser()" ng-if="PERMISSIONS.test('settings.users','W')"><i class="material-icons">add_circle</i>Add New</button>
+            {{Auth.getSession().UserId}}
+        </div>
+        <div class="col-xs-6 view-options">
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" />
+            </a>
+        </div>
+    </div>
+    <div>
+        <table-for datasource="fetchUsers" class="table table-condensed table-hover" filtering="searchTerm" schema="{{Schema}}" paging="paging" wrapper-class="table-responsive table-striped-double" table-class="">
+            <table-titlebar columns-options="true" export-options="true" paging="false"></table-titlebar>
+            <table-heading sorting="true">
+            </table-heading>
+            <table-data-rows>
+                <table-selection></table-selection>
+                <table-actions>
+                    <div class="btn-group dropdown" dropdown style="cursor: pointer;">
+                        <a class="btn btn-xs" ng-class="(!$row.$Locked) ? 'btn-primary':'btn-warning'">{{(!$row.$Locked) ? 'Unlocked':'Locked'}}</a>
+                        <a class="btn btn-xs toggle dropdown-toggle" ng-class="(!$row.$Locked) ? 'btn-primary':'btn-warning'" dropdown-toggle="" aria-haspopup="true" aria-expanded="false"><i aria-hidden="true" class="fa fa-caret-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item"  ng-click="changePassword($row.Id)" ng-if="PERMISSIONS.test('settings.users','W')"><i class="material-icons">lock</i>Change Password</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"  ng-click="lockAccount($row)" ng-if="PERMISSIONS.test('settings.users','W') && !$row.$Locked"><i class="material-icons">block</i>Lock User</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"  ng-click="verifyEmail($row)" ng-if="PERMISSIONS.test('settings.users','W') && !$row.EmailConfirmed"><i class="material-icons">email</i>Verify Email</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item"  ng-click="unblockAccount($row)" ng-if="PERMISSIONS.test('settings.users','W') && $row.$Locked"><span><i class="material-icons">check</i>Unlock User</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </table-actions>
+            </table-data-rows>
+            <table-footer paging="true">
+            </table-footer>
+        </table-for>
+    </div>
+</div>

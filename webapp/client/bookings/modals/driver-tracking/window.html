@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html xmlns="https://www.w3.org/1999/xhtml" ng-app="drivertracking">
+
+<head>
+    <title></title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+    <link href="/includes/css/style.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+    <style>
+        .loading-background {
+            background: rgba(255, 255, 255, 0.9);
+            /*background: #777;*/
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .loading-background .loading-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            background-color: #fff;
+            padding: 40px;
+            text-align: center;
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+            -webkit-transform: translate(-50%, -50%);
+            -moz-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        
+        #markerLayer {
+            width: 400px;
+            height: 400px;
+            display: block;
+        }
+        
+        #markerLayer img {
+            transition: all 600ms;
+        }
+        
+        .loading-background .loading-panel img {
+            width: 70px;
+            margin-bottom: 0px;
+        }
+    </style>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script>
+        window.endpoint = 'https://api.cab9.ilooklike.me/';
+    </script>
+    <script>
+        var token = localStorage.getItem('AUTH_TKN');
+        var parsed = JSON.parse(token);
+        document.write('<scr' + 'ipt type="text/javascript" src="https://maps.googleapis.com/maps/api/js?' + (parsed.GoogleApiKey ? ('key=' + parsed.GoogleApiKey + '&') : '') + 'libraries=weather,visualization,places,drawing,geometry&sensor=false&language=en&v=3.13"><' + '/scr' + 'ipt>')
+    </script>
+    <!-- build:bower -->
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <script src="/bower_components/jquery.easing/js/jquery.easing.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="/bower_components/masonry/dist/masonry.pkgd.min.js"></script>
+    <script src="/bower_components/packery/dist/packery.pkgd.min.js"></script>
+    <script src="/bower_components/pace/pace.min.js"></script>
+    <script src="/bower_components/skycons-html5/skycons.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="/bower_components/angular-ui-router-tabs/src/ui-router-tabs.js"></script>
+    <script src="/bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+    <script src="/bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
+    <script src="/bower_components/jcrop/js/jquery.Jcrop.min.js"></script>
+    <script src="/bower_components/angular-filter/dist/angular-filter.js"></script>
+    <script src="/additional_components/jQuery.Sparklines/jquery.sparkline.js"></script>
+    <script src="/bower_components/flot/jquery.flot.js"></script>
+    <script src="/bower_components/flot/jquery.flot.time.js"></script>
+    <script src="/bower_components/flot.curvedlines/curvedLines.js"></script>
+    <script src="/bower_components/flot/jquery.flot.pie.js"></script>
+    <script src="/bower_components/angular-timer/dist/angular-timer.js"></script>
+    <script src="/bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
+    <script src="/bower_components/angular-flot/angular-flot.js"></script>
+    <script src="/bower_components/angular-messages/angular-messages.js"></script>
+    <script src="/bower_components/sweetalert/lib/sweet-alert.min.js"></script>
+    <script src="/bower_components/signalr/jquery.signalR.min.js"></script>
+    <script src="/bower_components/lodash/lodash.js"></script>
+    <script src="/bower_components/fastclick/lib/fastclick.js"></script>
+    <script src="/bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
+    <script src="/bower_components/marker-animate-unobtrusive/vendor/markerAnimate.js"></script>
+    <script src="/bower_components/marker-animate-unobtrusive/SlidingMarker.js"></script>
+    <script src="/bower_components/humanize-duration/humanize-duration.js"></script>
+    <script src="/bower_components/angular-google-places-autocomplete/src/autocomplete.js"></script>
+    <script src="/bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js"></script>
+    <script src="/bower_components/moment-timezone/builds/moment-timezone-with-data.js"></script>
+    <script src="/bower_components/angularjs-slider/dist/rzslider.js"></script>
+    <script src="/bower_components/intl-tel-input/build/js/utils.js"></script>
+    <script src="/bower_components/intl-tel-input/build/js/intlTelInput.min.js"></script>
+    <script src="/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="/bower_components/ngtweet/dist/ngtweet.min.js"></script>
+    <!-- endbuild -->
+    <!-- build:model -->
+    <script src="/models/models.module.js"></script>
+    <script src="/models/Bill.js"></script>
+    <script src="/models/BillPayment.js"></script>
+    <script src="/models/Booking.js"></script>
+    <script src="/models/BookingExpense.js"></script>
+    <script src="/models/BookingOffer.js"></script>
+    <script src="/models/BookingRequirement.js"></script>
+    <script src="/models/BookingStop.js"></script>
+    <script src="/models/ChangePassword.js"></script>
+    <script src="/models/Claim.js"></script>
+    <script src="/models/Client.js"></script>
+    <script src="/models/ClientDispatchSettings.js"></script>
+    <script src="/models/DriverPaymentModelOverride.js"></script>
+    <script src="/models/ClientAdjustment.js"></script>
+    <script src="/models/ClientInvoiceAdjustment.js"></script>
+    <script src="/models/ClientPricingModelAdjustment.js"></script>
+    <script src="/models/ClientReference.js"></script>
+    <script src="/models/ClientStaff.js"></script>
+    <script src="/models/ClientStaffRole.js"></script>
+    <script src="/models/ClientTag.js"></script>
+    <script src="/models/ClientType.js"></script>
+    <script src="/models/Company.js"></script>
+    <script src="/models/Conversation.js"></script>
+    <script src="/models/Currency.js"></script>
+    <script src="/models/DispatchSettings.js"></script>
+    <script src="/models/Document.js"></script>
+    <script src="/models/DocumentType.js"></script>
+    <script src="/models/Driver.js"></script>
+    <script src="/models/DriverPayment.js"></script>
+    <script src="/models/DriverAdjustment.js"></script>
+    <script src="/models/DriverPaymentAdjustment.js"></script>
+    <script src="/models/DriverPaymentModel.js"></script>
+    <script src="/models/DriverPaymentModelAdjustment.js"></script>
+    <script src="/models/DriverTag.js"></script>
+    <script src="/models/DriverType.js"></script>
+    <script src="/models/Invoice.js"></script>
+    <script src="/models/InvoiceDetail.js"></script>
+    <script src="/models/FlightInfo.js"></script>
+    <script src="/models/KnownLocation.js"></script>
+    <script src="/models/KnownPickupPoint.js"></script>
+    <script src="/models/Location.js"></script>
+    <script src="/models/NewUser.js"></script>
+    <script src="/models/Note.js"></script>
+    <script src="/models/OneTransportIntegration.js"></script>
+    <script src="/models/Passenger.js"></script>
+    <script src="/models/PassengerAddress.js"></script>
+    <script src="/models/PassengerTag.js"></script>
+    <script src="/models/Payment.js"></script>
+    <script src="/models/PricingFixed.js"></script>
+    <script src="/models/ClientPricingFixed.js"></script>
+    <script src="/models/PricingModel.js"></script>
+    <script src="/models/PricingModelVehicleTypePricing.js"></script>
+    <script src="/models/PricingZone.js"></script>
+    <script src="/models/PricingZoneInPricingModel.js"></script>
+    <script src="/models/ScoreWeighting.js"></script>
+    <script src="/models/Staff.js"></script>
+    <script src="/models/StaffRole.js"></script>
+    <script src="/models/Tax.js"></script>
+    <script src="/models/TaxComponent.js"></script>
+    <script src="/models/TaxType.js"></script>
+    <script src="/models/User.js"></script>
+    <script src="/models/Vehicle.js"></script>
+    <script src="/models/VehicleClass.js"></script>
+    <script src="/models/VehicleTag.js"></script>
+    <script src="/models/VehicleType.js"></script>
+    <script src="/models/VehicleTypeInPricingFixed.js"></script>
+    <script src="/models/VehicleTypeInClientPricingFixed.js"></script>
+    <script src="/models/BookingValidation.js"></script>
+    <script src="/models/ClientWebBookerSetting.js"></script>
+    <!-- endbuild -->
+    <script src="https://code.angularjs.org/1.4.6/i18n/angular-locale_en-gb.js"></script>
+    <script src="https://api.cab9.ilooklike.me/signalr/hubs"></script>
+    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/2.0.0/layer/Marker.Rotate.js"></script>
+    <!-- build:components -->
+    <script src="/e9_components/services/Logger.service.js"></script>
+    <script src="/e9_components/services/ConsoleLoggingProvider.service.js"></script>
+    <script src="/e9_components/services/Model.service.js"></script>
+    <script src="/e9_components/services/Menu.service.js"></script>
+    <script src="/e9_components/services/Storage.service.js"></script>
+    <script src="/e9_components/services/Auth.service.js"></script>
+    <script src="/e9_components/services/Auth-Persist.service.js"></script>
+    <script src="/e9_components/services/ImageUpload.service.js"></script>
+    <script src="/e9_components/services/FileUpload.service.js"></script>
+    <script src="/e9_components/services/CSV.service.js"></script>
+    <script src="/e9_components/services/SignalR.service.js"></script>
+    <script src="/e9_components/services/Google.service.js"></script>
+    <script src="/e9_components/services/Currency.service.js"></script>
+    <script src="/e9_components/directives/uiSelect/select.js"></script>
+    <script src="/e9_components/directives/BindHtmlCompile.directive.js"></script>
+    <script src="/e9_components/directives/Card.directive.js"></script>
+    <script src="/e9_components/directives/FieldFor.directive.js"></script>
+    <script src="/e9_components/directives/international-phone-number.js"></script>
+    <script src="/e9_components/directives/Score.directive.js"></script>
+    <script src="/e9_components/directives/tags.directive.js"></script>
+    <script src="/e9_components/filters/utility.filter.js"></script>
+    <script src="/e9_components/layouts/structure/page.controller.js"></script>
+    <script src="/e9_components/layouts/breadcrumb/breadcrumb.controller.js"></script>
+    <script src="/e9_components/layouts/threepanel/threepanel.controller.js"></script>
+    <script src="/e9_components/layouts/module/module-cards.controller.js"></script>
+    <script src="/e9_components/layouts/module/module-secondary-cards.controller.js"></script>
+    <script src="/e9_components/layouts/module/module-table.controller.js"></script>
+    <script src="/e9_components/layouts/module/module-item.controller.js"></script>
+    <script src="/e9_components/layouts/module/module-documents.controller.js"></script>
+    <script src="/e9_components/layouts/module/module-document-item.controller.js"></script>
+    <script src="/e9_components/directives/TableFor.directive.js"></script>
+    <script src="/e9_components/directives/ScrollRepeater.directive.js"></script>
+    <script src="/e9_components/directives/datepickerwide/directive.js"></script>
+    <script src="/e9_components/directives/InfoCard.directive.js"></script>
+    <script src="/e9_components/directives/VirtualizedRepeater.directive.js"></script>
+    <script src="/e9_components/directives/AddressFinder.directive.js"></script>
+    <script src="/src/js/marker-cluster.js"></script>
+    <script src="/src/js/Cab9.js"></script>
+    <script src="/src/js/rotated-marker.js"></script>
+    <!-- endbuild -->
+    <!-- build:app -->
+    <script src="/webapp/common/utilities/utilities.js"></script>
+    <script src="/webapp/common/common.module.js"></script>
+    <script src="/webapp/layout/sidebar-left/sidebar-left.controller.js"></script>
+    <script src="/webapp/layout/topbar/topbar.controller.js"></script>
+    <script src="/webapp/common/views/numplate/module-number-plate.controller.js"></script>
+    <script src="/webapp/common/views/drivers/adjustments/controller.js"></script>
+    <script src="/webapp/common/views/drivers/adjustments/modal/controller.js"></script>
+    <script src="/webapp/common/views/clients/staff/options.controller.js"></script>
+    <script src="/webapp/common/views/clients/staff/details/create.controller.js"></script>
+    <script src="/webapp/common/views/clients/staff/details/controller.js"></script>
+    <script src="/webapp/common/views/clients/staff/passengers/controller.js"></script>
+    <script src="/webapp/common/views/clients/staff/user/controller.js"></script>
+    <script src="/webapp/common/views/clients/references/controller.js"></script>
+    <script src="/webapp/common/views/clients/references/modal/controller.js"></script>
+    <script src="/webapp/common/views/clients/bannedDrivers/controller.js"></script>
+    <script src="/webapp/common/views/clients/webBookerSettings/controller.js"></script>
+    <script src="/webapp/common/views/clients/clientVehicleTypes/controller.js"></script>
+    <script src="/webapp/common/views/conversations/conversations.modal.controller.js"></script>
+    <script src="/webapp/common/views/driverpayments/controller.js"></script>
+    <script src="/webapp/common/views/driverpayments/details/controller.js"></script>
+    <script src="/webapp/common/views/driverpayments/bonus/controller.js"></script>
+    <script src="/webapp/common/directives/stopedit/directive.js"></script>
+    <script src="/webapp/common/directives/numplate.directive.js"></script>
+    <script src="/webapp/common/directives/promiseShadow.directive.js"></script>
+    <script src="/webapp/common/reports/reports.module.js"></script>
+    <script src="/webapp/common/reports/bookings-report/report.bookings.directive.js"></script>
+    <script src="/webapp/common/reports/bookingSource-report/report.bookingSource.directive.js"></script>
+    <script src="/webapp/common/reports/client-report/report.client.directive.js"></script>
+    <script src="/webapp/common/reports/currency-report/report.currency.directive.js"></script>
+    <script src="/webapp/common/reports/driver-report/report.driver.directive.js"></script>
+    <script src="/webapp/common/reports/passenger-report/report.passenger.directive.js"></script>
+    <script src="/webapp/common/reports/paymentType-report/report.paymentType.directive.js"></script>
+    <script src="/webapp/common/reports/vehicleType-report/report.vehicleType.directive.js"></script>
+    <script src="/webapp/common/reports/vehicleClass-report/report.vehicleClass.directive.js"></script>
+    <script src="/webapp/common/modals/notes.modal.controller.js"></script>
+    <script src="/webapp/common/modals/quick-booking/controller.js"></script>
+    <script src="/webapp/common/modals/driver-payment-create.controller.js"></script>
+    <script src="/webapp/common/modals/user/controller.js"></script>
+    <script src="/webapp/common/modals/passenger/controller.js"></script>
+    <script src="/webapp/common/views/passenger-address/controller.js"></script>
+    <script src="/webapp/common/modals/address/create.controller.js"></script>
+    <script src="/webapp/common/modals/address/edit.controller.js"></script>
+    <script src="/webapp/common/modals/bookings/driver-payment-calculation/controller.js"></script>
+    <script src="/webapp/common/modals/bookings/edit-booking/controller.js"></script>
+    <script src="/webapp/common/modals/booker/controller.js"></script>
+    <script src="/webapp/common/modals/bookings/reuse-booking/controller.js"></script>
+    <script src="/webapp/common/modals/bookings/stop-address/controller.js"></script>
+    <script src="/webapp/common/directives/mileagestep/directive.js"></script>
+    <script src="/webapp/common/directives/passengerprofile/directive.js"></script>
+    <script src="/webapp/common/directives/document/directive.js"></script>
+    <script src="/webapp/common/widgets/booking-report.widget.js"></script>
+    <script src="/webapp/common/widgets/booking-source.widget.js"></script>
+    <script src="/webapp/common/widgets/booking-revenue.widget.js"></script>
+    <script src="/webapp/common/widgets/bookings-heatmap.widget.js"></script>
+    <script src="/webapp/common/widgets/unique-driver-passenger.widget.js"></script>
+    <script src="/webapp/common/widgets/client-report.widget.js"></script>
+    <script src="/webapp/common/widgets/driver-report.widget.js"></script>
+    <script src="/webapp/common/widgets/passenger-report.widget.js"></script>
+    <script src="/webapp/common/widgets/weather-report.widget.js"></script>
+    <script src="/webapp/common/widgets/twitter.widget.js"></script>
+    <!-- endbuild -->
+    <!-- build:individual -->
+    <script src="/webapp/client/app.js"></script>
+    <script src="/webapp/client/dashboard/dashboard.module.js"></script>
+    <script src="/webapp/client/dashboard/dashboard.controller.js"></script>
+    <script src="/webapp/client/bookings/bookings.module.js"></script>
+    <script src="/webapp/client/bookings/bookings-table.controller.js"></script>
+    <script src="/webapp/client/bookings/booking-strip.directive.js"></script>
+    <script src="/webapp/client/bookings/bookings-viewer.controller.js"></script>
+    <script src="/webapp/client/bookings/edit/booking-edit.controller.js"></script>
+    <script src="/webapp/client/bookings/new/controller.js"></script>
+    <script src="/webapp/client/passengers/passengers.module.js"></script>
+    <script src="/webapp/client/passengers/all/passengers-module-options.controller.js"></script>
+    <script src="/webapp/client/passengers/all/passengers-module-stats.controller.js"></script>
+    <script src="/webapp/client/passengers/item/passenger-item-dashboard.controller.js"></script>
+    <script src="/webapp/client/passengers/item/passenger-item-info.controller.js"></script>
+    <script src="/webapp/client/passengers/item/passenger-item-notes.controller.js"></script>
+    <script src="/webapp/client/locations/locations.module.js"></script>
+    <script src="/webapp/client/locations/controller.js"></script>
+    <script src="/webapp/client/locations/create.controller.js"></script>
+    <script src="/webapp/client/invoices/invoices.module.js"></script>
+    <script src="/webapp/client/invoices/all/table.controller.js"></script>
+    <script src="/webapp/client/invoices/item/invoice-edit.controller.js"></script>
+    <script src="/webapp/client/invoices/modals/payments-modal.controller.js"></script>
+    <script src="/webapp/client/settings/settings.module.js"></script>
+    <script src="/webapp/client/settings/details/details.controller.js"></script>
+    <script src="/webapp/client/settings/profile/profile.controller.js"></script>
+    <script src="/webapp/client/staff/staff.module.js"></script>
+    <script src="/webapp/client/widgets/client-booking-report.widget.js"></script>
+    <script src="/webapp/client/bookings/modals/reuse-booking/controller.js"></script>
+    <script src="/webapp/client/bookings/modals/driver-tracking/controller.js"></script>
+    <!-- endbuild -->
+    <script>
+        window.idCounter = 10000;
+    </script>
+</head>
+
+<body ng-controller="TrackingController">
+    <div ng-if="loading" class="loading-background" style="z-index:10000000">
+        <div class="loading-panel">
+            <img src="/includes/images/preloader.gif" />
+        </div>
+    </div>
+    <div class="map-area">
+        <div class="map-wrapper">
+            <!-- <div id="driver-map"></div> -->
+            <div id="mapid"></div>
+            <div id="passenger-details">
+                <div class="wrapper">
+                    <div class="profile-box-small">
+                        <span>Vehicle for</span>
+                        <div class="picture">
+                            <img ng-src="{{booking.LeadPassenger._ImageUrl}}" alt="" />
+                        </div>
+                        <div class="info">
+                            <h4 ng-bind="booking.LeadPassenger.Firstname"></h4>
+                            <h6 ng-bind="booking.LeadPassenger.Mobile"></h6>
+                        </div>
+                    </div>
+                    <!-- Vehicle for  <span ng-bind="booking.LeadPassenger.Firstname"></span> -->
+                    <!-- <br> -->
+                    <span class="status" ng-class="booking.BookingStatus" ng-bind="booking.BookingStatus"></span>
+                </div>
+            </div>
+            <div id="driverDetails">
+                <div class="wrapper">
+                    <div class="profile-box-small mb30">
+                        <div class="picture">
+                            <img ng-src="{{booking.Driver._ImageUrl}}" alt="" />
+                        </div>
+                        <div class="info">
+                            <h4 ng-bind="(booking.Driver.Firstname+ ' (' + booking.Driver.Callsign + ')')"></h4>
+                            <h6 ng-bind="(booking.Driver.Mobile)"></h6>
+                        </div>
+                    </div>
+                    <div class="vehicle">
+                        <span class="registration" ng-bind="booking.Vehicle.Registration"></span>
+                        <span class="vehicle-type" ng-class="booking.VehicleType.Name">Passenger</span>
+                        <span ng-bind="booking.Vehicle._Description" class="description"></span>
+                    </div>
+                    <div class="driver-status">
+                        <span ng-bind="driverStatus"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="eta" ng-click="showDriverDetails()" ng-class="booking.BookingStatus">
+                <div class="wrapper">
+                    <div class="circle" ng-show="eta||booking.AsDirected">
+                        <div class="dot">
+                        </div>
+                    </div>
+                    <div class="eta-mins">
+                        <div ng-show="booking.BookingStatus!='InProgress' && !booking.AsDirected">
+                            <span ng-show="eta">{{eta}}</span>
+                            <div class="loader" ng-show="!eta">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <small>mins</small>
+                        </div>
+                        <span class="as-directed" ng-show="booking.BookingStatus=='InProgress' && booking.AsDirected">As Directed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            var baseUrl = "https://api.cab9.ilooklike.me";
+            window.$$permissions = window.opener.$$permissions;
+
+            (function (window, angular, baseUrl, undefined) {
+                var app = angular.module('drivertracking', ['ngSanitize', "cab9.common"]);
+                app.config(configFn);
+
+
+                configFn.$inject = ['$config', 'SignalRProvider'];
+
+                function configFn($config, SignalRProvider) {
+
+                    SignalRProvider.setEndpoint($config.API_ENDPOINT + 'signalr/hubs');
+                    SignalRProvider.setHub('locationHub');
+                    if ((item = localStorage.getItem('AUTH_TKN'))) {
+                        try {
+                            var parsed = angular.fromJson(item);
+                            SignalRProvider.setQueryValue('token', parsed.access_token);
+
+                        } catch (e) {
+                            console.log(e);
+                        }
+                    }
+                    SignalRProvider.registerEvent('updateDriverLocation');
+                    SignalRProvider.registerEvent('updateBooking');
+
+                }
+
+
+                app.run(runFn);
+
+                runFn.$inject = ['Localisation', 'tmhDynamicLocale', 'Model', 'Auth', 'SignalR'];
+
+                function runFn(Localisation, tmhDynamicLocale, Model, Auth, SignalR) {
+                    var currencyObj = Localisation.currency();
+                    var currencies = currencyObj.currencies();
+
+                    Model.Company
+                        .query()
+                        .include('DefaultDriverPaymentModel')
+                        .filter("Id eq guid'" + Auth.getSession().TenantId + "'")
+                        .execute().then(function (c) {
+                            //Localisation set functions
+                            currencies.then(function (res) {
+                                currencyObj.setCurrent(c[0].DefaultCurrencyId);
+                                currencyIcon = currencyObj.getCurrent().Prepend;
+                            });
+                            if (c[0].DefaultLocale)
+                                tmhDynamicLocale.set(c[0].DefaultLocale);
+                            else
+                                tmhDynamicLocale.set($config.DEFAULT_LOCALE);
+
+                            if (c[0].DefaultTimezone) {
+                                moment.tz.setDefault(c[0].DefaultTimezone);
+                                Localisation.timeZone().setTimeZone(c[0].DefaultTimezone);
+                            }
+                            Localisation.useMetric(c[0].UseMetric);
+                        });
+
+                    SignalR.start().then(function () {
+
+                    });
+
+                }
+
+
+                app.controller('TrackingController', function ($scope, $http, $location, Model, Localisation, $UI, $controller, $q, SignalR) {
+                    $scope.loading = true;
+                    var searchParams = $location.search();
+                    var id = searchParams.id;
+
+                    var setupPromises = [];
+                    var bookingPromise = Model.Booking.query()
+                        .include('Driver,Client,Vehicle,VehicleType,BookingStops,LeadPassenger,Currency,BookingRequirements,ClientStaff,CreationUser,ModificationUser')
+                        .select('Id,LocalId,DriverId,PassengerNotificationPhone,BookingStatus,ClientId,VehicleId,Pax,Bax,LeadPassengerId,DriverNotes,PassengerNotes,OfficeNotes,CreationTime,Currency,CurrencyRate, Tax, ActualCost,BookedDateTime,ImageUrl,' +
+                            'Driver/Firstname,Driver/Surname,Driver/Callsign,Driver/ImageUrl,Driver/Mobile,Driver/DriverStatus,' +
+                            'Client/Name,Client/ImageUrl,Client/Phone,ClientStaff,Dispute,AsDirected,' +
+                            'Vehicle/Class,Vehicle/Registration,Vehicle/Colour,Vehicle/Make,Vehicle/Model,Vehicle/Registration,VehicleType/Name,' +
+                            'BookingStops/StopSummary,BookingStops/WaitTime,BookingStops/WaitTimeChargable,BookingStops/Address1,BookingStops/StopOrder,BookingStops/Address2,BookingStops/Area,BookingStops/TownCity,BookingStops/County,BookingStops/Postcode,BookingStops/Country,BookingStops/Latitude,BookingStops/Longitude,' +
+                            'LeadPassenger/Firstname,LeadPassenger/Surname,LeadPassenger/Mobile,LeadPassenger/ImageUrl,CreationUser/Name,ModificationUser/Name')
+                        .where("Id eq guid'" + id + "'")
+                        .trackingEnabled()
+                        .execute();
+                    setupPromises.push(bookingPromise);
+
+                    $q.all(setupPromises).then(function (results) {
+                        var c = $controller('DriverTrackingController', {
+                            $scope: $scope,
+                            scope: $scope,
+                            $UI: $UI,
+                            $http: $http,
+                            $config: $config,
+                            SignalR: SignalR,
+                            Model: Model,
+                            Localisation: Localisation,
+                            rBooking: results[0]
+                        });
+                        $scope.loading = false;
+                    }, function () {
+                        window.alert("An error occured!");
+                    });
+                    return;
+                });
+
+            }(window, angular, baseUrl));
+        </script>
+</body>
+
+</html>

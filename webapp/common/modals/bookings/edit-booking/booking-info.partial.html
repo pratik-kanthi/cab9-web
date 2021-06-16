@@ -1,0 +1,786 @@
+<div class="form-section" ng-show="bookingInfo">
+    <div class="row">
+        <div class="col-md-6 pr5">
+            <div class="passenger-info">
+                <div class="header mb5">Passenger Information</div>
+                <div class="block">
+                    <div ng-show="!paxMode.value">
+                        <div class="half-column">
+                            <div field-for="ClientId" display="Client" select-from="[client]" editable="false" ng-show="!repeat"></div>
+                            <div class="form-group" ng-show="repeat">
+                                <label class="control-label" for="ClientIdInput">Client</label>
+                                <div class="form-edit">
+                                    <ui-select class="edit" ng-model="item.ClientId" theme="selectize" ng-required="COMPANY.RequiresClient" ng-disabled="item.LeadPassengerId || viewMode == 'VIEW'" tabindex="1">
+                                        <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                            <div class="select-text"><img class="img-responsive img-circle" ng-if="$select.selected.ImageUrl" ng-src="{{$select.selected.ImageUrl}}" />{{$select.selected.Name}}</div>
+                                        </ui-select-match>
+                                        <ui-select-choices refresh="searchClients($select.search)" refresh-delay="200" repeat="item.Id as item in fetchedClients">
+                                            <div class="select-text-option">
+                                                <img class="img-responsive img-circle" ng-src="{{::item.ImageUrl}}" ng-if="::item.ImageUrl" />
+                                                <div ng-bind-html="::item.Name"></div>
+                                                <small class="text-muted" ng-show="::item.Description">{{::item.Description}}</small>
+                                            </div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <a ng-click="item.ClientId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="item.ClientId" class="red">Clear</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="half-column">
+                            <div class="form-group">
+                                <label class="control-label" for="Booker">Booker</label>
+                                <div class="form-edit" ng-show="!repeat">
+                                    <ui-select class="edit" ng-model="item.ClientStaffId" theme="selectize" ng-disabled="!item.ClientId || viewMode == 'VIEW'" name="booker" tabindex="2" ng-required="item.ClientId && COMPANY.RequiresBooker && !repeat">
+                                        <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                            <div class="select-text">
+                                                <img class="img-responsive img-circle" ng-if="$select.selected.ImageUrl" ng-src="{{$select.selected.ImageUrl}}" />{{$select.selected.Name}}
+                                                <edit-modal type="Booker" ng-click="$event.stopPropagation()" class="pull-right edit-modal" selected="$select.selected" ng-show="item.ClientStaffId && viewMode == 'EDIT'"></edit-modal>
+                                            </div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="item.Id as item in bookers | BookerFilter:$select.search" refresh="searchBookers($select.search)" refresh-delay="200">
+                                            <div class="select-text-option">
+                                                <img class="img-responsive img-circle" ng-src="{{::item.ImageUrl}}" ng-if="::item.ImageUrl" />
+                                                <div ng-bind-html="::item.Name"></div>
+                                                <small class="text-muted" ng-show="::item.Description">{{::item.Description}}</small>
+                                                <small class="ml40" ng-show="::(item.Mobile.length > 0)"><strong>{{::item.Mobile}}</strong></small>
+                                            </div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <a ng-click="item.ClientStaffId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="item.ClientStaffId && viewMode == 'EDIT'" class="red">Clear</a>
+                                </div>
+                                <div class="form-edit" ng-show="repeat">
+                                    <ui-select class="edit" ng-model="item.ClientStaffId" theme="selectize" ng-disabled="!item.ClientId" tabindex="2" ng-required="item.ClientId && COMPANY.RequiresBooker && repeat">
+                                        <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                            <div class="select-text">
+                                                <img class="img-responsive img-circle" ng-if="$select.selected.ImageUrl" ng-src="{{$select.selected.ImageUrl}}" />{{$select.selected.Name}}
+                                                <edit-modal type="Booker" ng-click="$event.stopPropagation()" class="pull-right edit-modal" selected="$select.selected" ng-show="item.ClientStaffId && viewMode == 'EDIT'"></edit-modal>
+                                            </div>
+                                        </ui-select-match>
+                                        <ui-select-choices refresh="searchBookers($select.search)" refresh-delay="500" repeat="item.Id as item in bookers">
+                                            <div class="select-text-option">
+                                                <img class="img-responsive img-circle" ng-src="{{::item.ImageUrl}}" ng-if="::item.ImageUrl" />
+                                                <div ng-bind-html="::item.Name"></div>
+                                                <small class="text-muted" ng-show="::item.Description">{{::item.Description}}</small>
+                                                <small class="ml40" ng-show="::(item.Mobile.length > 0)"><strong>{{::item.Mobile}}</strong></small>
+                                            </div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <a ng-click="item.ClientStaffId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="item.ClientStaffId" class="red">Clear</a>
+                                </div>
+                            </div>
+                        </div>
+                        <br class="clearfix" />
+                        <div class="half-column">
+                            <div field-for="Reference" display="General Reference" tab-index="3"></div>
+                        </div>
+                        <div class="half-column" ng-repeat="reference in clientReferences" ng-if="item.ClientId && clientReferences.length>0" ng-show="reference.Active || showInactiveReferences">
+                            <div class="form-group" ng-show="reference.ReferenceType=='FreeText'">
+                                <label for="" class="control-label">
+                                    {{reference.ReferenceName}}<span ng-if="reference.Mandatory && reference.Active">*</span>
+                                </label>
+                                <div class="form-edit">
+                                    <input type="text" tabindex="4" class="form-control" ng-model="reference.$knownValue" ng-required="reference.Mandatory && reference.Active" ng-disabled="viewMode == 'VIEW'">
+                                </div>
+                                <div class="help-block" ng-if="reference.Mandatory && reference.Active">{{reference.ReferenceName}} is required.</div>
+                                <div class="help-block" ng-if="!reference.Active">{{reference.ReferenceName}} is no longer Active.</div>
+                            </div>
+                            <div class="form-group" ng-show="reference.ReferenceType=='List' && !reference.ShowList">
+                                <label for="" class="control-label">{{reference.ReferenceName}}</label>
+                                <div class="form-edit input_group">
+                                    <ui-select tabindex="4" class="edit" ng-model="reference.$knownValue" theme="selectize" ng-required="reference.Mandatory && reference.Active" ng-disabled="viewMode == 'VIEW'" on-select="refSelected($reference, $search, reference)">
+                                        <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                            <div class="select-text">{{$select.selected.text}}</div>
+                                        </ui-select-match>
+                                        <ui-select-choices refresh="suggestReferences(reference,$select.search)" refresh-delay="500" repeat="i as i in reference.$suggested track by $index">
+                                            <div class="select-text-option reference-ui">
+                                                <div bind-html-compile="i.text"></div>
+                                            </div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <a ng-click="reference.$knownValue = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="reference.$knownValue && viewMode == 'EDIT'" class="red">Clear</a>
+                                </div>
+                                <div class="help-block" ng-if="reference.Mandatory && reference.Active">{{reference.ReferenceName}} is required.</div>
+                                <div class="help-block" ng-if="!reference.Active">{{reference.ReferenceName}} is no longer Active.</div>
+                            </div>
+                            <div class="form-group" ng-if="reference.ReferenceType=='List' && reference.ShowList">
+                                <label for="" class="control-label">{{reference.ReferenceName}}</label>
+                                <div class="form-edit input_group">
+                                    <ui-select tabindex="4" class="edit" ng-model="reference.$knownValue" theme="selectize" ng-required="reference.Mandatory && reference.Active" name="{{reference.ReferenceName}}" ng-disabled="viewMode == 'VIEW'" on-select="refSelected($reference, $search, reference)">
+                                        <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                            <div class="select-text">{{$select.selected.text}}</div>
+                                        </ui-select-match>
+                                        <ui-select-choices repeat="i as i in reference.$list track by $index">
+                                            <div class="select-text-option reference-ui">
+                                                <div bind-html-compile="::i.text"></div>
+                                            </div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <a ng-click="reference.$knownValue = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="reference.$knownValue && viewMode == 'EDIT'" class="red">Clear</a>
+                                </div>
+                                <div class="help-block" ng-if="reference.Mandatory && reference.Active">{{reference.ReferenceName}} is required.</div>
+                                <div class="help-block" ng-if="!reference.Active">{{reference.ReferenceName}} is no longer Active.</div>
+                            </div>
+                            <div class="form-group" ng-show="reference.ReferenceType=='Mask'">
+                                <label for="" class="control-label">{{reference.ReferenceName + ' (mask: ' + reference.Value + ')'}}</label>
+                                <div class="form-edit input-group">
+                                    <input tabindex="4" type="text" class="form-control" ng-model="reference.$knownValue" ng-required="reference.Mandatory && reference.Active" ng-disabled="viewMode == 'VIEW'">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger" ng-show="reference.$knownValue && !reference.$testReg.test(reference.$knownValue)">
+                                            <i class="material-icons">close</i>
+                                        </button>
+                                        <button class="btn btn-success" ng-show="reference.$knownValue && reference.$testReg.test(reference.$knownValue)">
+                                            <i class="material-icons">check</i>
+                                        </button>
+                                        <button class="btn btn-warning" ng-show="!reference.$knownValue">
+                                            <i class="material-icons">help_outline</i>
+                                        </button>
+                                    </span>
+                                </div>
+                                <div class="help-block" ng-if="reference.Mandatory && reference.Active">{{reference.ReferenceName}} is required.</div>
+                                <div class="help-block" ng-if="!reference.Active">{{reference.ReferenceName}} is no longer Active.</div>
+                            </div>
+                        </div>
+                        <div style="clear: both"></div>
+                        <div>
+                            <div class="form-group">
+                                <label class="control-label">Show Inactive References</label><br />
+                                <input class="check" type="checkbox" id="showInactiveReferences" ng-model="showInactiveReferences" />
+                                <label class="check-label" for="showInactiveReferences"></label>
+                            </div>
+                        </div>
+                        <div style="clear: both"></div>
+                        <div class="half-column">
+                            <div class="form-group">
+                                <label class="control-label" for="LeadPassengerIdInput">Passenger</label>
+                                <div class="form-edit" ng-if="!repeat">
+                                    <ui-select tabindex="5" class="edit" ng-model="item.LeadPassengerId" theme="selectize" ng-disabled="viewMode == 'VIEW'" required>
+                                        <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                            <div class="select-text">
+                                                <img class="img-responsive img-circle" ng-if="$select.selected.ImageUrl" ng-src="{{$select.selected.ImageUrl}}" />{{$select.selected.Name}}
+                                                <edit-modal type="Passenger" data="selectedPassenger" ng-click="$event.stopPropagation()" class="pull-right edit-modal" selected="$select.selected" ng-show="viewMode == 'EDIT'"></edit-modal>
+                                            </div>
+                                        </ui-select-match>
+                                        <ui-select-choices refresh="searchPassengers($select.search)" refresh-delay="500" repeat="item.Id as item in passengers">
+                                            <div class="select-text-option">
+                                                <img class="img-responsive img-circle" ng-src="{{::item.ImageUrl}}" ng-if="::item.ImageUrl" />
+                                                <div ng-bind-html="::item.Name"></div>
+                                                <small class="text-muted" ng-show="::item.Description">{{::item.Description}}</small>
+                                                <small class="ml40" ng-show="::(item.Mobile.length > 0)"><strong>{{::item.Mobile}}</strong></small>
+                                            </div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <a ng-click="item.LeadPassengerId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="item.LeadPassengerId && viewMode == 'EDIT'" class="red">Clear</a>
+                                </div>
+                                <div class="form-edit" ng-if="repeat">
+                                    <ui-select tabindex="5" class="edit" ng-model="item.LeadPassengerId" theme="selectize" ng-disabled="false" required>
+                                        <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                            <div class="select-text">
+                                                <img class="img-responsive img-circle" ng-if="$select.selected.ImageUrl" ng-src="{{$select.selected.ImageUrl}}" /> {{$select.selected.Name}}
+                                                <edit-modal type="Passenger" data="selectedPassenger" ng-click="$event.stopPropagation()" class="pull-right edit-modal" selected="$select.selected"></edit-modal>
+                                            </div>
+                                        </ui-select-match>
+                                        <ui-select-choices refresh="searchPassengers($select.search)" refresh-delay="500" repeat="item.Id as item in passengers">
+                                            <div class="select-text-option">
+                                                <img class="img-responsive img-circle" ng-src="{{::item.ImageUrl}}" ng-if="::item.ImageUrl" />
+                                                <div ng-bind-html="::item.Name"></div>
+                                                <small class="text-muted" ng-show="::item.Description">{{::item.Description}}</small>
+                                                <small class="ml40" ng-show="::(item.Mobile.length > 0)"><strong>{{::item.Mobile}}</strong></small>
+                                            </div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <a ng-click="item.LeadPassengerId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="item.LeadPassengerId" class="red">Clear</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="half-column">
+                            <div field-for="PassengerNotificationPhone" display="Contact Number" required="{{COMPANY.RequiresContactNumber}}"></div>
+                        </div>
+                        <br class="clearfix" />
+                    </div>
+                </div>
+            </div>
+            <div class="journey-info">
+                <div class="header mb5">Journey Information</div>
+                <div class="block">
+                    <div class="row" ng-show="item.OneTransportReference">
+                        <div class="col-xs-12">
+                            <div class="alert alert-info text-center" style="padding:5px;margin-bottom:6px;">
+                                <b>One Transport Booking!</b><br /> Any changes to the journey made here will not update the distance or price.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="item.CityFleetReference">
+                        <div class="col-xs-12">
+                            <div class="alert alert-info text-center" style="padding:5px;margin-bottom:6px;">
+                                <b>City Fleet Booking!</b><br /> Any changes to the journey made here will not update the distance or price.
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dispatch-new-booking" class="p0">
+                        <div class="tabs">
+                            <ul class="nav nav-tabs">
+                                <li ng-class="{'active': !item.ChauffeurMode }"><a ng-click="disableChauffering()">Journey</a></li>
+                                <li ng-if="COMPANY.ChauffeurModeActive" ng-class="{'active': item.ChauffeurMode }"><a ng-click="enableChauffering()">Hourly</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul ui-sortable="sortableOptions" ng-model="item.BookingStops" class="sortable-list">
+                        <li ng-repeat="stop in item.BookingStops">
+                            <div ng-if="$first">
+                                <div class="three-fourth-column">
+                                    <div class="form-group">
+                                        <label class="control-label" for="stop{{$index}}">
+                                            Pickup
+                                        </label>
+                                        <div class="form-edit booking-stop">
+                                            <div tab-index="6" stop-edit name="stop{{$index}}" map="map" required="$first" model="stop" known="externalLocations.knownLocations" external="externalLocations.historic"></div>
+                                        </div>
+                                    </div>
+                                    <div class="flip pointer" ng-if="item.BookingStops.length==2" ng-click="flipAddress()" ng-show="viewMode == 'EDIT'">
+                                        <i class="material-icons">import_export</i>
+                                    </div>
+                                </div>
+                                <div class="fourth-column pl20">
+                                    <div class="form-group">
+                                        <label class="control-label">As Directed</label>
+                                        <input class="check" type="checkbox" id="AsDirectedCheck" ng-model="item.AsDirected" ng-disabled="item.WaitAndReturn || viewMode == 'VIEW'" />
+                                        <label class="check-label " for="AsDirectedCheck"></label>
+                                    </div>
+                                </div>
+                                <br class="clearfix" />
+                            </div>
+                            <div ng-if="!$first && !item.AsDirected">
+                                <div class="full-column" ng-if="$middle">
+                                    <div class="form-group">
+                                        <label class="control-label" for="stop{{$index}}">
+                                            Via
+                                        </label>
+                                        <div class="form-edit input-group booking-stop">
+                                            <div tab-index="7" stop-edit name="stop{{$index}}" map="map" required="$first" model="stop" known="externalLocations.knownLocations" external="externalLocations.historic"></div>
+                                            <span class="input-group-btn" ng-show="viewMode == 'EDIT'"><button class="btn btn-danger" ng-click="removeStop($index)"><i class="material-icons">remove_circle</i></button></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="$last">
+                                    <div class="three-fourth-column">
+                                        <div class="form-group">
+                                            <label class="control-label" for="stop{{$index}}">
+                                                {{ item.WaitAndReturn ? 'Return To' : 'Drop Off' }}
+                                            </label>
+                                            <div class="form-edit booking-stop" ng-if="!item.WaitAndReturn">
+                                                <div tab-index="8" stop-edit name="stop{{$index}}" map="map" required="$first" model="stop" known="externalLocations.knownLocations" external="externalLocations.historic"></div>
+                                            </div>
+                                            <div class="form-edit booking-stop" ng-if="item.WaitAndReturn">
+                                                <input type="text" class="form-control" ng-model="stop.StopSummary" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fourth-column add-stop pl20">
+                                        <a href="" class="link" ng-click="addStop($index)" ng-show="viewMode == 'EDIT'"><i class="material-icons">add_circle</i>Add Stop</a>
+                                    </div>
+                                </div>
+                                <br class="clearfix" />
+                            </div>
+                        </li>
+                    </ul>
+                    <div ng-show="!item.ChauffeurMode">
+                        <div class="half-column">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    Wait & Return
+                                </label>
+                                <input class="check" type="checkbox" id="check-waitreturn" ng-model="item.WaitAndReturn" ng-disabled="item.AsDirected || viewMode == 'VIEW'" />
+                                <label class="check-label" for="check-waitreturn"></label>
+                            </div>
+                        </div>
+                        <div class="half-column">
+                            <button class="btn btn-xs btn-primary mt10" ng-if="item.BookingStops.length>2 && viewMode == 'EDIT'" ng-click="reverseStops()"><i class="material-icons" style="font-size:20px">import_export</i>Flip Journey</button>
+                        </div>
+                    </div>
+                    <div ng-show="item.ChauffeurMode">
+                        <div class="half-column">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    Duration
+                                </label>
+                                <div class="form-edit" ng-if="viewMode == 'VIEW'">
+                                    <span class="form-control-static">{{item.EstimatedMins}} Mins</span>
+                                </div>
+                                <div class="form-edit" ng-show="viewMode == 'EDIT'">
+                                    <input class="form-control" type="number" ng-model="item.EstimatedMins" min="0" max="10000" ng-model-options="{ debounce: 350 }" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="half-column" ng-show="item.AsDirected">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    Expected Mileage
+                                </label>
+                                <div class="form-edit" ng-if="viewMode == 'VIEW'">
+                                    <span class="form-control-static">{{item.ActualDistance}}</span>
+                                </div>
+                                <div class="form-edit" ng-if="viewMode == 'EDIT'">
+                                    <input class="form-control" type="number" ng-model="item.ActualDistance" min="0" max="10000" ng-model-options="{ debounce: 350 }" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br class="clearfix" />
+                    <div class="half-column" ng-if="item.FlightInfo != null">
+                        <div class="form-group">
+                            <label class="control-label">Date</label><br />
+                            <span class="form-contorl-static">{{flightData.GetDate('DD/MM/YYYY')}}</span>
+                        </div>
+                    </div>
+                    <div class="half-column" ng-if="item.FlightInfo != null">
+                        <div class="form-group">
+                            <label class="control-label">Time</label><br />
+                            <span class="form-contorl-static">{{flightData.GetDate('HH:mm')}}</span>
+                        </div>
+                    </div>
+                    <div class="half-column" ng-show="viewMode == 'VIEW' && item.FlightInfo == null">
+                        <div class="form-group">
+                            <label class="control-label">Date</label>
+                            <p class="form-control-static">{{item.BookedDateTime | companyDate:'DD/MM/YYYY'}}</p>
+                        </div>
+                    </div>
+                    <div class="half-column" ng-show="viewMode == 'EDIT' && item.FlightInfo == null">
+                        <div field-for="Date" display="Date" required="true"></div>
+                        <div class="quick-links" ng-show="viewMode == 'EDIT'">
+                            <a href="" class="linked" ng-click="addTime(0,'day')">Today</a>
+                            <a href="" class="linked" ng-click="addTime(1440,'day')">Tomorrow</a>
+                        </div>
+                    </div>
+                    <div class="half-column" ng-show="viewMode == 'VIEW' && item.FlightInfo == null">
+                        <div class="form-group">
+                            <label class="control-label">Time</label>
+                            <p class="form-control-static">{{item.BookedDateTime | companyDate:'HH:mm'}}</p>
+                        </div>
+                    </div>
+                    <div class="half-column" ng-show="viewMode == 'EDIT' && item.FlightInfo == null">
+                        <div field-for="Time" display="Time" step="300" required="true"></div>
+                        <div class="quick-links" ng-show="viewMode == 'EDIT'">
+                            <a href="" class="linked" ng-click="addTime(0,'time')">Now</a>
+                            <a href="" class="linked" ng-click="addTime(15,'time')">+15m</a>
+                            <a href="" class="linked" ng-click="addTime(30,'time')">+30m</a>
+                            <a href="" class="linked" ng-click="addTime(60,'time')">+60m</a>
+                        </div>
+                    </div>
+                    <br class="clearfix" />
+                </div>
+            </div>
+            <div class="notifications">
+                <div class="block">
+                    <h3 class="section-title">
+                        <i class="material-icons">settings_remote</i> Notifications
+                    </h3>
+                    <div class="row mt5">
+                        <div class="col-xs-2">
+                            <b>Confirmation</b>
+                            <div class="form-group mt10 mb15">
+                                <label class="control-label">Confirmation SMS</label>
+                                <input class="check" type="checkbox" id="SMSConfirmationCheck" ng-model="item.TextConfirmation" />
+                                <label class="check-label" for="SMSConfirmationCheck"></label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <b>Assigned</b>
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Assigned SMS</label>
+                                <input class="check" type="checkbox" id="TextAssignedCheck" ng-model="item.TextAssigned" />
+                                <label class="check-label" for="TextAssignedCheck"></label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <b>OnRoute</b>
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">OnRoute SMS</label>
+                                <input class="check" type="checkbox" id="TextOnOnRouteCheck" ng-model="item.TextOnOnRoute" />
+                                <label class="check-label" for="TextOnOnRouteCheck"></label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <b>Arrival</b>
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Arrival SMS</label>
+                                <input class="check" type="checkbox" id="TextOnArrivalCheck" ng-model="item.TextOnArrival" />
+                                <label class="check-label" for="TextOnArrivalCheck"></label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <b>Completion</b>
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Completion SMS</label>
+                                <input class="check" type="checkbox" id="CompletionSMSCheck" ng-model="item.TextOnCompletion" />
+                                <label class="check-label" for="CompletionSMSCheck"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt5 mb10">
+                        <div class="col-xs-2">
+                            <div class="form-group mt10 mb15">
+                                <label class="control-label">Confirmation Email</label>
+                                <input class="check" type="checkbox" id="EmailConfirmationCheck" ng-model="item.EmailConfirmation" />
+                                <label class="check-label" for="EmailConfirmationCheck"></label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Assigned Email</label>
+                                <input class="check" type="checkbox" id="EmailAssignedCheck" ng-model="item.EmailAssigned" />
+                                <label class="check-label" for="EmailAssignedCheck"></label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2"></div>
+                        <div class="col-xs-2">
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Arrival Phone Call</label>
+                                <input class="check" type="checkbox" id="CallOnArrivalCheck" ng-model="item.CallOnArrival" />
+                                <label class="check-label" for="CallOnArrivalCheck"></label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 pl0">
+            <div class="header mb5">Vehicle Information</div>
+            <div class="block">
+                <small class="text-muted">Vehicle type will depend upon the number of passengers chosen. Journey quote will appear in the cost box.</small>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div field-for="Pax" display="Passengers" required="true"></div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div field-for="Bax" display="Bags" required="true"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div field-for="VehicleTypeId" select-from="vehicleTypes" display="Vehicle"></div>
+                    </div>
+                    <div class="col-xs-6" ng-show="(mode != 'Client' || client.ShowPriceInPortal)">
+                        <div field-for="ActualCost" display="Cost"></div>
+                        <button class="btn btn-success btn-block" style="padding-left:16px;margin-top:-17px;" ng-show="mode != 'Client' && viewMode == 'EDIT' && quote && quote.FinalCost != item.ActualCost" ng-click="updateCost()">Accept New Quote: {{quote.FinalCost | currency}}</button>
+                    </div>
+                </div>
+                <div class="row" ng-show="item.Coupon || viewMode == 'EDIT'">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="" class="control-label">Coupon Code</label>
+                            <div class="form-edit input-group" ng-show="viewMode == 'EDIT'">
+                                <input type="text" class="form-control" ng-model="item.$Coupon" placeholder="" />
+                                <span class="input-group-btn"><button type="button" class="btn btn-primary" ng-click="applyCoupon()"><i class="material-icons">assignment</i></button></span>
+                            </div>
+                            <span ng-show="viewMode == 'VIEW'">{{item.Coupon}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header mb5" ng-show="viewMode == 'EDIT' || item.FlightInfo">Flight Information</div>
+            <div class="block" ng-show="viewMode == 'EDIT' || item.FlightInfo">
+                <small class="text-muted">The following flight is being tracked.</small>
+                <a ng-click="removeFlightInfo()" class="red pull-right" href="" style="margin-top:-28px;font-size:11px;" ng-show="viewMode == 'EDIT'">Remove Flight Info</a>
+                <div class="row" ng-if="item.FlightInfo">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Flight No:</label><br />
+                            <span class="form-control-static">{{item.FlightInfo.FlightNumber}}</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Departing:</label><br />
+                            <span class="form-control-static">{{item.FlightInfo.OriginCode}} {{item.FlightInfo.Origin}}</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Latest Time:</label><br />
+                            <span class="form-control-static">{{(item.FlightInfo.ArrivalTime || item.FlightInfo.ScheduledArrivalTime) | companyDate:'DD/MM/YYYY HH:mm'}}</span>
+                            <small class="muted" ng-if="item.FlightInfo.LastUpdate">Updated: {{item.FlightInfo.LastUpdate | companyDate:'DD/MM/YYYY HH:mm'}}</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Scheduled Arrival:</label><br />
+                            <span class="form-control-static">{{item.FlightInfo.ScheduledArrivalTime | companyDate:'DD/MM/YYYY HH:mm'}}</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Arriving:</label><br />
+                            <span class="form-control-static">{{item.FlightInfo.DestinationCode}} {{item.FlightInfo.Destination}} {{item.FlightInfo.Terminal ? ('T' + item.FlightInfo.Terminal) : ''}}</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Hold Off Time:</label><br />
+                            <span class="form-control-static">{{item.FlightInfo.MinsAfterLanding || 0}} Mins</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-show="viewMode == 'EDIT'">
+                    <div class="col-xs-4">
+                        <div tab-index="20" field-for="Date" display="Scheduled Date" required="true" open-name="FlightDate"></div>
+                        <div class="quick-links">
+                            <a href="" class="linked" ng-click="addTime(0, 'day')">Today</a>
+                            <a href="" class="linked" ng-click="addTime(1440, 'day')">Tomorrow</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <div class="form-edit input-group">
+                                <label for="" class="control-label">Flight No</label>
+                                <input type="text" class="form-control" ng-model="flightData.Number" placeholder="e.g. EK5" style="width: 80%;" />
+                                <span class="input-group-btn" style="width: 20%; float: right;"><button type="button" class="btn btn-primary" ng-click="fetchFlightInformation()"><i class="material-icons">assignment</i></button></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group" ng-show="item.FlightInfo">
+                            <label for="" class="control-label">Minutes After</label>
+                            <div class="form-edit input-group">
+                                <input type="number" class="form-control" name="Flight Holdoff" ng-model="flightData.MinsAfterLanding" min="0" max="180" step="5" ng-pattern="/^\d*$/" />
+                                <div ng-messages="formFor.form['Flight Holdoff'].$error" class="help-block">
+                                    <div ng-message="min">Holdoff time is not valid</div>
+                                    <div ng-message="max">180 mins maximum</div>
+                                    <div ng-message="pattern">Whole minutes only</div>
+                                    <div ng-message-default>Hold off time</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br class="clearfix">
+            </div>
+            <div class="block quote-breakdown" ng-show="quote && (mode != 'Client' || !client.ShowPriceInPortal)">
+                <h3 class="section-title">
+                    <i class="material-icons">settings</i> Quote Breakdown
+                </h3>
+                <div class="row mt5 mb5" ng-show="quote.Error">
+                    <div class="col-xs-12">
+                        <div class="alert alert-danger">
+                            <b>Invalid Quote:</b> {{quote.ErrorMessage}}
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="!quote.Error">
+                    <div class="row mt5 mb15">
+                        <div class="col-xs-6 col-xs-offset-3">
+                            <div class="text-center">
+                                <span class="form-contorl-static t-xl">Quote: {{(item.EstimatedCost + quote.TotalCharges) | currency}}</span>
+                                <br />
+                                <button class="btn btn-success btn-block" style="padding-left:16px;" ng-show="mode != 'Client' && viewMode == 'EDIT' && quote && quote.FinalCost != item.ActualCost" ng-click="updateCost()">Accept New Quote: {{quote.FinalCost | currency}}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt5 mb15">
+                        <div class="col-xs-4">
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Journey Quote:</label>
+                                <br />
+                                <span class="form-contorl-static">{{item.EstimatedCost | currency}}</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Charges:</label>
+                                <br />
+                                <span class="form-contorl-static">{{quote.TotalCharges | currency}}</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Taxes:</label>
+                                <br />
+                                <span class="form-contorl-static">{{(quote.TotalTaxAmount + quote.TotalChargesTaxAmount) | currency}}</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div ng-show="quote.IsFixed || quote.IsPeakDate || quote.IsPeakTime">
+                                <span class="label label-info" ng-show="quote.IsFixed">Fixed Price</span>
+                                <span class="label label-info" ng-show="quote.IsPeakDate">Peak Date (x{{quote.PeakDateMultiplier}})</span>
+                                <span class="label label-info" ng-show="quote.IsPeakTime">Peak Time (x{{quote.PeakTimeMultiplier}})</span>
+                            </div>
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Distance (miles):</label>
+                                <br />
+                                <span class="form-contorl-static" ng-if="quote.Directions">{{quote.Directions.Distance * 0.000621371 | number:1}} miles</span>
+                                <span class="form-contorl-static" ng-if="!quote.Directions">N/A</span>
+                                <div ng-show="quote.IncludedMiles">
+                                    <small>{{quote.IncludedMiles | number:1}} Included</small>
+                                </div>
+                            </div>
+                            <div class="form-group mt10 mb10">
+                                <label class="control-label">Time (without traffic):</label>
+                                <br />
+                                <span class="form-contorl-static" ng-if="quote.Directions">{{quote.Directions.Time * 1.2 / 1000 / 60 | number:0}} mins</span>
+                                <span class="form-contorl-static" ng-if="!quote.Directions">N/A</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div>
+                                <span class="brand-secondary bold" ng-show="quote.Charges">Included Charges:</span>
+                                <div ng-repeat="charge in quote.Charges" class="mt5">
+                                    <div class="lh15">
+                                        <small class="brand-primary bold">{{charge.Name}}:</small> <small>{{charge.Amount | currency}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header mb5">Tags</div>
+            <div class="special-requirements block">
+                <table class="table table-condensed table-hover mb10 table-bordered">
+                    <thead>
+                        <tr>
+                            <th><strong class="brand-secondary">Tags</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="Tags.length==0">
+                            <td>
+                                <span class="text-muted">No Tags has been added.</span>
+                            </td>
+                        </tr>
+                        <tr ng-if="_dbooking.Tags.length !== 0 && viewMode != 'VIEW'">
+                            <td>
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <strong class="brand-primary">Name</strong>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <strong class="brand-primary">Mandatory</strong>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <strong class="brand-primary">Preferred</strong>
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <!-- <a href="" class="red pull-right ml8" ng-click="removeTag(item)" ng-show="viewMode!='VIEW'">
+                                            <i class="material-icons">remove_circle</i>
+                                        </a> -->
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr ng-repeat="item in Tags">
+                            <td>
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        <strong class="brand-primary">{{item.Name}}</strong>
+                                    </div>
+                                    <div class="col-xs-3" ng-show="viewMode != 'VIEW'">
+                                        <label class="check-container" style="margin-top: 0px !important; font-size: 15px; margin-left: 15px;">
+                                            &nbsp;
+                                            <input type="radio" ng-model="item.Type" value="Mandatory" />
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-3" ng-show="viewMode != 'VIEW'">
+                                        <label class="check-container" style="margin-top: 0px !important; font-size: 15px; margin-left: 15px;">
+                                            &nbsp;
+                                            <input type="radio" ng-model="item.Type" value="Preferred" />
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-xs-1" ng-show="viewMode != 'VIEW'">
+                                        <a href="" class="red pull-right ml8" ng-click="removeTag(item)" ng-show="viewMode!='VIEW'">
+                                            <i class="material-icons">remove_circle</i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-sm-6" ng-show="viewMode != 'VIEW'">
+                        <div class="form-group" ng-show="unlinkedTags.length>0">
+                            <label for="">Add Tag</label>
+                            <div class="form-edit">
+                                <ui-select ng-model="item.$selectedTag" theme="selectize" title="Add Tags" ng-change="addTag($select.selected)" class="edit">
+                                    <ui-select-match placeholder="Select from list...">
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="item in unlinkedTags | filter: $select.search | orderBy: 'Name'">
+                                        <div class="select-text-option">
+                                            <div ng-bind-html="item.Name | highlight: $select.search"></div>
+                                        </div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <span ng-show="unlinkedTags.length==0">No tags available to add.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header mb5">Notes</div>
+            <div class="notes block">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mt10 mb20">
+                            <label class="control-label">Client Services</label>
+                            <input class="check" type="checkbox" id="BookingEditClientServicesCheck" ng-model="item.Dispute" ng-disabled="viewMode == 'VIEW'" />
+                            <label class="check-label" for="BookingEditClientServicesCheck"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group mt10">
+                            <label class="control-label">Driver Notes</label>
+                            <div class="form-edit">
+                                <textarea rows="3" class="form-control" ng-model="item.DriverNotes" ng-disabled="viewMode == 'VIEW'"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="mode != 'Client'">
+                    <div class="col-md-6">
+                        <div class="form-group mt10">
+                            <label class="control-label">Office Notes</label>
+                            <div class="form-edit">
+                                <textarea rows="3" class="form-control" ng-model="item.OfficeNotes" ng-disabled="viewMode == 'VIEW'"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mt10">
+                            <label class="control-label">Passenger Notes</label>
+                            <div class="form-edit">
+                                <textarea rows="3" class="form-control" ng-model="item.PassengerNotes" ng-disabled="viewMode == 'VIEW'"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="block" ng-if="dispatchSettings.Active">
+                <h3 class="section-title">
+                    <i class="material-icons">directions_car</i> Dispatch
+                </h3>
+                <div class="row mt5">
+                    <div class="col-xs-4">
+                        <div class="form-group mt10 mb15">
+                            <label class="control-label">AutoDispatch</label>
+                            <input class="check" type="checkbox" id="AutoDispatch" ng-model="item.AutoDispatch" ng-disabled="viewMode == 'VIEW'" />
+                            <label class="check-label" for="AutoDispatch"></label>
+                        </div>
+                    </div>
+                    <div ng-if="item.AutoDispatch">
+                        <div class="col-xs-4">
+                            <div class="form-group mt10 mb15">
+                                <label class="control-label">Lead Time (mins)</label>
+                                <input class="form-control" type="number" id="AutoDispatchOffset" ng-model="item._AutoDispatchOffset" ng-required="item.AutoDispatch" ng-disabled="viewMode == 'VIEW'" />
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="form-group mt10 mb15">
+                                <label class="control-label">Priority</label>
+                                <select class="form-control" id="priority" ng-model="item.Priority" ng-disabled="viewMode == 'VIEW'">
+                                    <option value="1">P1</option>
+                                    <option value="2">P2</option>
+                                    <option value="3">P3</option>
+                                    <option value="4">P4</option>
+                                    <option value="5">P5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

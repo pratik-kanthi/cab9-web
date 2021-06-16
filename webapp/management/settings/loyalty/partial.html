@@ -1,0 +1,50 @@
+
+<div id="settings-loyalty" ng-if="!loading">
+    <h2 class="page-title">
+		<i class="material-icons">settings</i>Loyalty Configuration
+	</h2>
+    <div form-for="config" schema="LoyaltyConfig" mode="{{viewMode}}">
+
+        <div class="mt10 mb10" ng-if="!!config">
+            <button class="btn btn-primary" ng-show="viewMode == 'VIEW'" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.email','W')"><i class="material-icons">create</i>Edit</button>
+            <button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+            <button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+        </div>
+        <div class="mt10 mb10" ng-if="!config">
+            <button class="btn btn-primary" ng-show="viewMode == 'VIEW'" ng-click="addNew()" ng-if="PERMISSIONS.test('settings.email','W')"><i class="material-icons">create</i>Add Loyalty Configuration</button>
+        </div>
+
+        <div class="row mt20" ng-if="!config">
+            <div class="col-md-12">
+                <div class="alert alert-warning">
+                    No Loyalty Settings Configured.
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt20">
+            <div class="col-md-6"> 
+                <div field-for="Enabled"></div>
+
+                <label>Booking Sources enabled</label>
+                <div class="row">
+                    <div class="col-md-4"><div field-for="Web"></div></div>
+                    <div class="col-md-4"> <div field-for="App"></div></div>
+                    <div class="col-md-4"> <div field-for="IVR"></div></div>
+                </div>
+                
+                <label>Payment Sources enabled</label>
+                <div class="row">
+                    <div class="col-md-4"><div field-for="Cash"></div></div>
+                    <div class="col-md-4"> <div field-for="Card"></div></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div ng-disabled="enabled" field-for="AmountPerPoint"></div>
+                <div ng-disabled="config.Enabled" field-for="ThresholdType"></div>
+                <div ng-disabled="config.Enabled" field-for="ThresholdValue"></div>
+            </div>
+        </div>
+
+    </div>
+</div>

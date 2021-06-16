@@ -1,0 +1,41 @@
+<div>
+        <form form-for="expense" schema="BookingExpense" mode="{{viewMode}}" class="reference-modal">
+    <div class="modal-header">
+        <h3 class="modal-title">Add Booking Expense</h3>
+    </div>
+    <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div field-for="Note"></div>
+                </div>
+                <div class="col-md-6">
+                    <div field-for="Amount"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div field-for="BookingExpenseTypeId" select-from="expenseTypes"></div>
+                </div>
+                <div class="col-md-6">
+                    <div field-for="TaxId" select-from="taxes"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div field-for="Approved"></div>
+                </div>
+                <div class="col-md-6">
+                    <div field-for="PayToDriver"></div>
+                </div>
+            </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()">
+            <i class="material-icons">undo</i>Cancel
+        </button>
+        <button class="btn btn-xs btn-success" ng-click="save()" ng-disabled="formFor.form.$invalid">
+            <i class="material-icons">save</i> Save
+        </button>
+    </div>
+        </form>
+</div>

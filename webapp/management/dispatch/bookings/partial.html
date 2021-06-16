@@ -1,0 +1,143 @@
+<div ng-show="'dispatch.bookings' | isState" id="dispatch-bookings">
+    <div class="header">
+        <div class="content-wrapper">
+            <div class="journey">Journey</div>
+            <div class="passenger">Passenger</div>
+            <div class="driver">Driver</div>
+            <div class="time">Time</div>
+            <div class="status">Status</div>
+            <div class="action"></div>
+        </div>
+    </div>
+    <div class="bookings-wrapper" id="bookings-wrapper">
+        <div class="no-bookings" ng-show="!fetching && (!dispatchObj.bookings.items || dispatchObj.bookings.items.length == 0)">
+            <h4>No Bookings Available</h4> Please change your search criteria or create a new booking by clicking the button below.
+            <div class="mt15">
+                <a href="" class="btn btn-success" ui-sref="dispatch.newbooking"><i class="material-icons">add_circle</i> Add Booking</a>
+            </div>
+        </div>
+        <!--   <virtualised-repeater repeat="b in abcBookings" item-height="51" match-height="#bookings-wrapper">
+            <div>
+                <div class="booking {{b.BookingStatus}}">
+                    <div class="content-wrapper">
+                        <div class="journey">
+                            <div class="indicators">
+                                <div class="tag pre" ng-show="b.$pre">PRE</div>
+                                <div class="tag vehicle" ng-class="b.VehicleType.Name" ng-bind="b.VehicleType.Name"></div>
+                                <div class="tag notes" ng-show="(b.OfficeNotes || b.DriverNotes || b.PassengerNotes)"><i class="material-icons">speaker_notes</i>Note</div>
+                                <div class="tag flight" ng-show="b.FlightInfo">
+                                    <i class="material-icons">airplanemode_active</i>
+                                    <span ng-bind="b.FlightInfo.FlightNumber"></span>
+                                </div>
+                                <div class="tag new" ng-show="b.$new">NEW</div>
+                            </div>
+                            <div class="text">
+                                <strong class="pickup" ng-bind="b.Summary"></strong>
+                            </div>
+                        </div>
+                        <div class="passenger">
+                            <div class="text">
+                                <span ng-bind="(b.LeadPassenger.Firstname + ' ' + b.LeadPassenger.Surname)"></span>
+                            </div>
+                            <div class="text">
+                                <strong ng-bind="('(' + b.Client.AccountNo +') ' + b.Client.Name)"></strong>
+                            </div>
+                        </div>
+                        <div class="driver">
+                            <div ng-hide="b.BookingStatus == 'Unconfirmed'">
+                                <div ng-show="b.Driver && b.BookingStatus != 'PreAllocated'">
+                                    <div class="text">
+                                        <strong ng-bind="('(' + b.Driver.Callsign + ')')"></strong> <span ng-bind="(b.Driver.Firstname)"></span> <span ng-bind="(b.Driver.Surname)"></span>
+                                    </div>
+                                    <div class="text">
+                                        <span ng-bind="(b.Vehicle._Description + ' ' +b.Vehicle.Registration)" class="vehicle"></span>
+                                    </div>
+
+                                </div>
+                                <div ng-show="b.Driver && b.BookingStatus == 'PreAllocated'">
+                                    <div class="text">
+                                        <strong ng-bind="('(' + b.Driver.Callsign + ')')"></strong> <span ng-bind="(b.Driver.Firstname)"></span> <span ng-bind="(b.Driver.Surname)"></span>
+                                    </div>
+                                    <div class="text" ng-if="b.$offer">
+                                        <span ng-if="b.$offer && b.$offer.Status == 'Sent' && b.$offer.Attempts == 1">Sending..</span>
+                                        <span ng-if="b.$offer && b.$offer.Status == 'Sent' && b.$offer.Attempts > 1">Retrying {{b.$offer.Attempts - 1}}..</span>
+                                        <span ng-if="b.$offer && b.$offer.Status == 'Read' && !b.$offer.ResponseTime">Read</span>
+                                        <span ng-if="b.$offer && b.$offer.Status == 'Rejected' &&  b.$offer.ResponseTime && b.$offer.Accepted == 0">Driver Rejected!</span>
+                                        <span ng-if="b.$offer && b.$offer.Status == 'Rejected' && !b.$offer.ResponseTime">Retries Exceeded!</span>
+                                    </div>
+                                    <div class="text" ng-if="!b.$offer">
+                                        <a class="btn btn-xs btn-success" style="padding-left: 12px;" ng-click="dispatchObj.bookings.allocateDriver(b, b.DriverId)">Confirm Allocation</a>
+                                    </div>
+                                </div>
+                                <div ng-show="!b.Driver && !b.$offer && !b.$recommendation" ng-click="dispatchObj.bookings.allocateDriver(b)">
+                                    <i class="material-icons">add_circle</i>
+                                    <p>Add Driver</p>
+                                </div>
+                                <div ng-show="!b.Driver && !b.$offer && b.$recommendation" style="opacity:0.6;">
+                                    <div class="text">
+                                        <strong ng-bind="('(' + b.$recommendation.Driver.Callsign + ')')"></strong> <span ng-bind="(b.$recommendation.Driver.Firstname)"></span> <span ng-bind="(b.$recommendation.Driver.Surname)"></span> <span class="pull-right label" ng-class="getScoreClass(b.$recommendation.Driver.FinalScore)">{{b.$recommendation.Driver.FinalScore | number:0}}%</span>
+                                    </div>
+                                    <div>
+                                        <a class="btn btn-xs btn-success" style="padding-left: 12px;" ng-click="dispatchObj.bookings.allocateDriver(b, b.$recommendation.Driver.DriverId, 1)">Confirm</a>
+                                        <a class="btn btn-xs btn-info" style="padding-left: 12px;" ng-click="dispatchObj.bookings.allocateDriver(b, null, -1)">Manual</a>
+                                    </div>
+                                </div>
+                                <div ng-show="!b.Driver && b.$offer" ng-click="dispatchObj.bookings.allocateDriver(b)">
+                                    <i class="material-icons">add_circle</i>
+                                    <div style="float:left;">
+                                        <div class="text">
+                                            <strong ng-bind="'(' + b.$offer.Driver.Callsign + ')'"></strong> <span ng-bind="b.$offer.Driver.Firstname"></span>
+                                        </div>
+                                        <div class="text">
+                                            <span ng-if="b.$offer && b.$offer.Status == 'Sent' && b.$offer.Attempts == 1">Sending..</span>
+                                            <span ng-if="b.$offer && b.$offer.Status == 'Sent' && b.$offer.Attempts > 1">Retrying {{b.$offer.Attempts - 1}}..</span>
+                                            <span ng-if="b.$offer && b.$offer.Status == 'Read' && !b.$offer.ResponseTime">Read</span>
+                                            <span ng-if="b.$offer && b.$offer.Status == 'Rejected' &&  b.$offer.ResponseTime && b.$offer.Accepted == 0">Driver Rejected!</span>
+                                            <span ng-if="b.$offer && b.$offer.Status == 'Rejected' && !b.$offer.ResponseTime">Retries Exceeded!</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-hide="b.BookingStatus != 'Unconfirmed'" class="accept-reject">
+                                <a href="" class="btn btn-xs btn-success" ng-click="dispatchObj.unconfirmed.acceptBooking(b)"><i class="material-icons">thumb_up</i>Accept</a>
+                                <a href="" class="btn btn-xs btn-danger" ng-click="dispatchObj.unconfirmed.rejectBooking(b)"><i class="material-icons">thumb_down</i>Reject</a>
+                            </div>
+                        </div>
+                        <div class="time">
+                            <strong ng-bind="b.BookedDateTime | companyDate:'HH:mm'" class="badge"></strong>
+                            <div class="text">
+                                <span ng-bind="b.$countdown"></span>
+                            </div>
+                        </div>
+                        <div class="status">
+                            <strong ng-bind="b.BookingStatus" class="badge"></strong>
+                            <div class="text">
+                                <span ng-bind="b.$eta"></span>
+                                <span ng-bind="b.$countup"></span>
+                            </div>
+                        </div>
+                        <div class="action">
+                            <a href="" class="expand" ng-click="dispatchObj.bookings.selectBooking(b)">
+                                <i class="material-icons" style="">place</i>
+                            </a>
+                            <a href="" class="expand" ng-click="dispatchObj.bookings.openBooking(b)">
+                                <i class="material-icons" style="">visibility</i>
+                            </a>
+                            <a href="" class="expand" ng-show="b.$recentlyCompleted" ng-click="dispatchObj.bookings.removeCompleted(b)">
+                                <i class="material-icons">check_circle</i>
+                            </a>
+                            <a href="" class="expand" ng-show="b.$recentlyCancelled" ng-click="dispatchObj.bookings.removeCancelled(b)">
+                                <i class="material-icons">check_circle</i>
+                            </a>
+                            <a href="" class="expand" ng-show="b.HasEdits" ng-click="approveChanges(b)">
+                                <i class="material-icons " style="transform: rotate(180deg);">info</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </virtualised-repeater> -->
+        <!-- directive binding react and angular -->
+        <react-booking dispatch-obj="dispatchObj" bookings="orderedBookings" open-booking="dispatchObj.bookings.openBooking(booking)" edit-booking="dispatchObj.bookings.editBooking(booking)" enable-bidding="$root.COMPANY.EnableBidding" bid-queue="dispatchObj.bookings.addToBidQueue(booking)" select-booking="dispatchObj.bookings.selectBooking(booking)" remove-completed="dispatchObj.bookings.removeCompleted(booking)" remove-cancelled="dispatchObj.bookings.removeCancelled(booking)" approve-changes="approveChanges(booking)" allocate-driver="dispatchObj.bookings.allocateDriver(booking,driverId,misc)" accept-booking="dispatchObj.unconfirmed.acceptBooking(booking)" reject-booking="dispatchObj.unconfirmed.rejectBooking(booking)" confirm="confirm(type,notify)" reload="dispatchObj.bookings.reload"></react-booking>
+    </div>
+</div>

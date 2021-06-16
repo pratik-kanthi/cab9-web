@@ -1,0 +1,45 @@
+<div form-for="setting" schema="ClientWebBookerSetting" mode="{{displayMode}}">
+    <h3 class="section-title mt0">Web Booker Settings</h3>
+    <small>Please use the panels below to manage the content displayed on the login screen for the account.</small>
+    <div class="row mt15">
+        <div class="col-md-6 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Basic Settings
+                    </h3>
+                </div>
+                <div class="panel-body">
+                     <div field-for="WebBookingDomain"></div> 
+                    <div field-for="WelcomeMessage"></div>
+                    <div field-for="WelcomeDescription" textarea="8"></div>
+                </div>
+                <div class="panel-footer" ng-if="PERMISSIONS.test('clients.viewer.webbookersettings', 'W')">
+                    <div ng-if="displayMode === 'VIEW'">
+                        <button class="btn btn-primary" ng-click="startEdit()"> <i class="material-icons">create</i> Edit</button>
+                    </div>
+                    <div ng-if="displayMode === 'EDIT' || displayMode === 'CREATE'">
+                        <button class="btn btn-success" ng-click="saveEdits()" ng-disabled="formFor.form.$invalid"> <i class="material-icons">save</i> Submit</button>
+                        <button class="btn btn-warning" ng-click="cancelEdit()"> <i class="material-icons">undo</i> Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Welcome Image</h3>
+                </div>
+                <div class="panel-body">
+                    <img ng-src="{{setting._WelcomeHeroImage}}?counter={{counter}}" class="welcome-image" style="width: 100%">
+                    <div class="alert alert-warning" ng-show="!setting.Id">Please save initial settings prior to choosing Welcome Image</div>
+                </div>
+                <div class="panel-footer" ng-if="PERMISSIONS.test('clients.viewer.webbookersettings', 'W')">
+                    <button class="btn btn-primary" ng-click="chooseImage()" ng-disabled="!setting.Id">
+                        <i class="material-icons">file_upload</i> Upload Image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

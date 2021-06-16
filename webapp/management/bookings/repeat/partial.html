@@ -1,0 +1,42 @@
+<h3 class="section-title mt0">
+    <i class="material-icons">repeat</i> Repeat Bookings
+</h3>
+<h3 class="panel-title" ng-if="paging.loading">
+    <i class="fa fa-circle-o-notch fa-spin"></i> Fetching Repeat Bookings...
+</h3>
+<div ng-if="bookings.length == 0">
+    <p class="grey">
+        No repeat bookings found. You can create a repeat booking from the new bookings page.
+    </p>
+</div>
+<p class="grey mb20" ng-if="bookings.length > 0">
+    Please find your repeat bookings below. If you have created a repeat booking just now, please note it can take upto 30 mins the process to complete. <br />You can cancel a repeat booking by clicking the Cancel button on the right. Cancellation for multiple repeat bookings can take upto 30 mins. <br /><b>No email notifications will be sent for the cancelled bookings.</b>
+</p>
+<div class="table-responsive" ng-if="bookings.length > 0">
+    <table class="table table-condensed primary-table">
+        <thead>
+            <tr>
+                <th style="width: 15%">Label</th>
+                <th style="width: 30%">Days Of Week</th>
+                <th style="width: 10%">End Date</th>
+                <th style="width: 15%">No Of Bookings</th>
+                <th style="width: 15%">Created</th>
+                <th style="width: 15%">Cancel</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="b in bookings">
+                <td>{{b.Label}}</td>
+                <td>{{b.DaysOfWeek}}</td>
+                <td>{{b.EndDate | date:'dd/MM/yyyy'}}</td>
+                <td>{{b.$numberOfBookings}}</td>
+                <td>{{b.CreationTime | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td>
+                    <button class="btn btn-danger btn-xs" ng-click="cancelRepeat(b.Id)" ng-disabled="b.$cancel">
+                        <i class="material-icons">cancel_schedule_send</i>Cancel
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,19 @@
+﻿<h3 class="section-title mt0">Change Password</h3>
+<small>Please use the form below to change your password.</small>
+<div class="row mt30">
+    <div class="col-sm-4">
+        <div form-for="user" schema="ChangePassword" mode="{{viewMode}}">
+            <div>
+                <div field-for="UserName" display="Username" editable="false"></div>
+                <div field-for="CurrentPassword" display="Current Password"></div>
+                <div field-for="NewPassword" display="New Password"></div>
+                <div field-for="NewPasswordRepeat" display="Confirm new password"></div>
+            </div>
+            <div class="mt10 mb10 text-right">
+                <button class="btn btn-success" ng-disabled="formFor.form.$invalid" ng-hide="!formFor.form.$invalid"><i class="material-icons">lock</i>Change Password</button>
+                <button class="btn btn-success mr10" ng-show="!formFor.form.$invalid" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+                <button class="btn btn-warning" ng-show="!formFor.form.$invalid" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

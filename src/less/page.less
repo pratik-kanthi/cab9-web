@@ -1,0 +1,264 @@
+﻿html {
+    #application-layout {
+        height: 100%;
+    }
+
+    #topbar {
+        z-index: 101;
+        position: fixed;
+        left: @sidebar-width-lg;
+        height: 60px;
+        background-color: @inverse;
+        right: 0;
+        border-bottom: 1px solid rgba(230, 230, 230, 0.7);
+        .translate3d(0, 0, 0);
+        .transition(all 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1));
+
+        @media only screen and (min-width: 768px) and (max-width: 1159px) {
+            left: 0;
+        }
+
+        @media only screen and (max-width: 767px) {
+            left: 0;
+        }
+    }
+
+    #sidebar-left {
+        z-index: 102;
+        position: fixed;
+        width: @sidebar-width-lg;
+        height: 100%;
+        overflow: scroll;
+        .translate3d(0, 0, 0);
+        .transition(all 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1));
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        -ms-overflow-style: none;
+
+        @media only screen and (min-width: 768px) and (max-width: 1159px) {
+            width: @sidebar-width-md;
+            .translate3d(-@sidebar-width-md, 0, 0);
+        }
+
+        @media only screen and (max-width: 767px) {
+            width: @sidebar-width-md;
+            .translate3d(-@sidebar-width-md, 0, 0);
+        }
+    }
+
+    #content-wrapper {
+        position: relative;
+        z-index: 2;
+        overflow-x: hidden;
+        min-height: 100%;
+        margin-left: @sidebar-width-lg;
+        padding-top: 60px;
+        .translate3d(0, 0, 0);
+        .transition(all 0.33s cubic-bezier(0.694, 0.0482, 0.335, 1));
+
+        .app-alert {
+            height: 40px;
+            background-image: url('http://bg.bajery.net/92130945611012065774.gif');
+            background-size: 220px;
+            background-position: center;
+            text-align: center;
+            color: #fff;
+            text-shadow: 1px 1px 1px #444;
+            line-height: 40px;
+            font-weight: 600;
+            font-size: 16px;
+            position: relative;
+
+            .transluscent {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: @brand-primary;
+                z-index: 1;
+                .opacity(0);
+            }
+
+            .content {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 2;
+
+                a {
+                    color: #fff;
+                    text-decoration: underline;
+                    outline: 0 !important;
+                }
+
+                >span {
+                    padding: 4px 8px 6px;
+                    border-radius: 4px;
+                    background-color: #7bd0ff;
+                }
+            }
+        }
+
+        @media only screen and (min-width: 768px) and (max-width: 1159px) {
+            margin-left: 0;
+        }
+
+        @media only screen and (max-width: 767px) {
+            margin-left: 0;
+            padding: 0;
+            padding-top: 60px;
+        }
+    }
+
+    #sidebar-right {
+        z-index: 104;
+        position: fixed;
+        top: 0;
+        right: -@sidebar-right-width;
+        height: 100%;
+        width: 100%;
+        max-width: @sidebar-right-width;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-left: 1px solid #e7e7e7;
+        box-shadow: 0 0 9px rgba(191, 191, 191, 0.36);
+        .transition(all 0.33s);
+
+        @media only screen and (max-width: 767px) {
+            max-width: 414px;
+            right: -414px;
+        }
+    }
+
+    &.sidebar-visible {
+        #topbar {
+            .translate3d(@sidebar-width-md, 0, 0);
+        }
+
+        #content-wrapper {
+            .translate3d(@sidebar-width-md, 0, 0);
+        }
+
+        #sidebar-left {
+            .translate3d(0, 0, 0);
+        }
+    }
+
+    &.right-sidebar-visible {
+        #sidebar-right {
+            right: 0;
+        }
+    }
+
+    #sidebar-toggle {
+        position: fixed;
+        z-index: 1000;
+        display: none;
+        left: 20px;
+        bottom: 30px;
+        height: 50px;
+        width: 50px;
+        .border-radius(25px);
+        .brand-gradient();
+        text-align: center;
+        .shadow();
+
+        i {
+            color: @inverse;
+            font-size: 28px;
+            line-height: 50px;
+        }
+
+        @media only screen and (max-width: 1024px) {
+            display: block;
+        }
+    }
+}
+
+.select2-container-multi .select2-choices li {
+    width: 96%;
+}
+
+.flotTip {
+    padding: 3px 5px;
+    background-color: #000;
+    z-index: 10000;
+    color: #fff;
+    box-shadow: 0 0 10px #555;
+    opacity: .7;
+    filter: alpha(opacity=70);
+    border: 1px solid #fff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 2px;
+}
+
+.reports .table-responsive {
+    max-height: 200px;
+    overflow: auto;
+    margin-left: -20px;
+    margin-right: -20px;
+    border-top: 3px solid rgba(100, 100, 100, .1) !important;
+}
+
+.reports .table-responsive table.table {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.reports .table-responsive .table.table-condensed {
+    table-layout: auto;
+}
+
+.max-lines {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 16px;
+    max-height: 32px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.panel-heading .booking-details {
+    border-top: 5px solid #64c458;
+}
+
+.email-config .templates .btn {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 8px;
+}
+
+.email-config .template {
+    border: 1px solid #eee;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 16px 20px;
+}
+
+iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.welcome-image {
+    width: 100%;
+}
+
+.ui-select-highlight {
+    display: inline !important;
+    width: initial !important;
+}
+
+td .btn-group {
+    overflow: visible !important;
+}

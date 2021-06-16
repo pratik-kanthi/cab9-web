@@ -1,0 +1,31 @@
+<form name="passengerForm" form-for="passenger" schema="Passenger" mode="CREATE">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+        <h3 class="modal-title" ng-hide="edit">New Passenger</h3>
+
+    </div>
+    <div class="modal-body" id="driverpayments">
+        <div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6">
+                    <div field-for="Firstname"></div>
+                    <div field-for="Surname"></div>
+                    <div ng-show="showClients">
+                        <div field-for="ClientId" select-from="clients" display="Choose Client"></div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div field-for="Phone"></div>
+                    <div field-for="Mobile" display="Mobile*"></div>
+                    <div field-for="Email"></div>
+                </div>
+            </div>
+            <hr />
+            
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-success" ng-click="saveEdits()" ng-disabled="formFor.form.$invalid || !passenger.Mobile"><i class="material-icons">save</i> Submit</button>
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"> <i class="material-icons">undo</i> Cancel</button>
+    </div>
+</form>

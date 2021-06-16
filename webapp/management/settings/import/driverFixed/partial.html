@@ -1,0 +1,193 @@
+<div class="panel panel-default" ng-if="import.stage == 'UPLOAD'">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Driver Fixed Prices Import</h3>
+    </div>
+    <div class="panel-body" style="overflow:visible;">
+        <p>
+            Use this page to import external driver fixed commission amounts into Cab9.<br />
+            Rows will first be validated to ensure they conform to validation rules and a summary will be presented on the next page.
+        </p>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label">Choose File:</label>
+                    <input type="file" class="form-control" file-picker file="import.file" style="border:0"/>
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label">Choose Payment Model:</label>
+                    <ui-select ng-model="import.modelId" theme="selectize" style="width: 100%;">
+                        <ui-select-match placeholder="Start typing to search...">
+                            <div class="select-text">
+                                {{$select.selected.Name}}
+                            </div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in models">
+                            <div class="ui-select-box">
+                                <div class="option-details">
+                                    <div>{{item.Name}}</div>
+                                    <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="col-xs-4">
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button type="button" class="btn btn-success" ng-click="validateFile()" ng-disabled="!import.modelId" ng-show="!import.status"><i class="material-icons">play_arrow</i> Validate File</button>
+        <div ng-show="import.percent && import.status != 'Processing'">
+            {{import.status}} {{import.percent}}%
+        </div>
+        <div ng-show="import.status == 'Processing'">
+            Please wait.. Processing file.
+        </div>
+        <div ng-show="import.status == 'Error Uploading'">
+            An Error has occured!
+        </div>
+        <a type="button" class="btn btn-info pull-right" download="DriverFixedImportTemplate.csv" href="/Uploads/Imports/Templates/DriverFixedImportTemplate.csv"><i class="material-icons">play_arrow</i> Download Template</a>
+        <br class="clearfix" />
+    </div>
+</div>
+<div class="panel panel-default" ng-if="import.stage == 'VALIDATE'">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Driver Fixed Prices Import</h3>
+    </div>
+    <div class="panel-body" style="overflow:visible;">
+        <p>
+            Check the data below.
+        </p>
+    </div>
+    <table class="table table-condensed table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Row Number</th>
+                <th>Errors</th>
+                <th>Warnings</th>
+                <th style="width:128px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat-start="row in import.preview">
+                <td><b class="text-primary">Row {{row.Row}}</b></td>
+                <td>
+                    <div ng-show="::row.Errors.length > 0">
+                        <i class="material-icons text-danger">error</i> Errors: {{::row.Errors.length}}
+                    </div>
+                    <div ng-show="::row.Errors.length == 0">
+                        <i class="material-icons text-success">thumb_up</i> Ready to Import
+                    </div>
+                </td>
+                <td>
+                    <div ng-show="::row.Warnings.length > 0">
+                        <i class="material-icons text-warning">warning</i> Warnings: {{::row.Warnings.length}}
+                    </div>
+                </td>
+                <td>
+                    <a class="btn btn-primary" ng-show="!row.$expanded" ng-click="row.$expanded = !row.$expanded"><i class="material-icons">expand_more</i> Expand</a>
+                </td>
+            </tr>
+            <tr ng-repeat-end ng-if="row.$expanded">
+                <td colspan="3">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="section-title">Values</h3>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Field:</th>
+                                        <th>Value:</th>
+                                        <th style="width:100px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>From</td>
+                                        <td>{{row.From}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'From')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'From')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>To</td>
+                                        <td>{{row.To}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'To')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'To')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Amount</td>
+                                        <td>{{row.BasePrice}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'Amount')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'Amount')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>VehicleTypes</td>
+                                        <td><small class="text-muted">See Below</small></td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, 'VehicleTypes')">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, 'VehicleTypes')">warning</i>
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="(k, v) in row.VehicleTypes">
+                                        <td>{{k}}</td>
+                                        <td>{{v}}</td>
+                                        <td>
+                                            <i class="material-icons text-danger" ng-if="::hasErrors(row, k)">error</i>
+                                            <i class="material-icons text-warning" ng-if="::hasWarnings(row, k)">warning</i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-6">
+                            <div ng-show="::row.Errors.length > 0">
+                                <h3 class="section-title">
+                                    Errors ({{row.Errors.length}})
+                                </h3>
+                                <ul>
+                                    <li ng-repeat="e in row.Errors">
+                                        <span class="text-danger" style="display:inline;">{{e.Error}}</span><br />
+                                        <small class="text-muted">{{e.Guidence}}</small>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div ng-show="::row.Errors.length == 0">
+                                <h3 class="section-title">
+                                    <i class="material-icons text-success">thumb_up</i> Ready to Import
+                                </h3>
+                            </div>
+                            <div ng-show="::row.Warnings.length > 0">
+                                <h3 class="section-title">
+                                    Warnings ({{row.Warnings.length}})
+                                </h3>
+                                <ul>
+                                    <li ng-repeat="e in row.Warnings">
+                                        <span class="text-warning" style="display:inline;">{{e.Error}}</span><br />
+                                        <small class="text-muted">{{e.Guidence}}</small>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style="vertical-align:top;">
+                    <a class="btn btn-warning" ng-click="row.$expanded = !row.$expanded" ><i class="material-icons">expand_less</i> Close</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="panel-footer">
+        <button type="button" class="btn btn-success" ng-click="importFile()" ng-disabled="import.hasErrors || import.pressed"><i class="material-icons">play_arrow</i> Confirm</button>
+    </div>
+</div>

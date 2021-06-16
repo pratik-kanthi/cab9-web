@@ -1,0 +1,231 @@
+/* Form Groups
+------------------------------------
+*/
+
+form {
+    h3.section-title {
+        color: @brand-primary;
+        margin-bottom: 16px;
+
+        i {
+            color: #aaa;
+        }
+    }
+}
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    line-height: 19px;
+    font-size: 16px;
+    position: relative;
+
+    label {
+        margin-bottom: 5px;
+        float: left;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+        margin-right: 4px;
+        clear: right;
+        width: 100%;
+        font-weight: 600;
+        color: @brand-primary;
+
+        .loader {
+            width: 14px;
+            position: absolute;
+            top: 0px;
+            right: 2px;
+        }
+    }
+
+    .intl-tel-input {
+        width: 100%;
+    }
+
+    .form-edit {
+
+        .form-control {
+            font-size: 13px;
+        }
+
+        .select-text {
+            font-size: 13px;
+            line-height: 20px !important;
+        }
+    }
+
+    .form-control {
+        width: 100%;
+        .border-radius(3px);
+        height: 30px;
+        border: 1px solid #d9d9d9;
+        color: #000;
+        padding: 3px 8px;
+        font-size: 15px;
+        line-height: 20px;
+        .box-shadow(none);
+        -webkit-appearance: none;
+
+        &:focus {
+            outline: none;
+            border-color: #08f;
+            box-shadow: 0 0 4px #08f;
+        }
+    }
+
+    .input-group {
+        .input-group-btn {
+            .btn {
+                width: 100%;
+                padding: 0;
+                width: 40px;
+                text-align: center;
+                height: 30px;
+                margin: 0 !important;
+
+                i {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+
+            &.append,
+            &.prepend {
+                .btn {
+                    border: 1px solid #d9d9d9;
+                    height: 30px;
+                    border-left: 0;
+                    outline: 0 !important;
+                    .box-shadow(none);
+                    &.btn-primary {
+                        border-color: @brand-primary;
+                    }
+                }
+            }
+
+            &.prepend {
+                .btn {
+                    border: 1px solid #d9d9d9;
+                    border-right: 0;
+                }
+            }
+        }
+
+        .form-control {
+            margin-top: 0 !important;
+        }
+    }
+
+    textarea.form-control {
+        height: inherit;
+        resize: none;
+    }
+
+    .form-control-static.pre {
+        white-space: pre-line;
+        padding-top: 0;
+        line-height: 22px
+    }
+
+    select {
+        background-image: url('/includes/images/select.png');
+        background-repeat: no-repeat;
+        background-size: 11px;
+        background-position: right 7px center;
+    }
+}
+
+.help-block {
+    font-size: 11px;
+}
+
+input[type="time"]::-webkit-clear-button {
+    display: none;
+}
+
+input[type="time"]::-ms-clear {
+    display: none;
+}
+
+input[type=time]::-webkit-inner-spin-button,
+input[type=time]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="file"] {
+    width: 100%;
+    outline: 0 !important;
+    margin-top: 4px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    height: 30px;
+
+    &::-webkit-file-upload-button {
+        visibility: hidden !important;
+        -webkit-appearance: none;
+    }
+
+    &::before {
+        content: 'Choose File';
+        display: inline-block;
+        background-color: @brand-primary;
+        .border-radius(3px);
+        line-height: 30px;
+        padding: 0px 12px;
+        height: 30px;
+        outline: none;
+        white-space: nowrap;
+        -webkit-user-select: none;
+        color: #fff;
+        cursor: pointer;
+        margin-left: -10px;
+        float: left;
+        font-weight: 700;
+        font-size: 10pt;
+        outline: 0 !important;
+    }
+
+    &:hover {
+        &::before {
+            border-color: black;
+        }
+    }
+}
+
+.cb-checkbox.checked .cb-inner {
+    border-color: @brand-primary  !important;
+    background-color: @brand-primary  !important;
+}
+
+.form-control {
+    &.google-address-text {
+        background-image: url('/includes/images/google.png');
+        background-repeat: no-repeat;
+        background-position: center left 4px;
+        background-size: 24px;
+        padding-left: 32px;
+    }
+}
+
+input.form-control {
+    &.ng-invalid {
+        background: rgba(255, 255, 0, .3);
+    }
+}
+
+div.selectize-control {
+    &.ng-invalid {
+        .selectize-input {
+            background: rgba(255, 255, 0, .3);
+        }
+    }
+}

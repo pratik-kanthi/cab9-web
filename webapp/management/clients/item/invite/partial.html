@@ -1,0 +1,234 @@
+<div id="invite">
+    <p class="grey mb0">
+        This view shows list of passengers firstly in
+        <strong class="brand-secondary">UNINVITED</strong> state, you can select passengers from list and invite them or
+        click on Invite All to initiate invitation process for all the customers. Secondly, it displays
+        <strong class="brand-secondary">INVITED</strong> state, where you can see the list of passengers who are invited
+        to explore our CUSTOMER APP. Last but not least, in case any of your customer missed the email for invitation you
+        can check <strong class="brand-secondary">FAILED</strong> state to check what went wrong.
+    </p>
+    <ul class="nav nav-tabs nav-justified mt20">
+        <li class="bg-warning" ng-class="{ 'active': tab.current == 'UNINVITED' }">
+            <a class="uninvited" ng-click="tab.current = 'UNINVITED';getUninvitedPassengers(1)" >Uninvited
+                    <br>Passengers
+                    
+                </a>
+        </li>
+        <li class="bg-danger" ng-class="{ 'active': tab.current == 'FAILED' }">
+            <a class="declined" ng-click="tab.current = 'FAILED'; getFailedPassengers()">Failed 
+                    <br>Inviation
+                    <span class="badge badge-success" style="display:inline;" ng-if="tab.current == 'FAILED'">{{failedPassengers.length}}</span>
+                </a>
+        </li>
+        <li class="bg-success" ng-class="{ 'active': tab.current == 'INVITED' }">
+            <a class="invited" ng-click="tab.current = 'INVITED';getInvitedPassengers(1)">Invited
+                        <br>Passengers
+                    </a>
+        </li>
+    </ul>
+    <div class="row mt20">
+        <div class="col-sm-9">
+            <div ng-if="tab.current == 'UNINVITED'">
+                
+                <div class="row">
+                    <div class="col-xs-6 module-options">
+                        <button class="btn btn-success" ng-click="inviteSelected(false)">
+                            <i class="material-icons">check</i> Invite</button>
+                        <button class="btn btn-success" ng-disabled="selectedRows.length > 0" ng-click="inviteAll(false)">
+                            <i class="material-icons">list</i> Invite All</button>
+                    </div>
+                    <div class="col-xs-6 view-options">
+                        <a href="" ng-click="">
+                    <span ng-click="toggleSearch()">
+                                    <i class="material-icons">search</i>Search</span>
+                    <br />
+                    <input type="text" ng-change="getUninvitedPassengers(1,searchTerm.$)" ng-model-options="{ debounce: 300 }" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" />
+                </a>
+                    </div>
+                </div>
+                <div class="invite-table">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-xs-1" style="width:35px;">
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Name</strong>
+                            </div>
+                            <div class="col-xs-2 text-right">
+                                <strong>Phone</strong>
+                            </div>
+                            <div class="col-xs-3 text-right">
+                                <strong>Mobile</strong>
+                            </div>
+                            <div class="col-xs-3 email">
+                                <strong>Email</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <div class="passenger-row" ng-repeat="pax in uninvitedPassengers | filter:searchTerm as results track by $index" ng-show="passengers.length != 0">
+                            <div class="row">
+                                <div class="col-xs-1" style="width:35px;">
+                                    <div class="checkbox">
+                                        <input id="{{pax.Id}}" type="checkbox" ng-click="toggleRowSelection($index,pax, false)" ng-checked="pax.$selected" class="form-control" />
+                                        <label for="{{pax.Id}}"></label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong class="brand-primary">{{pax.Firstname}} {{pax.Surname}}</strong>
+                                </div>
+                                <div class="col-xs-2 text-right">
+                                    <span>{{pax.Phone}}</span>
+                                </div>
+                                <div class="col-xs-3 text-right">
+                                    <span>{{pax.Mobile}}</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>{{pax.Email}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="uninvitedPassengers.length == 0" class="alert alert-warning">No information of uninvited passengers found.</div>
+                    </div>
+                </div>
+                <div ng-if="uninvitedPassengers.length > 0" class="pr20">
+                    <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm pull-right mt0" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="getUninvitedPassengers(paging.currentPage)"></pagination>
+                </div>
+            </div>
+            <div ng-if="tab.current == 'INVITED'">
+                <div class="row">
+                    <div class="col-xs-6 module-options">
+                    </div>
+                    <div class="col-xs-6 view-options">
+                        <a href="" ng-click="">
+                    <span ng-click="toggleSearch()">
+                                <i class="material-icons">search</i>Search</span>
+                    <br />
+                    <input type="text" ng-change="getInvitedPassengers(1, invitedSearchTerm.$)" ng-model-options="{ debounce: 300 }" ng-model="invitedSearchTerm.$" id="searchTerm" ng-show="showInvitedSearch" />
+                </a>
+                    </div>
+                </div>
+                <div class="invite-table">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-xs-1" style="width:35px;">
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Name</strong>
+                            </div>
+                            <div class="col-xs-2 text-right">
+                                <strong>Phone</strong>
+                            </div>
+                            <div class="col-xs-3 text-right">
+                                <strong>Mobile</strong>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Email</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <div class="passenger-row" ng-repeat="pax in invitedPassengers | filter:invitedSearchTerm as results track by $index">
+                            <div class="row">
+                                <div class="col-xs-1" style="width:35px;">
+                                    <div class="checkbox">
+                                        <input id="{{pax.Id}}" type="checkbox" ng-click="toggleRowSelection($index, pax, false)" ng-checked="pax.$selected" class="form-control" />
+                                        <label for="{{pax.Id}}"></label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong class="brand-primary">{{pax.Firstname}} {{pax.Surname}}</strong>
+                                </div>
+                                <div class="col-xs-2 text-right">
+                                    <span>{{pax.Phone}}</span>
+                                </div>
+                                <div class="col-xs-3 text-right">
+                                    <span>{{pax.Mobile}}</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span>{{pax.Email}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="invitedPassengers.length == 0" class="alert alert-warning">No information of invited passengers found.</div>
+                    </div>
+                </div>
+                <div ng-if="invitedPassengers.length > 0" class="pr20">
+                    <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm pull-right mt0" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="getInvitedPassengers(paging.currentPage)"></pagination>
+                </div>
+            </div>
+            <div ng-if="tab.current == 'FAILED'">
+                <div class="row">
+                    <div class="col-xs-6 module-options">
+                        <button class="btn btn-success" ng-click="inviteSelected(true)">
+                            <i class="material-icons">check</i> Invite</button>
+                        <button class="btn btn-success" ng-disabled="selectedRows.length > 0" ng-click="inviteAll(true)">
+                            <i class="material-icons">list</i> Invite All</button>
+                        <!-- <button class="btn btn-success" ng-disabled="selectedRows.length == 0 || selectedRows.length > 1" ng-click="inviteUsingDifferentUsername()">
+                            <i class="material-icons">edit</i> Edit Username to Invite</button> -->
+                    </div>
+                    <div class="col-xs-6 view-options">
+                        <a href="" ng-click="">
+                    <span ng-click="toggleSearch()">
+                                    <i class="material-icons">search</i>Search</span>
+                    <br />
+                    <input type="text" ng-change="getFailedPassengers(1,failedSearchTerm.$)" ng-model-options="{ debounce: 300 }" ng-model="failedSearchTerm.$" id="searchTerm" ng-show="showFailedSearch" />
+                </a>
+                    </div>
+                </div>
+                <div class="invite-table">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-xs-1" style="width:35px;">
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Name</strong>
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <strong>Email</strong>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>Error Description</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="body">
+                        <div class="passenger-row" ng-repeat="pax in failedPassengers | filter:failedSearchTerm as results track by $index" ng-show="failedPassengers.length != 0">
+                            <div class="row">
+                                <div class="col-xs-1" style="width:35px;">
+                                    <div class="checkbox">
+                                        <input id="{{pax.Id}}" type="checkbox" ng-click="toggleRowSelection($index,pax,true)" ng-checked="pax.$selected" class="form-control" />
+                                        <label for="{{pax.Id}}"></label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong class="brand-primary">{{pax.Firstname}} {{pax.Surname}}</strong>
+                                </div>
+                                <div class="col-xs-4 text-right">
+                                    <span>{{pax.Email}}</span>
+                                </div>
+                                <div class="col-xs-4 ">
+                                    <span>{{pax.Description}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="failedPassengers.length == 0" class="alert alert-warning">No information of failed passengers found.</div>
+                    </div>
+                </div>
+                <div ng-if="failedPassengers.length > 0" class="pr20">
+                    <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm pull-right mt0" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="getFailedPassengers(paging.currentPage)"></pagination>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 ">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Invite Passengers</h3>
+                </div>
+                <div class="panel-body">
+                    Only passengers with email address can be invited to the app. Please ensure passenger email address is unique.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

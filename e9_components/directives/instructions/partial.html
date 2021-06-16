@@ -1,0 +1,32 @@
+<div class="container" style="width: 100%;">
+    <div>
+        <h5 style="color: #788195;">{{instructionsObj.heading}}</h5>
+        <p class="description">{{instructionsObj.subHeading}}</p>
+    </div>
+    <div style="background-color: #4a5473; height: 48px; line-height: 48px;">
+        <span style="color: white; width: 100%; font-size: 16px; margin-left: 16px;" > <strong>Step {{i + 1}}/{{instructionsObj.instructions.length}}:</strong> {{instructionsObj.instructions[i].desc}}</span>
+    </div>
+    <div style="text-align: center; background-color: #ececec; min-height: 525px;">
+        <div style="max-height: 30%; text-align: left; padding: 24px; margin-left: 72px;">
+            <p ng-bind-html="instructionsObj.instructions[i].cap"></p>
+        </div>
+        <div style="max-height: 70%;">
+            <img ng-src="{{instructionsObj.instructions[i].src}}" style="width: 80%;" />
+        </div>
+    </div>
+    <div style="background-color: #d9d9d9; height: 48px;">
+        <button ng-show="!i == 0" class="btn btn-xs btn-primary" ng-click="prev()" style="margin-left: 16px; margin-top: 12px;">
+            <i class="material-icons">
+                arrow_back
+            </i>
+            Back
+        </button>
+        <button class="btn btn-xs btn-primary" ng-click="next()" style="margin-right: 16px; margin-top: 12px; float: right;">
+            <i class="material-icons">
+                arrow_forward
+            </i>
+            Next
+        </button>
+    </div>
+</div>
+    

@@ -1,0 +1,261 @@
+﻿<div id="booking-edit">
+    <div form-for="selectedBooking" schema="Booking" mode="{{viewMode}}">
+        <div class="row">
+            <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12">
+                <!--BookingOptions-->
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h2 class="page-title mb20">Booking Form</h2>
+                    </div>
+                    <div class="col-xs-6 text-right" ng-if="viewMode == 'CREATE'">
+                        <button class="btn btn-xs btn-success" ng-click="book(selectedBooking)" ng-disabled="formFor.form.$invalid || !selectedBooking.validStops"><i class="material-icons">book</i>Book</button>
+                        <a class="btn btn-xs btn-warning" ui-sref="root.bookings"><i class="material-icons">undo</i>Cancel</a>
+                    </div>
+                    <div class="col-xs-6 text-right" ng-if="viewMode == 'VIEW'">
+                        <button class="btn btn-xs btn-success" ng-click="startEdits()"><i class="material-icons">create</i>Edit</button>
+                    </div>
+                    <div class="col-xs-6 text-right" ng-if="viewMode == 'EDIT'">
+                        <button class="btn btn-xs btn-success" ng-click="save(selectedBooking)" ng-disabled="formFor.form.$invalid"><i class="material-icons">save</i>Save</button>
+                        <button class="btn btn-xs btn-warning" ng-click="cancel()"><i class="material-icons">undo</i>Cancel</button>
+                    </div>
+                </div>
+                <!--BookingOptions-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="alert alert-danger" ng-if="selectedBooking.BookingStatus == 'Cancelled'">
+                            This booking has been cancelled.
+                        </div>
+                        <div class="alert alert-info" ng-if="selectedBooking.OneTransportReference">
+                            This booking came from <b>One Transport</b>, ref: <b>{{selectedBooking.OneTransportReference}}</b>
+                        </div>
+                    </div>
+                    <!-- DateTime, Passenger, Driver -->
+                    <div class="col-lg-6">
+                        <div class="datetime block">
+                            <h3 class="section-title">Date/Time Information</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div field-for="BookedDateTime" display="Date" required="true"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div ng-hide="viewMode == 'VIEW'">
+                                        <div field-for="Time" display="Time" step="300" required="true"></div>
+                                    </div>
+                                    <div class="form-group" ng-show="viewMode == 'VIEW'">
+                                        <label class="control-label">Time</label>
+                                        <p class="form-control-static">{{selectedBooking.Time | companyDate:'HH:mm'}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="passenger block">
+                            <h3 class="section-title">Passenger Information <span class="label label-success pull-right" ng-if="selectedBooking.CabShare">CabShare</span></h3>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div field-for="Pax" display="Passengers" required="true"></div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div field-for="Bax" display="Bags" required="true"></div>
+                                </div>
+                            </div>
+                            <div field-for="ClientId" select-from="clients" display="Client" editable="false"></div>
+                            <ul class="nav nav-tabs nav-justified passenger-tab mt20 mb10" ng-if="viewMode == 'CREATE'">
+                                <li ng-class="{ 'active': !paxMode.value }" ng-click="paxMode.value = false">Existing Passenger</li>
+                                <li ng-class="{ 'active': paxMode.value }" ng-click="paxMode.value = true">New Passenger</li>
+                            </ul>
+                            <div ng-show="!paxMode.value">
+                                <div field-for="LeadPassengerId" select-from="passengers" select-filter="paxFilter" display="Passenger" editable="false"></div>
+                            </div>
+                            <div ng-show="paxMode.value">
+                                <div field-for="_LeadPassenger" display="Passenger Name"></div>
+                                <div field-for="_LeadPassengerNumber" display="Passenger Number"></div>
+                            </div>
+                        </div>
+                        <div class="driver-vehicle block">
+                            <h3 class="section-title">Vehicle/Driver Information</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div field-for="VehicleTypeId" select-from="vehicleTypes" display="Vehicle Type"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div field-for="VehicleClassId" select-from="vehicleClasses" display="Vehicle Class"></div>
+                                </div>
+                            </div>
+                            <div field-for="DriverId" select-from="drivers" display="Driver" editable="false" ng-show="selectedBooking.DriverId"></div>
+                            <div field-for="VehicleId" select-from="vehicles" display="Vehicle" editable="false" ng-show="selectedBooking.VehicleId"></div>
+                        </div>
+                    </div>
+                    <!-- Journey, Fare, Notes -->
+                    <div class="col-lg-6">
+                        <div class="journey block">
+                            <h3 class="section-title">Journey Information</h3>
+                            <div ng-repeat="stop in selectedBooking.BookingStops">
+                                <div class="form-group" ng-init="stop.StopOrder = $index + 1">
+                                    <label class="control-label" for="stop{{$index}}" ng-if="viewMode == 'CREATE'">
+                                        {{ $first ? 'Pickup' : $last ? 'Drop Off' : 'Via'}}
+                                    </label>
+                                    <label class="control-label" for="stop{{$index}}" ng-if="viewMode != 'CREATE'">
+                                        {{ stop.Type }}
+                                    </label>
+                                    <span class="pull-right" ng-hide="$first || $last" ng-click="selectedBooking.BookingStops.splice($index, 1)">X</span>
+                                    <div class="form-edit booking-stop">
+                                        <div stop-edit name="stop{{$index}}" map="map" required="$first" model="stop"></div>
+                                    </div>
+                                    <label class="control-label" for="stop{{$index}}" ng-if="viewMode != 'CREATE' && (selectedBooking.CabShare || selectedBooking.Passengers.length > 1)">
+                                        <span class="label label-info" ng-repeat="ps in stop.PassengerStops">{{ getPassengerName(ps.PassengerId) }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="checkbox">
+                                        <input id="group-check-asdirected" type="checkbox" ng-model="selectedBooking.AsDirected" />
+                                        <label for="group-check-asdirected"></label>
+                                        <span class="label">As Directed</span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="checkbox">
+                                        <input id="group-check-wandr" type="checkbox" ng-model="selectedBooking.WaitAndReturn" />
+                                        <label for="group-check-wandr"></label>
+                                        <span class="label">Wait And Return</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="COMPANY.ChauffeurModeActive">
+                                <div class="col-md-6" field-for="ChauffeurMode" display="Chauffer Mode"></div>
+                                <div class="col-md-6" field-for="EstimatedMins" display="Estimated Mins" ng-show="selectedBooking.ChauffeurMode"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6" field-for="FlightNo" display="Flight No."></div>
+                            </div>
+                        </div>
+                        <div class="fare block">
+                            <h3 class="section-title">Fare Information</h3>
+                            <div class="row">
+                                <div class="col-sm-6">
+
+                                    <div field-for="EstimatedCost" display="Quote" editable="false"></div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div field-for="ActualCost" display="Final Fare" editable="false"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div field-for="PaymentMethod" display="Payment Method"></div>
+                                </div>
+                            </div>
+                            <div class="checkbox">
+                                <input id="group-check-advance" type="checkbox" ng-model="advanced" />
+                                <label for="group-check-advance"></label>
+                                <span class="label">Show Advanced</span>
+                            </div>
+                            <div ng-show="advanced">
+                                <div field-for="Discount" display="Discount" editable="false"></div>
+                                <div class="row">
+                                    <div class="col-sm-6" ng-show="viewMode == 'CREATE'">
+                                        <div field-for="CurrencyId" select-from="available" display="Currency"></div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div field-for="TaxId" select-from="taxes"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="notes block">
+                            <h3 class="section-title">Booking Notes</h3>
+                            <div field-for="PassengerNotes" textarea="3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-6 hidden-xs">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h2 class="page-title mb20">Booking Summary</h2>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <!-- <input type="button" class="btn btn-xs btn-gradient" ng-click="exportReceipt()" value="Receipt" /> -->
+                    </div>
+                </div>
+                <div class="block summary">
+                    <h3 class="section-title">Journey Map</h3>
+                    <div class="checkbox">
+                        <input id="group-check-traffic" type="checkbox" ng-click="showTraffic = !showTraffic" ng-checked="showTraffic" />
+                        <label for="group-check-traffic"></label>
+                        <span class="label">Traffic</span>
+                    </div>
+                    <ui-gmap-google-map center='map.center' control="map" styles="map.styles" zoom='map.zoom' pan="true" style="width:100%;height:350px;">
+                        <ui-gmap-layer type="TrafficLayer" options="map.traffic.options" show="showTraffic"></ui-gmap-layer>
+                    </ui-gmap-google-map>
+                    <div class="row mt20">
+                        <div class="col-xs-4">
+                            <div class="info-box">
+                                <div class="title">Date</div>
+                                <div class="content">
+                                    {{selectedBooking.BookedDateTime | companyDate:'DD/MM/YYYY'}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="info-box">
+                                <div class="title">Time</div>
+                                <div class="content">
+                                    {{selectedBooking.Time | companyDate:'HH:mm'}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div class="info-box">
+                                <div class="title">Fare</div>
+                                <div class="content">
+                                    <div class="t-xl brand-primary">{{selectedBooking.ActualCost | currency:selectedBooking.Currency.Prepend}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12" ng-if="selectedBooking.BookingStops[0].StopSummary">
+                            <div class="info-box">
+                                <div class="title">From</div>
+                                <div class="content">
+                                    {{selectedBooking.BookingStops[0].StopSummary}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12" ng-if="selectedBooking.BookingStops[1].StopSummary">
+                            <div class="info-box">
+                                <div class="title">To</div>
+                                <div class="content">
+                                    {{selectedBooking.BookingStops[1].StopSummary}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6" ng-if="directions.currentRoute">
+                            <div class="info-box">
+                                <div class="title">Distance</div>
+                                <div class="content">
+                                    {{directions.currentRoute.legs[0].distance.text}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6" ng-if="directions.currentRoute">
+                            <div class="info-box">
+                                <div class="title">Duration</div>
+                                <div class="content">
+                                    {{directions.currentRoute.legs[0].duration.text}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-hide="viewMode == 'CREATE'">
+                        <div class="col-xs-4" ng-if="selectedBooking.LeadPassengerId">
+                            <a class="btn btn-gradient btn-xs" ng-click="emailTo('PAX', selectedBooking)"><i class="material-icons">email</i> Passenger</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

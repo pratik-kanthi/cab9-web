@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-xs-6 module-options">
+        <a ui-sref="root.staff.create" class="btn btn-xs btn-primary" ng-if="PERMISSIONS.test('staff', 'W')"><i class="material-icons">person_add</i>New Staff</a>
+    </div>
+    <div class="col-xs-6 view-options">
+        <a href="" ng-click="showStatsModal()" class="hidden-lg"><i class="material-icons">insert_chart</i>Stats</a>
+        <a ui-sref="root.staff.cards" ui-sref-active-eq="current-view"><i class="material-icons">view_module</i>Cards</a>
+        <a ui-sref="root.staff.table" ui-sref-active-eq="current-view"><i class="material-icons">view_headline</i>Table</a>
+        <a href="" ng-click="">
+            <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+            <br />
+            <input type="text" ng-model="serverSearchTerm.$" id="searchTerm" ng-show="showSearch" />
+        </a>
+    </div>
+</div>

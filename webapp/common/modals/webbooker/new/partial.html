@@ -1,0 +1,146 @@
+<form name="webBookerForm">
+    <div class="modal-header">
+        <h3 class="modal-title">New Web Booker Settings</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="Name">Name</label>
+                    <input type="text" name="Name" ng-model="webbooker.Name" class="form-control" required />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="Template">Template</label>
+                    <div class="form-edit">
+                        <ui-select class="edit" ng-model="webbooker.Template" theme="selectize" name="TemplateInput"
+                            tabindex="1" ng-model-options="{ debounce: 100 }">
+                            <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                <div class="select-text">{{$select.selected.Name}}</div>
+                            </ui-select-match>
+                            <ui-select-choices refresh-delay="200" repeat="item._id as item in templates">
+                                <div class="select-text-option">
+                                    <div ng-bind-html="::item.Name"></div>
+                                </div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <a ng-click="webbooker.Template = null;webbooker.Template = null;"
+                            style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="webbooker.Template"
+                            class="red">Clear</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="DefaultClientId">Default Client</label>
+                    <div class="form-edit">
+                        <ui-select class="edit" ng-model="webbooker.DefaultClientId" theme="selectize"
+                            name="ClientInput" tabindex="1" ng-model-options="{ debounce: 100 }">
+                            <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                <div class="select-text"><img class="img-responsive img-circle"
+                                        ng-if="$select.selected._ImageUrl"
+                                        ng-src="{{$select.selected._ImageUrl}}" />{{$select.selected.Name}}</div>
+                            </ui-select-match>
+                            <ui-select-choices refresh="searchClients($select.search)" refresh-delay="200"
+                                repeat="item.Id as item in fetchedClients">
+                                <div class="select-text-option">
+                                    <img class="img-responsive img-circle" ng-src="{{::item._ImageUrl}}"
+                                        ng-if="::item._ImageUrl" />
+                                    <div ng-bind-html="::item.Name"></div>
+                                    <small class="text-muted"
+                                        ng-show="::item.Description">{{::item.Description}}</small>
+                                </div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <a ng-click="webbooker.DefaultClientId = null;webbooker.DefaultBookerId = null;"
+                            style="position:absolute;right:0px;top:2px;font-size:11px;"
+                            ng-show="webbooker.DefaultClientId" class="red">Clear</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="DefaultBookerId">Default Booker</label>
+                    <div class="form-edit">
+                        <ui-select class="edit" ng-model="webbooker.DefaultBookerId" theme="selectize"
+                            name="BookerInput" tabindex="1" ng-model-options="{ debounce: 100 }">
+                            <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                <div class="select-text"><img class="img-responsive img-circle"
+                                        ng-if="$select.selected._ImageUrl"
+                                        ng-src="{{$select.selected._ImageUrl}}" />{{$select.selected._Fullname}}</div>
+                            </ui-select-match>
+                            <ui-select-choices refresh="searchBookers($select.search)" refresh-delay="200"
+                                repeat="item.Id as item in fetchedBookers">
+                                <div class="select-text-option">
+                                    <img class="img-responsive img-circle" ng-src="{{::item._ImageUrl}}"
+                                        ng-if="::item._ImageUrl" />
+                                    <div ng-bind-html="::item._Fullname"></div>
+                                    <small class="text-muted"
+                                        ng-show="::item.Description">{{::item.Description}}</small>
+                                </div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <a ng-click="webbooker.DefaultBookerId = null;"
+                            style="position:absolute;right:0px;top:2px;font-size:11px;"
+                            ng-show="webbooker.DefaultBookerId" class="red">Clear</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="StaffUserName">Account UserName</label>
+                    <input type="text" name="StaffUserName" ng-model="webbooker.StaffUserName" class="form-control"
+                        required />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="StaffPassword">Account Password</label>
+                    <input type="text" name="StaffPassword" ng-model="webbooker.StaffPassword" class="form-control"
+                        required />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="RefererUrl">Web Booker URL</label>
+                    <input type="text" name="RefererUrl" ng-model="webbooker.RefererUrl" class="form-control"
+                        required />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="SecretKey">Secret Key</label>
+                    <input type="text" name="SecretKey" ng-model="webbooker.SecretKey" class="form-control" required />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="BrandPrimary">Brand Primary</label>
+                    <input type="text" name="BrandPrimary" ng-model="webbooker.BrandColors.Primary" class="form-control"
+                        required />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label" for="BrandSecondary">Brand Secondary</label>
+                    <input type="text" name="BrandSecondary" ng-model="webbooker.BrandColors.Secondary"
+                        class="form-control" required />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success pull-right" ng-click="save()" ng-disabled="formFor.form.$invalid"><i
+                class="material-icons">save</i>Save</button>
+        <button class="btn btn-danger pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Close</button>
+    </div>
+</form>

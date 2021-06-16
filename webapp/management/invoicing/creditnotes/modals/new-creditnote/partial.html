@@ -1,0 +1,37 @@
+<div form-for="creditNote" schema="CreditNote" mode="{{displayMode}}">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+        <h3 class="modal-title">New Credit Note</h3>
+    </div>
+    <div class="modal-body" id="driverpayments">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" ng-click="groupClicked('input')" style="position:relative">
+                    <label class="control-label" for="ClientIdInput">ClientId</label>
+                    <div class="form-edit">
+                        <ui-select class="edit" ng-model="formFor.target.ClientId" name="ClientIdInput" theme="selectize" ng-disabled="false" ng-required="true">
+                            <ui-select-match allow-clear="true" placeholder="Select..">
+                                <div class="select-text"><img class="img-responsive img-circle" ng-if="$select.selected.ImageUrl" ng-src="{{$select.selected.ImageUrl}}" /><span ng-bind="'('+$select.selected.AccountNo+') '+$select.selected.Name"></span></div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="option.Id as option in clients | filter: $select.search">
+                                <div class="select-text-option"><img class="img-responsive img-circle" ng-src="{{::option.ImageUrl}}" ng-if="::option.ImageUrl" />
+                                    <div ng-bind-html="'('+option.AccountNo+') '+option.Name | highlight: $select.search"></div><small class="text-muted" ng-show="::option.Description">{{::option.Description}}</small></div>
+                            </ui-select-choices>
+                        </ui-select>
+
+                    </div>
+                </div>
+                <div field-for="Description" textarea="3"></div>
+                <div field-for="Amount"></div>
+            </div>
+            <div class="col-md-6">
+                <div field-for="TaxDate"></div>
+                <div field-for="TaxId" select-from="taxes"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+        <button class="btn btn-xs btn-primary" ng-click="save()" ng-disabled="formFor.form.$invalid "><i class="material-icons">save</i>Save</button>
+    </div>
+</div>

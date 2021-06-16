@@ -1,0 +1,137 @@
+<h3 class="section-title mt0">
+    Fixed Prices
+</h3>
+<div class="row">
+    <div class="col-md-6">
+        <a class="btn btn-success" ng-click="startNew()" ng-if="PERMISSIONS.test('drivers.viewer.fixed', 'W')"><i class="material-icons">playlist_add</i>Add Fixed Rate</a>
+    </div>
+    <div class="col-md-6">
+        <div class="view-options pull-right">
+            <a ng-click="showFilters=!showFilters">
+                <i class="material-icons">build</i>Filter
+            </a>
+        </div>
+    </div>
+</div>
+<div class="filter-options" ng-class="(showFilters)?'show-filter':'hide-filter'">
+    <div class="form-group">
+        <label for="">Choose From Zone</label>
+        <select class="form-control" ng-model="filters.fromZone" ng-options="zone.Id as zone.Name for zone in zones|filter:{Id:'!!'}">
+            <option value="">All</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="">Choose To Zone</label>
+        <select class="form-control" ng-model="filters.toZone" ng-options="zone.Id as zone.Name for zone in zones|filter:{Id:'!!'}">
+            <option value="">All</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="">From Postcode</label>
+        <input type="text" class="form-control" ng-model="filters.fromPostcode" placeholder="From Postcode" />
+    </div>
+    <div class="form-group">
+        <label for="">To Postcode</label>
+        <input type="text" class="form-control" ng-model="filters.toPostcode" placeholder="To Postcode" />
+    </div>
+    <a class="btn btn-primary pull-right" ng-click="filter()"><i class="material-icons">location_searching</i>Filter</a>
+</div>
+<div class="table-responsive mt20">
+    <table class="table" ng-style="{ 'width': (750 + (125 * vehicleTypes.length)) + 'px'}">
+        <thead>
+            <tr>
+                <th colspan="4" style="border-right:2px solid #ddd !important;">
+                    Defaults
+                </th>
+                <th ng-hide="vehicleTypes.length == 0" colspan="{{vehicleTypes.length}}">
+                    Vehicle Type Overrides
+                </th>
+            </tr>
+            <tr>
+                <th style="width:180px;">Actions</th>
+                <th style="width:200px;">From</th>
+                <th style="width:200px;">To</th>
+                <th style="border-right:2px solid #ddd !important;width:125px;">Fixed Fare</th>
+                <th ng-repeat="vt in vehicleTypes" style="width:125px;">
+                    {{vt.Name}}
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-show="fixeds.length==0">
+            <tr>
+                <td colspan="100">
+                    No Fixed Rates Added.
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-show="currentlyCreating">
+            <tr>
+                <td>
+                    <a class="btn btn-xs btn-success icon" ng-click="confirmNew()"><i class="material-icons">check_circle</i>Save</a>
+                    <a class="btn btn-xs btn-warning icon" ng-click="cancelNew()"><i class="material-icons">undo</i>Cancel</a>
+                </td>
+                <td>
+                    <ui-select ng-model="currentlyCreating.FromId" theme="selectize">
+                        <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in zones | filter: $select.search">
+                            <div ng-bind-html="item.Name | highlight: $select.search" class="p10"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <input type="text" class="form-control" ng-model="currentlyCreating.FromPostcode" ng-show="currentlyCreating.FromId == null" placeholder="Postcode Prefix" />
+                </td>
+                <td>
+                    <ui-select ng-model="currentlyCreating.ToId" theme="selectize">
+                        <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in zones | filter: $select.search">
+                            <div ng-bind-html="item.Name | highlight: $select.search" class="p10"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <input type="text" class="form-control" ng-model="currentlyCreating.ToPostcode" ng-show="currentlyCreating.ToId == null" placeholder="Postcode Prefix" />
+                </td>
+                <td style="border-right:2px solid #ddd !important;">
+                    <input type="number" class="form-control" min="0" max="1000" ng-model="currentlyCreating.Amount" />
+                </td>
+                <td ng-repeat="vt in vehicleTypes">
+                    <input type="number" class="form-control" min="0" max="1000" ng-init="$$val = null" ng-model="$$val" ng-change="setVehicleTypeCost(currentlyCreating, vt, $$val)" placeholder="(base fare)" ng-disabled="fixed != currentlyEditing" />
+                </td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr ng-repeat="fixed in fixeds | orderBy: '-CreationTime'">
+                <td>
+                    <a class="btn btn-xs btn-warning icon" ng-click="startEditing(fixed)" ng-show="fixed != currentlyEditing" ng-if="PERMISSIONS.test('drivers.viewer.fixed', 'W')"><i class="material-icons">create</i>Edit</a>
+                    <a class="btn btn-xs btn-danger icon" ng-click="remove(fixed)" ng-show="fixed != currentlyEditing" ng-if="PERMISSIONS.test('drivers.viewer.fixed', 'W')"><i class="material-icons">clear</i>Delete</a>
+                    <a class="btn btn-xs btn-success icon" ng-click="confirmEditing(fixed)" ng-show="fixed == currentlyEditing"><i class="material-icons">check_circle</i>Save</a>
+                    <a class="btn btn-xs btn-warning icon" ng-click="cancelEditing(fixed)" ng-show="fixed == currentlyEditing"><i class="material-icons">undo</i>Cancel</a>
+                </td>
+                <td>
+                    <ui-select ng-model="fixed.FromId" theme="selectize" ng-disabled="fixed != currentlyEditing" ng-show="fixed.FromId != null">
+                        <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in zones | filter: $select.search">
+                            <div ng-bind-html="item.Name | highlight: $select.search" class="p10"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <input type="text" class="form-control" ng-model="fixed.FromPostcode" ng-show="fixed.FromId == null" placeholder="Postcode Prefix" ng-readonly="fixed != currentlyEditing" />
+                </td>
+                <td>
+                    <ui-select ng-model="fixed.ToId" theme="selectize" ng-disabled="fixed != currentlyEditing" ng-show="fixed.ToId != null">
+                        <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in zones | filter: $select.search">
+                            <div ng-bind-html="item.Name | highlight: $select.search" class="p10"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <input type="text" class="form-control" ng-model="fixed.ToPostcode" ng-show="fixed.ToId == null" placeholder="Postcode Prefix" ng-readonly="fixed != currentlyEditing" />
+                </td>
+                <td style="border-right:2px solid #ddd !important;">
+                    <input type="number" class="form-control" min="0" max="1000" class="form-control" ng-model="fixed.Amount" ng-disabled="fixed != currentlyEditing" />
+                </td>
+                <td ng-repeat="vt in vehicleTypes">
+                    <input type="number" class="form-control" min="0" max="1000" class="form-control" ng-init="$$val = getVehicleTypeCost(fixed, vt)" ng-model="$$val" ng-change="setVehicleTypeCost(fixed, vt, $$val)" placeholder="(base fare)" ng-disabled="fixed != currentlyEditing" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div>
+    <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+</div>

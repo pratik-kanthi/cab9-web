@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-xs-6 module-options">
+        <a ui-sref="root.settings.knownlocations.create" class="btn btn-success"><i class="material-icons">add_circle</i>New Location</a>
+    </div>
+    <div class="col-xs-6 view-options">
+        <a ui-sref="root.settings.knownlocations.cards" ui-sref-active-eq="current-view"><i class="material-icons">view_module</i>Cards</a>
+        <a ui-sref="root.settings.knownlocations.table" ui-sref-active-eq="current-view"><i class="material-icons">view_headline</i>Table</a>
+        <a href="" ng-click="">
+            <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span><br />
+            <input type="text" ng-model="serverSearchTerm.$" id="searchTerm" ng-show="showSearch" />
+        </a>
+    </div>
+</div>

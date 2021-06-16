@@ -1,0 +1,98 @@
+<div id="dispatch-filters">
+    <div class="modal-header">
+        <h3 class="modal-title">Filter Bookings</h3>
+    </div>
+    <div class="modal-body">
+        <h3 class="section-title mt0">Status Filters</h3>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="status Incoming">
+                    <div class="checkbox">
+                        <input id="filter-Incoming" type="checkbox" ng-model="status.Incoming" />
+                        <label for="filter-Incoming"></label>
+                    </div>
+                    Incoming
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status OpenToBid">
+                    <div class="checkbox">
+                        <input id="filter-OpenToBid" type="checkbox" ng-model="status.OpenToBid" />
+                        <label for="filter-OpenToBid"></label>
+                    </div>
+                    Open To Bid
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status PreAllocated">
+                    <div class="checkbox">
+                        <input id="filter-PreAllocated" type="checkbox" ng-model="status.PreAllocated" />
+                        <label for="filter-PreAllocated"></label>
+                    </div>
+                    Pre Allocated
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status Allocated">
+                    <div class="checkbox">
+                        <input id="filter-Allocated" type="checkbox" ng-model="status.Allocated" />
+                        <label for="filter-Allocated"></label>
+                    </div>
+                    Allocated
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status OnRoute">
+                    <div class="checkbox">
+                        <input id="filter-OnRoute" type="checkbox" ng-model="status.OnRoute" />
+                        <label for="filter-OnRoute"></label>
+                    </div>
+                    En-route
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status Arrived">
+                    <div class="checkbox">
+                        <input id="filter-Arrived" type="checkbox" ng-model="status.Arrived" />
+                        <label for="filter-Arrived"></label>
+                    </div>
+                    Arrived
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status InProgress">
+                    <div class="checkbox">
+                        <input id="filter-InProgress" type="checkbox" ng-model="status.InProgress" />
+                        <label for="filter-InProgress"></label>
+                    </div>
+                    In Progress
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status Completed">
+                    <div class="checkbox">
+                        <input id="filter-Completed" type="checkbox" ng-model="status.Completed" />
+                        <label for="filter-Completed"></label>
+                    </div>
+                    Completed
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status Cancelled">
+                    <div class="checkbox">
+                        <input id="filter-Cancelled" type="checkbox" ng-model="status.Cancelled" />
+                        <label for="filter-Cancelled"></label>
+                    </div>
+                    Cancelled / COA
+                </div>
+            </div>
+        </div>
+        <h3 class="section-title mt5">Time Range</h3>
+        <rzslider rz-slider-model="timeSlider.minValue" rz-slider-high="timeSlider.maxValue" rz-slider-options="timeSlider.options"></rzslider>
+        <div class="alert alert-warning mt20" ng-if="blockFilters()">The time window can not be more than 72 hours. Please select a time period of less than or equal to 72 hours.</div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+        <button class="btn btn-xs btn-success pull-right" ng-disabled="blockFilters()" ng-click="confirmFilters()"><i class="material-icons">filter_list</i>Filter</button>
+    </div>
+</div>

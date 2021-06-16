@@ -1,0 +1,80 @@
+<div class="module">
+    <div class="row">
+        <div class="col-xs-6" ng-show="hideOptions"></div>
+        <div class="col-xs-6 module-options" ng-hide="hideOptions">
+            <a ng-click="openPaymentModal()" class="btn btn-xs btn-success" ng-if="PERMISSIONS.test('invoices','W')"><i class="material-icons">receipt</i>Create Invoice</a>
+        </div>
+        <div class="col-xs-6 view-options">
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-model-options="{ debounce: 400 }" ng-change="filterInvoices()" />
+            </a>
+            <div class="row">
+                <div class="col-xs-8"></div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label for="">Filter by Status</label>
+                        <select ng-model="selected.status" class="form-control" placeholder="Filter Status">
+                            <option value="Show All">Show All</option>
+                            <option value="Unsent">Unsent</option>
+                            <option value="Unpaid">Unpaid</option>
+                            <option value="Paid">Paid</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <date-picker-wide start="start" end="end" selected="selected" range="false" dateshow="true" show-toggle="false" utc="true"></date-picker-wide>
+    <div class="mt20">
+        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+    </div>
+    <div class="table-wrapper">
+        <table class="table table-condensed mb20 invoice-table-all">
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th>Client</th>
+                    <th style="text-align:center">Creation Date</th>
+                    <th style="text-align:center">Tax Date</th>
+                    <th style="text-align:center">Bookings</th>
+                    <th style="text-align:center">Status</th>
+                    <th style="text-align:right">Amount Due</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody ng-if="pageInvoices.length > 0 && !loading">
+                <tr ng-repeat="invoice in pageInvoices">
+                    <td ng-bind="invoice.Reference"></td>
+                    <td ng-bind="'('+invoice.Client.AccountNo+') '+invoice.Client.Name"></td>
+                    <td style="text-align:center" ng-bind="invoice.CreationTime|companyDate:'DD/MM/YYYY'"></td>
+                    <td style="text-align:center" ng-bind="invoice.DueDate|companyDate:'DD/MM/YYYY':'utc'"></td>
+                    <td style="text-align:center" ng-bind="invoice.NoOfBookings"></td>
+                    <td style="text-align:center" class="status" ng-class="invoice.Status" ng-bind="invoice.Status"></td>
+                    <td style="text-align:right" ng-bind="invoice._AmountDue | currency:'£'"></td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" ng-click="viewItem(invoice)" ng-if="PERMISSIONS.test('invoices.viewer')"><i class="material-icons">chrome_reader_mode</i> View</a>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-if="pageInvoices.length == 0 && !loading">
+                <tr>
+                    <td colspan="8" class="text-center">
+                        No Invoices found
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-if="loading">
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <img width="30" src="/includes/images/loading-blue.gif" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt20">
+        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+    </div>
+</div>

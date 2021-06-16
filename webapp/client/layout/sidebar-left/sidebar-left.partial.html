@@ -1,0 +1,48 @@
+﻿<div class="sidebar-wrapper">
+    <section id="company" class="pt20 pb20">
+        <div class="profile-box">
+            <img class="img-circle logo" ng-src="{{CLIENT._ImageUrl}}" alt="{{CLIENT.Name}}" />
+            <h4 class="title" ng-bind="CLIENT.Name"></h4>
+        </div>
+    </section>
+    <section id="profile">
+        <div class="profile-box-small">
+            <div class="picture">
+                <img ng-src="{{USER._ImageUrl}}" alt="David" ng-if="USER" />
+            </div>
+            <div class="info">
+                <h4 class="title">
+					{{USER.Name}}
+				</h4>
+                <h6 class="subtitle">
+					<a href="" class="grey" ng-click="logout()">Logout</a>
+				</h6>
+            </div>
+        </div>
+    </section>
+    <section>
+        <a ui-sref="root.bookings.create" ng-if="PERMISSIONS.test('bookings','W')" class="btn"><i class="material-icons">add_circle</i>New Booking</a>
+    </section>
+    <section id="navigation">
+        <ul class="main-nav">
+            <li ng-repeat="item in menu.menuItems" ui-sref-active="active" ng-class="(item.subMenus.length > 0)? 'has-dropdown' : '' ">
+                <a ui-sref="{{item.state}}" href="" ng-click="item.$open = !item.$open" ng-if="item.state">
+                    <i class="material-icons">{{item.icon}}</i> {{item.title}}
+                </a>
+                <a href="" ng-click="item.$open = !item.$open" ng-if="!item.state">
+                    <i class="material-icons">{{item.icon}}</i> {{item.title}}
+                </a>
+                <ul class="sub-nav" ng-class="(item.$open)? 'open':''">
+                    <li ng-repeat="subItem in item.subMenus">
+                        <a ui-sref="{{subItem.state}}">
+                            <i ng-class="(subItem.icon) ? subItem.icon:''"></i> {{subItem.title}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <section id="security">
+        <img src="/includes/images/ssl.png" alt="" />
+    </section>
+</div>

@@ -1,0 +1,16 @@
+.score {
+	.center-block();
+	.score-value {
+		position:absolute;
+		top:0;bottom:0;left:0;right:0;
+		text-align: center;
+		font-size: 16px;
+		font-weight: 600;
+	}
+	circle {
+		.rotate(-90deg);
+		.transform-origin(center);
+		.transition(all 0.5s);
+		.opacity(70);
+	}
+}

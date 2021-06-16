@@ -1,0 +1,217 @@
+#breadcrumb-bar {
+    background-color: #eee;
+}
+
+.breadcrumb {
+    font-size: 11px;
+    list-style: none;
+    padding-left: 20px;
+    margin-bottom: 0;
+    display: inline-block;
+    background-color: #eee;
+    width: auto;
+    li {
+        a {
+            text-transform: uppercase;
+            line-height: 30px;
+            font-weight: 600;
+            color: @dark-grey;
+        }
+        &:last-child {
+            a {
+                color: @brand-primary !important;
+            }
+        }
+        ;
+    }
+}
+
+.divider {
+    margin: 0 0 0 16px;
+    float: left;
+    line-height: 43px;
+    font-weight: 800;
+    color: @grey;
+}
+
+div.back-button {
+    float: left;
+    line-height: 46px;
+    margin-left: 16px;
+    a {
+        color: @grey;
+        i {
+            float: left;
+            line-height: 46px;
+            margin-right: 8px;
+        }
+    }
+}
+
+span.module-help {
+    float: right;
+    line-height: 18px;
+    padding: 10px 15px;
+    width: 10%;
+    text-align: center;
+    a {
+        width: 50px;
+        height: 50px;
+        display: block;
+        float: right;
+        text-transform: uppercase;
+        font-size: 9px;
+        i {
+            display: block;
+            margin-bottom: 0px;
+            font-size: 18px;
+            color: @brand-primary;
+            .center-block();
+        }
+    }
+}
+
+.time-controls {
+    float: right;
+    margin-top: 6px;
+    .material-icons {
+        font-size: 18px;
+        background: @brand-primary;
+        color: #fff;
+        padding: 8px;
+        border-radius: 50%;
+    }
+    .current-period {
+        text-transform: uppercase;
+        position: relative;
+        bottom: 5px;
+        display: inline-block;
+        padding: 8px;
+        color: #999;
+        font-weight: 800;
+        font-size: 12px;
+        width: 120px;
+        text-align: left;
+    }
+    @media(max-width:767px) {
+        margin-top: 8px;
+        .material-icons {
+            padding: 5px;
+        }
+    }
+}
+
+#time-controls {
+    .current-period {
+        width: auto;
+    }
+    .daterangepicker {
+        top: 42px !important;
+        right: -85px !important;
+        &:after {
+            display: none !important; // left: 8px !important;
+            // right: initial !important;
+        }
+        &:before {
+            display: none !important; // left: 7px !important;
+            // right: initial !important;
+        }
+    }
+}
+
+.daterangepicker {
+    right: 52px !important;
+    top: 124px !important;
+    background: #f5f5f5;
+    left: auto !important;
+    padding: 8px !important;
+    .ranges {
+        float: none !important;
+        margin: 0;
+        ul {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            li {
+                display: inline-block !important;
+                background: #777 !important;
+                color: #fff !important;
+                line-height: 30px;
+                text-align: center;
+                cursor: pointer;
+                padding: 0 5px;
+                font-size: 12px;
+                text-transform: uppercase;
+                width: 25%;
+                .border-radius(4px);
+                &:last-child {
+                    margin-right: 0;
+                }
+                &.active {
+                    background: @brand-primary !important;
+                    border: none;
+                }
+                &:hover {
+                    border: none;
+                }
+            }
+        }
+    }
+    .calendar {
+        float: left;
+        .calendar-table {
+            background: none;
+            border: none;
+        }
+    }
+    td {
+        &.in-range {
+            background: #ddd;
+        }
+        &.active {
+            background: @brand-primary;
+        }
+        &.available {
+            &:hover {
+                background: rgba(69, 86, 116, 0.27);
+            }
+        }
+    }
+    .daterangepicker_input {
+        i {
+            display: none;
+        }
+        .input-mini {
+            text-align: center;
+            padding: 0 !important;
+        }
+    }
+    &:after {
+        top: -19px;
+        border-right: 19px solid transparent;
+        border-left: 19px solid transparent;
+        border-bottom: 19px solid #f5f5f5;
+        right: 65px;
+        left: initial !important;
+    }
+    &:before {
+        top: -20px;
+        border-right: 20px solid transparent;
+        border-left: 20px solid transparent;
+        border-bottom: 20px solid #ccc;
+        right: 64px;
+        left: initial !important;
+    }
+    @media(max-width:767px) and (orientation:portrait) {
+        .ranges {
+            ul {
+                li {
+                    width: auto;
+                }
+            }
+        }
+        .calendar {
+            float: none;
+        }
+    }
+}

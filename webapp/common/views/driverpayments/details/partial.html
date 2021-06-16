@@ -1,0 +1,325 @@
+<div class="payment-model">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="overrides">
+                <button type="button" ng-click="selectedOverride=item" class="btn btn-primary" ng-class="selectedOverride!==item?'btn-default':'btn-primary'">Default Settings</button>
+                <button type="button" ng-repeat="override in clientOverrides" ng-click="selectOverride(override)" ng-class="selectedOverride.Id==override.Id?'btn-primary':'btn-default'" class="btn">{{override.Client.Name}}</button>
+                <button class="btn btn-dashed" ng-click="newClientOverride()" ng-show="!newOverride">Add Client Override</button>
+            </div>
+            <div ng-show="newOverride">
+                <div class="form-group">
+                    <select class="form-control mt10" ng-model="newOverride.ClientId" ng-options="c.Id as c.Name for c in clients">
+                        <option value="">Select a client</option>
+                    </select>
+                </div>
+                <div class="row mt20">
+                    <div class="col-xs-6">
+                        <button class="btn btn-xs btn-success" ng-disabled="formFor.form.$invalid" ng-click="addClientOverride()"> <i class="material-icons">save</i> Submit</button>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <button class="btn btn-xs btn-warning" ng-click="canceAddOverride()"> <i class="material-icons">undo</i> Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="mt20 mb20" ng-show="selectedOverride === item">
+                <h3 class="section-title mb5">Defaults</h3>
+                <small class="text-muted">The default payment configuration for this model.</small>
+            </div>
+            <div class="mt20 mb20" ng-show="selectedOverride !== item">
+                <h3 class="section-title mb5">{{selectedOverride.Client.Name}} Client Override</h3>
+                <small class="text-muted">The payment configuration for {{selectedOverride.Client.Name}}.</small>
+            </div>
+            <div class="payment-details">
+                <div class="tabs">
+                    <ul class="nav nav-tabs nav-tabs-justified">
+                        <li class="tab" style="width:33%" ng-class="{ 'active': !selectedOverride.$show }" ng-click="selectedOverride.$show = null"><a>All</a></li>
+                        <li class="tab" style="width:33%" ng-class="{ 'active': selectedOverride.$show == 'CARD' }" ng-click="selectedOverride.$show = 'CARD'"><a>Card</a></li>
+                        <li class="tab" style="width:33%" ng-class="{ 'active': selectedOverride.$show == 'CASH' }" ng-click="selectedOverride.$show = 'CASH'"><a>Cash</a></li>
+                    </ul>
+                </div>
+
+                <div ng-show="!selectedOverride.$show" >
+                    <div class="actions">
+                        <a class="btn btn-xs btn-success" ng-click="save(selectedOverride)"><i class="material-icons">save</i>Save</a>
+                        <a class="btn btn-xs btn-danger" ng-hide="selectedOverride.$overrides.length > 0 || selectedOverride == item" ng-click="remove(selectedOverride)"><i class="material-icons">delete</i>Remove</a>
+                    </div>
+                    <div class="row"  form-for="selectedOverride" schema="DriverPaymentModel" mode="{{viewMode}}">
+                        <div class="col-md-3">
+                            <div class="mb10">
+                                <strong class="brand-primary">Basic Details</strong>
+                            </div>
+                            <div field-for="Type"></div>
+                            <div field-for="WaitingPerHour"></div>
+                            <div class="mb10">
+                                <strong class="brand-primary">COA</strong>
+                            </div>
+                            <div field-for="CoaPricingType" display="COA Pricing Type"></div>
+                            <div field-for="CoaPricingAmount" display="Value"></div>
+                        </div>
+                        <div class="col-md-6" ng-show="selectedOverride.Type=='Commission'">
+                            <div class="mb10">
+                                <strong class="brand-primary">Commission Details</strong>
+                            </div>
+                            <div field-for="OwnCarCommision"></div>
+                            <div field-for="CompanyCarCommision"></div>
+                        </div>
+                        <div class="col-md-6" ng-show="selectedOverride.Type=='Mileage'">
+                            <label class="control-label brand-primary">Own Car Mileage Steps</label>
+                            <div mileage-step value="selectedOverride.OwnCarPerMileSteps"></div>
+                            <label class="control-label brand-primary">Company Car Mileage Steps</label>
+                            <div mileage-step value="selectedOverride.CompanyCarPerMileSteps"></div>
+                        </div>
+                        <div class="col-md-3" ng-show="COMPANY.ChauffeurModeActive">
+                            <div class="mb10">
+                                <strong class="brand-primary">Chauffeuring</strong>
+                            </div>
+                            <div field-for="ChauffeurCommision" display="Commission(%)"></div>
+                            <div field-for="ChauffeurPerHour" display="Cost/Hour (£)"></div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="selectedOverride.$show == 'CASH'">
+                    <div ng-if="!selectedOverride.Cash">
+                        <div class="actions">
+                            <a class="btn btn-xs btn-success" ng-click="addNewPaymentOverride('Cash', selectedOverride)"><i class="material-icons">save</i>Add New Override</a>
+                        </div>
+                    </div>
+                    <div ng-if="selectedOverride.Cash">
+                        <div class="actions">
+                            <a class="btn btn-xs btn-success" ng-click="save(selectedOverride.Cash, selectedOverride, 'Cash')"><i class="material-icons">save</i>Save</a>
+                            <a class="btn btn-xs btn-danger" ng-click="remove(selectedOverride.Cash, selectedOverride, 'Cash')"><i class="material-icons">delete</i>Remove</a>
+                        </div>
+                        <div class="row" form-for="selectedOverride.Cash" schema="DriverPaymentModel" mode="{{viewMode}}">
+                            <div class="col-md-3">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Basic Details</strong>
+                                </div>
+                                <div field-for="Type"></div>
+                                <div field-for="WaitingPerHour"></div>
+                            </div>
+                            <div class="col-md-6" ng-show="selectedOverride.Cash.Type=='Commission'">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Commission Details</strong>
+                                </div>
+                                <div field-for="OwnCarCommision"></div>
+                                <div field-for="CompanyCarCommision"></div>
+                            </div>
+                            <div class="col-md-6" ng-show="selectedOverride.Cash.Type=='Mileage'">
+                                <label class="control-label brand-primary">Own Car Mileage Steps</label>
+                                <div mileage-step value="selectedOverride.Cash.OwnCarPerMileSteps"></div>
+                                <label class="control-label brand-primary">Company Car Mileage Steps</label>
+                                <div mileage-step value="selectedOverride.Cash.CompanyCarPerMileSteps"></div>
+                            </div>
+                            <div class="col-md-3" ng-show="COMPANY.ChauffeurModeActive">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Chauffeuring</strong>
+                                </div>
+                                <div field-for="ChauffeurCommision" display="Commission(%)"></div>
+                                <div field-for="ChauffeurPerHour" display="Cost/Hour (£)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="selectedOverride.$show == 'CARD'">
+                    <div ng-if="!selectedOverride.Card">
+                        <div class="actions">
+                            <a class="btn btn-xs btn-success" ng-click="addNewPaymentOverride('Card', selectedOverride)"><i class="material-icons">save</i>Add New Override</a>
+                        </div>
+                    </div>
+                    <div ng-if="selectedOverride.Card">
+                        <div class="actions">
+                            <a class="btn btn-xs btn-success" ng-click="save(selectedOverride.Card, selectedOverride, 'Card')"><i class="material-icons">save</i>Save</a>
+                            <a class="btn btn-xs btn-danger" ng-click="remove(selectedOverride.Card, selectedOverride, 'Card')"><i class="material-icons">delete</i>Remove</a>
+                        </div>
+                        <div class="row" form-for="selectedOverride.Card" schema="DriverPaymentModel" mode="{{viewMode}}">
+                            <div class="col-md-3">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Basic Details</strong>
+                                </div>
+                                <div field-for="Type"></div>
+                                <div field-for="WaitingPerHour"></div>
+                            </div>
+                            <div class="col-md-6" ng-show="selectedOverride.Card.Type=='Commission'">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Commission Details</strong>
+                                </div>
+                                <div field-for="OwnCarCommision"></div>
+                                <div field-for="CompanyCarCommision"></div>
+                            </div>
+                            <div class="col-md-6" ng-show="selectedOverride.Card.Type=='Mileage'">
+                                <label class="control-label brand-primary">Own Car Mileage Steps</label>
+                                <div mileage-step value="selectedOverride.Card.OwnCarPerMileSteps"></div>
+                                <label class="control-label brand-primary">Company Car Mileage Steps</label>
+                                <div mileage-step value="selectedOverride.Card.CompanyCarPerMileSteps"></div>
+                            </div>
+                            <div class="col-md-3" ng-show="COMPANY.ChauffeurModeActive">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Chauffeuring</strong>
+                                </div>
+                                <div field-for="ChauffeurCommision" display="Commission(%)"></div>
+                                <div field-for="ChauffeurPerHour" display="Cost/Hour (£)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt20 mb20">
+                <h3 class="section-title mb5">Peak Periods</h3>
+                <small class="text-muted">Applies to bookings made between the following date and times.</small>
+                <div class="mt10">
+                    <div peak-day-step value="item.PeakDateBands" hide-times="true"></div>
+                </div>
+            </div>
+            <div class="mt20 mb10">
+                <h3 class="section-title mb5">Vehicle Overrides</h3>
+                <small class="text-muted">Below overrides will apply to Vehicle Types. You can also remove an override in which case the default pricing will be used.</small>
+            </div>
+            <div ng-repeat="override in selectedOverride.$overrides">
+                <div class="payment-details">
+                    <h4 class="mt0 mb0">{{getVehicleType(override)}}</h4>
+                    <div class="tabs">
+                        <ul class="nav nav-tabs nav-tabs-justified">
+                            <li class="tab" style="width:33%" ng-class="{ 'active': !override.$show }" ng-click="override.$show = null"><a>All</a></li>
+                            <li class="tab" style="width:33%" ng-class="{ 'active': override.$show == 'CARD' }" ng-click="override.$show = 'CARD'"><a>Card</a></li>
+                            <li class="tab" style="width:33%" ng-class="{ 'active': override.$show == 'CASH' }" ng-click="override.$show = 'CASH'"><a>Cash</a></li>
+                        </ul>
+                    </div>
+                    <div ng-show="!override.$show">
+                        <div class="actions">
+                            <a class="btn btn-xs btn-success" ng-click="save(override, selectedOverride)"><i class="material-icons">save</i>Save</a>
+                            <a class="btn btn-xs btn-danger" ng-click="remove(override, selectedOverride)"><i class="material-icons">delete</i>Remove</a>
+                        </div>
+                        <div class="row" form-for="override" schema="DriverPaymentModel" mode="{{viewMode}}">
+                            <div class="col-md-3">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Basic Details</strong>
+                                </div>
+                                <div field-for="Type"></div>
+                                <div field-for="WaitingPerHour"></div>
+                            </div>
+                            <div class="col-md-6" ng-show="override.Type=='Commission'">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Commission Details</strong>
+                                </div>
+                                <div field-for="OwnCarCommision"></div>
+                                <div field-for="CompanyCarCommision"></div>
+                            </div>
+                            <div class="col-md-6" ng-show="override.Type=='Mileage'">
+                                <label class="control-label brand-primary">Own Car Mileage Steps</label>
+                                <div mileage-step value="override.OwnCarPerMileSteps"></div>
+                                <label class="control-label brand-primary">Company Car Mileage Steps</label>
+                                <div mileage-step value="override.CompanyCarPerMileSteps"></div>
+                            </div>
+                            <div class="col-md-3" ng-show="COMPANY.ChauffeurModeActive">
+                                <div class="mb10">
+                                    <strong class="brand-primary">Chauffeuring</strong>
+                                </div>
+                                <div field-for="ChauffeurCommision" display="Commission(%)"></div>
+                                <div field-for="ChauffeurPerHour" display="Cost/Hour (£)"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="override.$show == 'CASH'">
+                        <div ng-if="!override.Cash">
+                            <div class="actions">
+                                <a class="btn btn-xs btn-success" ng-click="addNewPaymentOverride('Cash', override)"><i class="material-icons">save</i>Add New Override</a>
+                            </div>
+                        </div>
+                        <div ng-if="override.Cash">
+                            <div class="actions">
+                                <a class="btn btn-xs btn-success" ng-click="save(override.Cash, override, 'Cash')"><i class="material-icons">save</i>Save</a>
+                                <a class="btn btn-xs btn-danger" ng-click="remove(override.Cash, override, 'Cash')"><i class="material-icons">delete</i>Remove</a>
+                            </div>
+                            <div class="row" form-for="override.Cash" schema="DriverPaymentModel" mode="{{viewMode}}">
+                                <div class="col-md-3">
+                                    <div class="mb10">
+                                        <strong class="brand-primary">Basic Details</strong>
+                                    </div>
+                                    <div field-for="Type"></div>
+                                    <div field-for="WaitingPerHour"></div>
+                                </div>
+                                <div class="col-md-6" ng-show="override.Cash.Type=='Commission'">
+                                    <div class="mb10">
+                                        <strong class="brand-primary">Commission Details</strong>
+                                    </div>
+                                    <div field-for="OwnCarCommision"></div>
+                                    <div field-for="CompanyCarCommision"></div>
+                                </div>
+                                <div class="col-md-6" ng-show="override.Cash.Type=='Mileage'">
+                                    <label class="control-label brand-primary">Own Car Mileage Steps</label>
+                                    <div mileage-step value="override.Cash.OwnCarPerMileSteps"></div>
+                                    <label class="control-label brand-primary">Company Car Mileage Steps</label>
+                                    <div mileage-step value="override.Cash.CompanyCarPerMileSteps"></div>
+                                </div>
+                                <div class="col-md-3" ng-show="COMPANY.ChauffeurModeActive">
+                                    <div class="mb10">
+                                        <strong class="brand-primary">Chauffeuring</strong>
+                                    </div>
+                                    <div field-for="ChauffeurCommision" display="Commission(%)"></div>
+                                    <div field-for="ChauffeurPerHour" display="Cost/Hour (£)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="override.$show == 'CARD'">
+                        <div ng-if="!override.Card">
+                            <div class="actions">
+                                <a class="btn btn-xs btn-success" ng-click="addNewPaymentOverride('Card', override)"><i class="material-icons">save</i>Add New Override</a>
+                            </div>
+                        </div>
+                        <div ng-if="override.Card">
+                            <div class="actions">
+                                <a class="btn btn-xs btn-success" ng-click="save(override.Card, override, 'Card')"><i class="material-icons">save</i>Save</a>
+                                <a class="btn btn-xs btn-danger" ng-click="remove(override.Card, override, 'Card')"><i class="material-icons">delete</i>Remove</a>
+                            </div>
+                            <div class="row" form-for="override.Card" schema="DriverPaymentModel" mode="{{viewMode}}">
+                                <div class="col-md-3">
+                                    <div class="mb10">
+                                        <strong class="brand-primary">Basic Details</strong>
+                                    </div>
+                                    <div field-for="Type"></div>
+                                    <div field-for="WaitingPerHour"></div>
+                                </div>
+                                <div class="col-md-6" ng-show="override.Card.Type=='Commission'">
+                                    <div class="mb10">
+                                        <strong class="brand-primary">Commission Details</strong>
+                                    </div>
+                                    <div field-for="OwnCarCommision"></div>
+                                    <div field-for="CompanyCarCommision"></div>
+                                </div>
+                                <div class="col-md-6" ng-show="override.Card.Type=='Mileage'">
+                                    <label class="control-label brand-primary">Own Car Mileage Steps</label>
+                                    <div mileage-step value="override.Card.OwnCarPerMileSteps"></div>
+                                    <label class="control-label brand-primary">Company Car Mileage Steps</label>
+                                    <div mileage-step value="override.Card.CompanyCarPerMileSteps"></div>
+                                </div>
+                                <div class="col-md-3" ng-show="COMPANY.ChauffeurModeActive">
+                                    <div class="mb10">
+                                        <strong class="brand-primary">Chauffeuring</strong>
+                                    </div>
+                                    <div field-for="ChauffeurCommision" display="Commission(%)"></div>
+                                    <div field-for="ChauffeurPerHour" display="Cost/Hour (£)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="payment-details">
+                <div class="row">
+                    <div class="col-md-8">
+                        <b class="section-title">Add Vehicle Override</b>
+                        <br />
+                        <div class="form-group">
+                            <label class="control-label">Choose Vehicle Type to Override</label>
+                            <select class="form-control" ng-model="new.vt" ng-options="i.Id as i.Name for i in vehicleTypes | filter:alreadyOverriding"></select>
+                        </div>
+                        <a class="btn btn-xs btn-success" ng-click="addOverride(new.vt, selectedOverride)">Add Override</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

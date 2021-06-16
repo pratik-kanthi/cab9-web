@@ -1,0 +1,50 @@
+<div id="workshare-company-profile">
+    <div class="panel panel-default fleet">
+        <div class="panel-heading">
+            <h3 class="panel-title">Level of Services</h3>
+        </div>
+        <div class="panel-body">
+            <p class="text-muted">Please map your company vehicle types with the level of service shown below.
+                Any partner you work with will be show the level of service you have available and not your vehicle types </p>
+            <img src="/includes/images/spinner.gif" width="40" ng-if="loading" />
+            <div class="mileage-steps" ng-if="!loading">
+                <div class="header">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <strong>Service Type</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Vehicle Type</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="body">
+                    <div class="no-steps" ng-if="(services == null || services.length == 0)">
+                        No Fare Levels Added
+                    </div>
+                    <div class="step mt5" ng-repeat="service in services" ng-if="services && services.length > 0">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <strong class="vehicle-type-name" ng-bind="service.Name"></strong>:
+                                <small ng-bind="service.Description"></small>
+                                <br style="line-height:16px">
+                                Example: <small class="text-muted bold" ng-bind="service.Example"></small>
+                            </div>
+                            <div class="col-xs-6 vehicle-type">
+                                <div class="form-group">
+                                    <div class="form-edit">
+                                        <select class="form-control pull-left" ng-disabled="service.$loading" ng-change="updateAddService(service,$parent.$index)" ng-options="item.Id as item.Name for item in vehicleTypes" ng-model="service._VehicleTypeId">
+                                            <option value="" class="" ng-bind="service._VehicleTypeId?'Remove Service':'Select Vehicle Type'"> </option>
+                                        </select>
+                                        <img class="pull-right" ng-if="service.$loading" src="/includes/images/spinner.gif" width="30" />
+                                        <span ng-if="service.$tick" class="green pull-right material-icons">check</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

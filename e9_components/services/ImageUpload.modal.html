@@ -1,0 +1,70 @@
+<div class="modal-header">
+    <button type="button" class="close" aria-hidden="true" ng-click="$dismiss()">&times;</button>
+    <h3 class="modal-title">Choose Image</h3>
+</div>
+<div class="modal-body">
+    <h3 class="section-title">1. Choose File</h3>
+    <input type="file" file-picker file="upload.choosen" accept="image/*" />
+    <div ng-if="upload.src">
+        <h3 class="section-title">2. Crop Image</h3>
+        <image style="width:100%;" image-cropper source="upload.src" result="upload.dimensions" allowrect="upload.allowRect"></image>
+    </div>
+    <div ng-if="upload.src">
+        <h3 class="section-title">3. Confirm</h3>
+        <input type="button" class="btn btn-xs btn-success mr10" value="Upload Uncropped" ng-show="!upload.dimensions" ng-click="upload.uploadFull()" />
+        <input type="button" class="btn btn-xs btn-success mr10" value="Upload Cropped" ng-show="upload.dimensions" ng-click="upload.uploadCropped()" />
+    </div>
+    <!-- 	<tabset justified="true">
+	    <tab heading="Upload Image">
+			<h3 class="section-title">1. Choose File</h3>
+			<input type="file" file-picker file="upload.choosen" accept="image/*" />
+			<div ng-if="upload.src">
+				<h3 class="section-title">2. Crop Image</h3>
+				<image style="width:100%;" image-cropper source="upload.src" result="upload.dimensions" allowrect="upload.allowRect"></image>
+			</div>
+			<div ng-if="upload.src">
+				<h3 class="section-title">3. Confirm</h3>
+				<input type="button" class="btn btn-xs btn-success mr10" value="Upload Uncropped" ng-show="!upload.dimensions" ng-click="upload.uploadFull()" />
+				<input type="button" class="btn btn-xs btn-success mr10" value="Upload Cropped" ng-show="upload.dimensions" ng-click="upload.uploadCropped()" />
+			</div>
+	    </tab>
+	    <tab heading="Search Google">
+			<div class="form-group mt30">
+				<label class="control-label">Search Term</label>
+				<input type="text" class="form-control mt10" ng-model="search.term" />
+			</div>
+			<div ng-hide="search.choosen">
+				<h3 class="section-title">Choose From Below</h3>
+				<div class="row">
+					<div class="col-xs-6 col-sm-4" ng-repeat="img in search.results" style="height: 135px;">
+							<div class="card" ng-click="search.select(img)">
+								<div class="card-container" ng-click="viewItem(item)">
+									<svg class="logo" style="background-image:url('{{img.unescapedUrl}}')" viewBox="0 0 100 100"></svg>
+								</div>
+							</div>
+							<img ng-src="{{img.unescapedUrl}}" alt="" style="max-width:100%;max-height:100%;" />
+					</div>
+				</div>
+			</div>
+			<div ng-show="search.choosen">
+				<h3 class="section-title">Crop Image</h3>
+				<image style="width:100%;" image-cropper source="search.choosen" result="search.dimensions" allowrect="search.allowRect"></image>
+				<button class="btn btn-xs btn-warning mt20" ng-click="search.choosen=null"><i class="material-icons">undo</i> Cancel</button>
+			</div>
+			<div ng-if="search.choosen">
+				<h3 class="section-title">Confirm</h3>
+				<input type="button" class="btn btn-xs btn-success mr10" value="Upload Uncropped" ng-show="!search.dimensions" ng-click="search.uploadFull()" />
+				<input type="button" class="btn btn-xs btn-success" value="Upload Cropped" ng-show="search.dimensions" ng-click="search.uploadCropped()" />
+			</div>
+	    </tab>
+	    <tab heading="Previous Images">
+			
+				<h3 class="section-title">Choose Previous</h3>
+				<div class="row">
+					<div class="col-xs-6 col-sm-4" ng-repeat="img in previous.list" ng-click="previous.select(img)">
+						<card class="module-item-card" allow-click="false" show-score="false" class="single" show-title="false" show-subtitle="false" style="float:none;margin:0;width:100%" accessors="previous.accessors" item="img"></card>
+					</div>
+				</div>
+		</tab>
+	  </tabset> -->
+</div>

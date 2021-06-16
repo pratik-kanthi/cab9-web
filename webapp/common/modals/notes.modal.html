@@ -1,0 +1,16 @@
+<form form-for="note" schema="Note" mode="{{displayMode}}">
+    <div class="modal-header">
+        <h3 class="modal-title">Notes <span class="pull-right" ng-click="$dismiss()"><i class="material-icons">clear</i></span></h3>
+    </div>
+    <div class="modal-body">
+        <div field-for="Subject"></div>
+        <div field-for="Content" textarea="3"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()">
+            <i class="material-icons">undo</i>Cancel
+        </button>
+        <button class="btn btn-xs btn-success" ng-click="save()" ng-disabled="formFor.form.$invalid">
+            <i class="material-icons">save</i> Save</button>
+    </div>
+</form>

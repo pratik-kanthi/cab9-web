@@ -1,0 +1,72 @@
+<div class="panel panel-default" id="credit-cards-transactions">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">toc</i>  Card Transactions</h3>
+    </div>
+    <div class="panel-body">
+        <p class="brand-primary t-l bold" ng-if="transactions.length == 0">
+            No Transactions Found
+        </p>
+        <p class="brand-primary t-l bold" ng-if="transactions.length > 0">
+            Last 30 transactions
+        </p>
+        <div class="cards-wrapper" ng-if="transactions.length > 0">
+            <div class="table-responsive">
+                <table class="table table-bordered" style="min-width: 900px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%">Status</th>
+                            <th style="width: 10%">Type</th>
+                            <th style="width: 10%" class="text-center">Booking</th>
+                            <th style="width: 15%">Date/Time</th>
+                            <th style="width: 30%">Card Number</th>
+                            <th style="width: 12.5%">Provider</th>
+                            <th style="width: 12.5%" class="text-center">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat-start="item in transactions">
+                            <td class="status" ng-class="(item.Success)?'SUCCESS':'FAILURE'">
+                                <strong class="brand-primary">{{(item.Success)? 'Success': 'Failure'}}</strong>
+                            </td>
+                            <td class="transaction-type">
+                                <strong ng-bind="item.TransactionType" class="brand-secondary"></strong><br />
+                                <strong class="brand-primary" ng-bind="item.Amount | currency"></strong>
+                            </td>
+                            <td class="text-center">
+                                <a href="" ui-sref="root.bookings.search({ localId: item.LocalId })" target="_blank"><strong class="brand-primary">{{item.LocalId}}</strong></a>
+                            </td>
+                            <td>
+                                <span ng-bind="item.CreatedAt | date:'dd/MM/yyyy HH:mm'"></span>
+                            </td>
+                            <td class="card-type">
+                                <div class="credit-card-type small" ng-class="item.PaymentCardType"></div>
+                                <strong ng-bind="item.PaymentCardNumber"></strong>
+                            </td>
+                            <td class="provider-type">
+                                <div class="credit-card-provider-type small" ng-class="item.Provider"></div>
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-xs btn-primary" ng-show="!item.$expanded" ng-click="expandTransaction(item)"><i class="material-icons">expand_more</i>Details</button>
+                                <button class="btn btn-xs btn-warning" ng-show="item.$expanded" ng-click="item.$expanded = !item.$expanded"><i class="material-icons">expand_less</i>Hide</button>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end ng-if="item.$expanded">
+                            <td colspan="7">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <strong class="brand-primary">Payment Request</strong>
+                                        <pre>{{item.Request|json:true}}</pre>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong class="brand-primary">Provider Response</strong>
+                                        <pre>{{item.Response|json:true}}</pre>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

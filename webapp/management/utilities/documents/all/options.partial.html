@@ -1,0 +1,66 @@
+<div class="row">
+    <div class="col-xs-6 module-options">
+        <h3 class="section-title mt0">Documents</h3>
+        <small>A list of all the documents in the portal.</small>
+    </div>
+
+    <div class="col-xs-6">
+        <div class="view-options">
+            <a ng-click="showFilters=!showFilters">
+                <i class="material-icons">build</i>Filter
+            </a>
+            <a href="" ng-click="">
+                <span ng-click="toggleSearch()">
+                    <i class="material-icons">find_in_page</i>Search
+                </span>
+                <br />
+                <input type="text" ng-model-options="{ debounce: 500 }" ng-change="setupGrid()" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" />
+            </a>
+        </div>
+        <div class="filter-options" ng-class="(showFilters)?'show-filter':'hide-filter'">
+            <div class="form-group">
+                <label for="">Owner Type</label>
+                <select class="form-control" ng-model="filters.filterBy" ng-options="option as option for option in ['Client','Driver','Vehicle','Staff']">
+                    <option value="">Select Owner</option>
+                </select>
+            </div>
+            <div class="form-group" ng-show="filters.filterBy &&filters.filterBy=='Driver'">
+                <label for="">Owner Id</label>
+                <ui-select ng-model="filters.filterId" theme="selectize" title="Choose a Driver" ng-change="filter()" class="edit">
+                    <ui-select-match placeholder="Select/Search Driver...">{{$select.selected._Fullname}}</ui-select-match>
+                    <ui-select-choices repeat="driver.Id as driver in Drivers| filter: $select.search">
+                        <div ng-bind-html="driver._Fullname| highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-show="filters.filterBy &&filters.filterBy=='Client'">
+                <label for="">Owner Id</label>
+                <ui-select ng-model="filters.filterId" theme="selectize" title="Choose a Client" ng-change="filter()" class="edit">
+                    <ui-select-match placeholder="Select/Search Client...">{{$select.selected.Name}}</ui-select-match>
+                    <ui-select-choices repeat="client.Id as client in Clients| filter: $select.search">
+                        <div ng-bind-html="client.Name| highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-show="filters.filterBy &&filters.filterBy=='Vehicle'">
+                <label for="">Owner Id</label>
+                <ui-select ng-model="filters.filterId" theme="selectize" title="Choose a Vehicle" ng-change="filter()" class="edit">
+                    <ui-select-match placeholder="Select/Search Vehicle...">{{$select.selected.Registration}}</ui-select-match>
+                    <ui-select-choices repeat="vehicle.Id as vehicle in Vehicles| filter: $select.search">
+                        <div ng-bind-html="vehicle.Registration| highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-show="filters.filterBy &&filters.filterBy=='Staff'">
+                <label for="">Owner Id</label>
+                <ui-select ng-model="filters.filterId" theme="selectize" title="Choose a Staff" ng-change="filter()" class="edit">
+                    <ui-select-match placeholder="Select/Search Staff...">{{$select.selected._Fullname}}</ui-select-match>
+                    <ui-select-choices repeat="staff.Id as staff in Staff| filter: $select.search">
+                        <div ng-bind-html="staff._Fullname| highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </div>
+
+</div>

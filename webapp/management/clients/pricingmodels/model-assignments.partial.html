@@ -1,0 +1,75 @@
+<div class="module" id="driver-pricing-assignment">
+    <h3 class="section-title mt0">Client Pricing Model Assignments</h3>
+    <small>Please use the interface below to manage Pricing Models assigned to a client. A pricing model can be assigned to a client, client type or the entire company. Please note any changes to this module will only change the future Client Bookings and will not have any impact on the past bookings.</small>
+    <div class="row">
+        <div class="col-lg-8">
+            <table class="table table-condensed mt20">
+                <thead>
+                    <tr>
+                        <th style="width:40%">Default Company Pricing Model</th>
+                        <th style="width:60%">
+                            <div ng-show="!COMPANY.$selected">
+                                <span class="mr10">{{getCommModel(COMPANY)}}</span>
+                                <div class="pull-right">
+                                    <a href="" ng-click="EditModel(COMPANY)" ng-if="PERMISSIONS.test('clients.pricingmodels','W')" class="edit"><i class="material-icons">edit</i></a>
+                                </div>
+                            </div>
+                            <div ng-show="COMPANY.$selected" class="left">
+                                <select name="DefaultDriverPaymentModelInput" id="DefaultDriverPaymentModelInput" ng-model="COMPANY.PricingModelId" class="form-control" ng-options="option.Id as option.Name for option in paymentModels">
+                                    <option value="" label="{{getCommModel(COMPANY)}}" class="" ng-show="!COMPANY.PricingModelId"></option>
+                                </select>
+                                <div class="pull-right">
+                                    <a href="" ng-click="updateCommModel(COMPANY)" ng-if="PERMISSIONS.test('clients.pricingmodels','W')"><i class="material-icons green">check</i></a>
+                                    <a href="" ng-click="cancelUpdate(COMPANY)" ng-if="PERMISSIONS.test('clients.pricingmodels','W')"><i class="material-icons">undo</i></a>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="(key, values) in clientTypes">
+                    <tr class="driver-types">
+                        <td class="bold brand-primary">{{values[0].Name}}</td>
+                        <td>
+                            <div class="pull-left">
+                                <!--<span class="mr10">{{::getCommModel(values[0])}}</span>-->
+                                <!--<a href="" ng-click="EditModel(values[0])" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')" class="btn btn-xs btn-round btn-warning"><i class="material-icons">edit</i></a>-->
+                            </div>
+                            <!--<div ng-show="values[0].$selected" class="pull-left">
+                                <select name="{{key}}{{$index}}Input" id="{{key}}{{$index}}Input" class="form-control" ng-model="values[0].PricingModelId" class="input-sm" ng-options="option.Id as option.Name for option in paymentModels">
+                                    <option value="" label="Company Default" class="" ng-show="!values[0].PricingModelId"></option>
+                                </select>
+
+                                <a href="" ng-click="updateCommModel(values[0])" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')" class="btn btn-xs btn-round btn-success"><i class="material-icons">check_circle</i></a>
+                                <a href="" ng-click="cancelUpdate(values[0])" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')" class="btn btn-xs btn-round btn-warning"><i class="material-icons">undo</i></a>
+                            </div>-->
+                            <div class="pull-right">
+                                <a ng-show="!$expanded" ng-click="$expanded = true;"><i class="material-icons">expand_more</i></a>
+                                <a ng-show="$expanded" ng-show="!$expanded" ng-click="$expanded = false;"><i class="material-icons">expand_less</i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="val in values | orderBy:'Name'" ng-hide="$last" ng-if="$expanded" class="drivers">
+                        <td>{{val.Name}}</td>
+                        <td>
+                            <div ng-show="!val.$selected">
+                                <span class="mr10">{{getCommModel(val)}}</span>
+                                <div class="pull-right">
+                                    <a href="" ng-click="EditModel(val)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')" class="edit"><i class="material-icons">edit</i></a>
+                                </div>
+                            </div>
+                            <div ng-show="val.$selected">
+                                <select name="{{key}}{{$index}}Input" id="{{key}}{{$index}}Input" ng-model="val.PricingModelId" class="form-control" ng-options="option.Id as option.Name for option in paymentModels">
+                                    <option value="" label="Company Default" class=""></option>
+                                </select>
+                                <div class="pull-right">
+                                    <a href="" ng-click="updateCommModel(val)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons green">check</i></a>
+                                    <a href="" ng-click="cancelUpdate(val)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons">undo</i></a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

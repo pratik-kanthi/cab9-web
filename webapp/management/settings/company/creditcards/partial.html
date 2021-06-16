@@ -1,0 +1,134 @@
+<div class="panel panel-default" id="credit-card-details">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">credit_card</i> Credit Card Provider Settings</h3>
+    </div>
+    <div class="panel-body">
+        <div class="mt0 mb20">
+            <button class="btn btn-warning" ng-show="$viewMode == 'VIEW'" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.company','W')"><i class="material-icons">create</i>Edit</button>
+            <button class="btn btn-success mr10" ng-show="$viewMode == 'EDIT'" ng-click="saveEdits($index)" ng-disabled="ccDetailsForm.$invalid"><i class="material-icons">save</i>Save</button>
+            <button class="btn btn-warning" ng-show="$viewMode == 'EDIT'" ng-click="cancelEdit($index)"><i class="material-icons">undo</i>Cancel</button>
+        </div>
+        <form name="ccDetailsForm">
+            <h3 class="section-title mt0">Current Payment Provider</h3>
+            <p>Please choose your current credit card provider and provide your authentication details below. At one time you can only have one provider active. <br /><br /><strong class="red">Note: If you change providers while you still have pending transactions, those transactions will not proceed.</strong></p>
+            <div form-for="company" schema="Company" mode="{{$viewMode}}">
+                <div class="row mt15">
+                    <div class="col-sm-4">
+                        <label class="check-container">Judopay
+                            <input type="radio" ng-model="company.CurrentCardPaymentProvider" value="Judopay" ng-disabled="$viewMode == 'VIEW'" />
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="check-container">Stripe
+                            <input type="radio" ng-model="company.CurrentCardPaymentProvider" value="Stripe" ng-disabled="$viewMode == 'VIEW'" />
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div form-for="judopayData" ng-if="company.CurrentCardPaymentProvider == 'Judopay'" schema="CardPaymentProviderDetail" mode="{{$viewMode}}" class="mt40">
+                <hr>
+                <h3 class="section-title">Judopay Details</h3>
+                <div class="row mt10 mb10">
+                    <div class="col-sm-3">
+                        <img src="/includes/images/cc/provider-judo.jpg" class="provider-image" alt="">
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="pt10">
+                            Judopay is designed for easy integration, a beautiful user experience, and safer transactions. It’s a platform that partners with you, offering flexible solutions to power your business growth faster in the app economy.
+                        </p>
+                        <a href="https://www.judopay.com/" target="_blank" class="btn btn-primary"><i class="material-icons">explore</i>Know More</a>
+                    </div>
+                </div>
+                <div class="row mt40">
+                    <div class="col-sm-4">
+                        <div field-for="ProviderUserId" display="Judo Id"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="Token"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="Type" display="Environment Type" class="mb0"></div>
+                    </div>
+                </div>
+                <div field-for="SecretKey" display="Secret"></div>
+                <div field-for="Description" rows="8"></div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div field-for="PreauthAmount" display="Preauth Amount"></div>
+                        <small class="brand-secondary">Leave it blank for preauth value to be same as the booking value.</small>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong class="brand-primary">Payment Collection Mode</strong>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="check-container">Automated
+                                    <input type="radio" ng-model="judopayData.IsManualSetup" ng-value="false" ng-disabled="$viewMode == 'VIEW'" />
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="check-container">Manual
+                                    <input type="radio" ng-model="judopayData.IsManualSetup" ng-value="true" ng-disabled="$viewMode == 'VIEW'" />
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <small class="brand-secondary">If the mode is <b>Automated</b>, payments will be preauth/collected 01:00 hours every morning. </small>
+                    </div>
+                </div>
+            </div>
+            <div form-for="stripeData" ng-if="company.CurrentCardPaymentProvider == 'Stripe'" schema="CardPaymentProviderDetail" mode="{{$viewMode}}" class="mt40">
+                <hr>
+                <h3 class="section-title">Stripe Details</h3>
+                <div class="row mt10 mb10">
+                    <div class="col-sm-3 pt20">
+                        <img src="/includes/images/cc/provider-stripe.svg" class="provider-image" alt="">
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="pt10">
+                            Scale faster by building your business on Stripe's payment processing platform. 135+ currencies. Simple APIs. Transparent pricing. 100,000+ businesses. Easy integration. Highlights: Innovative Technology, Powerful And Flexible Tools.
+                        </p>
+                        <a href="https://stripe.com/" target="_blank" class="btn btn-primary"><i class="material-icons">explore</i>Know More</a>
+                    </div>
+                </div>
+                <div class="row mt40">
+                    <div class="col-sm-4">
+                        <div field-for="Token" display="Publishable Key"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="Type" display="Environment Type" class="mb0"></div>
+                    </div>
+                </div>
+                <div field-for="SecretKey" display="Secret Key"></div>
+                <div field-for="Description" rows="8"></div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div field-for="PreauthAmount" display="Preauth Amount"></div>
+                        <small class="brand-secondary">Leave it blank for preauth value to be same as the booking value.</small>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong class="brand-primary">Payment Collection Mode</strong>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="check-container">Automated
+                                    <input type="radio" ng-model="stripeData.IsManualSetup" ng-value="false" ng-disabled="$viewMode == 'VIEW'" />
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="check-container">Manual
+                                    <input type="radio" ng-model="stripeData.IsManualSetup" ng-value="true" ng-disabled="$viewMode == 'VIEW'" />
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <small class="brand-secondary">If the mode is <b>Automated</b>, payments will be preauth/collected 01:00 hours every morning. </small>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

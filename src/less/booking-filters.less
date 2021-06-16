@@ -1,0 +1,144 @@
+        #booking-filters {
+            .selectize-input {
+                height: auto;
+                line-height: 10px;
+                input {
+                    height: 30px;
+                }
+                .select-text {
+                    font-size: 14px;
+                    height: 30px;
+                }
+                .ui-select-match {
+                    line-height: 11px;
+                }
+            }
+            .status {
+                padding: 8px;
+                font-weight: 400;
+                margin-bottom: 16px;
+                .checkbox {
+                    float: left;
+                    margin-top: 2px;
+                    margin-left: 4px;
+                    margin-right: 8px;
+                }
+                &.Cancelled {
+                    background-color: lighten(@red, 25%);
+                    .checkbox {
+                        background-color: mix(@red, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @red;
+                    }
+                }
+                &.COA {
+                    background-color: lighten(@red, 25%);
+                    .checkbox {
+                        background-color: mix(@red, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @red;
+                    }
+                }
+                &.Incoming {
+                    background-color: lighten(@orange, 25%);
+                    .checkbox {
+                        background-color: mix(@orange, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @orange;
+                    }
+                }
+                &.Allocated {
+                    background-color: lighten(@dark-green, 25%);
+                    .checkbox {
+                        background-color: mix(@dark-green, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @dark-green;
+                    }
+                }
+                &.PreAllocated {
+                    background-color: lighten(@light-green, 25%);
+                    .checkbox {
+                        background-color: mix(@light-green, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @light-green;
+                    }
+                }
+                &.OnRoute {
+                    background-color: lighten(@brand-primary, 25%);
+                    .checkbox {
+                        background-color: mix(@brand-primary, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @brand-primary;
+                    }
+                }
+                &.Arrived {
+                    background-color: lighten(@brand-primary, 25%);
+                    .checkbox {
+                        background-color: mix(@brand-primary, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @brand-primary;
+                    }
+                }
+                &.InProgress {
+                    background-color: lighten(@sky, 25%);
+                    .checkbox {
+                        background-color: mix(@sky, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @sky;
+                    }
+                }
+                &.OpenToBid {
+                    background-color: lighten(@yellow, 25%);
+                    .checkbox {
+                        background-color: mix(@yellow, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @yellow;
+                    }
+                }
+                &.Completed {
+                    background-color: lighten(@dark-blue, 25%);
+                    .checkbox {
+                        background-color: mix(@dark-blue, #fff, 10%);
+                    }
+                    .checkbox label:after {
+                        border-color: @dark-blue;
+                    }
+                }
+            }
+            .select {
+                &.selectize-control.single {
+                    .selectize-input {
+                        padding: 2px;
+                        border: 1px solid #d9d9d9!important;
+                    }
+                }
+            }
+            .selectize-control {
+                .ui-select-choices {
+                    top: 53px;
+                    border: 0 !important;
+                    overflow: hidden;
+                }
+            }
+            .amount-range {
+                input {
+                    border-radius: 3px;
+                    height: 32px;
+                    border: 1px solid #d9d9d9;
+                    color: #000;
+                    padding: 3px 8px;
+                    font-size: 15px;
+                    line-height: 20px;
+                    box-shadow: none;
+                }
+            }
+        }

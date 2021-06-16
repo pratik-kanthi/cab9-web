@@ -1,0 +1,37 @@
+<div class="document-content">
+    <div class="hero" ng-if="API_ENDPOINT">
+        <img ng-src="{{API_ENDPOINT+data.ThumbnailPath}}" alt="{{data.Name}}" />
+        <!-- <div class="shadow"></div> -->
+    </div>
+    <div class="options">
+        <!--        <i class="material-icons" ng-click="deleteDocument(d)">delete_forever</i>-->
+        <i class="material-icons" ng-click="openModalWithDocument()">create</i>
+        <i class="material-icons" ng-click="previewDocument()">find_in_page</i>
+    </div>
+    <div class="info">
+        <div class="document-label">
+            <small ng-bind="data.DocumentType.Name"></small>
+            <h3 ng-bind="data.Name"></h3>
+            <br>
+            <strong class="brand-secondary" ng-bind="data.OwnerId.Name" ng-show="showOwner==true"></strong>
+        </div>
+        <div class="date-info">
+            <div class="row">
+                <div class="col-xs-12">
+                    <span ng-if="data.ExpiryDate && !data.$expired">
+                                Expiring in {{data.ExpiryDate | Countdown}}
+                            </span>
+                    <span ng-if="data.ExpiryDate && data.$expired">
+                                Expired {{data.ExpiryDate | Countdown}}
+                            </span>
+                    <span ng-if="data.IssueDate && !data.ExpiryDate">
+                                Issued {{data.IssueDate | Countdown}}
+                            </span>
+                    <span ng-if="!data.IssueDate && !data.ExpiryDate">
+                                No Date Info
+                            </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Basic Company Settings</h3>
+    </div>
+    <div class="panel-body">
+        <div form-for="company" schema="Company" mode="{{viewMode}}">
+            <div class="mt10 mb10">
+                <button class="btn btn-warning" ng-show="viewMode == 'VIEW'" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.company','W')"><i class="material-icons">create</i>Edit</button>
+                <button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+                <button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+            </div>
+            <h3 class="section-title">Company Info</h3>
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <div class="image-edit">
+                        <card class="module-item-card" allow-click="false" show-score="false" show-title="false" show-subtitle="false"></card>
+                        <div class="image-edit-overlay" ng-show="viewMode === 'EDIT'" ng-click="chooseImage()">
+                            <i class="material-icons">file_upload</i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div field-for="Name" display="Company Name"></div>
+                            <div field-for="Phone"></div>
+                            <div field-for="Email"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div field-for="Website"></div>
+                            <div field-for="Mobile"></div>
+                            <div field-for="Fax"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title">Address Info</h3>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div ng-show="viewMode === 'VIEW'">
+                        <div field-for="_FullAddress"></div>
+                    </div>
+                    <div ng-show="viewMode === 'EDIT'">
+                        <hr />
+                        <h3 class="section-title">Address</h3>
+                        <b>Search Address</b>
+                        <br />
+                        <address-populate object="company"></address-populate>
+                        <br />
+                        <div field-for="Address1"></div>
+                        <div field-for="Address2"></div>
+                        <div field-for="Area"></div>
+                        <div field-for="TownCity"></div>
+                        <div field-for="Postcode"></div>
+                        <div field-for="County"></div>
+                        <div field-for="Country"></div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div ng-show="viewMode === 'VIEW'">
+                        <div field-for="_FullBillingAddress"></div>
+                    </div>
+                    <div ng-show="viewMode === 'EDIT'">
+                        <hr />
+                        <h3 class="section-title">Billing Address</h3>
+                        <b>Search Address</b>
+                        <br />
+                        <address-populate object="company" prefix="Billing"></address-populate>
+                        <br />
+                        <div field-for="BillingAddress1"></div>
+                        <div field-for="BillingAddress2"></div>
+                        <div field-for="BillingArea"></div>
+                        <div field-for="BillingTownCity"></div>
+                        <div field-for="BillingPostcode"></div>
+                        <div field-for="BillingCounty"></div>
+                        <div field-for="BillingCountry"></div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title">Company Base</h3>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div ng-show="viewMode === 'EDIT'">
+                        <b>Search Base Location</b>
+                        <br />
+                        <address-populate object="company" prefix="Base"></address-populate>
+                        <br />
+                    </div>
+                    <div field-for="BaseLatitude" display="Latitude"></div>
+                    <div field-for="BaseLongitude" display="Longitude"></div>
+                    <div field-for="BaseZoom" display="Zoom"></div>
+                </div>
+                <div class="col-sm-8">
+                    <ui-gmap-google-map center='map.center' zoom='map.zoom' pan="true" style="width:100%;height:375px;overflow:hidden;">
+                        <ui-gmap-marker idKey='2' coords='markerOptions.coords' options="markerOptions"></ui-gmap-marker>
+                    </ui-gmap-google-map>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<div id="bookings" class="module">
+    <div class="row">
+        <div class="col-xs-6 module-options">
+            <a ui-sref="root.bookings.create" ng-if="PERMISSIONS.test('bookings','W')" class="btn btn-success"><i class="material-icons">add_circle</i>New Booking</a>
+            <span style="vertical-align: middle;font-size:20px;">Showing Bookings For <b>{{filter.date.selectedPeriod}}</b></span>
+        </div>
+        <div class="col-xs-6 view-options">
+            <a ng-click="showFilterModal()"><i class="material-icons">filter_list</i>Filter</a>
+            <a href="" ng-click="exportBookings()" ng-show="isAdmin"><i class="material-icons">receipt</i> Export</a>
+             <a href="" ng-click="">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-model-options="{ debounce: 400 }" ng-show="showSearch" />
+            </a> 
+        </div>
+    </div>
+    <div class="bookings-wrapper">
+        <div class="booking-strip header hidden-xs">
+            <div class="booking">
+                <div class="info">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-sm-3 date-time">
+                            Date
+                        </div>
+                        <div class="col-xs-8 col-sm-3 col-md-3 col-lg-5 journey">
+                            Journey
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 passenger">
+                            Passenger
+                        </div>
+                        <div class="col-lg-2 hidden-md hidden-sm vehicle">
+                            Vehicle
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="no-booking" ng-if="bookingGroups == null">
+            <h3 class="section-title">Fetching...</h3>
+        </div>
+        <div class="no-booking" ng-if="bookingGroups && bookingGroups.length==0">
+            <h3 class="section-title">No bookings for this period.</h3>
+        </div>
+        <div ng-repeat="bg in bookingGroups" ng-init="groupIndex = $index">
+            <div class="date-group">
+                {{bg.date | companyDate: 'DD/MM/YYYY'}}
+            </div>
+            <booking-strip ng-repeat="booking in bg.bookings | orderBy:'BookedDateTime'" booking="booking" drivers="drivers" vehicles="vehicles" on-completed="onCompleted(groupIndex, $index)"></booking-strip>
+        </div>
+    </div>
+    <div class="mt20">
+        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+    </div>
+</div>

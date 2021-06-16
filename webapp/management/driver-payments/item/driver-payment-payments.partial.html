@@ -1,0 +1,250 @@
+<div ng-show="payment.Bill && payment.BillId">
+    <div class="mb20">
+        <h3 class="section-title mt0">Payments</h3>
+        <p class="grey">You can balance the payments by clicking the button below. It will create the transactions needed to balance the bill from driver and the invoice to driver below.</p>
+        <a class="btn btn-success" ng-click="transferBalance('Invoice')" ng-disabled="(payment.Invoice.TotalAmount - calculatePaidAmount('Invoice')) <= 0" ng-if="PERMISSIONS.test('driverpayments.viewer.payments','W')"><i class="material-icons">compare_arrows</i>Balance Payments</a>
+    </div>
+    <div class="mb10">
+        <strong class="brand-primary">Bill Payments</strong>
+    </div>
+    <div class="mb20">
+        <a class="btn btn-xs btn-success" ng-click="createNewPayment('Bill')" ng-disabled="(payment.Bill.TotalAmount + payment.BonusAmount - calculatePaidAmount('Bill')) <= 0" ng-if="PERMISSIONS.test('driverpayments.viewer.payments','W')"><i class="material-icons">add_box</i>Add Payment</a>
+    </div>
+    <table class="table table-hover table-condensed show-overflow">
+        <thead>
+            <tr>
+                <th style="width:20%">Date</th>
+                <th style="width:20%">Ref</th>
+                <th style="width:20%">Payment Type</th>
+                <th style="width:20%" class="text-right">Amount</th>
+                <th style="width:200px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="newBillPayment">
+                <td>
+                    <div class="form-group">
+                        <div class="form-edit">
+                            <div class="input-group mb5">
+                                <input class="form-control" type="text" ng-model="newBillPayment.PaymentDate" datepicker-popup="{{DATETIME_FORMAT}}" is-open="openedDt[0]" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" />
+                                <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="openedDt[0] = true; openCalendar($event);"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="newBillPayment.Reference" placeholder="Ref" />
+                </td>
+                <td>
+                    <select class="form-control" ng-model="newBillPayment.PaymentType" name="PaymentTypeInput" ng-disabled="disabled" ng-options="option for option in BillPaymentTypes"></select>
+                </td>
+                <td class="text-right">
+                    <input type="text" class="form-control" ng-model="newBillPayment.Amount" placeholder="Amount" />
+                </td>
+                <td>
+                    <a class="btn btn-xs btn-success" ng-click="savePayment('Bill')"><i class="material-icons">save</i>Save</a>
+                    <a class="btn btn-xs btn-warning" ng-click="cancelSave('Bill')"><i class="material-icons">undo</i>Cancel</a>
+                </td>
+            </tr>
+            <tr ng-repeat="pay in billPayments">
+                <td>
+                    <span ng-bind="pay.PaymentDate | date:'shortDate'" ng-show="pay!=BillSelected"></span>
+                    <div class="form-group" ng-show="pay==BillSelected">
+                        <div class="form-edit">
+                            <div class="input-group mb5">
+                                <input class="form-control" type="text" ng-model="pay.PaymentDate" datepicker-popup="{{DATETIME_FORMAT}}" is-open="openedDt[$index+1]" placeholder="{{DATETIME_FORMAT}}" ng-disabled="pay!=BillSelected" show-weeks="false" show-button-bar="false" />
+                                <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="openedDt[$index+1] = true; openCalendar($event);"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span ng-bind="pay.Reference" ng-show="pay!=BillSelected"></span>
+                    <input class="form-control" ng-model="pay.Reference" ng-show="pay==BillSelected" placeholder="Ref" />
+                </td>
+                <td>
+                    <span ng-bind="pay.PaymentType" ng-show="pay!=BillSelected"></span>
+                    <select class="form-control" ng-model="pay.PaymentType" name="PaymentTypeInput" ng-show="pay==BillSelected" ng-disabled="disabled" ng-options="option for option in BillPaymentTypes"></select>
+                </td>
+                <td class="text-right">
+                    <span ng-bind="pay.Amount | Format" ng-show="pay!=BillSelected"></span>
+                    <input class="form-control" ng-model="pay.Amount" ng-show="pay==BillSelected" placeholder="Amount" />
+                </td>
+                <td class="text-right">
+                    <div ng-show="pay!=BillSelected">
+                        <a class="btn btn-xs btn-warning" ng-click="selectPayment('Bill', pay)" ng-if="PERMISSIONS.test('driverpayments.viewer.payments','W')"><i class="material-icons">create</i>Edit</a>
+                        <a class="btn btn-xs btn-danger" ng-click="deletePayment('Bill', pay)" ng-if="PERMISSIONS.test('driverpayments.viewer.payments','D')"><i class="material-icons">delete</i>Delete</a>
+                    </div>
+                    <div ng-show="pay==BillSelected">
+                        <a class="btn btn-xs btn-success" ng-click="updatePayment('Bill',pay)"><i class="material-icons">save</i>Save</a>
+                        <a class="btn btn-xs btn-warning" ng-click="cancelUpdate('Bill', pay)"><i class="material-icons">undo</i>Cancel</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td colspan="4" class="text-right">
+                    <h6 class="grey">Commission Payable</h6>
+                </td>
+                <td class="text-right">
+                    <h6 class="grey">{{(payment.Bill.TotalAmount + payment.BonusAmount) | Format}}</h6>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right">
+                    <strong>Total Payment</strong>
+                </td>
+                <td class="text-right">
+                    <span>{{calculatePaidAmount('Bill') | Format}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right">
+                    <strong>Outstanding Payable</strong>
+                </td>
+                <td class="text-right">
+                    <span>{{(payment.Bill.TotalAmount + payment.BonusAmount - calculatePaidAmount('Bill')) | Format}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div ng-show="payment.Invoice && payment.InvoiceId" class="mt20">
+    <div class="mb10">
+        <strong class="brand-primary">Invoice Payments</strong>
+    </div>
+    <div class="mb20">
+        <a class="btn btn-xs btn-success" ng-click="createNewPayment('Invoice')" ng-disabled="(payment.Invoice.TotalAmount - calculatePaidAmount('Invoice') <= 0)" ng-if="PERMISSIONS.test('driverpayments.viewer.payments','W')"><i class="material-icons">add_box</i>Add Payment</a>
+        <a class="btn btn-xs btn-success" ng-click="createNewCreditCardPayment()" ng-disabled="(payment.Invoice.TotalAmount - calculatePaidAmount('Invoice') <= 0)" ng-if="PERMISSIONS.test('driverpayments.viewer.payments','W') && CARD_PAYMENTS_ENABLED == true"><i class="material-icons">credit_card</i>Take Card Payment</a>
+    </div>
+    <div class="card-payment" ng-if="cardPaymentForm">
+        <h3 class="section-title">Take Card Payment</h3>
+        <p class="t-s">Please choose a card from the list below, set the amount and press the Take Payment button.</p>
+        <div class="no-cards" ng-if="fetchingDriverCards">
+            <i class="fa fa-circle-o-notch fa-spin"></i> Fetching cards registered against the Driver.
+        </div>
+        <div class="no-cards" ng-if="driverCards && driverCards.length == 0" ng-click="$dismiss()">
+            No cards found for Driver. Please add a card <a href="#" ui-sref="root.drivers.viewer.creditcards.cards({Id: driverId})">here.</a>
+        </div>
+        <div class="row" ng-if="driverCards.length > 0">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Choose Card</label>
+                    <select class="form-control" ng-model="paymentParams.PaymentCard" name="PaymentTypeInput" ng-options="option.CardNumber for option in driverCards"></select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Amount</label>
+                    <input type="number" class="form-control" ng-model="paymentParams.Amount" />
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="mt20">
+                <button class="btn btn-primary" ng-disabled="paymentParams.PaymentCard == null || paymentParams.Amount == null || paymentParams.Amount <= 0" ng-click="takeInvoiceCardPayment()" ng-if="!paymentParams.collectingPayment"><i class="material-icons">credit_card</i>Take Payment</button>
+                <button class="btn btn-primary" ng-disabled="true" ng-if="paymentParams.collectingPayment"><i class="fa fa-circle-o-notch fa-spin"></i>Please Wait...</button>
+                <button class="btn btn-warning ml10" ng-click="cancelNewCardPayment()" ng-if="!paymentParams.collectingPayment"><i class="material-icons">arrow_back</i>Cancel</button>
+            </div></div>
+        </div>
+    </div>
+    <table class="table table-condensed show-overflow">
+        <thead>
+            <tr>
+                <th style="width:20%">Date</th>
+                <th style="width:20%">Ref</th>
+                <th style="width:20%">Payment Type</th>
+                <th style="width:20%" class="text-right">Amount Paid</th>
+                <th style="width:200px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="newInPayment">
+                <td>
+                    <div class="form-group">
+                        <div class="form-edit">
+                            <div class="input-group mb5">
+                                <input class="form-control" type="text" ng-model="newInPayment.PaymentDate" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened[0]" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" />
+                                <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="opened[0] = true; openCalendar($event);"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <input type="text" class="form-control" ng-model="newInPayment.Reference" placeholder="Ref" />
+                </td>
+                <td>
+                    <select class="form-control" ng-model="newInPayment.PaymentType" name="PaymentTypeInput" ng-disabled="disabled" ng-options="option for option in InPaymentTypes"></select>
+                </td>
+                <td class="text-right">
+                    <input type="text" class="form-control text-right" ng-model="newInPayment.AmountPaid" placeholder="Amount Paid" />
+                </td>
+                <td class="text-right">
+                    <a class="btn btn-xs btn-success" ng-click="savePayment('Invoice')" ng-disabled="(payment.Invoice.TotalAmount - calculatePaidAmount('Invoice') - newInPayment.AmountPaid < 0)"><i class="material-icons">save</i>Save</a>
+                    <a class="btn btn-xs btn-warning" ng-click="cancelSave('Invoice')"><i class="material-icons">undo</i>Cancel</a>
+                </td>
+            </tr>
+            <tr ng-repeat="pay in invoicePayments">
+                <td>
+                    <span ng-bind="pay.PaymentDate | date:'shortDate'" ng-show="pay!=InSelected"></span>
+                    <div class="form-group" ng-show="pay==InSelected">
+                        <div class="form-edit">
+                            <div class="input-group mb5">
+                                <input class="form-control" type="text" ng-model="pay.PaymentDate" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened[$index+1]" placeholder="{{DATETIME_FORMAT}}" ng-disabled="pay!=InSelected" show-weeks="false" show-button-bar="false" />
+                                <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="opened[$index+1] = true; openCalendar($event);"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <span ng-bind="pay.Reference" ng-show="pay!=InSelected"></span>
+                    <input class="form-control" ng-model="pay.Reference" ng-show="pay==InSelected" placeholder="Ref" />
+                </td>
+                <td>
+                    <span ng-bind="pay.PaymentType" ng-show="pay!=InSelected"></span>
+                    <select class="form-control" ng-model="pay.PaymentType" name="PaymentTypeInput" ng-show="pay==InSelected" ng-disabled="disabled" ng-options="option for option in InPaymentTypes"></select>
+                </td>
+                <td class="text-right">
+                    <span ng-bind="pay.AmountPaid | Format" ng-show="pay!=InSelected"></span>
+                    <input class="form-control text-right" ng-model="pay.AmountPaid" ng-show="pay==InSelected" placeholder="Amount Paid" />
+                </td>
+                <td class="text-right">
+                    <div ng-show="pay!=InSelected">
+                        <a class="btn btn-xs btn-warning" ng-click="selectPayment('Invoice', pay)" ng-if="PERMISSIONS.test('driverpayments.viewer.payments','W')"><i class="material-icons">create</i>Edit</a>
+                        <a class="btn btn-xs btn-danger" ng-click="deletePayment('Invoice', pay)" ng-if="PERMISSIONS.test('driverpayments.viewer.payments','D')"><i class="material-icons">delete</i>Delete</a>
+                    </div>
+                    <div ng-show="pay==InSelected">
+                        <a class="btn btn-xs btn-success" ng-click="updatePayment('Invoice', pay)" ng-disabled="(payment.Invoice.TotalAmount + payment.Bonus - calculatePaidAmount('Invoice') < 0)"><i class="material-icons">save</i>Save</a>
+                        <a class="btn btn-xs btn-warning" ng-click="cancelUpdate('Invoice', pay)"><i class="material-icons">undo</i>Cancel</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td colspan="4" class="text-right">
+                    <h6 class="grey">Commission Receivable</h6>
+                </td>
+                <td class="text-right">
+                    <h6 class="grey">{{payment.Invoice.TotalAmount | Format}}</h6>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right">
+                    <strong>Payment Received</strong>
+                </td>
+                <td class="text-right">
+                    <span>{{calculatePaidAmount('Invoice') | Format}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right">
+                    <strong>Total Due</strong>
+                </td>
+                <td class="text-right">
+                    <span>{{(payment.Invoice.TotalAmount - calculatePaidAmount('Invoice')) | Format}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

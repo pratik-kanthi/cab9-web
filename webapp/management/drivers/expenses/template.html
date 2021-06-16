@@ -1,0 +1,131 @@
+﻿<div class="module" id="driver-expenses">
+	<h2 class="page-title mb10">
+		<i class="material-icons">library_books</i>Driver Expenses
+	</h2>
+
+	<p class="grey mb0">
+		This view shows expenses added by drivers across three states. When an expense is added by a driver it's in the
+		<strong class="brand-secondary">Pending</strong> state. It can then be
+		<strong class="brand-secondary">Approved</strong> or
+		<strong class="brand-secondary">Declined</strong> by staff memebers who have the right to do so.
+	</p>
+	<div class="view-options pull-right">
+		<a href="" ng-click="" class="mb20">
+			<span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+			<br>
+			<input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" class="ng-valid ng-dirty ng-valid-parse ng-touched" style="">
+		</a>
+	</div>
+	<div class="mt20" ng-show="fetching">
+		<h4 class="brand-secondary"><i class="fa fa-circle-o-notch fa-spin"></i> Fetching Expenses...</h4>
+	</div>
+	<div class="mt20" ng-show="!fetching">
+		<ul class="nav nav-tabs nav-justified">
+			<li class="bg-warning" ng-class="{ 'active': tab.current == 'PENDING' }">
+				<a class="pending" ng-click="tab.current = 'PENDING'">Pending
+					<br>Expenses
+					<span class="badge badge-warning" style="display:inline;">{{PendingExpenses.length}}</span>
+				</a>
+			</li>
+			<li class="bg-danger" ng-class="{ 'active': tab.current == 'DECLINED' }">
+				<a class="declined" ng-click="tab.current = 'DECLINED'">Recently
+					<br>Declined
+					<span class="badge badge-danger" style="display:inline;">{{DeclinedExpenses.length}}</span>
+				</a>
+			</li>
+			<li class="bg-success" ng-class="{ 'active': tab.current == 'APPROVED' }">
+				<a class="approved" ng-click="tab.current = 'APPROVED'">Recently Approved
+					<br> Last 7 Days
+					<span class="badge badge-success" style="display:inline;">{{ApprovedExpenses.length}}</span>
+				</a>
+			</li>
+		</ul>
+		<div class="mt20" ng-if="tab.current == 'PENDING'">
+			<p class="grey" ng-if="PendingExpenses.length > 0">List of
+				<strong class="brand-secondary">Pending</strong> expenses. Expenses can be marked
+				<strong class="brand-secondary">Approved</strong> or
+				<strong class="brand-secondary">Declined</strong> by clicking on the respective buttons which appear on the expense upon hovering.</p>
+			<p class="grey" ng-if="PendingExpenses.length == 0">No
+				<strong class="brand-secondary">Pending</strong> Expenses</p>
+			<div class="row">
+				<div ng-repeat="expense in PendingExpenses | filter:searchTerm" class="col-lg-4 col-md-4 col-sm-6">
+					<div ng-include="'/webapp/management/drivers/expenses/expense-widget.template.html'"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt20" ng-if="tab.current == 'DECLINED'">
+			<p class="grey" ng-if="DeclinedExpenses.length > 0">List of
+				<strong class="brand-secondary">Declined</strong> expenses. If an expense was
+				<strong class="brand-secondary">Declined</strong> in error, it can be marked
+				<strong class="brand-secondary">Approved</strong> by clicking on the respective buttons which appear on the expense upon hovering. A
+				<strong class="brand-secondary">Declined</strong> expense can also be deleted.</p>
+			<p class="grey" ng-if="DeclinedExpenses.length == 0">No
+				<strong class="brand-secondary">Declined</strong> Expenses</p>
+			<div class="row">
+				<div ng-repeat="expense in DeclinedExpenses | filter:searchTerm" class="col-lg-4 col-md-4 col-sm-6">
+					<div ng-include="'/webapp/management/drivers/expenses/expense-widget.template.html'"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="mt20" ng-if="tab.current == 'APPROVED'">
+			<p class="grey" ng-if="ApprovedExpenses.length > 0">List of recently
+				<strong class="brand-secondary">Approved</strong> expenses. If an expense was
+				<strong class="brand-secondary">Approved</strong> in error, it can be marked
+				<strong class="brand-secondary">Declined</strong> by clicking on the respective buttons which appear on the expense upon hovering.</p>
+			<p class="grey" ng-if="ApprovedExpenses.length == 0">No
+				<strong class="brand-secondary">Approved</strong> Expenses</p>
+
+			<div class="table-responsive table-striped-double">
+				<table class="table module-table">
+					<thead>
+						<tr>
+							<th style="width:20%">Driver</th>
+							<th style="width:20%">Booking</th>
+							<th style="width:25%">Expense</th>
+							<th style="width:20%; text-align: right;">Amount</th>
+							<th style="width:25%; text-align: right;" class="pr15">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="expense in ApprovedExpenses | filter:searchTerm">
+							<td>
+								<span class="driver">({{::expense.Callsign}})</span>
+								<br />
+								<strong class="grey">{{::expense.Firstname}} {{::expense.Surname}}</strong>
+							</td>
+							<td>
+								<span class="booking">
+									<strong class="brand-secondary">Booking </strong> #{{::expense.LocalId}}</span>
+								<br />
+								<strong class="grey">Booked </strong>
+								<span class="time">{{::expense.BookedDateTime | date:'dd/MM/yyyy HH:mm'}}</span>
+							</td>
+							<td>
+								<span class="expense-name">{{::expense.Name}}</span>
+								<br />Added {{::expense.CreationTime | date:'dd/MM/yyyy HH:mm'}}
+							</td>
+							<td style="text-align: right;">
+								<span class="amount">
+									{{::expense.DriverAmount | currency}}
+								</span>
+							</td>
+							<td>
+								<button class="approve" ng-if="expense.$Status != 'Approved'" ng-click="acceptExpense(expense)">
+									<i class="material-icons">done</i>
+								</button>
+								<button class="decline" ng-if="expense.$Status != 'Declined'" ng-click="declineExpense(expense)">
+									<i class="material-icons">close</i>
+								</button>
+								<button class="view" ng-click="openEditModal($event, expense)">
+									<i class="material-icons">assignment</i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

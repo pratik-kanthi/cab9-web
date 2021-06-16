@@ -1,0 +1,229 @@
+<div class="module" id="all-transactions" ng-if="CARD_PAYMENTS_ENABLED">
+   <h2 class="page-title ng-scope">
+      <i class="material-icons">credit_card</i>Card Transactions
+   </h2>
+   <div class="row">
+      <div class="col-sm-3">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <div class="panel-title">
+                  <i class="material-icons">filter_list</i>Filters
+               </div>
+            </div>
+            <div class="panel-body" style="overflow:visible;">
+               <div class="form-group">
+                  <label class="control-label">Search</label>
+                  <div class="form-edit">
+                     <input class="form-control" type="text" ng-model="searchText" placeholder="Search"  />
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="control-label">From</label>
+                  <div class="form-edit">
+                     <div class="input-group mb5">
+                        <input class="form-control" type="text" ng-model="filters.from" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.From" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" />
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openCalendar($event, 'From')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                        </span>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="control-label">To</label>
+                  <div class="form-edit">
+                     <div class="input-group mb5">
+                        <input class="form-control" type="text" ng-model="filters.to" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.To" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" />
+                        <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openCalendar($event, 'To')">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                        </span>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="control-label">Type</label>
+                  <div class="form-edit">
+                     <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="filters.type" btn-radio="">All</label>
+                        <label class="btn btn-primary" ng-model="filters.type" btn-radio="'Preauth'">Preauth</label>
+                        <label class="btn btn-primary" ng-model="filters.type" btn-radio="'Payment'">Payment</label>
+                     </div>
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="control-label">Result</label>
+                  <div class="form-edit">
+                     <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="filters.result" btn-radio="">All</label>
+                        <label class="btn btn-primary" ng-model="filters.result" btn-radio="true">Success</label>
+                        <label class="btn btn-primary" ng-model="filters.result" btn-radio="false">Failure</label>
+                     </div>
+                  </div>
+               </div>
+               <div class="mt10">
+                  <button class="btn btn-success" ng-click="dateChanged()">
+                  <i class="material-icons">play_arrow</i>Fetch
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-sm-9">
+         <div class="panel panel-default" id="credit-cards-transactions">
+            <div class="panel-heading">
+               <h3 class="panel-title" ng-if="!fetchingTransactions">
+                  <i class="material-icons">toc</i>  Card Transactions
+               </h3>
+               <h3 class="panel-title" ng-if="fetchingTransactions">
+                  <i class="fa fa-circle-o-notch fa-spin"></i>  Fetching Transactions...
+               </h3>
+               <button class="btn btn-primary btn-xs" ng-click="exportTransactions()"><i class="material-icons">cloud_download</i> Export</button>
+            </div>
+            <div class="panel-body">
+               <p class="brand-primary t-l bold" ng-if="transactions.length == 0 && !fetchingTransactions">
+                  No Transactions Found
+               </p>
+               <div class="tg-wrapper" ng-if="transactions.length > 0 && !fetchingTransactions">
+                  <tabset>
+                     <tab heading="Booking Transactions">
+                        <table class="table table-responsive table-bordered" style="min-width: 800px;">
+                           <thead>
+                              <tr>
+                                 <th style="width: 10%">Status</th>
+                                 <th style="width: 10%">Type</th>
+                                 <th style="width: 10%" class="text-center">Booking</th>
+                                 <th style="width: 15%">Date/Time</th>
+                                 <th style="width: 30%">Card Number</th>
+                                 <th style="width: 12.5%">Provider</th>
+                                 <th style="width: 12.5%" class="text-center">Details</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr ng-repeat-start="item in $filtered = (bTransactions | filter:{'_TransactionType':filters.type, 'Success':filters.result, $:searchText}) track by item.Id">
+                                 <td class="status" ng-class="(item.Success)?'SUCCESS':'FAILURE'">
+                                    <strong class="brand-primary">{{::((item.Success)? 'Success': 'Failure')}}</strong>
+                                 </td>
+                                 <td class="transaction-type">
+                                    <strong ng-bind="::item.TransactionType" class="brand-secondary"></strong>
+                                    <br />
+                                    <strong class="brand-primary" ng-bind="::item.Amount | currency"></strong>
+                                 </td>
+                                 <td class="text-center">
+                                    <a href="" ui-sref="root.bookings.search({ localId: item.LocalId })" target="_blank">
+                                    <strong class="brand-primary">{{::item.LocalId}}</strong>
+                                    </a>
+                                 </td>
+                                 <td>
+                                    <span ng-bind="::(item.CreatedAt | date:'dd/MM/yyyy HH:mm')"></span>
+                                 </td>
+                                 <td class="card-type">
+                                    <div class="credit-card-type small" ng-class="::item.PaymentCardType"></div>
+                                    <strong ng-bind="item.PaymentCardNumber"></strong>
+                                 </td>
+                                 <td class="provider-type">
+                                    <div class="credit-card-provider-type small" ng-class="::item.Provider"></div>
+                                 </td>
+                                 <td class="text-center">
+                                    <button class="btn btn-xs btn-primary" ng-show="!item.$expanded" ng-click="expandTransaction(item)">
+                                    <i class="material-icons">expand_more</i>Details
+                                    </button>
+                                    <button class="btn btn-xs btn-warning" ng-show="item.$expanded" ng-click="item.$expanded = !item.$expanded">
+                                    <i class="material-icons">expand_less</i>Hide
+                                    </button>
+                                 </td>
+                              </tr>
+                              <tr ng-repeat-end ng-if="item.$expanded">
+                                 <td colspan="7">
+                                    <div class="row mt10">
+                                       <div class="col-sm-6">
+                                          <strong class="brand-primary">Payment Request</strong>
+                                          <pre>{{::(item.Request|json:true)}}</pre>
+                                       </div>
+                                       <div class="col-sm-6">
+                                          <strong class="brand-primary">Provider Response</strong>
+                                          <pre>{{::(item.Response|json:true)}}</pre>
+                                       </div>
+                                    </div>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </tab>
+
+                     <tab heading="Invoice Transactions">
+                        <table class="table table-responsive table-bordered" style="min-width: 800px;">
+                           <thead>
+                              <tr>
+                                 <th style="width: 10%">Status</th>
+                                 <th style="width: 10%">Type</th>
+                                 <th style="width: 10%" class="text-center">Invoice</th>
+                                 <th style="width: 15%">Date/Time</th>
+                                 <th style="width: 30%">Card Number</th>
+                                 <th style="width: 12.5%">Provider</th>
+                                 <th style="width: 12.5%" class="text-center">Details</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                              <tr ng-repeat-start="item in $filtered = (iTransactions | filter:{'_TransactionType':filters.type, 'Success':filters.result, $:searchText}) track by item.Id">
+                                 <td class="status" ng-class="(item.Success)?'SUCCESS':'FAILURE'">
+                                    <strong class="brand-primary">{{::((item.Success)? 'Success': 'Failure')}}</strong>
+                                 </td>
+                                 <td class="transaction-type">
+                                    <strong ng-bind="::item.TransactionType" class="brand-secondary"></strong>
+                                    <br />
+                                    <strong class="brand-primary" ng-bind="::item.Amount | currency"></strong>
+                                 </td>
+                                 <td class="text-center">
+                                    <a href="" ui-sref="root.invoices.viewer({ Id: item.InvoiceId })" target="_blank">
+                                    <strong class="brand-primary">{{::item.InvoiceRef}}</strong>
+                                    </a>
+                                 </td>
+                                 <td>
+                                    <span ng-bind="::(item.CreatedAt | date:'dd/MM/yyyy HH:mm')"></span>
+                                 </td>
+                                 <td class="card-type">
+                                    <div class="credit-card-type small" ng-class="::item.PaymentCardType"></div>
+                                    <strong ng-bind="item.PaymentCardNumber"></strong>
+                                 </td>
+                                 <td class="provider-type">
+                                    <div class="credit-card-provider-type small" ng-class="::item.Provider"></div>
+                                 </td>
+                                 <td class="text-center">
+                                    <button class="btn btn-xs btn-primary" ng-show="!item.$expanded" ng-click="expandTransaction(item)">
+                                    <i class="material-icons">expand_more</i>Details
+                                    </button>
+                                    <button class="btn btn-xs btn-warning" ng-show="item.$expanded" ng-click="item.$expanded = !item.$expanded">
+                                    <i class="material-icons">expand_less</i>Hide
+                                    </button>
+                                 </td>
+                              </tr>
+                              <tr ng-repeat-end ng-if="item.$expanded">
+                                 <td colspan="7">
+                                    <div class="row mt10">
+                                       <div class="col-sm-6">
+                                          <strong class="brand-primary">Payment Request</strong>
+                                          <pre>{{::(item.Request|json:true)}}</pre>
+                                       </div>
+                                       <div class="col-sm-6">
+                                          <strong class="brand-primary">Provider Response</strong>
+                                          <pre>{{::(item.Response|json:true)}}</pre>
+                                       </div>
+                                    </div>
+                                 </td>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </tab>
+                  </tabset>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="mt20" ng-if="!CARD_PAYMENTS_ENABLED">
+   <div class="alert alert-warning">Credit Card payments are not activated for your account. Please enable Credit Card Payments in Company Settings.</div>
+</div>

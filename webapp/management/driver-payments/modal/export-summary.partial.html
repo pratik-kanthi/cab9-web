@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+    <h3 class="modal-title">Export Summary</h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group mt30">
+                <label class="control-label" for="date">Date Range</label>
+                <div class="form-edit">
+                    <a id="daterangepicker_bookings" href="">
+                        <i class="material-icons">date_range</i>
+                    </a>
+                    <span class="current-period" ng-bind="options.period.summary"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group mt30">
+                <label class="control-label" for="DriverIdInput">Driver</label>
+                <div class="form-edit">
+                    <ui-select class="edit" ng-model="filterOptions.DriverId" theme="selectize">
+                        <ui-select-match allow-clear="true" placeholder="Select...">
+                            <div class="select-text">{{$select.selected.Name}}</div>
+                        </ui-select-match>
+                        <ui-select-choices repeat="item.Id as item in drivers | filter: $select.search">
+                            <div class="select-text-option">
+                                <div ng-bind-html="item.Name"></div>
+                                <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <a ng-click="filterOptions.DriverId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="options.DriverId" class="red">Clear</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+    <button class="btn btn-xs btn-primary" ng-click="proceed()"><i class="material-icons">save</i>Proceed</button>
+</div>

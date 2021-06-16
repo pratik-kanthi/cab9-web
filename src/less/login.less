@@ -1,0 +1,209 @@
+.login-wrapper {
+	height: 100%;
+	min-height: 500px !important;
+	background: @brand-primary;
+	position: relative;
+	.hero {
+		position: absolute;
+		width: 65%;
+		#background {
+			height: 100%;
+			overflow: hidden;
+			background-position: center;
+			background-size: cover;
+			background-repeat: no-repeat;
+			.opacity(70);
+		}
+		.logo {
+			position: absolute;
+			top: 50px;
+			left: 50px;
+			img {
+				height: 120px;
+				float: left;
+				margin-right: 20px;
+				display: none;
+				.animate(2, fadeIn);
+			}
+			.brand {
+				float: left;
+				height:80px;
+				border: 8px solid white;
+				font-size: 36px;
+				line-height: 64px;
+				padding: 0 25px;
+				font-weight: 800;
+				color: #fff;
+				display: none;
+				.animate(2, fadeIn);
+			}
+		}
+		.features {
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+			color:#eee;
+
+			right: 0px;
+			padding:50px;
+			background: -moz-linear-gradient(top,  rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.85))); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.85) 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.85) 100%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(top,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.85) 100%); /* IE10+ */
+			background: linear-gradient(to bottom,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.85) 100%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#a6000000',GradientType=0 ); /* IE6-9 */
+			i {
+				float: left;
+				width:30%;
+				margin-right: 20px;
+				font-size: 64px;
+			}
+			.desc {
+				float: left;
+				width:60%;
+				.tag-line {
+					font-size: 24px;
+					line-height: 30px;
+					display: block;
+					margin-bottom: 20px;
+				}
+			}
+		}
+	}
+	.login-container {
+		width: 35%;
+		display: block;
+		position: relative;
+		float: right;
+		background-color:rgba(255,255,255,1.0);
+		padding:80px 70px;
+		
+		> .login-box {
+			max-width: 400px;
+			h1 {
+				color: @brand-primary;
+				margin: 0;
+			}
+			form#login-form {
+				padding-top:15px;
+			}
+			#login-button {
+				background-color: @brand-primary !important;
+				color: #fff !important;
+				.transition(all 400ms);
+				text-align: left;
+				i {
+					font-size: 16px;
+					margin-right: 8px;
+				}
+			}
+		}
+		.row {
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+		}
+		.cims-info {
+			padding:0 70px 50px;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			.row {
+				img {
+					width:50px;
+					.border-radius(25px);
+					border: 1px solid #eee;
+					.shadow();
+				}
+				.info {
+					font-size: 12px;
+					padding:4px 0 7.5px 10px;
+				}
+			}
+		}
+	}
+	> * {
+		height: 100%;
+		min-height: 550px !important;
+	}
+	@media only screen and (min-width: 992px) and (max-width: 1159px) {
+		.hero {
+			width: 55%;
+			.cims-features {
+				.desc {
+					width: 100%;
+				}
+			}
+		}
+		.login-container {
+			width: 45%;
+			padding:80px 50px;
+			.cims-info {
+				padding:0 50px 50px;
+			}
+		}
+	}
+	@media only screen and (min-width: 768px) and (max-width: 1159px) {
+		.hero {
+			width: 55%;
+			.cims-features {
+				.desc {
+					width: 100%;
+				}
+			}
+		}
+		.login-container {
+			width: 45%;
+			padding:80px 50px;
+			.cims-info {
+				padding:0 50px 50px;
+			}
+		}
+	}
+	@media only screen and (max-width: 767px) {
+		.hero {
+			display: block;
+			position: static !important;
+			height: 50% !important;
+			min-height: 50% !important;
+			width: 100% !important;
+			background-position: center;
+			.background {
+				.opacity(80);
+				background-position: top !important;
+			}
+		}
+		.login-container {
+			min-height: 50% !important;
+			height: 50% !important;
+			position: absolute;
+			background-color: #fff;
+			padding: 30px;
+			width: 100%;
+			z-index:2;
+			> .login-box {
+				max-width: 500px;
+				img {
+					width: 100px;
+				}
+			}
+			.cims-info {
+				display: none;
+				.row {
+					max-width: 500px;
+					img {
+						max-width: 60px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.verification {
+	padding: 60px;
+	.verified {
+			color: @brand-primary;
+		}
+}

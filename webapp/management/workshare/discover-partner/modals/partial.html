@@ -1,0 +1,51 @@
+<div id="partner-filters">
+    <div class="modal-header">
+        <h3 class="modal-title">Filter Partners
+            <span class="pull-right" ng-click="$dismiss()"><i class="material-icons cancel">cancel</i></span>
+        </h3>
+    </div>
+    <div class="modal-body" class="filters">
+        <div class="row">
+            <div class="col-sm-6">
+                <label for>Address Finder</label>
+                <p class="text-muted"> You can select an address and choose a radius within specific miles from that address to
+                    filter particular partners. </p>
+                <address-map-search object="filterOptions.addressFinder"></address-map-search>
+                <label for class="control-label">Miles Range</label>
+                <div class="range-slider">
+                    <input ng-disabled="!filterOptions.addressFinder.latitude" type="range" min="0" max="200" ng-model="filterOptions.miles">
+                    <div class="range-values">
+                        <span class="pull-right mt8" ng-bind="filterOptions.miles"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <label for>Services</label>
+                <p class="text-muted"> You can select multiple services to show only those partners who support them. </p>
+                <ui-select multiple ng-model="filterOptions.services" theme="select2">
+                    <ui-select-match placeholder="Type to search...">
+                        <div class="select-text" ng-bind="::$item.Name"></div>
+                    </ui-select-match>
+                    <ui-select-choices repeat="item.Id as item in services">
+                        <div class="ui-select-box">
+                            <div class="option-details">
+                                <strong ng-bind="::item.Name"></strong>
+                                <small class="text-muted" ng-bind="::item.Description"></small>
+                            </div>
+                        </div>
+                    </ui-select-choices>
+                </ui-select>
+                <div class="form-group mt15">
+                    <label class="control-label">Min. Drivers</label>
+                    <div class="form-edit">
+                        <input type="number" class="form-control" ng-model="filterOptions.minDrivers" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+        <button class="btn btn-xs btn-success pull-right" ng-click="confirmFilters()"><i class="material-icons">date_range</i>Filter</button>
+    </div>
+</div>

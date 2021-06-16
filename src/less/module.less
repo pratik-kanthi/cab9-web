@@ -1,0 +1,291 @@
+.module {
+    #content-wrapper & {
+        padding: 8px;
+        position: relative;
+        >[name="options-area"] {
+            margin-bottom: 20px;
+        }
+        [name="view-area"] {
+            .transition(opacity 0.4s linear);
+            &.ng-enter {
+                opacity: 0;
+            }
+            &.ng-enter-active {
+                opacity: 1;
+            }
+            &.ng-leave {
+                display: none;
+            }
+            &.ng-leave-active {
+                display: none;
+            }
+        }
+        @media only screen and (max-width: 767px) {
+            padding: 0px;
+        }
+    }
+}
+
+.tab-content>.module {
+    padding: 0 !important;
+    >[name="options-area"] {
+        margin-top: -16px !important;
+    }
+}
+
+.module-options {
+    a.btn {
+        margin-right: 10px;
+        @media only screen and (max-width: 767px) {
+            color: @brand-primary !important;
+            height: 30px;
+            display: block;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            float: left;
+            text-transform: uppercase;
+            font-size: 9px;
+            text-align: center;
+            padding: 0;
+            border: 0;
+            min-width: inherit!important;
+            background: transparent; // height: 30px;
+            i {
+                margin-bottom: 3px;
+                float: none;
+                font-size: 18px;
+                color: @brand-primary !important;
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                position: relative;
+                line-height: 16px;
+            }
+        }
+    }
+}
+
+.module-secondary {}
+
+.module,
+.module-item {
+    .view-options {
+        a {
+            height: 30px;
+            display: block;
+            margin-right: 0;
+            margin-left: 10px;
+            float: right !important;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 9px;
+            text-align: center;
+            position: relative;
+            i {
+                display: block;
+                margin-bottom: 4px;
+                font-size: 18px;
+                .center-block();
+            }
+            #searchTerm {
+                -webkit-appearance: none;
+                border: 1px solid @brand-primary;
+                position: absolute;
+                right: 45px;
+                top: 0px;
+                width: 100px;
+                height: 35px;
+                z-index: 100000;
+                padding-left: 5px;
+                padding-right: 5px;
+                font-size: 12px;
+                .border-radius(2px);
+                &.ng-hide-add,
+                &.ng-hide-remove {
+                    display: block !important;
+                }
+                &.ng-hide-remove {
+                    -webkit-animation: 0.5s searchshow ease;
+                    animation: 0.5s searchshow ease;
+                }
+                &.ng-hide-add {
+                    -webkit-animation: 0.5s searchhide ease;
+                    animation: 0.5s searchhide ease;
+                }
+            }
+            &.current-view {
+                display: none;
+            }
+        }
+    }
+}
+
+@keyframes searchshow {
+    0% {
+        width: 2px;
+        height: 5px;
+        top: 3px;
+        right: 20px;
+    }
+    50% {
+        width: 2px;
+        height: 5px;
+        top: 3px;
+        right: 45px;
+    }
+    75% {
+        width: 2px;
+        height: 35px;
+        top: 0px;
+        right: 45px;
+    }
+    100% {
+        width: 100px;
+        height: 35px;
+        top: 0px;
+        right: 45px;
+    }
+}
+
+@-webkit-keyframes searchshow {
+    0% {
+        width: 2px;
+        height: 5px;
+        top: 3px;
+        right: 20px;
+    }
+    50% {
+        width: 2px;
+        height: 5px;
+        top: 3px;
+        right: 45px;
+    }
+    75% {
+        width: 2px;
+        height: 35px;
+        top: 0px;
+        right: 45px;
+    }
+    100% {
+        width: 100px;
+        height: 35px;
+        top: 0px;
+        right: 45px;
+    }
+}
+
+@keyframes searchhide {
+    100% {
+        width: 2px;
+        height: 5px;
+        top: 3px;
+        right: 20px;
+    }
+    75% {
+        width: 2px;
+        height: 5px;
+        top: 3px;
+        right: 45px;
+    }
+    50% {
+        width: 2px;
+        height: 35px;
+        top: 0px;
+        right: 45px;
+    }
+    0% {
+        width: 100px;
+        height: 35px;
+        top: 0px;
+        right: 45px;
+    }
+}
+
+@-webkit-keyframes searchhide {
+    100% {
+        width: 2px;
+        height: 5px;
+        top: 3px;
+        right: 20px;
+    }
+    75% {
+        width: 2px;
+        height: 5px;
+        top: 3px;
+        right: 45px;
+    }
+    50% {
+        width: 2px;
+        height: 35px;
+        top: 0px;
+        right: 45px;
+    }
+    0% {
+        width: 100px;
+        height: 35px;
+        top: 0px;
+        right: 45px;
+    }
+}
+
+.filter-options {
+    position: absolute;
+    z-index: 3;
+    width: 264px;
+    right: 15px;
+    top: 40px;
+    background-color: #ddd !important;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    z-index: 100;
+    .border-radius(4px);
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    &.show-filter {
+        overflow: visible;
+        background-color: #ddd !important;
+        height: auto;
+        padding: 16px;
+        border: 1px solid #d9d9d9;
+        margin-top: 30px !important;
+    }
+    ul.map-options-menu {
+        padding: 0 !important;
+        list-style: none;
+        li {
+            display: block;
+            padding: 4px;
+            strong {
+                display: block;
+                color: @grey;
+                text-transform: uppercase;
+            }
+            label {
+                display: inline-block;
+                margin-right: 10px;
+                input {
+                    margin-right: 5px;
+                }
+                font-weight: 400;
+                color: #444;
+            }
+            .toggle {
+                .control {
+                    float: right;
+                }
+                .info {
+                    line-height: 40px;
+                }
+                color: #444;
+            }
+            &.location-search {
+                line-height: 30px;
+                select {
+                    width: 104px;
+                }
+            }
+        }
+    }
+}

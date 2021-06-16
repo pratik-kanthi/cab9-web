@@ -1,0 +1,41 @@
+<h3 class="section-title mt0">
+Current References</h3>
+<div class="row">
+    <div class="col-xs-6 module-options">
+        <a ng-click="openReferenceCreate()" class="btn btn-success mt20 mb20"  ng-if="PERMISSIONS.test('clients.viewer.references', 'W')">
+            <i class="material-icons">add_circle</i>Add Reference
+        </a>
+    </div>
+    <div class="col-xs-6">
+        <div class="view-options">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <table-for datasource="references" class="table table-condensed table-hover" schema="ClientReference" filtering="searchTerm" sorting="" paging="" grouping="grouping" wrapper-class="table-responsive table-striped-double " table-class="">
+            <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+            <table-heading sorting="true">
+            </table-heading>
+            <table-data-rows>
+                <table-selection></table-selection>
+                <table-actions>
+                    <div class="btn-group" dropdown ng-if="PERMISSIONS.test('clients.viewer.references', 'W')">
+                        <a class="btn btn-xs btn-primary" ng-click="openReferenceEdit($row)" ><i class="material-icons">remove_red_eye</i> Edit</a>
+                        <a class="btn btn-xs btn-primary" dropdown-toggle ng-click="toggle = !toggle" style="width: 26px;min-width: initial;"><i class="caret" style="width: 0;height: 0;margin-left: 8px;margin-top:8px;vertical-align: middle;"></i></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a ng-href="{{$row._KnownValuesCSVUrl}}" ng-show="$row.ReferenceType == 'List'" download="{{$row.ReferenceName}}.csv"><i class="material-icons">file_download</i> Download File</a>
+                            </li>
+                            <li>
+                                <a ng-click="deleteReference($row)" ng-if="PERMISSIONS.test('clients.viewer.references', 'D')"><i class="material-icons">delete_forever</i> Delete</a>
+                            </li>
+                        </ul>
+                    </div>
+                </table-actions>
+            </table-data-rows>
+            <table-footer paging="true">
+            </table-footer>
+        </table-for>
+    </div>
+</div>

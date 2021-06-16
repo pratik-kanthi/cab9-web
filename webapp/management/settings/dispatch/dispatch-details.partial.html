@@ -1,0 +1,342 @@
+<div class="payment-model auto-dispatch-settings" style="margin-top: -75px;">
+    <div class="pull-right mt20">
+        <input type="checkbox" ng-model="show.advanced" /> Show Advanced
+    </div>
+    <div form-for="item" schema="DispatchSettings" mode="{{viewMode}}" class="mt25 mb10">
+        <div class="row">
+            <div class="col-sm-3">
+                <div field-for="Description"></div>
+            </div>
+            <div class="col-sm-3">
+                <div field-for="Type"></div>
+            </div>
+            <div class="col-sm-3">
+                <div field-for="Type"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="payment-details" form-for="item" schema="DispatchSettings" mode="{{viewMode}}">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h3 class="section-title">Base Settings</h3>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <button class="btn btn-warning" ng-show="viewMode=='VIEW'" ng-click="startEdit()"><i class="material-icons">create</i>Edit</button>
+                    <button class="btn btn-success" ng-show="viewMode=='EDIT'" ng-click="saveEdits(item)" ng-disabled="(item.$profile == 'Custom') && (item.TimeWeighting + item.RatingWeighting + item.FairnessWeighting + item.GreenWeighting + item.EmptyWeighting) < 0.99999999"> <i class="material-icons">save</i> Submit</button>
+                    <button class="btn btn-warning" ng-show="viewMode=='EDIT'" ng-click="reset(item)"> <i class="material-icons">undo</i> Cancel</button>
+                </div>
+            </div>
+            <br />
+            <br />
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Active</label>
+                        <input class="check" type="checkbox" id="AutoDispatchActive" ng-disabled="viewMode == 'VIEW'" ng-model="item.Active" />
+                        <label class="check-label" for="AutoDispatchActive"></label>
+                        <br class="clearfix">
+                        <small class="help-block">
+                            Use this to disable/enable auto-dispatch.
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb20">
+                        <div field-for="Mode" class="with-help"></div>
+                        <small class="help-block mt0">
+                            Recommend - Selected driver shown on dispatch screen.<br />
+                            Auto - Driver automatically sent booking offer.
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3" ng-show="show.advanced">
+                    <div field-for="LookForwardMinutes" display="Look Ahead (mins)" class="with-help"></div>
+                    <small class="help-block mt0">
+                        Number of minutes ahead to consider when choosing drivers.<br />
+                        Bookings will still only be dispatched when dispatch time reached.
+                    </small>
+                </div>
+                <div class="col-md-3">
+                    <div field-for="OverrideMode"></div>
+                </div>
+                <div class="col-md-3" ng-if="show.advanced">
+                </div>
+                <br class="clearfix" ng-if="show.advanced" />
+                <div class="col-md-3" ng-if="show.advanced">
+                    <div class="form-group">
+                        <label>Target Time (mins)</label>
+                        <input type="number" class="form-control" ng-model="item.TargetTime" ng-disabled="viewMode == 'VIEW'" />
+                        <small class="help-block">
+                            Initial driver selection will be made from drivers below this threshold.
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3" ng-if="show.advanced">
+                    <div class="form-group">
+                        <label>Acceptable Time (mins)</label>
+                        <input type="number" class="form-control" ng-model="item.AcceptableTime" ng-disabled="viewMode == 'VIEW'" />
+                        <small class="help-block">
+                            Threshold for swapping drivers to make more efficient pairings.<br />
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Maximum Time (mins)</label>
+                        <input type="number" class="form-control" ng-model="item.MaximumTime" ng-disabled="viewMode == 'VIEW'" />
+                        <small class="help-block">
+                            Maximum on-route time driver will be assigned.<br />
+                        </small>
+                    </div>
+                </div>
+                <div class="col-md-3" ng-if="show.advanced">
+                    <div class="form-group">
+                        <label>Dispatch Cap Time (mins)</label>
+                        <input type="number" class="form-control" ng-model="item.DispatchTimeCap" ng-disabled="viewMode == 'VIEW'" />
+                        <small class="help-block">
+                            Time defined to be used as minimum dispatch time<br />
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Driver Scoring Profile</label>
+                        <p class="form-control-static" ng-bind="item.$profile" ng-show="viewMode == 'VIEW'"></p>
+                        <select class="form-control" ng-model="item.$profile" ng-show="viewMode == 'EDIT'">
+                            <option ng-repeat="(p, v) in profiles" ng-value="p">{{p}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label>Profile Breakdown</label><br class="clearfix" />
+                        <div class="progress mb30" style="height:30px;">
+                            <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.TimeWeighting * 100) + '%', 'border-width': item.TimeWeighting ? '1px' : 0,'background-color':'#A88ADC' }" tooltip="{{item.TimeWeighting * 100}}%, Time Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">access_time</i></div>
+                            <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.EmptyWeighting * 100) + '%', 'border-width': item.EmptyWeighting ? '1px' : 0,'background-color':'#FA7B70' }" tooltip="{{item.EmptyWeighting * 100}}%, Empty Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">hourglass_empty</i></div>
+                            <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.FairnessWeighting * 100) + '%', 'border-width': item.FairnessWeighting ? '1px' : 0,'background-color':'#68CCFB' }" tooltip="{{item.FairnessWeighting * 100}}%, Fairness Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">how_to_reg</i></div>
+                            <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.RatingWeighting * 100) + '%', 'border-width': item.RatingWeighting ? '1px' : 0,'background-color':'#F7B500' }" tooltip="{{item.RatingWeighting * 100}}%, Rating Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">star</i></div>
+                            <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.GreenWeighting * 100) + '%', 'border-width': item.GreenWeighting ? '1px' : 0,'background-color':'#31C85A' }" tooltip="{{item.GreenWeighting * 100}}%, Green Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">eco</i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="viewMode == 'EDIT'">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label><i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">access_time</i>Time Weighting</label>
+                        <small class="help-block">Importance given to the driver who is nearest the pickup location.</small>
+                        <rzslider rz-slider-model="item.TimeWeighting" rz-slider-options="verticalSlider.TimeWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.TimeBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.TimeCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label> <i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">star</i> Rating Weighting</label>
+                        <small class="text-muted help-block">Importance given to the driver who has the best rating.</small>
+                        <rzslider rz-slider-model="item.RatingWeighting" rz-slider-options="verticalSlider.RatingWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.RatingBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.RatingCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label><i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">hourglass_empty</i>Empty Weighting</label>
+                        <small class="help-block">Importance given to the driver who has been empty the longest.</small>
+                        <rzslider rz-slider-model="item.EmptyWeighting" rz-slider-options="verticalSlider.EmptyWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.EmptyBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.EmptyCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">eco</i>Green Weighting</label>
+                        <small class="text-muted help-block">Importance given to driver who would produce least emissions.</small>
+                        <rzslider rz-slider-model="item.GreenWeighting" rz-slider-options="verticalSlider.GreenWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.GreenBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.GreenCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label><i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">how_to_reg</i>Fairness Weighting</label>
+                        <small class="help-block">Importance given to the driver who has earned the least in the current period.</small>
+                        <rzslider rz-slider-model="item.FairnessWeighting" rz-slider-options="verticalSlider.FairnessWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.FairnessBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.FairnessCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="payment-details">
+            <div class="row mb5">
+                <div class="col-xs-6">
+                    <h3 class="section-title">Overrides</h3>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <button class="btn btn-success" ng-show="viewMode=='VIEW'" ng-click="addOverride()"><i class="material-icons">add</i>Add Override</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-bordered">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th style="color:white;">Client</th>
+                                <th style="color:white;width:115px;">Timespan</th>
+                                <th style="color:white;width:100px;">Payment</th>
+                                <th style="color:white;width:50%;">Profile</th>
+                                <th style="color:white;width:75px;">{{item.OverrideMode == 'WeightedAverage' ? 'Weighting' : 'Priority'}}</th>
+                                <th style="color:white;width:42px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody style="background:white;">
+                            <tr ng-if="overrides.length == 0">
+                                <td colspan="6">
+                                    <span class="text-muted">No Client Overrides</span>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="o in overrides | orderBy:'Strength'">
+                                <td>
+                                    {{o.Client.Name}}
+                                    <span class="text-muted" ng-if="!o.ClientId">N/A</span>
+                                </td>
+                                <td class="lh20">
+                                    {{o.$timespan}}
+                                    <span class="text-muted" ng-if="!o.$timespan">N/A</span><br />
+                                    <small class="text-muted">{{o.DaysOfWeek}}</small>
+                                </td>
+                                <td>
+                                    {{o.PaymentType}}
+                                    <span class="text-muted" ng-if="!o.PaymentType">All</span>
+                                </td>
+                                <td>
+                                    {{o.$profile}}<br />
+                                    <div class="progress mb0" style="height:30px;">
+                                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (o.TimeWeighting * 100) + '%', 'border-width': o.TimeWeighting ? '1px' : 0,'background-color':'#A88ADC' }" tooltip="{{o.TimeWeighting * 100}}%, Time Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">access_time</i></div>
+                                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (o.EmptyWeighting * 100) + '%', 'border-width': o.EmptyWeighting ? '1px' : 0,'background-color':'#FA7B70' }" tooltip="{{o.EmptyWeighting * 100}}%, Empty Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">hourglass_empty</i></div>
+                                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (o.FairnessWeighting * 100) + '%', 'border-width': o.FairnessWeighting ? '1px' : 0,'background-color':'#68CCFB' }" tooltip="{{o.FairnessWeighting * 100}}%, Fairness Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">how_to_reg</i></div>
+                                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (o.RatingWeighting * 100) + '%', 'border-width': o.RatingWeighting ? '1px' : 0,'background-color':'#F7B500' }" tooltip="{{o.RatingWeighting * 100}}%, Rating Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">star</i></div>
+                                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (o.GreenWeighting * 100) + '%', 'border-width': o.GreenWeighting ? '1px' : 0,'background-color':'#31C85A' }" tooltip="{{o.GreenWeighting * 100}}%, Green Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">eco</i></div>
+                                    </div>
+                                </td>
+                                <td>{{o.Strength}}</td>
+                                <td>
+                                    <a ng-click="editOverride(o)" ng-show="viewMode=='VIEW'"><i class="material-icons">edit</i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="payment-details">
+            <div class="row mb5">
+                <div class="col-xs-6">
+                    <h3 class="section-title">Ranks</h3>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <button class="btn btn-success" ng-show="viewMode=='VIEW'" ng-click="addRank()"><i class="material-icons">add</i>Add Rank</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-bordered">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th style="color:white;">Zone</th>
+                                <th style="color:white;width:200px;">Timespan</th>
+                                <th style="color:white;width:42px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody style="background:white;">
+                            <tr ng-if="ranks.length == 0">
+                                <td colspan="6">
+                                    <span class="text-muted">No Ranks</span>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="o in ranks | orderBy:'Zone.Name'">
+                                <td>
+                                    {{o.Zone.Name}}
+                                    <span class="text-muted" ng-if="!o.ZoneId">N/A</span>
+                                </td>
+                                <td class="lh20">
+                                    {{o.$timespan}}
+                                    <span class="text-muted" ng-if="!o.$timespan">N/A</span><br />
+                                    <small class="text-muted">{{o.DaysOfWeek}}</small>
+                                </td>
+                                <td>
+                                    <a ng-click="removeRank(o)" ng-show="viewMode=='VIEW'"><i class="material-icons">delete</i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

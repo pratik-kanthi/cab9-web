@@ -1,0 +1,62 @@
+ul.nav {
+	&.nav-pills {
+		&.nav-stacked {
+			li {
+				margin-bottom: 10px;
+                background-color: #e7e7e7;
+				a {
+					.border-radius(0px);
+                    font-weight: 800; 
+					i {
+						float: left;
+						font-size: 24px;
+						margin-right: 10px;
+						color: @brand-secondary;
+					}
+				}
+				&.active {
+					a {
+						background-color: @brand-secondary;
+						color: #fff !important;
+						font-weight: 800; 
+						i {
+							color: #fff;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+ul.nav.settings {
+        li {
+            cursor: pointer;
+            a {
+                background: none;
+                color: @brand-primary!important;
+                font-weight: 600;
+                padding: 10px;
+                cursor: pointer;
+                i {
+                    color: @brand-primary;
+                    font-size: 20px;
+                    &:first-child {
+                        font-size: 22px;
+                    }
+                }
+                &:focus,
+                &:hover {
+                    background: @brand-primary;
+                    color: white!important;
+                    font-weight: 600;
+                    i {
+                        color: white!important;
+                    }
+                }
+                .active {
+                    background: @brand-primary;
+                }
+            }
+        }
+    }

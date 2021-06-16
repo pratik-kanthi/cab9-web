@@ -1,0 +1,348 @@
+<div form-for="client" schema="Client" mode="{{displayMode}}">
+	<div class="row">
+		<div class="col-xs-12" style="padding: 8px 15px;">
+			<div ng-if="displayMode === 'VIEW'">
+				<button class="btn btn-primary" ng-click="startEditing()" ng-if="PERMISSIONS.test('clients.viewer', 'W')"> <i class="material-icons">create</i>
+					Edit</button>
+				<!--<button class="btn btn-xs btn-danger" ng-click="recalcJobs()">
+                    Recalc Bookings
+                </button>-->
+			</div>
+			<div ng-if="displayMode === 'EDIT' || displayMode === 'CREATE'">
+				<button class="btn btn-success" ng-click="saveEdits()" ng-disabled="formFor.form.$invalid || saving">
+					<span ng-show="!saving"><i class="material-icons">save</i> Submit</span>
+					<span ng-show="saving"><i class="material-icons animated spin">refresh</i> Saving</span>
+
+				</button>
+				<button class="btn btn-warning" ng-click="cancelEditing()"> <i class="material-icons">undo</i> Cancel</button>
+				<button class="btn btn-primary" ng-click="chooseImage()" ng-show="displayMode=='EDIT'">
+					<i class="material-icons">add_a_photo</i>Upload Photo
+				</button>
+
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3 col-sm-6">
+			<h3 class="section-title">Basic Details</h3>
+			<div field-for="Name"></div>
+			<div field-for="AccountNo"></div>
+			<div field-for="Priority"></div>
+			<div field-for="AutoDispatch"></div>
+			<div field-for="AccountPassword"></div>
+			<div field-for="OnHold"></div>
+			<div field-for="ClientTypeId" select-from="clientTypes" display="Client Type"></div>
+			<h3 class="section-title">App Payment Settings</h3>
+			<div class="row">
+				<div class="col-xs-4">
+					<div class="form-group">
+						<label class="control-label">Card</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="AllowCardCheck" ng-disabled="displayMode === 'VIEW'" ng-model="client.$AllowCard" />
+							<label class="check-label" for="AllowCardCheck"></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="form-group">
+						<label class="control-label">Account</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="AllowAccoCheck" ng-disabled="displayMode === 'VIEW'" ng-model="client.$AllowAccount" />
+							<label class="check-label" for="AllowAccoCheck"></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="form-group">
+						<label class="control-label">Cash</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="AllowCashCheck" ng-disabled="displayMode === 'VIEW'" ng-model="client.$AllowCash" />
+							<label class="check-label" for="AllowCashCheck"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-3 col-sm-6">
+			<h3 class="section-title">Primary Contact Details</h3>
+			<div field-for="PrimaryContact"></div>
+			<div field-for="Phone"></div>
+			<div field-for="Mobile"></div>
+			<div field-for="Fax"></div>
+			<div field-for="Email"></div>
+			<div class="form-group" ng-if="displayMode === 'VIEW' && client._FullAddress">
+				<label class="control-label">Full Address</label>
+				<p class="form-control-static address">{{client._FullAddress}}</p>
+			</div>
+			<div ng-show="displayMode === 'EDIT' || displayMode === 'CREATE'">
+				<hr />
+				<b>Search Address</b>
+				<br />
+				<address-populate object="client"></address-populate>
+				<br />
+				<div field-for="Address1"></div>
+				<div field-for="Address2"></div>
+				<div field-for="Area"></div>
+				<div field-for="TownCity"></div>
+				<div field-for="Postcode"></div>
+				<div field-for="County"></div>
+				<div field-for="Country"></div>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6">
+			<h3 class="section-title">Billing Details</h3>
+			<a hef="" ng-click="copyToBilling('contact')" ng-show="displayMode === 'EDIT' || displayMode === 'CREATE'" style="position: absolute;top: 21px;right: 16px;">Copy</a>
+			<div field-for="BillingContact"></div>
+			<div field-for="BillingPhone"></div>
+			<div field-for="BillingMobile"></div>
+			<div field-for="BillingFax"></div>
+			<div field-for="BillingEmail"></div>
+			<div class="form-group" ng-if="displayMode === 'VIEW' && client._FullBillingAddress">
+				<label class="control-label">Full Billing Address</label>
+				<p class="form-control-static address">{{client._FullBillingAddress}}</p>
+			</div>
+			<div ng-show="displayMode === 'EDIT' || displayMode === 'CREATE'">
+				<hr />
+				<b>Search Billing Address</b>
+				<br />
+				<a hef="" ng-click="copyToBilling('address')" ng-show="displayMode === 'EDIT' || displayMode === 'CREATE'" style="float: right;margin-top: -24px;">Copy</a>
+				<address-populate object="client" prefix="Billing"></address-populate>
+				<br />
+				<div field-for="BillingAddress1"></div>
+				<div field-for="BillingAddress2"></div>
+				<div field-for="BillingArea"></div>
+				<div field-for="BillingTownCity"></div>
+				<div field-for="BillingPostcode"></div>
+				<div field-for="BillingCounty"></div>
+				<div field-for="BillingCountry"></div>
+			</div>
+			<div field-for="InvoicePeriod"></div>
+			<div field-for="InvoiceSplitField" select-from="groupOptions"></div>
+			<div field-for="InvoiceGroupField" select-from="groupOptions"></div>
+		</div>
+		<div class="col-md-3 col-sm-6">
+			<h3 class="section-title">Other Details</h3>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label class="control-label">Active</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="ActiveCheck" ng-disabled="displayMode === 'VIEW'" ng-model="client.Active" />
+							<label class="check-label" for="ActiveCheck"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label class="control-label">All Vehicle Type</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="AllVehicleTypeAccessCheck" ng-disabled="displayMode === 'VIEW'"
+								   ng-model="client.AllVehicleTypeAccess" />
+							<label class="check-label" for="AllVehicleTypeAccessCheck"></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label class="control-label">Show VAT on Portal</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="ShowVATInPortalCheck" ng-disabled="displayMode === 'VIEW'" ng-model="client.ShowVATInPortal" />
+							<label class="check-label" for="ShowVATInPortalCheck"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label class="control-label">Show Price on Confirmation</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="ShowPriceInEmailChecl" ng-disabled="displayMode === 'VIEW'" ng-model="client.ShowPriceInEmail" />
+							<label class="check-label" for="ShowPriceInEmailChecl"></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label class="control-label">Show Price on Portal</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="ShowPriceInPortalChecl" ng-disabled="displayMode === 'VIEW'" ng-model="client.ShowPriceInPortal" />
+							<label class="check-label" for="ShowPriceInPortalChecl"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label class="control-label">Allow Cash on Portal</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="AllowCashInPortalChecl" ng-disabled="displayMode === 'VIEW'" ng-model="client.AllowCashInPortal" />
+							<label class="check-label" for="AllowCashInPortalChecl"></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label class="control-label">Passenger Signature Required</label>
+						<div class="mt5">
+							<input class="check" type="checkbox" id="SignatureRequiredChecl" ng-disabled="displayMode === 'VIEW'" ng-model="client.SignatureRequired" />
+							<label class="check-label" for="SignatureRequiredChecl"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div field-for="StartDate"></div>
+
+			<div ng-show="displayMode === 'EDIT' || displayMode === 'CREATE' || client.EndDate">
+				<div field-for="EndDate"></div>
+			</div>
+			<div field-for="RepId" select-from="staff" display="Rep"></div>
+			<h3 class="section-title">Client Tags</h3>
+			<small class="help-block" ng-show="displayMode !== 'VIEW'">
+                Please click on the box to add client tags.
+            </small>
+			<small class="text-muted" ng-show="client.Tags.length == 0 && displayMode == 'VIEW'">No Tags Selected</small>
+			<ui-select multiple ng-model="client.Tags" theme="select2" ng-disabled="displayMode === 'VIEW'" class="tags-edit">
+				<ui-select-match placeholder="Select Client Tags">
+					{{$item.Name}}
+				</ui-select-match>
+				<ui-select-choices repeat="item as item in clientTags | filter: alreadySelected | filter: $select.search">
+					<div>
+						<strong ng-bind-html="item.Name | highlight: $select.search"></strong>
+					</div>
+				</ui-select-choices>
+			</ui-select>
+
+			<h3 class="section-title">Routing Config</h3>
+			<div class="row">
+				<div class="col-xs-4">
+					<div class="form-group">
+						<label class="control-label">Default</label>
+						<label class="mt5 check-container">
+							<input style="top: 5px;left: 5px;z-index: 99;" type="radio" ng-model="client.RoutingOption" ng-value="undefined" ng-disabled="displayMode == 'VIEW'" />
+							<span class="checkmark"></span>
+						</label>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="form-group">
+						<label class="control-label">Shortest</label>
+						<label class="mt5 check-container">
+							<input style="top: 5px;left: 5px;z-index: 99;" type="radio" ng-model="client.RoutingOption" value="SHORTEST" ng-disabled="displayMode == 'VIEW'" />
+							<span class="checkmark"></span>
+						</label>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="form-group">
+						<label class="control-label">Fastest</label>
+						<label class="mt5 check-container">
+							<input style="top: 5px;left: 5px;z-index: 99;" type="radio" ng-model="client.RoutingOption" value="FASTEST" ng-disabled="displayMode == 'VIEW'" />
+							<span class="checkmark"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3 col-sm-6">
+			<h3 class="section-title">Overrides</h3>
+			<div field-for="DefaultTaxId" select-from="taxes" display="Default Tax"></div>
+			<div field-for="DefaultPaymentType" display="Default Payment Method"></div>
+			<div field-for="DefaultVehicleTypeId" select-from="vehicleTypes" display="Default Vehicle Type"></div>
+			<div ng-show="displayMode == 'CREATE'">
+				<div field-for="DefaultCurrencyId" select-from="currencies"></div>
+			</div>
+			<div ng-show="displayMode != 'CREATE'">
+				<div class="form-group">
+					<label class="control-label">Default Currency</label>
+					<br />
+					<p class="form-control-static" style="white-space:pre">{{client.DefaultCurrency.Name}}</p>
+				</div>
+			</div>
+			<div field-for="PricingModelId" select-from="pricingModels" display="Override Pricing Model"></div>
+			<div field-for="FreeWaitingTime" display="Free Waiting Time"></div>
+			<div class="form-group">
+				<label class="control-label">Grace Waiting</label>
+				<select class="form-control" ng-model="client.IsWaitingTimeGrace" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+				 ng-options="o.value as o.text for o in comOptions"></select>
+			</div>
+			<div field-for="FreeWaitingTimeAirport" display="Free Waiting Time (Airport)"></div>
+			<div class="form-group">
+				<label class="control-label">Grace Waiting (Airport)</label>
+				<select class="form-control" ng-model="client.IsWaitingTimeGraceAirport" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+				 ng-options="o.value as o.text for o in comOptions"></select>
+			</div>
+		</div>
+		<div class="col-md-9 col-sm-6">
+			<h3 class="section-title">Default Notifications</h3>
+			<div class="row mt5 mb30">
+				<div class="col-xs-2">
+					<div class="form-group mt10 mb15">
+						<label class="control-label">Confirmation SMS</label>
+						<select class="form-control" ng-model="client.TextConfirmation" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+						 ng-options="o.value as o.text for o in comOptions"></select>
+					</div>
+					<div class="form-group mt10 mb15">
+						<label class="control-label">Confirmation Email</label>
+						<select class="form-control" ng-model="client.EmailConfirmation" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+						 ng-options="o.value as o.text for o in comOptions"></select>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<div class="form-group mt10 mb10">
+						<label class="control-label">Assigned SMS</label>
+						<select class="form-control" ng-model="client.TextAssigned" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+						 ng-options="o.value as o.text for o in comOptions"></select>
+					</div>
+					<div class="form-group mt10 mb10">
+						<label class="control-label">Assigned Email</label>
+						<select class="form-control" ng-model="client.EmailAssigned" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+						 ng-options="o.value as o.text for o in comOptions"></select>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<div class="form-group mt10 mb10">
+						<label class="control-label">OnRoute SMS</label>
+						<select class="form-control" ng-model="client.TextOnOnRoute" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+						 ng-options="o.value as o.text for o in comOptions"></select>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<div class="form-group mt10 mb10">
+						<label class="control-label">Arrival SMS</label>
+						<select class="form-control" ng-model="client.TextOnArrival" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+						 ng-options="o.value as o.text for o in comOptions"></select>
+					</div>
+					<div class="form-group mt10 mb10">
+						<label class="control-label">Arrival Phone Call</label>
+						<select class="form-control" ng-model="client.CallOnArrival" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+						 ng-options="o.value as o.text for o in comOptions"></select>
+					</div>
+				</div>
+				<div class="col-xs-2">
+					<div class="form-group mt10 mb10">
+						<label class="control-label">Completion SMS</label>
+						<select class="form-control" ng-model="client.TextOnCompletion" ng-disabled="displayMode === 'VIEW'" placeholder="Company Default"
+						 ng-options="o.value as o.text for o in comOptions"></select>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="" sub-form-for="CancellationRule" schema="CancellationRule">
+		                <h3 class="section-title">Cancellation Rules</h3>
+		                <div field-for="BookingStatus"></div>
+		                <div field-for="MinutesBeforePickup"></div>
+		                <button class="btn btn-xs btn-danger" ng-click="deleteCancellationRule()" ng-if="displayMode === 'EDIT' && client.CancellationRuleId"><i class="material-icons">delete</i>Delete Cancellation Rule</button>
+		            </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

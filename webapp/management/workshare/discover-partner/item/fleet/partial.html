@@ -1,0 +1,37 @@
+<div id="fleet">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Fleet Details</h3>
+        </div>
+        <div class="panel-body">
+            <div ng-if="fleetDetails.length == 0">
+                <p class="grey">
+                    Partner has no fleet details.
+                </p>
+            </div>
+            <div class="table-responsive" ng-if="fleetDetails.length > 0">
+                <table class="table table-condensed table-striped primary-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 35%">Description</th>
+                            <th style="width: 25%">Registration No.</th>
+                            <th style="width: 20%">CORating</th>
+                            <th style="width: 20%">Electric</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="f in fleetDetails">
+                            <td>{{f.Description}}</td>
+                            <td>{{f.RegistrationNumber}}...</td>
+                            <td>{{f.CORating}}</td>
+                            <td>{{f.Electric}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm pull-right mt0" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="getFleetDetails(paging.currentPage)"></pagination>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

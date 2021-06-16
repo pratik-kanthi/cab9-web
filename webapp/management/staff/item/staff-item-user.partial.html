@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="col-md-6">
+        <form>
+            <h3 class="section-title"><i class="material-icons">enhanced_encryption</i>User Account</h3>
+            <hr />
+            <div class="row" ng-if="PERMISSIONS.test('staff.viewer.user', 'W')">
+                <div class="row">
+                    <div class="col-xs-6 module-options" ng-show="!User.UserName">
+                        <a ng-click="openUserModal()" class="btn btn-xs btn-primary">
+                            <i class="material-icons">add_circle</i>Create User Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="User.UserName">
+                <div class="form-group">
+                    <label>UserName</label>
+                    <div class="controls">
+                        <p name="UserName" ng-bind="User.UserName"></p>
+                    </div>
+                </div>
+                <!--
+                <a ng-click="deleteUserAccount()" class="btn btn-xs btn-danger">
+                    <i class="material-icons">delete_forever</i>Delete User Account
+                </a>
+                -->
+            </div>
+            <div ng-show="!User.UserName" class="mt16">
+                <span class="t-l">No users add yet.</span>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+                <div ng-if="PERMISSIONS.test('staff.viewer.user', 'W')">
+        <button type="button" class="btn btn-warning pull-left" ng-click="resetPassword()" ng-show="User.UserName">Reset Password</button>
+                </div>
+    </div>
+
+</div>

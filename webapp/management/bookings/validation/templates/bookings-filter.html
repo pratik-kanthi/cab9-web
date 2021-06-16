@@ -1,0 +1,163 @@
+<div class="filter">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+         <div class="panel-title">Validation Filters</div>
+      </div>
+      <div class="panel-body" style="overflow:visible;">
+         <div class="form-group">
+            <label class="control-label">StartDate</label>
+            <div class="form-edit calendar-picker">
+               <input class="form-control" type="text" ng-model="filters.From" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.From" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" ng-focus="openCalendar($event, 'From')" />
+               <span class="cal-icon"><i class="material-icons">event</i></span>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">End Date</label>
+            <div class="form-edit calendar-picker">
+               <input class="form-control" type="text" ng-model="filters.To" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.To" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" ng-focus="openCalendar($event, 'To')" />
+               <span class="cal-icon"><i class="material-icons">event</i></span>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Search Text</label>
+            <div class="form-edit calendar-picker">
+               <input class="form-control" type="text" ng-model="filters.SearchTerm" />
+               <span class="cal-icon"><i class="material-icons">search</i></span>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Drivers</label>
+            <div class="form-edit">
+               <ui-select multiple ng-model="filters.DriverIds" theme="select2">
+                  <ui-select-match placeholder="Search Drivers...">
+                     <span>
+                     {{$item.Callsign}}
+                     </span>
+                  </ui-select-match>
+                  <ui-select-choices refresh="searchDrivers($select.search)" repeat="item.Id as item in fetchedDrivers">
+                     <div class="ui-select-box">
+                        <div class="option-details">
+                           <strong>{{item.Name}}</strong>
+                           <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                        </div>
+                     </div>
+                  </ui-select-choices>
+               </ui-select>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Clients</label>
+            <div class="form-edit">
+               <ui-select multiple ng-model="filters.ClientIds" theme="select2" ng-disabled="false">
+                  <ui-select-match placeholder="Search Clients...">
+                     <span>
+                     {{$item.AccountNo}}
+                     </span>
+                  </ui-select-match>
+                  <ui-select-choices refresh="searchClients($select.search)" repeat="item.Id as item in fetchedClients">
+                     <div class="ui-select-box">
+                        <div class="option-details">
+                           <strong>{{item.Name}}</strong>
+                           <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                        </div>
+                     </div>
+                  </ui-select-choices>
+               </ui-select>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Passengers</label>
+            <div class="form-edit">
+               <ui-select multiple ng-model="filters.PassengerIds" theme="select2" ng-disabled="false">
+                  <ui-select-match placeholder="Search Passengers...">
+                     {{$item.Firstname}}
+                  </ui-select-match>
+                  <ui-select-choices refresh="searchPassengers($select.search)" repeat="item.Id as item in fetchedPassengers">
+                     <div class="ui-select-box">
+                        <div class="option-details">
+                           <strong>{{item.Name}}</strong>
+                           <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                        </div>
+                     </div>
+                  </ui-select-choices>
+               </ui-select>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Vehicle Types</label>
+            <div class="form-edit">
+               <ui-select on-select="onSelected($item)" multiple ng-model="filters.VehicleTypeIds" theme="select2" ng-disabled="false">
+                  <ui-select-match placeholder="Select Vehicle Types">
+                     <span id="{{$item.$$hashKey}}">{{$item.Name}}</span>
+                  </ui-select-match>
+                  <ui-select-choices repeat="item.Id as item in vehicleTypes | filter: $select.search">
+                     <div class="ui-select-box">
+                        <strong ng-bind-html="item.Name | highlight: $select.search"></strong>
+                     </div>
+                  </ui-select-choices>
+               </ui-select>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Payment Methods</label>
+            <div class="form-edit">
+               <ui-select multiple ng-model="filters.PaymentMethods" theme="select2">
+                  <ui-select-match placeholder="Select Payment Methods">
+                     {{$item.Name}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="item.Id as item in paymentTypes | filter: $select.search">
+                     <div>
+                        <strong ng-bind-html="item.Name | highlight: $select.search"></strong>
+                     </div>
+                  </ui-select-choices>
+               </ui-select>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Booking Source</label>
+            <div class="form-edit">
+               <ui-select multiple ng-model="filters.BookingSources" theme="select2">
+                  <ui-select-match placeholder="Select Booking Sources...">
+                     {{$item.Name}}
+                  </ui-select-match>
+                  <ui-select-choices repeat="item.Id as item in bookingSources | filter: $select.search">
+                     <div>
+                        <strong ng-bind-html="item.Name | highlight: $select.search"></strong>
+                     </div>
+                  </ui-select-choices>
+               </ui-select>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Booking Amount</label>
+            <div class="row">
+               <div class="col-xs-6 form-edit">
+                  <input class="form-control mr5" type="number" ng-model="filters.BookingAmount.From" placeholder="Min">
+               </div>
+               <div class="col-xs-6 form-edit">
+                  <input class="form-control" type="number" ng-model="filters.BookingAmount.To" placeholder="Max">
+               </div>
+            </div>
+         </div>
+         <div class="form-group">
+            <label class="control-label">Profit</label>
+            <div class="row">
+               <div class="col-xs-6 form-edit">
+                  <input class="form-control mr5" type="number" ng-model="filters.MinProfit" placeholder="Min">
+               </div>
+               <div class="col-xs-6 form-edit">
+                  <input class="form-control" type="number" ng-model="filters.MaxProfit" placeholder="Max">
+               </div>
+            </div>
+         </div>
+         <div class="mt10 actions">
+            <button class="btn btn-warning pull-left" ng-click="clearFilters()">
+            <i class="material-icons">cancel</i>Clear
+            </button>
+            <button class="btn btn-success pull-right" ng-click="setPage(1)">
+            <i class="material-icons">play_arrow</i>Fetch
+            </button>
+         </div>
+      </div>
+   </div>
+</div>

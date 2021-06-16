@@ -1,0 +1,10 @@
+<div class="overlay" ng-if="overlay" ng-click="togglePopup('mileage')"></div>
+<div class="popup-edit mileage">
+     <div ng-repeat="stop in booking.Stops track by $index" class="mb10">
+         <i class="material-icons">location_on</i><strong class="brand-primary" ng-bind="$index == 0 ? 'Pickup': ($index == booking.Stops.length -1 ? 'Drop': 'Via')"></strong><br />
+         <span ng-bind="stop.StopSummary">
+         	
+         </span>
+         <!-- <address-populate object="stop" show-label="showLabel" default-fill="defaultFill"></address-populate> -->
+     </div>
+</div>

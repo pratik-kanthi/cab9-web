@@ -1,0 +1,259 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Mobile App Settings</h3>
+    </div>
+    <div class="panel-body">
+        <p>This page is used to manage Mobile App specific settings.</p>
+        <p>Please upload APN certificates for Driver and Customer app below.</p>
+        <h3 class="section-title">Apple Push Notification Config (Driver App)</h3>
+        <div class="row" ng-if="!state.editing && state.validApn">
+            <div class="col-xs-6">
+                <span class="text-success">✔</span> Configured <a class="btn btn-success btn-xs" style="padding-left:12px;" ng-click="state.editing = true">Change Config</a>
+            </div>
+        </div>
+        <div class="row" ng-if="!state.editing && !state.validApn">
+            <div class="col-xs-6">
+                <span class="text-danger">✘</span> Not Configured <a class="btn btn-success btn-xs" style="padding-left:12px;" ng-click="state.editing = true">Change Config</a>
+            </div>
+        </div>
+        <div class="row" ng-if="state.editing">
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label">Certificate File:</label>
+                    <input type="file" class="form-control" file-picker file="import.file" />
+                </div>
+            </div>
+            <div class="col-xs-4">
+                    <div class="form-group">
+                        <label class="control-label">Password:</label>
+                        <input type="password" class="form-control" ng-model="import.password" />
+                    </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label">&nbsp;</label>
+                    <button class="btn btn-success btn-fix" ng-click="save()" ng-disabled="!import.file || !import.password">Save</button>
+                    <button class="btn btn-warning btn-fix" ng-click="import.password = null; import.file = null; state.editing = false;">Cancel</button>                
+            
+                </div>
+            </div>
+        </div>
+
+        <h3 class="section-title">Apple Push Notification Config (Customer App)</h3>
+        <div class="row" ng-if="!customerstate.editing && customerstate.validApn">
+            <div class="col-xs-6">
+                <span class="text-success">✔</span> Configured <a class="btn btn-success btn-xs" style="padding-left:12px;" ng-click="customerstate.editing = true">Change Config</a>
+            </div>
+        </div>
+        <div class="row" ng-if="!customerstate.editing && !customerstate.validApn">
+            <div class="col-xs-6">
+                <span class="text-danger">✘</span> Not Configured <a class="btn btn-success btn-xs" style="padding-left:12px;" ng-click="customerstate.editing = true">Change Config</a>
+            </div>
+        </div>
+        <div class="row" ng-if="customerstate.editing">
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label">Certificate File:</label>
+                    <input type="file" class="form-control" file-picker file="Customerappimport.file" />
+                </div>
+            </div>
+            <div class="col-xs-4">
+                    <div class="form-group">
+                        <label class="control-label">Password:</label>
+                        <input type="password" class="form-control" ng-model="Customerappimport.password" />
+                    </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label class="control-label">&nbsp;</label>
+                    <button class="btn btn-success btn-fix" ng-click="save(true)" ng-disabled="!Customerappimport.file || !Customerappimport.password">Save</button>
+                    <button class="btn btn-warning btn-fix" ng-click="Customerappimport.password = null; Customerappimport.file = null; customerstate.editing = false;">Cancel</button>                
+            
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <h3 class="section-title">Notification Templates</h3>
+        <div form-for="notificationTemplates" schema="NotificationTemplates" mode="{{displayMode}}">
+            <div ng-if="displayMode === 'VIEW'">
+                <button class="btn btn-warning" ng-click="startEditing()"><i class="material-icons">create</i>Edit</button>
+            </div>
+            <div ng-if="displayMode === 'EDIT' || displayMode === 'CREATE'">
+                <button class="btn btn-success" ng-click="saveEdits()" ng-disabled="formFor.form.$invalid"><i class="material-icons">save</i> Submit</button>
+                <button class="btn btn-warning mr30" ng-click="cancelEditing()"> <i class="material-icons">undo</i> Cancel</button>
+            </div>
+            <b>New Booking Offer</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="NewBookingOfferTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="NewBookingOfferText"></div>
+                </div>
+            </div>
+            <b>Shift Timeout Alert</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="ShiftTimeoutAlertTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="ShiftTimeoutAlertText"></div>
+                </div>
+            </div>
+            <b>Shift Timeout Final Alert</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="ShiftTimeoutFinalAlertTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="ShiftTimeoutFinalAlertText"></div>
+                </div>
+            </div>
+            <b>Shift Closed Alert</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="ShiftClosedAlertTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="ShiftClosedAlertText"></div>
+                </div>
+            </div>
+            <b>New Booking</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="NewBookingTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="NewBookingText"></div>
+                </div>
+            </div>
+            <b>Booking Changed</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingChangedTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingChangedText"></div>
+                </div>
+            </div>
+            <b>Booking Unallocated</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingUnallocatedTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingUnallocatedText"></div>
+                </div>
+            </div>
+            <b>Bookings For Bidding</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="NewBiddingNotificationTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="NewBiddingNotificationText"></div>
+                </div>
+            </div>
+            <b>Customer App New Booking</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="NewBookingForPassengerTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="NewBookingForPassengerText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking Changed</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingChangedForPassengerText"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingChangedForPassengerTitle"></div>
+                </div>
+            </div>
+            <b>Customer App Next Stop</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingNextStopForPassengerTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingNextStopForPassengerText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking Unallocated</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingUnallocatedForPassengerTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingUnallocatedForPassengerText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking Allocated</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingAllocatedForPassengerTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingAllocatedForPassengerText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking Arrived</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingArrivedTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingArrivedText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking On Route</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingOnRouteTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingOnRouteText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking In Progress</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingInProgressTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingInProgressText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking Completed</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingCompletedTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingCompletedText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking Cancelled</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingCancelledTitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingCancelledText"></div>
+                </div>
+            </div>
+            <b>Customer App Booking COA</b>
+            <div class="row">
+                <div class="col-xs-3">
+                    <div field-for="BookingCOATitle"></div>
+                </div>
+                <div class="col-xs-9">
+                    <div field-for="BookingCOAText"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

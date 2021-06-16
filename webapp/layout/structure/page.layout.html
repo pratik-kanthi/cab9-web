@@ -1,0 +1,14 @@
+﻿<div class="application-layout">
+    <div id="quick-navigate" ng-show="showQuickNav" ui-view name="quick-nav"></div>
+    <div id="sidebar-left" ng-include="'/webapp/layout/menu/menu.partial.html'"></div>
+    <div id="topbar" ng-include="'/webapp/layout/navbar/navbar.partial.html'"></div>
+    <div id="content-wrapper">
+        <div id="breadcrumb-bar" ng-include="'/webapp/layout/bar/bar.partial.html'">
+
+        </div>
+        <div ui-view name="content-area">
+
+        </div>
+    </div>
+    <div id="sidebar-right" ng-include="'/webapp/layout/sidebar-right/bar.partial.html'"></div>
+</div>

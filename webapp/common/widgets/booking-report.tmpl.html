@@ -1,0 +1,70 @@
+<div class="grid-item intro-panel" promise-shadow promise="deferred.promise">
+    <div class="wrapper">
+        <h2><small>Hello, </small><span ng-bind="USER.Name+'!'"></span></h2>
+        <div class="welcome-note">
+            <div class="quick-stat">
+                <div class="number">
+                    <i class="material-icons">person_pin</i><span ng-bind="driverCount"></span>
+                </div>
+                <div class="description">Registered Drivers</div>
+            </div>
+            <div class="quick-stat">
+                <div class="number">
+                    <i class="material-icons">local_taxi</i><span ng-bind="vehicleCount"></span>
+                </div>
+                <div class="description">Registered Vehicles</div>
+            </div>
+        </div>
+        <div class="graph">
+            <h4>Showing bookings from <span>{{filters.from|date}}</span> to <span>{{filters.to|date}}</span></h4>
+            <flot dataset="bookingGraph.data" options="bookingGraph.options"></flot>
+        </div>
+        <div class="stats">
+            <div class="number-stats-wrapper">
+                <div class="number-stats">
+                    <div class="stats-wrapper">
+                        <div class="icon brand-secondary-bg">
+                        </div>
+                        <div class="data">
+                            <small>Bookings Count</small>
+                            <i class="material-icons">assignment</i><strong class="brand-secondary" ng-bind="totalBookings | number:0"></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-stats">
+                    <div class="stats-wrapper">
+                        <div class="icon green-bg">
+                        </div>
+                        <div class="data">
+                            <small>Bookings Value</small>
+                            <i class="material-icons">account_balance</i><strong class="green" ng-bind="'£' + (totalAmount | AbbrValue)"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="number-stats-wrapper">
+                <div class="number-stats">
+                    <div class="stats-wrapper">
+                        <div class="icon sky-bg">
+                        </div>
+                        <div class="data">
+                            <small>Unique Drivers</small>
+                            <i class="material-icons">person_pin</i><strong class="sky" ng-bind="uniqueDrivers | number:0"></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-stats">
+                    <div class="stats-wrapper">
+                        <div class="icon orange-bg">
+                        </div>
+                        <div class="data">
+                            <small>Unique Passengers</small>
+                            <i class="material-icons ng-binding">people_outline</i><strong class="orange" ng-bind="uniquePassengers | number:0"></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br class="clearfix">
+    </div>
+</div>

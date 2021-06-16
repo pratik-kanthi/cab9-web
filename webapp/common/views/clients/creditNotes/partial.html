@@ -1,0 +1,60 @@
+<div class="module">
+    <div class="row">
+        <div class="col-xs-6" ng-show="hideOptions"></div>
+        <div class="col-xs-6 module-options" ng-hide="hideOptions">
+            <a ng-click="openPaymentModal()" class="btn btn-xs btn-success" ng-if="PERMISSIONS.test('creditNotes','W')"><i class="material-icons">receipt</i>Create Invoice</a>
+        </div>
+        <div class="col-xs-6 view-options">
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-model-options="{ debounce: 400 }" ng-change="filterCreditNotes()" />
+            </a>
+        </div>
+    </div>
+    <date-picker-wide start="start" end="end" selected="selected" range="false" dateshow="true" show-toggle="false"></date-picker-wide>
+    <div class="mt20">
+        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+    </div>
+    <div class="table-wrapper">
+        <table class="table table-condensed mb20 invoice-table-all">
+            <thead>
+                <tr>
+                    <th>Reference</th>
+                    <th style="width: 600px;">Description</th>
+                    <th style="text-align:center">Tax Date</th>
+                    <th style="text-align:center">Amount</th>
+                    <th style="width:110px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody ng-if="pageCreditNotes.length > 0 && !loading">
+                <tr ng-repeat="cn in pageCreditNotes">
+                    <td ng-bind="cn.Reference"></td>
+                    <td ng-bind="cn.Description"></td>
+                    <td style="text-align:center" ng-bind="cn.TaxDate | companyDate:'DD/MM/YYYY'"></td>
+                    <td style="text-align:center" ng-bind="cn.Amount | currency:'£'"></td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" ng-click="viewItem(cn)" ng-if="PERMISSIONS.test('creditnotes.viewer')"><i class="material-icons">chrome_reader_mode</i> View</a>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-if="pageCreditNotes.length == 0 && !loading">
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No Credit Notes found
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-if="loading">
+                <tr>
+                    <td colspan="8" class="text-center">
+                        <img width="30" src="/includes/images/loading-blue.gif" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt20">
+        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+    </div>
+</div>

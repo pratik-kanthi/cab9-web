@@ -1,0 +1,114 @@
+<div class="panel auction-settings">
+    <div class="panel-heading">
+        <h3 class="panel-title">Allocation Rule</h3>
+    </div>
+    <div class="panel-body">
+        <!--Allocation Settings-->
+        <div class="automation-config">
+            <div class="rules-creation">
+                    <div form-for="allocationRule" name="newRuleForm" schema="BiddingFilter" mode="{{ruleViewMode}}">
+                        <strong class="brand-primary">Choose the filters that should be applied to the booking</strong>
+                        <p class="t-s grey">
+                            The following filters will be applied to the entire data and the resulted set of bookings will be displayed to the selected drivers. If you don't specify a value for Client, all client bookings will be selected. The same principle applies for all the other properties like VehicleType, Min Mileage and Max Mileage.
+                        </p>
+                        <div class="row mt20">
+                            <div class="col-sm-4">
+                                <div field-for="ClientId" select-from="clients" select-option-template="<div>({{option.AccountNo}}) {{option.Name}}</div>" display="Client"></div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div field-for="VehicleTypeId" select-from="vehicleTypes" display="Vehicle Type"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div field-for="MinMileage"></div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div field-for="MaxMileage"></div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group rule-period">
+                                    <label for="">Start Period</label>
+                                    <div class="form-edit">
+                                        <input type="text" class="form-control" ng-model="allocationRule.$StartPeriodValue" required/>
+
+                                        <select ng-model="allocationRule.$StartPeriodType" class="form-control">
+                                            <option value="HOURS">Hours</option>
+                                            <option value="DAYS">Days</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- <div field-for="StartPeriod"></div> -->
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group rule-period">
+                                    <label for="">End Period</label>
+                                    <div class="form-edit">
+                                        <input type="text" class="form-control" ng-model="allocationRule.$EndPeriodValue" required/>
+                                        <select ng-model="allocationRule.$EndPeriodType" class="form-control">
+                                            <option value="HOURS">Hours</option>
+                                            <option value="DAYS">Days</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- <div field-for="EndPeriod"></div> -->
+                            </div>
+                        </div>
+                        <strong class="brand-primary">Choose the drivers that should see these bookings.</strong>
+                        <p class="t-s grey">
+                            The following drivers will be able to see the filtered bookings. Please note that you can only choose a driver type or drivers whose Callsign start with a particular letter. If no driver filter is specified, bookings will be visible to all drivers.
+                        </p>
+                        <div class="mt10">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label class="check-container">Callsign Identifier
+                                        <input type="radio" ng-model="allocationRule.$DriverMode" value="Callsign" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="check-container">Driver Type
+                                        <input type="radio" ng-model="allocationRule.$DriverMode" value="DriverType" />
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div field-for="DriverIdentifier" ng-show="allocationRule.$DriverMode == 'Callsign'" display="Callsign Starts With"></div>
+                                    <div ng-show="allocationRule.$DriverMode == 'DriverType'">
+                                        <label for>Driver Types</label>
+                                        <ui-select multiple ng-model="allocationRule.$selectedDriverTypes" theme="select2">
+                                            <ui-select-match placeholder="Type to search...">
+                                                <div class="select-text" ng-bind="::$item.Name"></div>
+                                            </ui-select-match>
+                                            <ui-select-choices repeat="item.Id as item in driverTypes">
+                                                <div class="ui-select-box">
+                                                    <div class="option-details">
+                                                        <strong ng-bind="::item.Name"></strong>
+                                                    </div>
+                                                </div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actions mt20 mb20">
+                            <button ng-if="mode == 'CREATE'" class="btn btn-xs btn-success mr10" ng-click="saveAllocationRule()" ng-disabled="$newRuleSaving">
+                                <i class="fa fa-circle-o-notch fa-spin" ng-show="$newRuleSaving"></i>
+                                <i class="material-icons" ng-show="!$newRuleSaving">save</i>
+                                Save</button>
+
+                             <button ng-if="mode == 'EDIT'" class="btn btn-xs btn-success mr10" ng-click="updateAllocationRule()" ng-disabled="$ruleSaving">
+                                <i class="fa fa-circle-o-notch fa-spin" ng-show="$ruleSaving"></i>
+                                <i class="material-icons" ng-show="!$ruleSaving">save</i>
+                                Update</button>
+
+
+                            <button class="btn btn-xs btn-warning" ng-click="$close()"><i class="material-icons">undo</i>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <!--Allocation Settings-->
+    </div>
+</div>

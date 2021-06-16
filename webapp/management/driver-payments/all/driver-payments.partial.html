@@ -1,0 +1,74 @@
+<div class="module">
+    <div class="row mb20" ng-hide="hideOptions">
+        <div class="col-xs-6 module-options">
+            <a ng-click="openPaymentModal()" class="btn btn-success" ng-if="PERMISSIONS.test('driverpayments','W')"><i class="material-icons">receipt</i>Create Driver Payment</a>
+            <span style="vertical-align: middle;font-size:20px;" ng-if="!searchTerm.$">Showing Payments For <b>{{filter.date.selectedPeriod}}</b></span>
+            <span style="vertical-align: middle;font-size:20px;" ng-if="searchTerm.$">Showing Payments Matching '<b>{{searchTerm.$}}</b>'</span>
+        </div>
+        <div class="col-xs-6 view-options">
+            <a href="" ng-click="exportSummary()"><i class="material-icons">receipt</i> Summary</a>
+            <a ng-click="showFilterModal()"><i class="material-icons">filter_list</i>Filter</a>
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" ng-model-options="{ 'debounce': 500 }" />
+            </a>
+        </div>
+    </div>
+    <div class="mt20">
+        <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+    </div>
+    <div class="table-wrapper">
+        <table class="table table-condensed mb20">
+            <thead>
+                <tr>
+                    <th>Driver</th>
+                    <th style="width:180px;">Payment To</th>
+                    <th style="width:180px;">Creation Date</th>
+                    <th style="width:100px;">Invoice Amt</th>
+                    <th style="width:100px;">Bill Amt</th>
+                    <th style="width:100px;">Bonus</th>
+                    <th style="width:150px;">Balance</th>
+                    <th style="width:150px;" class="text-center">Status</th>
+                    <th style="width:120px;" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody ng-if="payments.length > 0">
+                <tr ng-repeat="p in payments">
+                    <td>{{p._Driver}}</td>
+                    <td>{{p.PaymentTo|companyDate:'DD/MM/YYYY'}}</td>
+                    <td ng-bind="p.CreationTime|companyDate:'DD/MM/YYYY'"></td>
+                    <td ng-bind="p._InvoiceCost | currency"></td>
+                    <td ng-bind="p._BillValue | currency"></td>
+                    <td ng-bind="p.BonusAmount | currency"></td>
+                    <td ng-bind="p.Balance | currency"></td>
+                    <td  class="text-center" ng-class="{'bg-warning': p.Status == 'Unsent', 'bg-danger': p.Status == 'Unpaid', 'bg-success': p.Status == 'Paid'}" ng-bind="p.Status"></td>
+                    <td class="text-center">
+                        <a class="btn btn-xs btn-primary" ui-sref="root.driverpayments.viewer.summary({ Id: p.Id})" target="_blank" ng-if="PERMISSIONS.test('driverpayments.viewer')"><i class="material-icons">chrome_reader_mode</i> View</a>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody ng-if="payments.length == 0">
+                <tr>
+                    <td colspan="8" class="text-center">
+                        No Payments found for selected filter
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--<date-picker-wide start="start" end="end" selected="selected" range="false" dateshow="true" show-toggle="false"></date-picker-wide>
+    <table-for datasource="payments" class="table table-condensed table-hover" schema="DriverPayment" filtering="searchTerm" sorting="" paging="paging" grouping="grouping" wrapper-class="" table-class="mt20">
+        <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+        <table-heading sorting="true">
+        </table-heading>
+        <table-data-rows>
+            <table-selection></table-selection>
+            <table-actions>
+                <a class="btn btn-xs btn-primary" ui-sref="root.driverpayments.viewer.summary({ Id: $row.Id})" ng-if="PERMISSIONS.test('driverpayments.viewer')"><i class="material-icons">chrome_reader_mode</i> View</a>
+            </table-actions>
+        </table-data-rows>
+        <table-footer paging="true">
+        </table-footer>
+    </table-for>-->
+</div>

@@ -1,0 +1,248 @@
+/* Modals
+------------------------------------
+*/
+
+.modal-backdrop.in {
+    bottom: 0;
+    .opacity(30);
+    &.chatBG {
+        display: none;
+    }
+    &.transparent {
+        .opacity(0);
+        pointer-events: none;
+    }
+}
+
+.modal-backdrop {
+    
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.modal,
+.modal-lg {
+    .modal-content {
+        .box-shadow(none) !important;
+        border: 0;
+        .border-radius(6px);
+        .modal-header {
+            background-color: @brand-primary;
+            .border-radius(6px 6px 0 0);
+            border-bottom: 0;
+            padding: 14px;
+            position: relative;
+            h3 {
+                color: @brand-grey;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 24px;
+                color: #fff;
+            }
+            .close {
+                position: absolute;
+                right: 16px;
+                top: 16px;
+                font-size: 16px; // line-height: 30px;
+                color: #eee !important;
+                .opacity(100);
+            }
+            .info{
+                border: none;
+                position: absolute;
+                background: none;
+                right: 40px;
+                font-size: 16px;
+                color: #eee!important;
+                opacity: 100;
+                filter: alpha(opacity=10000);
+                opacity: 1;
+                outline: none;
+            }
+        }
+        .modal-body {
+            padding: 15px 30px;
+            .form-group {
+                border: 0;
+                padding: 0;                
+            }
+        }
+        .modal-footer {
+            background: #eee;
+            .border-radius(0 0 6px 6px);
+        }
+    }
+    &.christmas {
+        background-image: url('https://thumbs.dreamstime.com/t/winter-forest-pattern-hand-drawn-christmas-tree-blue-night-sky-stars-snowflakes-vector-background-wrapping-paper-80185181.jpg');
+        .modal-content {
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+        .snowflake {
+            color: #fff;
+            font-size: 1em;
+            font-family: Arial;
+            text-shadow: 0 0 1px #000;
+        }
+        @-webkit-keyframes snowflakes-fall {
+            0% {
+                top: -10%
+            }
+            100% {
+                top: 100%
+            }
+        }
+        @-webkit-keyframes snowflakes-shake {
+            0% {
+                -webkit-transform: translateX(0px);
+                transform: translateX(0px)
+            }
+            50% {
+                -webkit-transform: translateX(80px);
+                transform: translateX(80px)
+            }
+            100% {
+                -webkit-transform: translateX(0px);
+                transform: translateX(0px)
+            }
+        }
+        @keyframes snowflakes-fall {
+            0% {
+                top: -10%
+            }
+            100% {
+                top: 100%
+            }
+        }
+        @keyframes snowflakes-shake {
+            0% {
+                transform: translateX(0px)
+            }
+            50% {
+                transform: translateX(80px)
+            }
+            100% {
+                transform: translateX(0px)
+            }
+        }
+        @media screen and (max-width: 736px) {
+            #banner p {
+                font-size: 14px;
+            }
+        }
+        .snowflake {
+            position: fixed;
+            top: -10%;
+            z-index: 9999;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: default;
+            -webkit-animation-name: snowflakes-fall, snowflakes-shake;
+            -webkit-animation-duration: 10s, 3s;
+            -webkit-animation-timing-function: linear, ease-in-out;
+            -webkit-animation-iteration-count: infinite, infinite;
+            -webkit-animation-play-state: running, running;
+            animation-name: snowflakes-fall, snowflakes-shake;
+            animation-duration: 10s, 3s;
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: infinite, infinite;
+            animation-play-state: running, running
+        }
+        .snowflake:nth-of-type(0) {
+            left: 1%;
+            -webkit-animation-delay: 0s, 0s;
+            animation-delay: 0s, 0s
+        }
+        .snowflake:nth-of-type(1) {
+            left: 10%;
+            -webkit-animation-delay: 1s, 1s;
+            animation-delay: 1s, 1s
+        }
+        .snowflake:nth-of-type(2) {
+            left: 20%;
+            -webkit-animation-delay: 6s, .5s;
+            animation-delay: 6s, .5s
+        }
+        .snowflake:nth-of-type(3) {
+            left: 30%;
+            -webkit-animation-delay: 4s, 2s;
+            animation-delay: 4s, 2s
+        }
+        .snowflake:nth-of-type(4) {
+            left: 40%;
+            -webkit-animation-delay: 2s, 2s;
+            animation-delay: 2s, 2s
+        }
+        .snowflake:nth-of-type(5) {
+            left: 50%;
+            -webkit-animation-delay: 8s, 3s;
+            animation-delay: 8s, 3s
+        }
+        .snowflake:nth-of-type(6) {
+            left: 60%;
+            -webkit-animation-delay: 6s, 2s;
+            animation-delay: 6s, 2s
+        }
+        .snowflake:nth-of-type(7) {
+            left: 70%;
+            -webkit-animation-delay: 2.5s, 1s;
+            animation-delay: 2.5s, 1s
+        }
+        .snowflake:nth-of-type(8) {
+            left: 80%;
+            -webkit-animation-delay: 1s, 0s;
+            animation-delay: 1s, 0s
+        }
+        .snowflake:nth-of-type(9) {
+            left: 90%;
+            -webkit-animation-delay: 3s, 1.5s;
+            animation-delay: 3s, 1.5s
+        }
+        .modal-body {
+            background-color: transparent !important;
+            color: #fff;
+            text-shadow: 1px 1px 2px #222;
+            h4 {
+                font-size: 24px;
+                text-align: center;
+                margin-bottom: 16px;
+            }
+            p {
+                background-color: @brand-primary;
+                padding: 8px;
+                text-shadow: none;
+                margin-bottom: 0;
+                font-size: 16px;
+            }
+            table {
+                width: 100%;
+                margin-bottom: 20px;
+                thead {
+                    background-color: #fff;
+                    color: @brand-primary;
+                    text-shadow: none;
+                }
+                th,
+                td {
+                    padding: 4px 12px !important;
+                    background-color: rgba(255, 255, 255, 0.95);
+                    color: @brand-primary;
+                    text-shadow: none;
+                    border-bottom: 1px solid #ddd;
+                    border-right: 1px solid #ddd;
+                    vertical-align: top;
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}
+
+.image-upload-modal {
+    .modal-content {
+        .modal-body {
+            padding: 0 30px 30px;
+        }
+    }
+}

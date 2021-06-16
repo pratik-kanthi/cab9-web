@@ -1,0 +1,21 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+        <h3 class="modal-title">New Payment Model</h3>
+    </div>
+    <div class="modal-body">
+        <div form-for="paymentModel" schema="DriverPaymentModel" mode="CREATE">
+            <div field-for="Name"></div>
+            <div field-for="Description" textarea="3"></div>
+            <div field-for="Type"></div>
+            <hr />
+            <p class="well well-sm">
+                After creating you can customise the Model futher.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+        <button type="button" class="btn btn-xs btn-success" ng-click="save()"><i class="material-icons">save</i>Save</button>
+    </div>
+</div>

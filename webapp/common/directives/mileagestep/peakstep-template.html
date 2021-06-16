@@ -1,0 +1,59 @@
+<div class="peak-day-time-selector">
+    <p class="no-data" ng-hide="steps && steps.length > 0">
+        No Peak Times Added
+    </p>
+    <div class="peak-day-time" ng-repeat="s in steps">
+        <div class="remove" ng-hide="viewMode == 'VIEW'">
+            <a class="" ng-click="remove(s)">
+                <i class="material-icons">close</i>
+            </a>
+        </div>
+        <strong class="brand-primary">
+            Configuration {{$index + 1}}
+        </strong>
+        <div class="day-selector">
+            <div class="week-wrapper">
+                <div class="day-wrapper" ng-repeat="day in s.$week">
+                    <button class="day" ng-disabled="viewMode == 'VIEW'" ng-click="toggleDay(day, s)" ng-class="(day.selected==true)?'active':''">
+                        <strong class="text-muted">{{day.day}}</strong>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br class="clearfix" />
+        <div class="time-selector">
+            <div ng-show="steps.length == 0">
+                No Peak Times Added
+            </div>
+            <div class="steps">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label class="control-label">From (HH:MM)</label>
+                            <div class="form-edit">
+                                <input type="text" ng-disabled="viewMode == 'VIEW'" ng-change="onChange()" placeholder="HH:MM" class="form-control" ng-model="s.start">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label class="control-label">To (HH:MM)</label>
+                            <div class="form-edit">
+                                <input type="text" ng-change="onChange()" ng-disabled="viewMode == 'VIEW'" placeholder="HH:MM" class="form-control" ng-model="s.end">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="form-group">
+                            <label class="control-label">Multiplier</label>
+                            <div class="form-edit">
+                                <input type="number" ng-change="onChange()" ng-disabled="viewMode == 'VIEW'" class="form-control" ng-model="s.multiplier">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-success" ng-hide="viewMode == 'VIEW'" ng-click="add(s)"><i class="material-icons">add_circle</i>Add New</a>
+</div>

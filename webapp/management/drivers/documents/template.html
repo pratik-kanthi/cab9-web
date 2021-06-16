@@ -1,0 +1,123 @@
+﻿<div class="module document-expiry">
+    <div class="row">
+        <div class="col-xs-6 module-options">
+            <h2 class="page-title"><i class="material-icons">library_books</i>Driver Documents</h2>
+        </div>
+        <div class="col-xs-6 view-options">
+            <select ng-model="searchTerm.Active" class="form-control documents-select pull-right" style="display:inline;width:140px;">
+                <option value="">All Drivers</option>
+                <option value="false">Inactive Drivers</option>
+                <option value="true">Active Drivers</option>
+            </select>
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="exportData()"><i class="material-icons">receipt</i>Export</span>
+            </a>
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" ng-model-options="{ 'debounce': 500 }" />
+            </a>
+        </div>
+    </div>
+    <div class="row mt20">
+        <div class="col-md-12">
+            <!-- <div class="table table-condensed"> -->
+            <div class="table-responsive table-striped" style="overflow-y:hidden;height:auto;">
+                <table class="table table-bordered" style="margin-bottom:0;width:1560px;">
+                    <thead>
+                        <tr style="background:#455674;">
+                            <th style="width:350px;" colspan="2">
+                                Driver
+                            </th>
+                            <th colspan="3" style="width:390px">
+                                Drivers Documents
+                            </th>
+                            <th style="width:300px">
+                                Vehicle
+                            </th>
+                            <th colspan="4" style="width:520px">
+                                Vehicle Documents
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <table class="table table-bordered" style="margin-bottom:0;margin-top:-7px;width:1560px;">
+                    <thead>
+                        <tr style="background:#A88ADC;">
+                            <th colspan=2 style="width:350px">
+                                Info
+                            </th>
+                            <th style="width:130px;">
+                                Driving License
+                            </th>
+                            <th style="width:130px;">
+                                PCO License
+                            </th>
+                            <th style="width:130px;">
+                                National Insurance
+                            </th>
+                            <th style="width:300px">
+                                Primary Vehicle
+                            </th>
+                            <th style="width:130px;">
+                                V5 Registration
+                            </th>
+                            <th style="width:130px;">
+                                MOT Certificate
+                            </th>
+                            <th style="width:130px;">
+                                PCO License
+                            </th>
+                            <th style="width:130px;">
+                                Insurance
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <div style="overflow-y:scroll;height:600px;width:1560px;overflow-x: visible;">
+                    <table class="table table-bordered" style="margin-top:0;width:1560px;">
+                        <tbody>
+                            <tr ng-repeat="d in drivers | filter:searchTerm | orderBy:'Callsign'">
+                                <td style="width:50px;">
+                                    <div class="profile" style="background-image: url({{::formatUrl(d.ImageUrl,d.Callsign)}})"></div>
+                                    <!-- <img ng-src="{{::formatUrl(d.ImageUrl, d.Callsign)}}" class="img img-circle" width="50" height="50" /> -->
+                                </td>
+                                <td style="width:300px;">
+                                    <span class="driver-name">({{::d.Callsign}}) {{::d.Firstname}} {{::d.Surname}} </span>
+                                    <br>
+                                    <span class="label" ng-class="::{ 'label-success': d.Active, 'label-danger': !d.Active }" style="display:inline;">{{::d.Active ? 'Active' : 'Inactive'}}</span> <span class="reason">{{::d.InactiveReason}}</span>
+                                </td>
+                                <td style="width:130px;" ng-class="::{ 'bg-danger': !d.Docs['75bb45ff-d712-e611-80c8-141877289421'][0].ExpiryDate || today.isAfter(d.Docs['75bb45ff-d712-e611-80c8-141877289421'][0].ExpiryDate), 'bg-warning': warning.isAfter(d.Docs['75bb45ff-d712-e611-80c8-141877289421'][0].ExpiryDate), 'bg-success': warning.isBefore(d.Docs['75bb45ff-d712-e611-80c8-141877289421'][0].ExpiryDate)  }">
+                                    <span ng-show="::!d.Docs['75bb45ff-d712-e611-80c8-141877289421'][0].ExpiryDate">Missing!</span> {{::d.Docs['75bb45ff-d712-e611-80c8-141877289421'][0].ExpiryDate | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td style="width:130px;" ng-class="::{ 'bg-danger': !d.Docs['8fd1aee6-bfc9-4086-9eb1-9753a9d8b130'][0].ExpiryDate || today.isAfter(d.Docs['8fd1aee6-bfc9-4086-9eb1-9753a9d8b130'][0].ExpiryDate), 'bg-warning': warning.isAfter(d.Docs['8fd1aee6-bfc9-4086-9eb1-9753a9d8b130'][0].ExpiryDate), 'bg-success': warning.isBefore(d.Docs['8fd1aee6-bfc9-4086-9eb1-9753a9d8b130'][0].ExpiryDate)  }">
+                                    <span ng-show="::!d.Docs['8fd1aee6-bfc9-4086-9eb1-9753a9d8b130'][0].ExpiryDate">Missing!</span> {{::d.Docs['8fd1aee6-bfc9-4086-9eb1-9753a9d8b130'][0].ExpiryDate | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td style="width:130px;" ng-class="::{ 'bg-danger': !d.Docs['1129bff7-d712-e611-80c8-141877289421'][0].ExpiryDate || today.isAfter(d.Docs['1129bff7-d712-e611-80c8-141877289421'][0].ExpiryDate), 'bg-warning': warning.isAfter(d.Docs['1129bff7-d712-e611-80c8-141877289421'][0].ExpiryDate), 'bg-success': warning.isBefore(d.Docs['1129bff7-d712-e611-80c8-141877289421'][0].ExpiryDate)  }">
+                                    <span ng-show="::!d.Docs['1129bff7-d712-e611-80c8-141877289421'][0].ExpiryDate">Missing!</span> {{::d.Docs['1129bff7-d712-e611-80c8-141877289421'][0].ExpiryDate | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td style="width:300px;" ng-class="::{ 'bg-danger': !d.Vehicle }" class="vehicle">
+                                    {{::d.Vehicle.Colour}} {{::d.Vehicle.Make}} {{::d.Vehicle.Model}}
+                                    <br /><span ng-show="d.Vehicle.Registration" class="registration"> {{::d.Vehicle.Registration}}</span>
+                                </td>
+                                <td style="width:130px;" ng-class="::{ 'bg-danger': !d.Docs['2422ff28-8cd5-463a-8c62-1c864ddeeaf3'][0].ExpiryDate || today.isAfter(d.Docs['2422ff28-8cd5-463a-8c62-1c864ddeeaf3'][0].ExpiryDate), 'bg-warning': warning.isAfter(d.Docs['2422ff28-8cd5-463a-8c62-1c864ddeeaf3'][0].ExpiryDate), 'bg-success': warning.isBefore(d.Docs['2422ff28-8cd5-463a-8c62-1c864ddeeaf3'][0].ExpiryDate)  }">
+                                    <span ng-show="::!d.Docs['2422ff28-8cd5-463a-8c62-1c864ddeeaf3'][0].ExpiryDate">Missing!</span> {{::d.Docs['2422ff28-8cd5-463a-8c62-1c864ddeeaf3'][0].ExpiryDate | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td style="width:130px;" ng-class="::{ 'bg-danger': !d.Docs['2e846662-e86b-e611-80ca-14187728d133'][0].ExpiryDate || today.isAfter(d.Docs['2e846662-e86b-e611-80ca-14187728d133'][0].ExpiryDate), 'bg-warning': warning.isAfter(d.Docs['2e846662-e86b-e611-80ca-14187728d133'][0].ExpiryDate), 'bg-success': warning.isBefore(d.Docs['2e846662-e86b-e611-80ca-14187728d133'][0].ExpiryDate)  }">
+                                    <span ng-show="::!d.Docs['2e846662-e86b-e611-80ca-14187728d133'][0].ExpiryDate">Missing!</span> {{::d.Docs['2e846662-e86b-e611-80ca-14187728d133'][0].ExpiryDate | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td style="width:130px;" ng-class="::{ 'bg-danger': !d.Docs['44a72205-eb55-4021-9b00-acdaf653b40a'][0].ExpiryDate || today.isAfter(d.Docs['44a72205-eb55-4021-9b00-acdaf653b40a'][0].ExpiryDate), 'bg-warning': warning.isAfter(d.Docs['44a72205-eb55-4021-9b00-acdaf653b40a'][0].ExpiryDate), 'bg-success': warning.isBefore(d.Docs['44a72205-eb55-4021-9b00-acdaf653b40a'][0].ExpiryDate)  }">
+                                    <span ng-show="::!d.Docs['44a72205-eb55-4021-9b00-acdaf653b40a'][0].ExpiryDate">Missing!</span> {{::d.Docs['44a72205-eb55-4021-9b00-acdaf653b40a'][0].ExpiryDate | date:'dd/MM/yyyy'}}
+                                </td>
+                                <td style="width:130px;" ng-class="::{ 'bg-danger': !d.Docs['3bd9cc4f-6383-4dc4-91e1-bfc8808af0c3'][0].ExpiryDate || today.isAfter(d.Docs['3bd9cc4f-6383-4dc4-91e1-bfc8808af0c3'][0].ExpiryDate), 'bg-warning': warning.isAfter(d.Docs['3bd9cc4f-6383-4dc4-91e1-bfc8808af0c3'][0].ExpiryDate), 'bg-success': warning.isBefore(d.Docs['3bd9cc4f-6383-4dc4-91e1-bfc8808af0c3'][0].ExpiryDate)  }">
+                                    <span ng-show="::!d.Docs['3bd9cc4f-6383-4dc4-91e1-bfc8808af0c3'][0].ExpiryDate">Missing!</span> {{::d.Docs['3bd9cc4f-6383-4dc4-91e1-bfc8808af0c3'][0].ExpiryDate | date:'dd/MM/yyyy'}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
+    </div>
+</div>

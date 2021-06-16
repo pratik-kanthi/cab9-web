@@ -1,0 +1,98 @@
+<div class="module invoices">
+    <div class="row">
+        <div class="col-xs-8 module-options">
+            <a ng-click="openPaymentModal()" class="btn btn-success" ng-if="PERMISSIONS.test('invoices','W')"><i class="material-icons">receipt</i>Create Invoice</a>
+            <span style="vertical-align: middle;font-size:19px;display: block;margin-top: 20px;" ng-if="!searchTerm.$">Showing Invoices For <b>{{filter.date.selectedPeriod}}</b></span>
+            <span style="vertical-align: middle;font-size:19px;display: block;margin-top: 20px;" ng-if="searchTerm.$">Showing Invoices Matching '<b>{{searchTerm.$}}</b>'</span>
+        </div>
+        <div class="col-xs-4 view-options">
+            <a ng-click="showFilterModal()"><i class="material-icons">filter_list</i>Filter</a>
+            <a href="" ng-click="" class="mb20">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" ng-model-options="{ 'debounce': 500 }" />
+            </a>
+        </div>
+    </div>
+    <!-- <div class="row mt20"> -->
+    <!--  <div class="col-md-6">
+            <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+        </div> -->
+    <!--   <div class="col-md-6 text-right">
+            <a class="btn btn-default" ng-click="startBulk()" style="padding-left:16px;" ng-show="!bulkMode">Bulk Email</a>
+            <span class="alert alert-info" ng-show="bulkMode" style="padding-top:6px;padding-bottom:8px;">Select Invoices to Email:</span>
+            <button class="btn btn-success" ng-click="submitBulk()" style="padding-left:16px;" ng-show="bulkMode" ng-disabled="!anySelected()">Email Selected</button>
+            <a class="btn btn-warning" ng-click="cancelBulk()" style="padding-left:16px;" ng-show="bulkMode">Cancel</a>
+        </div> -->
+    <!-- </div> -->
+    <div class="table table-condensed">
+        <div class="table-responsive table-striped-double">
+            <table class="table module-table">
+                <thead>
+                    <tr>
+                        <th colspan="100" class="table-arrange">
+                            <div class="pagination-wrapper pull-left">
+                                <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="3" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)" style="margin: 0;" first-text="&laquo;" previous-text="&lsaquo;" next-text="&rsaquo;" last-text="&raquo;"></pagination>
+                                <div ng-show="bulkMode"><span class="text-muted" style="font-weight: 400;">Select Invoices to Email:</span></div>
+                            </div>
+                            <div class="pull-right">
+                                <a class="btn btn-primary" ng-click="startBulk()" style="padding-left:16px;" ng-show="!bulkMode">Bulk Email</a>
+                                <button class="btn btn-success" ng-click="submitBulk()" style="padding-left:16px;" ng-show="bulkMode" ng-disabled="selectedRows.length==0">Email Selected</button>
+                                <a class="btn btn-warning" ng-click="cancelBulk()" style="padding-left:16px;" ng-show="bulkMode">Cancel</a>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th ng-if="bulkMode">
+                            <div class="checkbox" style="display: inline-block;">
+                                <input id="table-group-check" type="checkbox" ng-checked="allSelected()" ng-click="selectAll(!allSelected())">
+                                <label for="table-group-check"></label>
+                            </div>
+                            <!-- <input type="checkbox" ng-checked="allSelected()" ng-click="selectAll(!allSelected())" /> -->
+                            <div style="max-width: 300px;display: inline-block;">
+                                - Billing Email Address
+                            </div>
+                        </th>
+                        <th>Reference</th>
+                        <th>Client</th>
+                        <th>Tax Date</th>
+                        <th>Creation Date</th>
+                        <th>Bookings</th>
+                        <th>Amount Due</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="invoices.length==0">
+                        <td col="100" class="bold" style="background:none;text-align: left;"> No Invoices found</td>
+                    </tr>
+                    <tr ng-repeat="invoice in invoices | orderBy: CreationTime" ng-if="invoices.length > 0">
+                        <td ng-if="bulkMode">
+                            <!--  <input type="checkbox" ng-model="invoice.$selected" ng-disabled="!invoice.Client.BillingEmail" /> - {{invoice.Client.BillingEmail || 'No Client Billing Email'}} -->
+                            <div class="checkbox" style="display: inline-block;">
+                                <input id="table-check-{{::$index}}" type="checkbox" ng-click="toggleRowSelection(invoice)" ng-checked="invoice.$selected">
+                                <label for="table-check-{{::$index}}"></label>
+                            </div>
+                            <div style="max-width: 300px;display: inline-block;">
+                                - {{invoice.Client.BillingEmail || 'No Client Billing Email'}}
+                            </div>
+                        </td>
+                        <td ng-bind="invoice.Reference"></td>
+                        <td ng-bind="'(' + invoice.Client.AccountNo + ') ' + invoice.Client.Name"></td>
+                        <td ng-bind="invoice.DueDate|companyDate:'DD/MM/YYYY'"></td>
+                        <td ng-bind="invoice.CreationTime|companyDate:'DD/MM/YYYY'"></td>
+                        <td ng-bind="invoice.NoOfBookings"></td>
+                        <td ng-bind="'£'+invoice._AmountDue.toFixed(2)"></td>
+                        <td class="text-center" ng-class="{'bg-warning': invoice.Status == 'Unsent', 'bg-danger': invoice.Status == 'Unpaid', 'bg-success': invoice.Status == 'Paid'}" ng-bind="invoice.Status"></td>
+                        <td class="text-center">
+                            <a class="btn btn-xs btn-primary" ui-sref="root.invoices.viewer({ Id: invoice.Id})" target="_blank" ng-if="PERMISSIONS.test('invoices.viewer')"><i class="material-icons">chrome_reader_mode</i> View</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,113 @@
+.dropdown-menu.ng-valid-date-disabled {
+    padding: 1px;
+    .border-radius(3px);
+    border: 1px solid @brand-primary;
+    background-color: #fff;
+    table {
+        outline: 0;
+        margin: 0;
+        width: 250px;
+        thead {
+            background: none;
+            th {
+                background: none;
+                font-size: 16px;
+                line-height: 30px;
+                font-family: @font-family-base;
+                font-weight: 600;
+                color: @brand-primary;
+                padding: 1px;
+                button.btn {
+                    background: @brand-primary;
+                    border: 1px solid @brand-primary;
+                    font-family: @font-family-base;
+                    color: #fff !important;
+                    outline: none;
+                    .border-radius(0);
+                    padding: 5px 10px !important;
+                    height: 35px;
+                    min-width: inherit !important;
+                    width: 100%;
+                    margin: 0 !important;
+                    &:hover,
+                    &:focus {
+                        background-color: @brand-primary;
+                        outline: none;
+                    }
+                    i {
+                        font-size: 16px;
+                    }
+                }
+                &:first-child {
+                    button.btn {
+                        .border-radius(3px 0 0 3px);
+                    }
+                }
+                &:last-child {
+                    button.btn {
+                        .border-radius(0 3px 3px 0);
+                    }
+                }
+            }
+        }
+        td {
+            background-color: #fff;
+            padding: 1px;
+            .btn {
+                min-width: inherit !important;
+            }
+            .btn.btn-sm {
+                background: none;
+                min-width: inherit !important;
+                color: #444;
+                margin: 0;
+                width: 35px !important;
+                height: 35px !important;
+                .border-radius(20px);
+                border: 1px solid #eee;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                text-align: center;
+                background-color: #fff;
+                &.active {
+                    border: 1px solid @brand-primary;
+                    background-color: @brand-primary;
+                    color: #fff !important;
+                }
+                .text-info {
+                    color: @brand-primary;
+                }
+            }
+            .btn.btn-default {
+                width: 90px;
+                padding-left: 0;
+                padding-right: 0;
+                text-align: center !important;
+            }
+            &:first-child {
+                .border-radius(3px 0 0 3px);
+            }
+            &:last-child {
+                .border-radius(0 3px 3px 0);
+            }
+        }
+    }
+}
+
+.dropdown-menu {
+    &.timepicker {
+        width: 160px;
+        padding: 5px 16px;
+        td.form-group {
+            padding: 0 4px;
+            .form-control {
+                width: 100% !important;
+                border-radius: 3px;
+            }
+        }
+        a.btn {
+            padding: 5px 16px;
+            top: 1px;
+        }
+    }
+}

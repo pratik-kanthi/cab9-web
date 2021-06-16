@@ -1,0 +1,110 @@
+<button class="btn btn-warning" ng-show="viewMode == 'VIEW'" ng-click="startEdit()"><i class="material-icons">create</i>Edit</button>
+<button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+<button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+<h3 class="section-title">Bonus Settings</h3>
+<div class="row mt20" ng-show="item.$bonus.DependsUpon ||viewMode=='EDIT'">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label">Depends Upon:</label>
+            <p class="form-control-static" ng-bind="item.$bonus.DependsUpon" ng-show="viewMode=='VIEW'"></p>
+            <select id="DependsUpon" class="form-control" ng-model="item.$bonus.DependsUpon" ng-show="viewMode=='EDIT'" ng-options="option for option in DependsUpon">
+                <option value="" class=""></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Type:</label>
+            <p class="form-control-static" ng-bind="item.$bonus.Type" ng-show="viewMode=='VIEW'"></p>
+            <select id="Type" class="form-control" ng-show="viewMode=='EDIT'" ng-model="item.$bonus.Type" ng-options="option for option in Types">
+                <option value="" class=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-6" ng-show="item.$bonus.Type">
+        <div class="form-group">
+            <label class="control-label brand-primary">Add bonus steps</label>
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th>MinValue</th>
+                        <th ng-show="item.$bonus.Type=='Percentage'"><span>Percentage Bonus</span></th>
+                        <th ng-show="item.$bonus.Type=='Fixed'"><span>Fixed Bonus</span></th>
+                        <th ng-show="viewMode !== 'VIEW'"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="item.$bonus.steps.length == 0">
+                        <td colspan="{{viewMode === 'VIEW' ? 2 : 3}}">No Bonus Levels Added</td>
+                    </tr>
+                    <tr ng-repeat="s in item.$bonus.steps track by $index">
+                        <td>
+                            <div ng-show="viewMode === 'VIEW'" ng-bind="s.max"></div>
+                            <div ng-show="viewMode !== 'VIEW'">
+                                <input type="number" class="form-control" min="{{getPrevious(s)}}" ng-model="s.max" />
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-show="viewMode === 'VIEW' && item.$bonus.Type=='Fixed'" ng-bind="s.bonus | currency"></div>
+                            <div ng-show="viewMode === 'VIEW' && item.$bonus.Type=='Percentage'" ng-bind="s.bonus+'%'"></div>
+                            <div ng-show="viewMode !== 'VIEW'">
+                                <input type="number" class="form-control" ng-model="s.bonus" />
+                            </div>
+                        </td>
+                        <td ng-show="viewMode !== 'VIEW'">
+                            <a class="" ng-click="remove(s)">Remove</a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot ng-show="viewMode !== 'VIEW'">
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <a class="" ng-click="addLevel()">Add Level</a>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <!--
+        <div class="form-group" ng-show="item.$bonus.Type=='Percentage'">
+            <label class="control-label">Percentage Bonus:</label>
+            <input class="form-control" type="number" min=0 max=100 ng-model="item.$bonus.Percentage" />
+        </div>
+        <div class="form-group" ng-show="item.$bonus.Type=='Fixed'">
+            <label class="control-label">Fixed Bonus:</label>
+            <input class="form-control" type="number" min=0 ng-model="item.$bonus.Bonus" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">MinValue:</label>
+            <input class="form-control" type="number" min=0 ng-model="item.$bonus.MinValue" />
+        </div>
+-->
+    </div>
+</div>
+<!--
+<div class="row mt20" ng-show="viewMode=='VIEW' && item.$bonus.DependsUpon">
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="control-label">Depends Upon:</label>
+            <p class="form-control-static" ng-bind="item.$bonus.DependsUpon"></p>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Type:</label>
+            <p class="form-control-static" ng-bind="item.$bonus.Type"></p>
+        </div>
+    </div>
+    
+  <div class="col-md-2">
+    <div class="form-group" ng-show="item.$bonus.Type=='Percentage'">
+        <label class="control-label">Percentage Bonus:</label>
+        <p class="form-control-static" ng-bind="item.$bonus.Percentage"></p>
+    </div>
+    <div class="form-group" ng-show="item.$bonus.Type=='Fixed'">
+        <label class="control-label">Fixed Bonus:</label>
+        <p class="form-control-static" ng-bind="item.$bonus.Bonus"></p>
+    </div>
+    <div class="form-group">
+        <label class="control-label">MinValue:</label>
+        <p class="form-control-static" ng-bind="item.$bonus.MinValue"></p>
+    </div>
+</div>
+</div>-->
+<div ng-show="viewMode=='VIEW' && !item.$bonus.DependsUpon">Bonus Structure not avaialable!</div>

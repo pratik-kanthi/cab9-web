@@ -1,0 +1,96 @@
+<div class="row advanced">
+        <div class="col-md-3">
+            <ul class="nav nav-pills nav-stacked">
+                <li ng-class="{'active': view.current == 'SAVED'}">
+                    <a ng-click="view.switchTo('SAVED')">Saved Cards</a>
+                </li>
+                <li ng-class="{'active': view.current == 'ADD'}">
+                    <a ng-click="view.switchTo('ADD')">Add new card</a>
+                </li>
+            </ul>
+        </div>
+        <div class="" ng-show="view.current == 'SAVED'">
+            <div class="col-md-9" style="padding:0">
+                <div class="col-md-12">
+                    <h3 style="font-size: 14px;font-weight: 400;margin-top: 5px;margin-bottom: 0;" ng-if="cardList.length != 0">
+                            Your saved cards are listed above. You can change your default card by clicking on Tick button given at lower right corner of each card.
+                        </h3>
+                    </div>
+                <div ng-repeat="card in cardList">
+                    <div class="col-md-4 jp-card-container" style="transform: scale(0.857143);    padding: 0;
+                    margin: 0;">
+                        <div class="" ng-class="getCardTypeClass(card.Type)">
+                            <div class="jp-card-front">
+                                <div class="jp-card-logo jp-card-elo"><div class="e">e</div><div class="l">l</div><div class="o">o</div></div>
+                                <div class="jp-card-logo jp-card-visa">Visa</div>
+                                <div class="jp-card-logo jp-card-visaelectron">Visa<div class="elec">Electron</div></div>
+                                <div class="jp-card-logo jp-card-mastercard">Mastercard</div>
+                                <div class="jp-card-logo jp-card-maestro">Maestro</div>
+                                <div class="jp-card-logo jp-card-amex"></div>
+                                <div class="jp-card-logo jp-card-discover">discover</div>
+                                <div class="jp-card-logo jp-card-dinersclub"></div>
+                                <div class="jp-card-logo jp-card-dankort"><div class="dk"><div class="d"></div><div class="k"></div></div></div>
+                                <div class="jp-card-logo jp-card-jcb"><div class="j">J</div><div class="c">C</div><div class="b">B</div></div>
+                                <div class="jp-card-lower">
+                                    <div class="jp-card-shiny"></div>
+                                    <div class="jp-card-number jp-card-display jp-card-invalid">{{card.CardNumber}}</div>
+                                    <div class="jp-card-name jp-card-display">{{card.BillingName}}</div>
+                                    <div class="jp-card-expiry jp-card-display" data-before="month/year" data-after="validthru">{{card.ExpirationMonth}}/{{card.ExpirationYear}}</div>
+                                    <div class="jp-card-expiry jp-card-display ng-binding" style="position: absolute;padding-top: 20px;width:  100%;margin-left: 25px;">
+                                         <i class="material-icons ng-scope" style="float:right;font-size: 18px;cursor: pointer;color: black; background-color: white; border-radius: 50%;padding: 2px 2px 2px 2px;" title="click to delete the card." ng-click="deleteCard(card.Id)">delete_forever</i>                        
+                                         <i class="material-icons ng-scope" style="float:right;font-size: 18px;cursor: pointer;color: black; background-color: white;border-radius: 50%;padding: 2px 2px 2px 2px;margin-right: 3px; " title="click to make card default" ng-click="makeDefault(card)" ng-if="!card.DefaultCard">done</i>                                                                 
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                
+            </div>
+            <div class="col-md-9">
+                    <div class="alert alert-warning mb0 ng-scope" ng-if="cardList.length == 0">
+                        No Payment Cards Added.
+                    </div>
+                </div>  
+        </div>
+        
+        <div class="" ng-show="view.current == 'ADD'">
+            <div class="col-md-9" style="padding: 0;">
+                <div class="col-md-12" style="padding: 0;margin-bottom: 10px;background-color: #fafafa; margin-right: 10px">
+                    <div ng-show="view.current == 'ADD'" style="background-color: #fafafa;padding-bottom: 10px;">
+                        <form data-width="300" name="cardForm" data-card="" data-width="500" data-card-container="#card-container" data-placeholders="cardPlaceholders" data-options="cardOptions" data-messages="cardMessages" class="ng-pristine ng-valid">
+                            <span>
+                                <div style="float:left;transform: scale(0.857143);" id="card-container"></div>
+                                <div class="addcreditcard">
+                                    <h3 style="font-size: 14px;font-weight: 400;margin-top: 5px;">
+                                        Please fill your card and billing details to add card to your saved cards.
+                                    </h3>
+                                    <div style="padding-left: 15px;">
+                                        <input placeholder="Card number" required type="text" name="CardNumber" card-number="" data-ng-model="card.CardNumber" class="ng-pristine ng-untouched ng-valid">
+                                        <input placeholder="Full name" required type="text" name="CardName" card-name="" data-ng-model="card.BillingName" class="ng-pristine ng-untouched ng-valid">
+                                    </div>
+                                    <div style="padding-left: 15px;">
+                                        <input placeholder="MM/YYYY" required type="text" card-expiry="" name="CardExpiryMonth" data-ng-model="card.ExpirationMonth" class="ng-pristine ng-valid ng-isolate-scope ng-touched">
+                                        <input placeholder="CVC" required type="text" name="CardCvc" card-cvc="" data-ng-model="card.Cvc" class="ng-pristine ng-untouched ng-valid ng-isolate-scope">
+                                    </div>
+                                    <h3 style="font-size: 14px;color: #455674;margin: 5px 0px 5px 15px;">Billing Address Details</h3>
+                                    <div style="padding-left: 15px;">
+                                        <input placeholder="Address" required type="text" name="CardBillingAddress" data-ng-model="card.billingaddress" class="ng-pristine ng-valid ng-isolate-scope ng-touched" style="width:230px; margin-top: 1px;">
+                                        <input placeholder="Postcode" required type="text" pattern="^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) [0-9][A-Za-z]{2})$" required name="cardPostcode" data-ng-model="card.BillingPostcode" class="ng-pristine ng-untouched ng-valid ng-isolate-scope" style="width: 128px;">
+                                    </div>
+                                    <div style="padding: 5px 33px 0px;" ng-if="!showLoader">
+                                        <button type="submit" title="click to add card to your saved cards" class="btn btn-success" ng-disabled="!card.CardNumber || !card.BillingName || !card.ExpirationMonth || !card.Cvc || !card.billingaddress || !card.BillingPostcode" ng-click="addCard(card, false)" style="padding-left: 17px;">Add Your Card</button>
+                                        <button type="submit" title="click to add card as your default card in your saved cards" class="btn btn-success" ng-disabled="!card.CardNumber || !card.BillingName || !card.ExpirationMonth || !card.Cvc || !card.billingaddress || !card.BillingPostcode" ng-click="addCard(card, true)" style="padding-left: 17px;">Add As default card</button>
+                                    </div>
+                                    <div style="padding: 5px 33px 0px;" ng-if="showLoader">
+                                       <button type="submit" title="click to add card to your saved cards" class="btn btn-success" ng-disabled="!card.CardNumber || !card.BillingName || !card.ExpirationMonth || !card.Cvc || !card.billingaddress || !card.BillingPostcode" ng-click="addCard(card)"><i class="fa fa-circle-o-notch fa-spin"></i> Saving...</button>
+                                     </div>
+                                </div>
+                            </span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

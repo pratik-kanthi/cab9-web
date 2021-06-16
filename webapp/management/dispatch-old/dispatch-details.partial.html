@@ -1,0 +1,120 @@
+<div class="header">
+    <h2 class="page-title">Booking #{{selected.booking.LocalId}}</h2>
+    <a href="" class="section-close" ng-click="unselect()">
+        <i class="material-icons">clear</i>
+    </a>
+</div>
+<div class="sidebar-content-wrapper">
+    <div class="content booking-edit" form-for="selected.booking" schema="Booking" mode="EDIT">
+        <div class="row mb20">
+            <div class="col-sm-6">
+                <strong class="brand-primary">Passenger Information</strong>
+                <div class="profile-box-small mt5">
+                    <div class="picture">
+                        <img ng-src="{{selected.booking.LeadPassenger._ImageUrl}}" alt="" />
+                    </div>
+                    <div class="info">
+                        <h4 ng-bind="selected.booking.LeadPassenger._Fullname"></h4>
+                        <h6 ng-bind="selected.booking.LeadPassenger.Mobile"></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6" ng-if="selected.booking.Client">
+                <strong class="brand-primary">Client Information</strong>
+                <div class="profile-box-small mt5">
+                    <div class="picture">
+                        <img ng-src="{{selected.booking.Client._ImageUrl}}" alt="" />
+                    </div>
+                    <div class="info">
+                        <h4 ng-bind="selected.booking.Client.Name"></h4>
+                        <h6 ng-bind="selected.booking.Client.Mobile"></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-repeat="stop in selected.booking.BookingStops">
+            <div class="row" ng-if="$first">
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <label class="control-label" for="stop{{$index}}">
+                            Pickup
+                        </label>
+                        <div class="form-edit booking-stop">
+                            <div stop-edit name="stop{{$index}}" map="map" required="$first" model="stop"></div>
+                            <a href="" ng-if="!selected.booking.AsDirected" class="stop-button add" ng-click="addStop($index)"><i class="material-icons">add_circle</i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label">As Directed</label>
+                        <div class="mt5">
+                            <input class="check" type="checkbox" id="AsDirectedCheck" ng-model="selected.booking.AsDirected" />
+                            <label class="check-label" for="AsDirectedCheck"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" ng-init="stop.StopOrder = $index + 1" ng-if="!$first">
+                <label class="control-label" for="stop{{$index}}">
+                    {{ $last ? 'Drop Off' : 'Via'}}
+                </label>
+                <div class="form-edit booking-stop">
+                    <div stop-edit name="stop{{$index}}" map="map" required="$first" model="stop"></div>
+                    <a href="" class="stop-button add" ng-show="!$last" ng-click="addStop($index)"><i class="material-icons">add_circle</i></a>
+                    <a href="" class="stop-button sub" ng-show="$middle" ng-click="selected.booking.BookingStops.splice($index, 1)"><i class="material-icons">remove_circle</i></a>
+                </div>
+            </div>
+        </div>
+        <div class="row mt20" ng-show="COMPANY.ChauffeurModeActive">
+            <div class="col-sm-6">
+                <div field-for="ChauffeurMode" display="Chauffer Mode"></div>
+            </div>
+            <div class="col-sm-6">
+                <div field-for="EstimatedMins" display="Estimated Mins" ng-show="selected.booking.ChauffeurMode"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div field-for="BookedDateTime" display="Date" required="true"></div>
+            </div>
+            <div class="col-sm-6">
+                <div field-for="Time" display="Time" step="300" required="true"></div>
+            </div>
+        </div>
+        <div class="row mt10">
+            <div class="col-sm-4">
+                <div field-for="Pax" display="Passengers" required="true"></div>
+            </div>
+            <div class="col-sm-4">
+                <div field-for="Bax" display="Bags" required="true"></div>
+            </div>
+            <div class="col-sm-4">
+                <div field-for="FlightNo" display="Flight No."></div>
+            </div>
+        </div>
+        <div class="row mt10">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label">Auto Dispatch</label>
+                    <div class="mt5">
+                        <input class="check" type="checkbox" id="AutoDispatchCheck" ng-model="selected.booking.AutoDispatch" />
+                        <label class="check-label" for="AutoDispatchCheck"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div field-for="DriverNotes" display="Driver Note"></div>
+            </div>
+        </div>
+        <div class="row mt10">
+            <div class="col-sm-6">
+                <div field-for="ActualCost" display="Fare"></div>
+            </div>
+        </div>
+        <div class="actions">
+            <a href="" class="btn btn-success" ng-click="save()"><i class="material-icons">save</i>Save Booking</a>
+            <a href="" class="btn btn-warning" ng-click="cancel()"><i class="material-icons">undo</i>Cancel</a>
+        </div>
+    </div>
+</div>

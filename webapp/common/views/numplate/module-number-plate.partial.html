@@ -1,0 +1,23 @@
+<div class="numplate-wrapper">
+    <div class="numplate-view-options">
+        <div class="row">
+            <div class="col-sm-8 col-xs-6">
+                <div class="group-filters">
+                    <a class="group-options" ng-if="!selectGroups" ng-click="chosenGroup = null" ng-class="(chosenGroup == null)?'active':''">All</a>
+                    <a class="group-options" ng-if="!selectGroups" ng-click="$parent.chosenGroup = title" ng-class="($parent.chosenGroup == title)?'active':''" ng-repeat="(title, items) in groups">{{title}}({{(items | filter:searchTerm).length }})</a>
+                    <select class="group-select" ng-if="selectGroups" ng-model="$parent.chosenGroup">
+                        <option value="">All ({{(rawItems | filter:searchTerm).length }})</option>
+                        <option ng-repeat="(title, items) in groups" value="{{title}}">{{title}} ({{(items | filter:searchTerm).length }})</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <virtualised-repeater repeat="item in filteredItems" item-width="155" item-height="96">
+        <numplate showscore="{{showScore}}"></numplate>
+    </virtualised-repeater>
+    <div ng-if="rawItems.length === 0">
+        No Items Added Yet.
+    </div>
+    <br class="clearfix" />
+</div>

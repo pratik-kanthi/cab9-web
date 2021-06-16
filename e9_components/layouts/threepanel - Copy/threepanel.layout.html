@@ -1,0 +1,93 @@
+﻿<div class="three-panel-layout">
+    <div class="panel panel-default left-bar" ng-style="{ width: bars.left.currentWidth, bottom: bars.bottom.currentHeight }">
+        <div class="panel-heading">
+            <h3 class="panel-title" ng-hide="bars.left.currentWidth == bars.left.options[0]">Info</h3>
+            <div class="resize-options">
+                <span class="dropdown left" dropdown ng-hide="bars.left.currentWidth == bars.left.options[0]">
+                    <a dropdown-toggle><i class="material-icons">menu</i></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a ui-sref="dispatch.bookings">Bookings</a>
+                        </li>
+                        <li>
+                            <a ui-sref="dispatch.drivers">Drivers</a>
+                        </li>
+                        <li>
+                            <a ui-sref="dispatch.newbooking">New Booking</a>
+                        </li>
+                    </ul>
+                </span>
+                <a ng-click="bars.left.close()" ng-hide="bars.left.currentWidth == bars.left.options[0]"> < </a>
+                <a ng-click="bars.left.open()"> > </a>
+            </div>
+        </div>
+        <div class="panel-body" ng-hide="bars.left.currentWidth == bars.left.options[0]">
+            <ui-view name="leftbar"></ui-view>
+        </div>
+        <div ng-show="bars.left.currentWidth == bars.left.options[0]">
+            <h3 class="title-minimised">Info</h3>
+        </div>
+    </div>
+    <div class="panel panel-default bottom-bar" ng-style="{ height: bars.bottom.currentHeight }" style="z-index:100000;">
+        <div class="panel-heading">
+            <h3 class="panel-title">Details</h3>
+            <div class="resize-options">
+                <span class="dropdown left" dropdown ng-hide="bars.bottom.currentHeight == bars.bottom.options[0]">
+                    <a dropdown-toggle><i class="material-icons">menu</i></a>
+                    <ul class="dropdown-menu"></ul>
+                </span>
+                <a ng-click="bars.bottom.close()">&#x2C5;</a>
+                <a ng-click="bars.bottom.open()">&#x2C4;</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <ui-view name="bottombar"></ui-view>
+        </div>
+    </div>
+    <div class="panel panel-default main-section" ng-style="{ bottom: bars.bottom.currentHeight, left: bars.left.currentWidth }">
+        <div class="panel-heading">
+            <h3 class="panel-title">Map</h3>
+            <div class="resize-options">
+                <span class="dropdown left" dropdown>
+                    <a dropdown-toggle><i class="icon icon-eye"></i></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Show</li>
+                        <li><a class="underline" ng-class="{ active: show.drivers }" ng-click="show.drivers = !show.drivers">&nbsp;&nbsp;&nbsp;Drivers</a></li>
+                        <li><a class="underline" ng-class="{ active: show.bookings }" ng-click="show.bookings = !show.bookings">&nbsp;&nbsp;&nbsp;Bookings</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Clustering</li>
+                        <li><a class="underline" ng-class="{ active: clustering.drivers }" ng-click="clustering.drivers = !clustering.drivers">&nbsp;&nbsp;&nbsp;Drivers</a></li>
+                        <li><a class="underline" ng-class="{ active: clustering.bookings }" ng-click="clustering.bookings = !clustering.bookings">&nbsp;&nbsp;&nbsp;Bookings</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Labels</li>
+                        <li><a class="underline" ng-class="{ active: view.drivers }" ng-click="toggleDriverLabels()">&nbsp;&nbsp;&nbsp;Drivers</a></li>
+                        <li><a class="underline" ng-class="{ active: view.bookings }" ng-click="toggleBookingLabels()">&nbsp;&nbsp;&nbsp;Bookings</a></li>
+                    </ul>
+                </span>
+                <span class="dropdown left" dropdown>
+                    <a dropdown-toggle><i class="material-icons">menu</i></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Fit</li>
+                        <li><a ng-click="fit(null, driverMarkers)">&nbsp;&nbsp;&nbsp;Drivers</a></li>
+                        <li><a ng-click="fit(bookingMarkers, null)">&nbsp;&nbsp;&nbsp;Bookings</a></li>
+                        <li><a ng-click="fit(bookingMarkers, driverMarkers)">&nbsp;&nbsp;&nbsp;Both</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="underline" ng-class="{ active: traffic.show }" ng-click="traffic.show = !traffic.show">
+                                Toggle Traffic
+                            </a>
+                        </li>
+                        <li>
+                            <a class="underline" ng-class="{ active: heatmap.show }" ng-click="heatmap.show = !heatmap.show">
+                                Toggle Heatmap
+                            </a>
+                        </li>
+                    </ul>
+                </span>
+            </div>
+        </div>
+        <div class="panel-body" style="height:100%;overflow:hidden;">
+            <ui-view name="mainsection"></ui-view>
+        </div>
+    </div>
+</div>

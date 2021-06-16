@@ -1,0 +1,21 @@
+﻿<div>
+    <button class="btn btn-primary btn-xs" ng-click="newPoint()">
+        <i class="material-icons">add_location</i> Add New Pickup Point
+    </button>
+    <div class="row mt16">
+        <div class="col-sm-8">
+            <br />
+            <div class="cards-wrapper mt16">
+                <card item="p" accessors="pointAccessors" ng-repeat="p in item.KnownPickupPoints" ng-click="openPoint(p)">
+
+                </card>
+                <br class="clearfix" ng-show="item.KnownPickupPoints.length > 0" />
+            </div>
+            <br />
+            <div ng-if="item.KnownPickupPoints.length === 0">
+                No Items Added Yet.
+            </div>
+            <br class="clearfix" />
+        </div>
+    </div>
+</div>

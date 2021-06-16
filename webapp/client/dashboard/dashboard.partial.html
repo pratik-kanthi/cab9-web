@@ -1,0 +1,19 @@
+<div id="dashboard">
+    <div class="grid">
+        <div class="loading-div" ng-hide="dataRequestsCount == 0">
+            <div class="loader">
+                <div class="loader-inner ball-clip-rotate-multiple">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div id="width-sizer" style="width:25%"></div>
+        <booking-client-report filters="reportFilters" order="1"></booking-client-report>
+        <!-- <booking-revenue filters="reportFilters" order="2"></booking-revenue> -->
+        <passenger-report filters="reportFilters" order="2" ng-if="!$root.reportFilters.ClientStaffId"></passenger-report>
+        <bookings-heatmap filters="reportFilters" order="3"></bookings-heatmap>
+        <twitter order="4" height="400"></twitter>
+        <weather-report order="5"></weather-report>
+    </div>
+</div>

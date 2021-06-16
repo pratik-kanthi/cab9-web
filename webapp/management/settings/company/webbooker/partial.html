@@ -1,0 +1,384 @@
+<div id="webbooker" class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Web Booker Settings</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group pull-right mt10" ng-show="setting">
+            <div class="form-edit">
+                <ui-select class="edit" style="width:auto" ng-model="selected.setting" theme="selectize">
+                    <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                        <div class="select-text">
+                            {{$select.selected.RefererUrl}}
+                        </div>
+                    </ui-select-match>
+                    <ui-select-choices refresh-delay="200" repeat="item in settings">
+                        <div class="select-text-option">
+                            <strong ng-bind="item.RefererUrl | highlight: $select.search"></strong>
+                        </div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div form-for="setting" schema="WebBookerDetails" mode="{{viewMode}}" ng-show="setting">
+            <div class="mt10 mb10">
+                <button class="btn btn-warning" ng-show="viewMode == 'VIEW'" ng-click="startEdit()"
+                    ng-if="PERMISSIONS.test('settings.company','W')"><i class="material-icons">create</i>Edit</button>
+                <button class="btn btn-danger" ng-show="viewMode == 'VIEW'" ng-click="remove()"><i
+                        class="material-icons">delete</i>Delete</button>
+                <button class="btn btn-success" ng-show="viewMode == 'VIEW'" ng-click="addNew()"><i
+                        class="material-icons">add_circle</i>Add New</button>
+                <button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-disabled="formFor.form.$invalid"
+                    ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+                <button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i
+                        class="material-icons">undo</i>Cancel</button>
+            </div>
+            <p>This page configures your Web Booker integration</p>
+            <h3 class="section-title">Basic Info</h3>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div field-for="Name" display="Name"></div>
+                </div>
+                <div class="col-sm-4" sub-form-for="Template" schema="Template" mode="{{viewMode}}"
+                    ng-if="viewMode=='VIEW'">
+                    <div field-for="Name" display="Template"></div>
+                </div>
+                <div class="col-sm-4" ng-if="viewMode=='EDIT'">
+                    <div class="form-group">
+                        <label class="control-label" for="Template">Template</label>
+                        <div class="form-edit">
+                            <ui-select class="edit" ng-model="setting.Template" theme="selectize" name="TemplateInput"
+                                tabindex="1" ng-model-options="{ debounce: 100 }">
+                                <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                    <div class="select-text">{{$select.selected.Name}}</div>
+                                </ui-select-match>
+                                <ui-select-choices refresh-delay="200" repeat="item._id as item in templates">
+                                    <div class="select-text-option">
+                                        <div ng-bind-html="::item.Name"></div>
+                                    </div>
+                                </ui-select-choices>
+                            </ui-select>
+                            <a ng-click="setting.Template = null;setting.Template = null;"
+                                style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="setting.Template"
+                                class="red">Clear</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div field-for="SecretKey" display="SecretKey"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div field-for="StaffUserName" display="Account UserName"></div>
+                </div>
+                <div class="col-sm-4">
+                    <div field-for="StaffPassword" display="Account Password" type="password"></div>
+                </div>
+                <div class="col-sm-4">
+                    <div field-for="RefererUrl" display="Web Booker URL"></div>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title">Coverage Areas</h3>
+            <div class="mt10 mb10"
+                ng-show="(selectedCoverageAreaMode != 'EDIT' && selectedCoverageAreaMode != 'CREATE') && viewMode == 'EDIT'">
+                <button class="btn btn-success" ng-click="addNewCoverageArea()"><i
+                        class="material-icons">playlist_add</i>Add New</button>
+            </div>
+            <div class="row" ng-if="setting.CoverageAreas.length > 0">
+                <div class="col-sm-4" ng-repeat="cvgArea in setting.CoverageAreas track by $index">
+                    <div class="pricing-zone info-card">
+                        <div class="name">Zone-{{$index + 1}}</div>
+                        <div class="actions" ng-show="selectedCoverageAreaMode != 'EDIT'">
+                            <a ng-click="startEditCoverageArea($index)" ng-show="viewMode == 'EDIT'"><i
+                                    class="material-icons">create</i></a>
+                            <a ng-click="deleteCoverageArea($index)" ng-show="viewMode == 'EDIT'"><i
+                                    class="material-icons">delete</i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-success" ng-show="selectedCoverageAreaMode == 'EDIT'"
+                    ng-click="updateCoverageArea()"><i class="material-icons">save</i>Update</button>
+                <button class="btn btn-warning" ng-show="selectedCoverageAreaMode == 'EDIT'"
+                    ng-click="cancelEditCoverageArea()"><i class="material-icons">undo</i>Cancel</button>
+            </div>
+            <br class="clearfix">
+            <div id="pricing-zone-pm">
+                <div class="map-div">
+                    <address-map-search object="map.center"></address-map-search>
+                    <ui-gmap-google-map center="map.center" zoom="map.zoom" pan="true" control="map.control"
+                        styles="map.styles" options="map.options" bounds="mapBounds">
+                        <ui-gmap-drawing-manager options="drawingManager.options" control="drawingManager.control">
+                        </ui-gmap-drawing-manager>
+                        <ui-gmap-polygons models="configPolygons" path="'path'" editable="'editable'"
+                            draggable="'draggable'" stroke="'stroke'" events="'events'" static="false">
+                        </ui-gmap-polygons>
+                        <ui-gmap-marker idKey='2' coords="companyMarker.coords" options="companyMarker.options">
+                        </ui-gmap-marker>
+                    </ui-gmap-google-map>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title">Default Pickup</h3>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <button class="btn btn-success mb10"
+                            ng-show="viewMode == 'EDIT' && !setting.DefaultPickup.StopSummary"
+                            ng-click="newAddress('pickup')"><i class="material-icons">add_circle</i>Add</button>
+                        <table class="table table-condensed table-hover mb10 table-bordered">
+                            <tbody>
+                                <tr ng-if="!setting.DefaultPickup.StopSummary">
+                                    <td>
+                                        <span class="text-muted">No Default Pickup added.</span>
+                                    </td>
+                                </tr>
+                                <tr ng-if="setting.DefaultPickup && setting.DefaultPickup.StopSummary">
+                                    <td>
+                                        <strong class="brand-primary">{{setting.DefaultPickup.StopSummary}}</strong>
+                                        <a href="" class="brand-primary pull-right ml8"
+                                            ng-click="removeAddress('pickup')" ng-show="viewMode!='VIEW'">
+                                            <i class="material-icons">remove_circle</i>
+                                        </a>
+                                        <a href="" class="brand-primary pull-right ml8"
+                                            ng-click="editAddress(setting.DefaultPickup,'pickup')"
+                                            ng-show="viewMode!='VIEW'">
+                                            <i class="material-icons">create</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <small class="text-muted">* You can add only one default pickup.</small>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title"> Nearby DropsOffs</h3>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <button class="btn btn-success mb10" ng-show="viewMode == 'EDIT'"
+                            ng-click="newAddress('dropoff')"><i class="material-icons">add_circle</i>Add</button>
+                        <table class="table table-condensed table-hover mb10 table-bordered">
+                            <tbody>
+                                <tr ng-if="setting.NearbyDropOffs.length==0">
+                                    <td>
+                                        <span class="text-muted">No NearbyDropOffs added.</span>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="item in setting.NearbyDropOffs track by $index">
+                                    <td>
+                                        <strong class="brand-primary">{{item.StopSummary}}</strong>
+                                        <a href="" class="brand-primary pull-right ml8"
+                                            ng-click="removeAddress('dropoff',$index)" ng-show="viewMode!='VIEW'">
+                                            <i class="material-icons">remove_circle</i>
+                                        </a>
+                                        <a href="" class="brand-primary pull-right ml8"
+                                            ng-click="editAddress(item,'dropoff',$index)" ng-show="viewMode!='VIEW'">
+                                            <i class="material-icons">create</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <small class="text-muted">* You can add multiple nearby dropoffs.</small>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title">Restrictions</h3>
+            <div class="row" sub-form-for="Restrictions" schema="WebBookerRestrictions" mode="{{viewMode}}">
+                <div class="col-sm-3">
+                    <div field-for="Mileage"></div>
+                </div>
+                <div class="col-sm-3">
+                    <div field-for="LeadTime"></div>
+                </div>
+                <div class="col-sm-2">
+                    <div field-for="AllowCash"></div>
+                </div>
+                <div class="col-sm-2">
+                    <div field-for="SMS"></div>
+                </div>
+                <div class="col-sm-2">
+                    <div field-for="Email"></div>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title">Brand Colors</h3>
+            <div sub-form-for="BrandColors" schema="WebBookerBrandColors" mode="{{viewMode}}">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div field-for="Primary"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="Secondary"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="Light"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div field-for="Dark"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="Grey"></div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title">Contact Information</h3>
+            <div sub-form-for="ContactInfo" schema="ContactInfo" mode="{{viewMode}}">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div field-for="Email"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="PhoneNumber"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="Website"></div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <h3 class="section-title">Template Text Details</h3>
+            <div sub-form-for="TemplateText" schema="WebBookerTemplateText" mode="{{viewMode}}">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div field-for="BookingConfirmationAlertText" display="Booking Confirmation"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div field-for="CashPaymentText" display="Cash Payment"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div field-for="EmailText" display="Email"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div field-for="SMSText" display="SMS"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div field-for="CoverageAreasText" display="Coverage Area"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div field-for="MileageText" display="Mileage"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div field-for="LeadTimeText" display="Lead Time"></div>
+                    </div>
+                </div>
+                <div class="mt16">
+                    <label class="control-label">Annotations</label>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Passenger First Name:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.firstname}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Passenger Last Name:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.lastname}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Mobile:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.mobile}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Email:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.email}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Booking ID:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.bookingid}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Pick Up:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.pickup}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Drop:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.drop}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Max Mileage:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.maxmileage}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Lead Time:
+                        </div>
+                        <div class="col-sm-4">
+                            {{annotations.leadtime}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="section-title">External Scripts</h3>
+            <div class="mb32">
+                <p><b>HeaderJS (Head Script)</b>: The added script will be placed right at the <b>end</b> of the <code>head</code> tag</p>
+                <p><b>BodyJS (Pre-Body Script)</b>: The added script will be placed right at the <b>start</b> of the <code>body</code> tag</p>
+                <p><b>FooterJS (Head Script)</b>: The added script will be placed right at the <b>end</b> of the <code>body</code> tag</p>
+            </div>
+            <div sub-form-for="ExternalScripts" schema="WebBookerExternalScripts" mode="{{viewMode}}">
+                <div class="row scripts">
+                    <div class="col-sm-4">
+                        <div field-for="HeaderJS" display="HeaderJS"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="BodyJS" display="BodyJS"></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div field-for="FooterJS" display="FooterJS"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="!setting">
+            <p class="text-muted">No Web Booker Settings found. Please contact the technical team to setup Web Booker.
+            </p>
+            <button class="btn btn-success" ng-show="viewMode == 'VIEW'" ng-click="addNew()"><i
+                    class="material-icons">add_circle</i>Add New</button>
+        </div>
+    </div>
+</div>

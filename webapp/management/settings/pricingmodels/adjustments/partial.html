@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-xs-6 module-options">
+        <div ng-if="PERMISSIONS.test('clients.viewer.Adjustments', 'W')">
+            <a ng-click="openAdjustmentCreate()" class="btn btn-success">
+                <i class="material-icons">add_circle</i>Add Adjustment
+            </a>
+        </div>
+    </div>
+    <div class="col-xs-6" ng-show="!recurring">
+        <div class="view-options pull-right">
+            <a ng-click="showFilters=!showFilters">
+                <i class="material-icons">build</i>Filter
+            </a>
+            <div class="filter-options" ng-class="(showFilters)?'show-filter':'hide-filter'">
+                <div class="form-group">
+                    <label for="">Choose Type</label>
+                    <select class="form-control" ng-change="filterAdjustments()" ng-model="filters.Type" ng-options="option as option for option in ['Debit','Credit']">
+                        <option value="">All</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<h3 class="section-title">Adjustments</h3>
+<table-for datasource="adjustments" class="table table-condensed table-hover" schema="{{schema}}" filtering="searchTerm" sorting="" paging="" grouping="grouping" wrapper-class="table-responsive table-striped-double" table-class="" ng-if="schema">
+    <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+    <table-heading sorting="true">
+    </table-heading>
+    <table-data-rows>
+        <table-selection></table-selection>
+        <table-actions>
+            <a class="btn btn-xs btn-warning" ng-click="openAdjustmentEdit($row)"><i class="material-icons">create</i>Edit</a>
+            <a class="btn btn-xs btn-danger" ng-click="deleteAdjustment($row)"><i class="material-icons">delete_forever</i>Delete</a>
+        </table-actions>
+    </table-data-rows>
+    <table-footer paging="true">
+    </table-footer>
+</table-for>

@@ -1,0 +1,25 @@
+﻿<div class="panel panel-default panel-alert">
+    <div class="panel-heading">
+        <h3 class="panel-title">Quick Stats</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-4 text-center">
+                <h5 class="mb0">{{quickStats.total}}</h5>
+                <div class="lh15 t-s mt5">Total Drivers</div>
+            </div>
+            <div class="col-xs-4 text-center">
+                <h5 class="mb0">{{quickStats.active}}</h5>
+                <div class="lh15 t-s mt5">Active Drivers</div>
+            </div>
+            <div class="col-xs-4 text-center">
+                <h5 class="mb0">{{quickStats.recent}}</h5>
+                <div class="lh15 t-s mt5">Recently Added</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="section-title">This Week</h3>
+<driver-report filters="reportFilters"></driver-report>
+

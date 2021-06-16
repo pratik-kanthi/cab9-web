@@ -1,0 +1,282 @@
+<div class="form-section finance" ng-show="finance">
+    <div class="row">
+        <div class="col-sm-8" style="margin-right: -25px;">
+            <div class="block-area">
+                <div class="header mb5">Waiting Times</div>
+                <div class="table-wrapper block">
+                    <table class="table table-condensed mb20">
+                        <thead>
+                            <tr>
+                                <th style="width:60%">Booking Stop</th>
+                                <th style="width:40%">Wait Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="stop in item.BookingStops">
+                                <td><strong class="brand-primary">{{stop.StopSummary}}</strong></td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="form-edit">
+                                            <input type="number" min="0" class="form-control" ng-model="stop.WaitTime" ng-model-options="{ debounce: 400 }">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4" style="margin-right: -25px;width:35.33%;">
+            <div class="block-area">
+                <div class="header mb5">Tax Rate</div>
+                <div class="block">
+                    <small class="text-muted">
+                        Use this to set the tax rate for this booking for the purpose of client invoicing.
+                    </small>
+                    <div field-for="TaxId" select-from="taxes"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="block-area expenses">
+        <div class="header mb5">Expenses</div>
+        <div class="block">
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Expense</th>
+                        <th style="width: 25%;text-align: right">Amount</th>
+                        <th style="width: 10%;text-align: right">Tax</th>
+                        <th style="width: 25%;text-align: right" ng-hide="viewMode == 'VIEW'"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-show="item.BookingExpense.length == 0">
+                        <td colspan="5" class="text-center">No Expenses Added</td>
+                    </tr>
+                    <tr ng-repeat-start="bs in item.BookingExpense" ng-if="expenses.editing != bs || viewMode == 'VIEW'">
+                        <td>
+                            <strong>{{getExpenseTypeName(bs.BookingExpenseTypeId)}}</strong>
+                            <p class="mb0"><small class="text-muted mb0">{{bs.Note}}</small></p>
+                            <strong>Approved: </strong>{{bs.Approved}} | <strong>Reimburse Driver: </strong>{{bs.PayToDriver}} 
+                        </td>
+                        <td class="text-right">
+                            <strong>Client: </strong> {{bs.Amount | currency}}<br />
+                            <strong>Driver: </strong>
+                            <span ng-if="bs.PayToDriver && bs.DriverAmount == null">{{bs.Amount | currency}}</span>
+                            <span ng-if="bs.PayToDriver && bs.DriverAmount != null">{{bs.DriverAmount | currency}}</span>
+                            <span ng-if="!bs.PayToDriver">Not Paid</span>
+                        </td>
+                        <td class="text-right">{{getTaxName(bs.TaxId)}}</td>
+                        <td class="text-right" ng-hide="viewMode == 'VIEW'">
+                            <button class="btn btn-success btn-xs" ng-click="editExpense(bs)" ng-disabled="expenses.editing != null || expenses.adding != null"><i class="material-icons">edit</i>Edit</button>
+                            <button class="btn btn-xs btn-warning" ng-click="removeExpense(bs)" ng-disabled="expenses.editing != null || expenses.adding != null"><i class="material-icons">delete_forever</i>Delete</button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end="" ng-if="expenses.editing == bs && viewMode == 'EDIT'">
+                        <th colspan="5" ng-init="formFor = {}" style="font-weight: normal;">
+                            <div form-for="expenses.editing" override="editExpenseFrom" schema="BookingExpense" mode="EDIT">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div field-for="BookingExpenseTypeId" select-from="expenseTypes"></div>
+                                        <div field-for="Note"></div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div field-for="Amount"></div>
+                                            </div>
+                                            <div class="col-sm-6" ng-show="expenses.editing.PayToDriver">
+                                                <div field-for="DriverAmount" display="Driver Amount"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div field-for="Approved"></div>
+                                        <div field-for="PayToDriver"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <a class="btn btn-xs btn-success" ng-disabled="formFor.form.$invalid" ng-click="saveEditedExpense()"><i class="material-icons">check_circle</i>Save</a>
+                                        <a class="btn btn-xs btn-warning" ng-click="cancelEditedExpense()"><i class="material-icons">undo</i>Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr ng-if="expenses.adding == null" ng-hide="viewMode == 'VIEW'">
+                        <td colspan="5">
+                            <button class="btn btn-success" ng-click="addExpense()" ng-disabled="expenses.editing != null"><i class="material-icons">add_circle</i>Add Expense</button>
+                        </td>
+                    </tr>
+                    <tr ng-if="expenses.adding != null" ng-hide="viewMode == 'VIEW'">
+                        <td colspan="5" ng-init="formFor = {}">
+                            <div form-for="expenses.adding" name="newExpenseFrom" schema="BookingExpense" mode="CREATE" class="new-expense">
+                                <p>Please fill up the details below to add an expense to this booking. If left empty Driver Amount will be the same as Client Amount.</p>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div field-for="BookingExpenseTypeId" select-from="expenseTypes"></div>
+                                        <div field-for="Note"></div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div field-for="Amount"></div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div field-for="DriverAmount" display="Driver Amount"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div field-for="Approved"></div>
+                                        <div field-for="PayToDriver"></div>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <a class="btn btn-success" ng-disabled="formFor.form.$invalid" ng-click="saveNewExpense()"><i class="material-icons">check_circle</i>Save</a>
+                                    <a class="btn btn-warning" ng-click="cancelNewExpense()"><i class="material-icons">undo</i>Cancel</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="block-area">
+        <div class="header mb5">Driver Payment</div>
+        <div class="table-wrapper block">
+            <div class="alert alert-warning" ng-if="item.DriverPaymentId">
+                This Booking has already been included on a Driver Payment and therefore these values can not be changed
+            </div>
+            <div ng-if="item.DriverPaymentId">
+                <div class="row" ng-if="item.ManualCommission">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Manual Commission</label>
+                            <br />
+                            <span class="form-control-static">{{item.ManualCommission | currency}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" ng-if="!item.ManualCommission">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Journey Commission</label>
+                            <br />
+                            <span class="form-control-static">{{item.JourneyCommission || 0 | currency}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Waiting Commission</label>
+                            <br />
+                            <span class="form-control-static">{{item.WaitingCommission || 0 | currency}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Extras Commission</label>
+                            <br />
+                            <span class="form-control-static">{{item.ExtrasCommission || 0 | currency}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="!item.DriverPaymentId">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Calculated {{item.ClientId == 'aa306c7a-b76c-e611-80ca-14187728d133' ? 'Company' : 'Driver'}} Commission</label>
+                        <br />
+                        <span class="form-control-static text-muted" ng-show="!driverPayment">Calculating</span>
+                        <span class="form-control-static" ng-show="driverPayment && driverPayment.CouldPrice">{{driverPayment.JourneyCommission + driverPayment.WaitingCommission | currency}}</span>
+                        <span class="form-control-static" ng-show="driverPayment && !driverPayment.CouldPrice">Could not price: {{driverPayment.Reason}}</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Workings</label>
+                        <br />
+                        <span class="form-control-static text-muted" ng-show="!driverPayment">Calculating</span>
+                        <span class="form-control-static" ng-show="driverPayment && driverPayment.CouldPrice && driverPayment.ManuallyPriced">Manually Set</span>
+                        <span class="form-control-static" ng-show="driverPayment && driverPayment.CouldPrice && !driverPayment.ManuallyPriced" ng-repeat="w in driverPayment.Workings">
+                            {{w.Text}} - {{w.Cost | currency}}<br />
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Manually Set {{item.ClientId == 'aa306c7a-b76c-e611-80ca-14187728d133' ? 'Company' : 'Driver'}} Commission</label>
+                        <br />
+                        <input type="number" ng-model="item.ManualCommission" class="form-control" ng-disabled="item.DriverPaymentId" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block-area">
+        <div class="header mb5">Invoice Details</div>
+        <div class="table-wrapper block">
+            <div class="alert alert-success" ng-if="!item.InvoiceId">
+                This Booking has not yet been invoiced.
+            </div>
+            <div class="alert alert-warning" ng-if="item.InvoiceId">
+                This Booking has already been invoiced: <a href="" ng-click="openInvoice(item.InvoiceId)">{{item.Invoice.Reference}}</a>
+            </div>
+            <div ng-if="item.InvoiceId">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Fare</label>
+                            <br />
+                            <span class="form-control-static">{{(item.InvoiceCost || 0) | currency}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Waiting</label>
+                            <br />
+                            <span class="form-control-static">{{(item.WaitingCost || 0) | currency}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Adjustments</label>
+                            <br />
+                            <span class="form-control-static">{{(item.AdjustmentTotal || 0) | currency}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Extras</label>
+                            <br />
+                            <span class="form-control-static">{{(item.ExtrasCost || 0) | currency}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Discount</label>
+                            <br />
+                            <span class="form-control-static">{{(item.Discount || 0) | currency}}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Taxes</label>
+                            <br />
+                            <span class="form-control-static">{{(((item.InvoiceCost || 0) + (item.WaitingCost || 0) + (item.ExtrasCost || 0) + (item.AdjustmentTotal || 0) - (item.Discount || 0)) * 0.2) | currency}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

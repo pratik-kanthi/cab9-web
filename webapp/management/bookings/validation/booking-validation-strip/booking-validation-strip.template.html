@@ -1,0 +1,152 @@
+<div class="booking-validation-strip" id="{{::booking.Id}}">
+	<div class="booking" ng-class="::booking.BookingStatus">
+		<div class="loading" ng-if="booking.$loading == true">
+			<img src="/includes/images/preloader.gif" alt="">
+		</div>
+		<div class="info">
+			<div class="row">
+				<div class="col-md-8 col-sm-8">
+					<span class="badge primary">
+						<i class="material-icons">insert_drive_file</i>
+						<span ng-bind="::booking.LocalId"></span>
+					</span>
+					<span class="badge red" ng-if="Dispute">
+						<i class="material-icons">thumb_down</i>
+						<span>CS</span>
+					</span>
+					<span class="badge purple" ng-if="booking.FlightNumber">
+						<i class="material-icons">airplanemode_active</i>
+						<span ng-bind="::booking.FlightNumber"></span>
+					</span>
+					<span class="text-center badge vehicle" ng-class="::booking.VehicleTypeName" style="background-color: {{::booking.VehicleTypeColour}}">{{::booking.VehicleTypeName}}</span>
+					<span class="text-center badge blue" ng-if="booking.PaymentMethod">
+						<i class="material-icons">account_balance_wallet</i>
+						<span ng-bind="::booking.PaymentMethod"></span>
+					</span>
+				</div>
+				<div class="col-md-4 col-sm-4">
+					<span class="badge status {{::booking.BookingStatus}}" ng-bind="::booking.BookingStatus"></span>
+				</div>
+			</div>
+			<div class="row mt10">
+				<div class="col-md-4 col-sm-4">
+					<span class="brand-primary bold block" ng-bind="::('Est. Distance: ' + booking.EstimatedDistance + ' mi.')"></span>
+					<div class="from-to">
+						<span class="address" ng-bind="::booking.Stops[0].StopSummary | Mtruncate:40"></span>
+						<br />
+						<span class="address" ng-bind="::booking.Stops[booking.Stops.length - 1].StopSummary | Mtruncate:40"></span>
+						<b class="additional" ng-show="::booking.Stops.length > 2">+{{::booking.Stops.length - 2}} Stop<span ng-if="::(booking.Stops.length > 3)">s</span></b>
+					</div>
+				</div>
+				<div class="col-md-3 col-sm-3">
+					<div class="passenger">
+						<span class="brand-primary bold block">Client / Passenger</span>
+						<span class="dark-grey name" ng-bind="::booking.LeadPassengerName"></span>
+						<br />
+						<strong></strong>
+						<span class="brand-primary name" ng-bind="::( '(' + booking.ClientAccountNo + ') ' + booking.ClientName)"></span>
+					</div>
+				</div>
+				<div class="col-md-3 col-sm-3">
+					<div class="driver-vehicle">
+						<div ng-if="::(booking.DriverId && !booking.PartnerId)">
+                            <span class="brand-primary bold block">Driver</span>
+							<span>({{::booking.DriverCallsign}})</span>
+							<span ng-bind="::booking.DriverName"></span>
+							<div ng-if="::booking.VehicleRegistration">
+								<span class="text-center registration" ng-bind="::booking.VehicleRegistration"></span>
+							</div>
+							<div ng-if="::!booking.VehicleRegistration">
+								<span class="text-center registration na">N/A</span>
+							</div>
+							<div ng-if="::booking.DriverVehicleType">
+								<span class="text-center badge vehicle" ng-class="::booking.DriverVehicleType" ng-bind="::booking.DriverVehicleType" style="background-color: {{::booking.DriverVehicleTypeColour}}"></span>
+							</div>
+						</div>
+						<div class="mt5" ng-if="!booking.DriverId && !booking.PartnerId">
+							<strong class="t-m">
+								Not Assigned
+							</strong>
+						</div>
+						<div ng-if="::(booking.PartnerId && !booking.DriverId)">
+                            <span class="brand-primary bold block">Partner</span>
+							<span>({{::booking.PartnerType}})</span>
+							<span ng-bind="::booking.PartnerDriverName"></span>
+							<div ng-if="::booking.PartnerVehicleRegistration">
+								<span class="text-center registration" ng-bind="::booking.PartnerVehicleRegistration"></span>
+							</div>
+							<div ng-if="::!booking.PartnerVehicleRegistration">
+								<span class="text-center registration na">N/A</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2 col-sm-2">
+					<div class="date-time">
+						<div class="date" ng-bind="::(booking.BookedDateTime | date: 'dd/MM/yyyy')"></div>
+						<div class="time" ng-bind="::(booking.BookedDateTime | date: 'HH:MM')"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="amount-edit">
+			<div class="form-group">
+				<label class="control-label">{{::booking.$invLbl}}</label>
+				<input class="form-control" type="number" min="0" step="0.1" ng-model="booking.ActualCost">
+			</div>
+			<div class="form-group">
+				<label class="control-label">Driver Comm.</label>
+				<input class="form-control" type="number" min="0" step="0.1" ng-model="booking.JourneyCommission">
+			</div>
+			<div class="form-group">
+				<label class="control-label">Waiting Cost</label>
+				<input class="form-control" type="number" min="0" step="0.1" ng-value="booking.WaitingCost" disabled>
+			</div>
+			<div class="form-group">
+				<label class="control-label">Driver Waiting</label>
+				<input class="form-control" type="number" min="0" step="0.1" ng-value="booking.WaitingCommission" disabled>
+			</div>
+			<div class="form-group">
+				<label class="control-label">Extras</label>
+				<input class="form-control" type="number" min="0" step="0.1" ng-value="booking.ExtrasCost" disabled>
+			</div>
+			<div class="form-group">
+				<label class="control-label">Driver Extras</label>
+				<input class="form-control" type="number" min="0" step="0.1" ng-value="booking.DriverExtrasCost" disabled>
+			</div>
+			<div class="form-group">
+				<label class="control-label">Profit Markup (%)</label>
+				<input class="form-control" ng-class="(booking.Profit > 0) ? 'profit':'loss'" type="number" min="0" step="0.1"
+				 ng-value="booking.Profit" disabled>
+			</div>
+			<div class="form-group">
+				<label class="control-label">Profit Margin (%)</label>
+				<input class="form-control" ng-class="(booking.ProfitMargin > 0) ? 'profit':'loss'" type="number" min="0" step="0.1"
+				 ng-value="booking.ProfitMargin" disabled>
+			</div>
+		</div>
+	</div>
+	<div class="options">
+		<div class="row">
+			<div class="col-sm-6">
+				<button class="pull-left btn btn-warning" ng-click="openEditModal(booking)">
+					<i class="material-icons">edit</i>Edit
+                </button>
+                <button class="pull-left btn btn-success ml10" ng-click="setCommissions(booking)">
+                        <i class="material-icons">save</i>Save
+                    </button>
+			</div>
+			<div class="col-sm-6">
+				<button class="pull-right btn btn-success" ng-click="validateBooking(booking)" ng-if="!booking.FinanceValidated || booking.FinanceValidated == false">
+					<i class="material-icons">check_circle</i>Validate
+				</button>
+				<button class="pull-right btn btn-warning" ng-click="inValidateBooking(booking)" ng-if="booking.FinanceValidated == true">
+					<i class="material-icons">warning</i>Invalidate
+				</button>
+				<button class="pull-right btn btn-primary mr10" ng-click="recalculateBooking(booking)">
+					<i class="material-icons">refresh</i>Recalculate
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

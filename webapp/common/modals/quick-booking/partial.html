@@ -1,0 +1,131 @@
+<form name="bookingForm" form-for="_qbooking" schema="Booking" mode="CREATE">
+    <div class="modal-header">
+        <h3 class="modal-title">Quick Booking</h3>
+        <div class="arrow"></div>
+    </div>
+    <div class="modal-body">
+        <div class="overlay loading-div" ng-if="!dataReady">
+            <div class="loader">
+                <div class="loader-inner ball-clip-rotate-multiple">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="booking form-section">
+                    <div class="passenger">
+                        <ul class="nav nav-tabs">
+                            <li ng-class="{ 'active': !paxMode.value }" ng-click="paxMode.value = false">
+                                <a href="">Existing Passenger</a>
+                            </li>
+                            <li ng-class="{ 'active': paxMode.value }" ng-click="paxMode.value = true;">
+                                <a href="">New Passenger</a>
+                            </li>
+                        </ul>
+                        <div ng-show="!paxMode.value">
+                            <div class="half-column">
+                                <div field-for="LeadPassengerId" select-from="filteredPassengers" display="Passenger"></div>
+                            </div>
+                            <div class="half-column">
+                                <div field-for="ClientId" select-from="filteredClients" display="Choose Client" ng-hide="_qbooking.LeadPassengerId && !_qbooking.ClientId" ng-disabled="_qbooking.LeadPassengerId"></div>
+                            </div>
+                        </div>
+                        <div ng-show="paxMode.value">
+                            <div class="half-column">
+                                <div field-for="_LeadPassenger" display="Passenger Name"></div>
+                            </div>
+                            <div class="half-column">
+                                <div field-for="_LeadPassengerNumber" display="Passenger Mobile"></div>
+                            </div>
+                            <div class="half-column">
+                                <div field-for="_LeadPassengerEmail" display="Choose Email"></div>
+                            </div>
+                            <div class="half-column">
+                                <div field-for="ClientId" select-from="clients" display="Choose Client"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <br class="clearfix" />
+                    <div class="half-column">
+                        <div class="form-group">
+                            <label class="control-label">From</label>
+                            <div class="form-edit booking-stop">
+                                <div stop-edit name="stopFrom" map="map" model="_qbooking.BookingStops[0]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="half-column">
+                        <div class="form-group">
+                            <label class="control-label">To</label>
+                            <div class="form-edit booking-stop">
+                                <div stop-edit name="stopTo" map="map" model="_qbooking.BookingStops[1]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="half-column">
+                        <div field-for="BookedDateTime" display="Date" required="true"></div>
+                    </div>
+                    <div class="half-column">
+                        <div field-for="Time" display="Time" step="300" required="true"></div>
+                    </div>
+                    <div class="third-column">
+                        <div field-for="Pax" display="Passengers" required="true"></div>
+                    </div>
+                    <div class="third-column">
+                        <div field-for="VehicleTypeId" select-from="vehicleTypes" display="Vehicle"></div>
+                    </div>
+                    <div class="third-column">
+                        <div field-for="EstimatedCost" display="Cost"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 map-container">
+                <tabset>
+                    <tab active="currentTab == 'JOURNEY'">
+                        <tab-heading>
+                            Journey Map
+                        </tab-heading>
+                        <div id="map-div"></div>
+                    </tab>
+                    <tab ng-if="_qbooking.LeadPassengerId" active="currentTab == 'HISTORY'">
+                        <tab-heading>
+                            Pax History
+                        </tab-heading>
+                        <div class="passenger-history">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th style="width:15%">Copy</th>
+                                        <th style="width:85%">Last 5 Bookings</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-if="paxHistory.length > 0">
+                                    <tr ng-repeat="item in paxHistory">
+                                        <td class="text-center"><a href="" ng-click="repeatBooking(item)"><i class="material-icons">add_box</i></a></td>
+                                        <td>
+                                            <strong class="brand-primary">{{item._FromSummary}}</strong>
+                                            <span>{{item._ToSummary}}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-if="paxHistory.length == 0">
+                                    <tr>
+                                        <td colspan="3" class="text-center">
+                                            No Booking Added
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success pull-right" ng-click="save()" ng-disabled="!bookingForm.$valid || !canQuote"><i class="material-icons">send</i>Send</button>
+        <button class="btn btn-danger pull-left" ng-click="close()"><i class="material-icons">undo</i>Close</button>
+    </div>
+</form>

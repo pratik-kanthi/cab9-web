@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html ng-app="conversationsWindow">
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
+    <link href="/includes/css/style.min.css" rel="stylesheet" />
+
+    <script src="/webapp/config.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/signalr/jquery.signalR.min.js"></script>
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="https://code.angularjs.org/1.4.6/i18n/angular-locale_en-gb.js"></script>
+    <script src="https://api.cab9.co/signalr/hubs"></script>
+    <script src="/e9_components/services/Logger.service.js"></script>
+    <script src="/e9_components/services/Model.service.js"></script>
+    <script src="/e9_components/services/Storage.service.js"></script>
+    <script src="/e9_components/services/Auth.service.js"></script>
+    <script src="/e9_components/services/Auth-Persist.service.js"></script>
+    <script src="/e9_components/services/SignalR.service.js"></script>
+    <script src="/e9_components/services/Logger.service.js"></script>
+
+    <script src="/webapp/conversations/conversations-window.module.js"></script>
+</head>
+<body ng-controller="ConversationsController">
+    <div style="position:absolute;top:0;right:0;bottom:0;left:0;">
+        <div class="panel" style="position:absolute;top:0;bottom:0;left:0;width:400px;margin-bottom:0;">
+            <div class="panel-heading">
+                <h3 class="panel-title"></h3>
+            </div>
+            <div class="list-group" style="position:absolute;top: 44px;left:0;right:0;overflow-y:auto;">
+                <a href="#" class="list-group-item" ng-show="!drivers">
+                    <b class="list-group-item-heading">Loading Drivers...</b><br />
+                </a>
+                <a href="#" class="list-group-item" ng-repeat="driver in drivers" ng-class="{ 'active': currentDriver.Id == driver.Id }" ng-click="selectConversation(convo)">
+                    <div style="display:inline-block;">
+                        <img class="media-object img-circle" style="max-width:42px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                    </div>
+                    <div style="display:inline-block;">
+                        <!--<span class="badge">2</span>-->
+                        <b class="list-group-item-heading">{{driver.Callsign}} {{driver.Firstname}} {{driver.Surname}}</b><br />
+                        <small class="list-group-item-text text-muted">Driver</small>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item" ng-show="drivers && drivers.length == 0">
+                    <b class="list-group-item-heading">No Drivers</b><br />
+                </a>
+            </div>
+        </div>
+        <div class="panel" style="position:absolute;top:0;bottom:0;right:0;width:calc(100% - 400px);margin-bottom:0;">
+            <div class="panel-heading">
+                <h3 class="panel-title"></h3>
+            </div>
+            <div class="panel-body" style="position:absolute;top: 44px;bottom:0;right:0;overflow-y:auto;" ng-show="!currentConversation">
+                <p>< Select a conversations to view.</p>
+            </div>
+            <div class="panel-body" style="position:absolute;top: 44px;bottom:83px;right:0;overflow-y:auto;" ng-show="currentConversation">
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-circle" style="max-width:50px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <b class="media-heading" style="display:block;">David Beech</b>
+                        <div>Hello</div>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body text-right" style="padding-left:30%">
+                        <b class="media-heading " style="display:block;">Tarpit Grover</b>
+                        <div> Hi</div>
+                    </div>
+                    <div class="media-right">
+                        <a href="#">
+                            <img class="media-object img-circle" style="max-width:50px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                        </a>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-circle" style="max-width:50px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body" style="padding-right:30%">
+                        <b class="media-heading" style="display:block;">David Beech</b>
+                        <div>This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message.</div>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body text-right" style="padding-left:30%">
+                        <b class="media-heading" style="display:block;">Tarpit Grover</b>
+                        <div>This is a much longer message. This is a much longer message.</div>
+                    </div>
+                    <div class="media-right">
+                        <a href="#">
+                            <img class="media-object img-circle" style="max-width:50px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                        </a>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-circle" style="max-width:50px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <b class="media-heading" style="display:block;">David Beech</b>
+                        <div>Hello</div>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body text-right" style="padding-left:30%">
+                        <b class="media-heading " style="display:block;">Tarpit Grover</b>
+                        <div>Hi</div>
+                    </div>
+                    <div class="media-right">
+                        <a href="#">
+                            <img class="media-object img-circle" style="max-width:50px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                        </a>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-circle" style="max-width:50px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body" style="padding-right:30%">
+                        <b class="media-heading" style="display:block;">David Beech</b>
+                        <div>This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message. This is a much longer message.</div>
+                    </div>
+                </div>
+                <div class="media">
+                    <div class="media-body text-right" style="padding-left:30%">
+                        <b class="media-heading" style="display:block;">Tarpit Grover</b>
+                        <div>This is a much longer message. This is a much longer message.</div>
+                    </div>
+                    <div class="media-right">
+                        <a href="#">
+                            <img class="media-object img-circle" style="max-width:50px;" src="https://api.cab9.co/Uploads/50f56597-c049-e611-80c7-14187728d133/Driver/cd136c2d-cc49-e611-80c7-14187728d133/Images/1.JPG" alt="...">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer" style="position:absolute;bottom:0;left:0;right:0;overflow-y:auto;" ng-show="currentConversation">
+                <div class="row">
+                    <div class="col-md-10">
+                        <textarea rows="2" class="form-control"></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success"><i class="fa fa-send"></i> Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</body>
+</html>

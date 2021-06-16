@@ -1,0 +1,64 @@
+<div form-for="item" schema="Tag">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">close</i></button>
+        <h3 class="modal-title">Tag</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <div field-for="Name" placeholder="Enter Tag Name..."></div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label">Description</label>
+                    <div class="form-edit">
+                        <textarea class="form-control" rows="3" ng-model="item.Description" placeholder="Enter Tag Description..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group mb20">
+                    <label class="control-label">Entity Types</label>
+                    <div class="row days">
+                        <div class="col-xs-3 day" ng-repeat="day in entity">
+                            <div class="checkbox" style="display:inline-block;margin-bottom:0;margin-right:10px;">
+                                <input id="filter-{{day.full}}" name="{{day.full}}" type="checkbox" value="{{day.value}}" ng-model="day.selected" />
+                                <label for="filter-{{day.full}}"></label>
+                            </div>
+                            {{day.full}}
+                        </div>
+                        <br class="clearfix" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <div field-for="Type" display="Tag Type"></div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <div field-for="ClientVisible" display="Client Visible"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col-xs-6 text-left">
+                <button class="btn btn-danger btn-fix pull-left" ng-show="!!deleteOverride" ng-click="deleteOverride()">Delete</button>
+            </div>
+            <div class="col-xs-6 text-right">
+                <button class="btn btn-success btn-fix" ng-click="save()" ng-disabled="formFor.form.$invalid">Save</button>
+                <button class="btn btn-warning btn-fix" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

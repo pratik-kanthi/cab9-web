@@ -1,0 +1,341 @@
+/*Bower Components*/
+
+@bowerBasePath: "../../bower_components/";
+@commonBasePath: "../../common_components/";
+@includesBasePath: "../../includes/";
+@import "@{bowerBasePath}bootstrap/less/bootstrap.less";
+@import (inline) "@{bowerBasePath}angular-ui-select/dist/select.css";
+@import (inline) "@{bowerBasePath}datetimepicker/jquery.datetimepicker.css";
+@import (inline) "@{bowerBasePath}bootstrap-daterangepicker/daterangepicker.css";
+@import (inline) "@{bowerBasePath}angular-ui-select/dist/select.css";
+@import (inline)
+  "@{bowerBasePath}angular-ui-notification/dist/angular-ui-notification.min.css";
+@import (inline) "@{bowerBasePath}animate.css/animate.css";
+@import (inline)
+  "@{bowerBasePath}angular-google-places-autocomplete/src/autocomplete.css";
+@import (inline) "@{bowerBasePath}magic/magic.min.css";
+@import (inline) "@{bowerBasePath}pace/themes/blue/pace-theme-minimal.css";
+@import (inline) "@{bowerBasePath}sweetalert/dist/sweetalert.css";
+@import (inline) "@{bowerBasePath}jcrop/css/jquery.Jcrop.css";
+@import (inline) "@{bowerBasePath}/select2/dist/css/select2.min.css";
+@import (inline) "@{bowerBasePath}/selectize/dist/css/selectize.css";
+@import (inline) "@{bowerBasePath}/angularjs-slider/dist/rzslider.css";
+@import (inline) "@{bowerBasePath}intl-tel-input/build/css/intlTelInput.css";
+@import (inline)
+  "@{bowerBasePath}angular-color-picker/dist/angularjs-color-picker.min.css";
+@import (inline)
+  "@{bowerBasePath}angular-color-picker/dist/themes/angularjs-color-picker-bootstrap.min.css";
+@import "@{includesBasePath}icons/font-awesome/css/font-awesome.min.css";
+@import "mixins.less";
+@import "common.less";
+@import "variables.less";
+
+/*Fonts*/
+
+@import url("https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900");
+@import "@{includesBasePath}fonts/SanFrancisco/usesf.css";
+
+/*Components*/
+
+@import "page.less";
+@import "breadcrumb.less";
+@import "sidebar-left.less";
+@import "topbar.less";
+@import "content.less";
+@import "panels.less";
+@import "forms.less";
+@import "buttons.less";
+@import "checkbox.less";
+@import "select2.less";
+@import "selectize.less";
+@import "check.less";
+@import "info-card.less";
+@import "sweet-alert.less";
+@import "notifications.less";
+@import "tables.less";
+@import "tabs.less";
+@import "icons.less";
+@import "notes.less";
+@import "modal.less";
+@import "charts.less";
+@import "conversation.less";
+@import "cards.less";
+@import "score.less";
+@import "module.less";
+@import "disputes.less";
+@import "module-item.less";
+@import "dashboard.less";
+@import "reports.less";
+@import "login.less";
+@import "bookings.less";
+@import "booking-edit.less";
+@import "booking-stop.less";
+@import "quick-booking.less";
+@import "client-booking.less";
+@import "numplate.less";
+@import "widgets.less";
+@import "datepicker.less";
+@import "datepicker-wide.less";
+@import "booking-strip.less";
+@import "partner-card.less";
+@import "booking-validation-strip.less";
+@import "booking-window.less";
+@import "maps.less";
+@import "invoices.less";
+@import "settings.less";
+@import "nav.less";
+@import "selectlist.less";
+@import "tags.less";
+@import "documents.less";
+@import "vendor-pricing.less";
+@import "dispatch.less";
+@import "booking-filters.less";
+@import "features.less";
+@import "references.less";
+@import "payment-model.less";
+@import "client-profile.less";
+@import "driverpayments.less";
+@import "driver-assignment.less";
+@import "passengers.less";
+@import "driver-tracking.less";
+@import "driver-shifts.less";
+@import "track.less";
+@import "roles.less";
+@import "driver-earnings.less";
+@import "events.less";
+@import "global-search.less";
+@import "credit-card.less";
+@import "driver-expenses.less";
+@import "time-slots.less";
+@import "bookingcredit-card.less";
+@import "forgot-password.less";
+@import "fixed-price.less";
+@import "invite-to-app.less";
+@import "driver-bid.less";
+@import "vehicletypes.less";
+@import "telephony.less";
+@import "workshare.less";
+
+.panel {
+  overflow: visible;
+}
+
+.selectize-control .selectize-input.disabled {
+  opacity: 1;
+}
+
+.form-group .selectize-input.disabled input[type="text"] {
+  display: none;
+}
+
+.selectize-control.single .selectize-input.disabled:after {
+  display: none;
+}
+
+.numplate > .numplate-container .logo {
+  background-size: initial;
+  width: 150px;
+  height: 40px;
+}
+
+i.icon-menu {
+  pointer-events: none;
+}
+
+.jcrop-keymgr {
+  display: none !important;
+}
+
+.voice-request {
+  background: @dirty-white;
+  i {
+    display: block;
+    float: left;
+    width: 50px;
+    text-align: center;
+    font-size: 34px;
+    line-height: 50px;
+    color: @grey;
+    &.listening {
+      color: @green;
+      -webkit-animation: beat 0.95s infinite alternate;
+      -moz-animation: beat 0.95s infinite alternate;
+      -ms-animation: beat 0.95s infinite alternate;
+      -o-animation: beat 0.95s infinite alternate;
+      animation: beat 0.95s infinite alternate;
+      -webkit-transform-origin: center;
+      -moz-transform-origin: center;
+      -o-transform-origin: center;
+      -ms-transform-origin: center;
+      transform-origin: center;
+    }
+  }
+  #request-box {
+    width: calc(~"100% - 50px");
+    border: 0 !important;
+    height: 50px;
+    line-height: 50px;
+    font-size: 24px;
+    outline: 0 !important;
+    color: @grey;
+    padding-left: 5px;
+    background: @dirty-white;
+    .box-shadow(none);
+  }
+}
+
+.angular-google-map-container {
+  height: 375px;
+}
+
+.pagination > .active > a {
+  color: #fff !important;
+}
+
+.loading-background {
+  background: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 25% auto;
+  background-color: @brand-primary;
+  border-radius: 100%;
+  -webkit-animation: sk-scaleout 1s infinite ease-in-out;
+  animation: sk-scaleout 1s infinite ease-in-out;
+}
+
+@-webkit-keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/**** DatePicker ***/
+
+.dropdown-menu.ng-valid-date-disabled {
+  padding: 1px;
+  .border-radius(3px);
+  border: 1px solid @brand-primary;
+  background-color: #fff;
+  table {
+    outline: 0;
+    margin: 0;
+    width: 250px;
+    thead {
+      background: none;
+      th {
+        background: none;
+        font-size: 16px;
+        line-height: 30px;
+        font-family: @font-family-base;
+        font-weight: 600;
+        color: @brand-primary;
+        padding: 1px;
+        button.btn {
+          background: @brand-primary;
+          border: 1px solid @brand-primary;
+          font-family: @font-family-base;
+          color: #fff !important;
+          outline: none;
+          .border-radius(0);
+          padding: 5px 10px;
+          height: 35px;
+          min-width: inherit !important;
+          width: 100%;
+          margin: 0 !important;
+          &:hover,
+          &:focus {
+            background-color: @brand-primary;
+            outline: none;
+          }
+          i {
+            font-size: 16px;
+          }
+        }
+        &:first-child {
+          button.btn {
+            .border-radius(3px 0 0 3px);
+          }
+        }
+        &:last-child {
+          button.btn {
+            .border-radius(0 3px 3px 0);
+          }
+        }
+      }
+    }
+    td {
+      background-color: #fff;
+      padding: 1px;
+      .btn {
+        min-width: inherit !important;
+      }
+      .btn.btn-sm {
+        background: none;
+        min-width: inherit !important;
+        color: #444;
+        margin: 0;
+        width: 35px !important;
+        height: 35px !important;
+        .border-radius(20px);
+        border: 1px solid #eee;
+        background-color: #fff;
+        &.active {
+          border: 1px solid @brand-primary;
+          background-color: @brand-primary;
+          color: #fff !important;
+        }
+        .text-info {
+          color: @brand-primary;
+        }
+      }
+      &:first-child {
+        .border-radius(3px 0 0 3px);
+      }
+      &:last-child {
+        .border-radius(0 3px 3px 0);
+      }
+    }
+  }
+}
+
+[ng\:cloak],
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+  display: none !important;
+}
+
+.close {
+  opacity: 0.2;
+}
+
+.close:hover,
+.close:focus {
+  opacity: 0.5;
+}

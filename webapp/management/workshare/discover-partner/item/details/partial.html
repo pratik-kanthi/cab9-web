@@ -1,0 +1,66 @@
+<div id="details">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Statistics</h3>
+        </div>
+        <div class="panel-body">
+            <div class="stats">
+                <div class="number-stats-wrapper">
+                    <div class="number-stats">
+                        <div class="stats-wrapper">
+                            <div class="icon brand-secondary-bg">
+                            </div>
+                            <div class="data">
+                                <small>Bookings Count (Last Month)</small>
+                                <i class="material-icons">assignment</i><strong class="brand-secondary" ng-bind="companyProfile.BookingsCount | AbbrValue"></strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="number-stats">
+                        <div class="stats-wrapper">
+                            <div class="icon green-bg">
+                            </div>
+                            <div class="data">
+                                <small>PartnerBookings Count</small>
+                                <i class="material-icons">assignment</i><strong class="green" ng-bind="companyProfile.PartnerBookingsCount | AbbrValue"></strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-stats-wrapper">
+                    <div class="number-stats">
+                        <div class="stats-wrapper">
+                            <div class="icon sky-bg">
+                            </div>
+                            <div class="data">
+                                <small>Drivers Count</small>
+                                <i class="material-icons">person_pin</i><strong class="sky" ng-bind="companyProfile.DriversCount | AbbrValue"></strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="number-stats">
+                        <div class="stats-wrapper">
+                            <div class="icon orange-bg">
+                            </div>
+                            <div class="data">
+                                <small>Vehicles Count</small>
+                                <i class="material-icons">drive_eta</i><strong class="orange" ng-bind="companyProfile.VehiclesCount | AbbrValue"></strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Coverage Area</h3>
+        </div>
+        <div class="panel-body">
+            <ui-gmap-google-map center="map.center" zoom="map.zoom" pan="true" control="map.control" styles="map.styles" options="map.options" bounds="mapBounds">
+                <ui-gmap-polygons models="configPolygons" path="'path'" editable="'editable'" draggable="'draggable'" stroke="'stroke'" events="'events'" static="false">
+                </ui-gmap-polygons>
+            </ui-gmap-google-map>
+        </div>
+    </div>
+</div>

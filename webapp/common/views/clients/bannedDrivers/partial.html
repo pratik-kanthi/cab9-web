@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-sm-6">
+        <h3 class="section-title mt0">Drivers</h3>
+        <span ng-if="PERMISSIONS.test('vendors', 'W') || PERMISSIONS.test('clients.viewer.banneddrivers', 'W')"> You can click on "<span ng-bind="(client.BannedDrivers.length > 0)?'Edit':'Add'"></span> Banned Drivers" to manage the Banned Drivers.</span>
+        <div class="options mt30 mb30" ng-if="PERMISSIONS.test('vendors', 'W') || PERMISSIONS.test('clients.viewer.banneddrivers', 'W')">
+            <button class="btn btn-primary" ng-click="startEdit()" ng-show="viewMode === 'VIEW'">
+                <i class="material-icons">create</i><span ng-bind="(client.BannedDrivers.length > 0)?'Edit':'Add'"></span> Banned Drivers
+            </button>
+            <button class="btn btn-warning" ng-click="cancelEdit()" ng-show="viewMode != 'VIEW'">
+                <i class="material-icons">undo</i>Cancel
+            </button>
+            <button class="btn btn-success" ng-click="saveChanges()" ng-disabled="formFor.form.$invalid" ng-show="viewMode != 'VIEW'">
+                <i class="material-icons">save</i>Save
+            </button>
+        </div>
+        <table class="table table-condensed table-hover mb10 table-bordered">
+            <thead>
+                <tr>
+                    <th><strong class="brand-secondary">Banned Drivers</strong></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="client.BannedDrivers.length==0">
+                    <td>
+                        <span class="text-muted">No Drivers Banned yet.</span>
+                    </td>
+                </tr>
+                <tr ng-repeat="item in client.BannedDrivers">
+                    <td>
+                        <strong class="brand-primary">{{item._Fullname}}</strong>
+                        <a href="" class="red pull-right ml8" ng-click="removeDriver(item)" ng-show="viewMode!='VIEW'">
+                            <i class="material-icons">remove_circle</i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-sm-6" style="height: 400px;" ng-show="viewMode != 'VIEW'">
+                <div class="form-group">
+                    <label for="">Add Driver <img src="/includes/images/preloader-fading.gif" ng-show="loadingDrivers" alt="" class="loader"></label>
+                    <ui-select ng-model="selected.Driver" theme="selectize" title="Choose a Driver" ng-change="addDriver($select.selected)" class="edit">
+                        <ui-select-match placeholder="Search..."></ui-select-match>
+                        <ui-select-choices refresh="searchDrivers($select.search)" repeat="driver in unlinkedDrivers">
+                            <div class="ui-select-box">
+                                <div class="option-details">
+                                    <div>{{driver.Firstname}} {{driver.Surname}}</div>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <!-- <span ng-show="unlinkedDrivers.length==0">No Drivers available to ban.</span> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6"></div>
+</div>

@@ -1,0 +1,125 @@
+﻿<div ng-show="viewMode === 'VIEW'">
+    <button class="btn btn-warning" ng-click="startEditing()"> <i class="material-icons">create</i> Edit</button>
+    <button class="btn btn-danger" ng-click="deleteModel(item)"> <i class="material-icons">delete</i> Delete</button>
+</div>
+<div ng-show="viewMode === 'EDIT' || viewMode === 'CREATE'">
+    <button class="btn btn-success" ng-click="saveEdits()"> <i class="material-icons">save</i> Submit</button>
+    <button class="btn btn-warning" ng-click="cancelEditing()"> <i class="material-icons">undo</i> Cancel</button>
+</div>
+<div class="row details mt20">
+    <div class="name" form-for="item" schema="PricingModel" mode="{{viewMode}}">
+        <div class="col-md-3">
+            <h3 class="section-title">Basic Details</h3>
+            <div field-for="Name"></div>
+            <div field-for="Description" textarea="3"></div>
+            <div class="" sub-form-for="CancellationRule" schema="CancellationRule">
+                <h3 class="section-title">Cancellation Rules</h3>
+                <div field-for="BookingStatus"></div>
+                <div field-for="MinutesBeforePickup"></div>
+                <button class="btn btn-xs btn-danger" ng-click="deleteCancellationRule()" ng-if="viewMode === 'EDIT' && item.CancellationRuleId"><i class="material-icons">delete</i>Delete Cancellation Rule</button>
+            </div>
+        </div>
+        <div class="col-md-6 charges">
+            <h3 class="section-title">Defaults</h3>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="MinimumCharge"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="StandingCharge"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="WaitTimeCharge"></div>
+                    <div field-for="FreeWaitingTime" display="Free Waiting Time"></div>
+                    <div field-for="IsWaitingTimeGrace" display="Grace Waiting"></div>
+                    <div field-for="FreeWaitingTimeAirport" display="Free Waiting Time (Airport)"></div>
+                    <div field-for="IsWaitingTimeGraceAirport" display="Grace Waiting (Airport)"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="ExtraStopCharge"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="FarePerMile" display="Default Fare Per Mile"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="FarePreference" display="Prefer From"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="RoundMileageTo"></div>
+                </div>
+                <div class="col-sm-6" ng-show="item.RoundMileageTo">
+                    <div field-for="RoundMileageMode"></div>
+                </div>
+                <div class="col-sm-12" ng-show="item.RoundMileageTo">
+                    <div class="alert alert-warning">
+                        Rounding Mileage is not compatible with zonal steps, any zonal steps will be ignored and only default ones used.
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="RoundTo"></div>
+                </div>
+                <div class="col-sm-6" ng-show="item.RoundTo">
+                    <div field-for="RoundMode"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="StepsMode"></div>
+                </div>
+                <div class="col-sm-6">
+                </div>
+                <div class="col-sm-12" ng-show="item.StepsMode != 'Precise'">
+                    <div class="alert alert-warning">
+                        {{item.StepsMode}} is not compatible with zonal steps, any zonal steps will be ignored and only default ones used.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 charges" ng-show="COMPANY.ChauffeurModeActive">
+            <h3 class="section-title">Chauffering Defaults</h3>
+            <div field-for="PricePerHour"></div>
+            <div field-for="MinMinutes"></div>
+            <div field-for="IncludedMiles"></div>
+        </div>
+    </div>
+    <div class="mt30">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3 class="section-title">Mileage Steps</h3>
+                <div mileage-step value="item.FarePerMileSteps"></div>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+        <div class="mt20">
+            <h3 class="section-title">Peak Settings</h3>
+            <div class="row">
+                <div class="col-sm-8">
+                    <strong class="t-l brand-secondary">Peak Dates</strong>
+                    <p class="mt10 mb20 lh20 grey">
+                        Please use the widget below to manage your peak dates.<br />You can add rows of configuration within the widget.
+                    </p>
+                    <div peak-day-step value="item.PeakDateBands"></div>
+                </div>
+                <div class="col-sm-4">
+                    <strong class="t-l brand-secondary">Peak Times</strong>
+                    <p class="mt10 mb20 lh20 grey">
+                        Please use the widget below to manage your peak times. <br />You can add rows of configuration within the widget.
+                    </p>
+                    <div peak-step value="item.PeakTimeBands"></div>
+                </div>
+            </div>
+            <div class="row">
+            </div>
+            <!--<pre>{{item.PeakDateBands | json:true}}</pre>-->
+        </div>
+    </div>
+</div>

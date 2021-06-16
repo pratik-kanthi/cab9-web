@@ -1,0 +1,76 @@
+<div class="module" id="driver-pricing-assignment">
+    <h2 class="page-title"><i class="material-icons">library_books</i>Driver Payment Model Assignments</h2>
+    <small>Please use the interface below to manage Payment Models assigned to a driver. A payment model can be assigned to a driver, driver type or the entire company. Please note any changes to this module will only change the future Drivery Payments and will not have any impact on the past payments.</small>
+    <div class="row">
+        <div class="col-lg-8">
+            <table class="table table-condensed mt20">
+                <thead>
+                    <tr>
+                        <th style="width:40%">Default Driver Payment Model</th>
+                        <th style="width:60%">
+                            <div ng-show="!COMPANY.$selected">
+                                <span class="mr10">{{getCommModel(COMPANY)}}</span>
+                                <div class="pull-right">
+                                    <a href="" class="edit" ng-click="EditModel(COMPANY)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons">edit</i></a>
+                                </div>
+                            </div>
+                            <div ng-show="COMPANY.$selected">
+                                <select name="DefaultDriverPaymentModelInput" id="DefaultDriverPaymentModelInput" ng-model="COMPANY.DefaultDriverPaymentModelId" class="form-control" ng-options="option.Id as option.Name for option in paymentModels">
+                                    <option value="" label="{{getCommModel(COMPANY)}}" class="" ng-show="!COMPANY.DefaultDriverPaymentModelId"></option>
+                                </select>
+                                <div class="pull-right">
+                                    <a href="" ng-click="updateCommModel(COMPANY)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons green">check</i></a>
+                                    <a href="" ng-click="cancelUpdate(COMPANY)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons">undo</i></a>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody ng-repeat="(key, values) in driverTypes">
+                    <tr class="driver-types">
+                        <td class="bold brand-primary">{{values[0].Name}}</td>
+                        <td>
+                            <div ng-show="!values[0].$selected">
+                                <span class="mr10">{{getCommModel(values[0])}}</span>
+                                <div class="pull-right">
+                                    <a href="" class="edit" ng-click="EditModel(values[0])" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons">edit</i></a>
+                                    <a ng-show="!$expanded" ng-click="$expanded=true;"><i class="material-icons">expand_more</i></a>
+                                    <a ng-show="$expanded" ng-show="!$expanded" ng-click="$expanded = false;"><i class="material-icons">expand_less</i></a>
+                                </div>
+                            </div>
+                            <div ng-show="values[0].$selected">
+                                <select name="{{key}}{{$index}}Input" id="{{key}}{{$index}}Input" class="form-control" ng-model="values[0].DefaultDriverPaymentModelId" class="input-sm" ng-options="option.Id as option.Name for option in paymentModels">
+                                    <option value="" label="{{getCommModel(values[0])}}" class="" ng-show="!values[0].DefaultDriverPaymentModelId"></option>
+                                </select>
+                                <div class="pull-right">
+                                    <a href="" ng-click="updateCommModel(values[0])" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons green">check</i></a>
+                                    <a href="" ng-click="cancelUpdate(values[0])" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons">undo</i></a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="val in values| orderBy:'Firstname'" ng-hide="$last" ng-if="$expanded" class="drivers">
+                        <td>{{val._Fullname}}</td>
+                        <td>
+                            <div ng-show="!val.$selected">
+                                <span class="mr10">{{getCommModel(val)}}</span>
+                                <div class="pull-right">
+                                    <a href="" class="edit" ng-click="EditModel(val)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons">edit</i></a>
+                                </div>
+                            </div>
+                            <div ng-show="val.$selected">
+                                <select name="{{key}}{{$index}}Input" id="{{key}}{{$index}}Input" ng-model="val.DefaultDriverPaymentModelId" class="form-control" ng-options="option.Id as option.Name for option in paymentModels">
+                                    <option value="" label="{{getCommModel(val)}}" class="" ng-show="!val.DefaultDriverPaymentModelId"></option>
+                                </select>
+                                <div class="pull-right">
+                                    <a href="" ng-click="updateCommModel(val)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons">check</i></a>
+                                    <a href="" ng-click="cancelUpdate(val)" ng-if="PERMISSIONS.test('drivers.paymentmodels','W')"><i class="material-icons">undo</i></a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

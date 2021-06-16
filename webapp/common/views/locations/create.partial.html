@@ -1,0 +1,34 @@
+<div class="module">
+    <div form-for="item" schema="KnownLocation" mode="{{displayMode}}">
+        <div class="row">
+            <div class="col-xs-12" style="padding: 8px 15px;">
+                <div ng-if="displayMode === 'VIEW'">
+                    <button class="btn btn-primary" ng-click="startEditing()" ng-if="PERMISSIONS.test('clients.viewer.locations','W')"><i class="material-icons">create</i>Edit</button>
+                </div>
+                <div ng-if="displayMode === 'EDIT' || displayMode === 'CREATE'">
+                    <button class="btn btn-success" ng-click="saveEdits()" ng-disabled="formFor.form.$invalid"><i class="material-icons">save</i> Submit</button>
+                    <button class="btn btn-warning mr30" ng-click="cancelEditing()"> <i class="material-icons">undo</i> Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <h3 class="section-title">Basic Details</h3>
+                <div field-for="Name"></div>
+                <div field-for="LocationType"></div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <h3 class="section-title">Address Details</h3>
+                <address-populate object="item"></address-populate>
+                <br />
+                <div field-for="Address1"></div>
+                <div field-for="Address2"></div>
+                <div field-for="Area"></div>
+                <div field-for="TownCity"></div>
+                <div field-for="Postcode"></div>
+                <div field-for="County"></div>
+                <div field-for="Country"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+<div class="document-options">
+    <button class="btn btn-primary" ng-click="openNewDocumentModal()" ng-if="PERMISSIONS.test(state,'W')">
+        <i class="material-icons">note_add</i> Add New Document
+    </button>
+</div>
+<h3 class="section-title" ng-if="documents.length==0">No Documents Added.</h3>
+<div class="documents-wrapper">
+    <h3 class="section-title" ng-hide="onlyActive">Active Documents</h3>
+    <div ng-show="activeDocuments.length==0">
+        <span class="text-muted">No Active documents.</span>
+    </div>
+    <div class="active-grid mt10" ng-show="activeDocuments.length>0">
+        <div class="document grid-item active-docs" ng-repeat="d in activeDocuments">
+            <div class="document-content">
+                <div class="hero">
+                    <img ng-src="{{getImagePath(d.ThumbnailPath)}}" alt="{{d.Name}}" />
+                    <!-- <div class="shadow"></div> -->
+                </div>
+                <div class="options">
+                    <i class="material-icons" ng-click="deleteDocument(d)" ng-if="PERMISSIONS.test(state,'D')">delete_forever</i>
+                    <i class="material-icons" ng-click="openModalWithDocument(d)" ng-if="PERMISSIONS.test(state,'W')">create</i>
+                    <i class="material-icons" ng-click="previewDocument(d)">find_in_page</i>
+                </div>
+                <div class="info">
+                    <div class="document-label">
+                        <small>{{d.DocumentType.Name}} ({{d.Active?'Active':'Inactive'}})</small>
+                        <h3>{{d.Name}}</h3>
+                    </div>
+                    <div class="date-info">
+                        <span ng-if="d.ExpiryDate">
+                            Expiring in {{d.ExpiryDate | Countdown}}
+                        </span>
+                        <span ng-if="d.IssueDate && !d.ExpiryDate">
+                            Issued {{d.IssueDate | Countdown}}
+                        </span>
+                        <span ng-if="!d.IssueDate && !d.ExpiryDate">
+                            No Date Info
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-hide="onlyActive">
+        <h3 class="section-title">Inactive Documents</h3>
+        <div ng-show="inActiveDocuments.length==0">
+            <span class="text-muted">No Inactive documents.</span>
+        </div>
+        <div class="inactive-grid mt10" ng-show="inActiveDocuments.length>0">
+            <div class="document grid-item inactive-docs" ng-repeat="d in inActiveDocuments">
+                <div class="document-content">
+                    <div class="hero">
+                        <img ng-src="{{API_ENDPOINT+d.ThumbnailPath}}" alt="{{d.Name}}" />
+                        <!-- <div class="shadow"></div> -->
+                    </div>
+                    <div class="options">
+                        <i class="material-icons" ng-click="deleteDocument(d)" ng-if="PERMISSIONS.test(state,'D')">delete_forever</i>
+                        <i class="material-icons" ng-click="openModalWithDocument(d)" ng-if="PERMISSIONS.test(state,'W')">create</i>
+                        <i class="material-icons" ng-click="previewDocument(d)">find_in_page</i>
+                    </div>
+                    <div class="info">
+                        <div class="document-label">
+                            <small>{{d.DocumentType.Name}}({{d.Active?'Active':'Inactive'}})</small>
+                            <h3>{{d.Name}}</h3>
+                        </div>
+                        <div class="date-info">
+                            <span ng-if="d.ExpiryDate">
+                                Expiring in {{d.ExpiryDate | Countdown}}
+                            </span>
+                            <span ng-if="d.IssueDate && !d.ExpiryDate">
+                                Issued {{d.IssueDate | Countdown}}
+                            </span>
+                            <span ng-if="!d.IssueDate && !d.ExpiryDate">
+                                No Date Info
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

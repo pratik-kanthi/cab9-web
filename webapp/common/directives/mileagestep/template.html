@@ -1,0 +1,48 @@
+<div class="mileage-steps">
+    <div class="header">
+        <div class="row">
+            <div class="col-xs-4">
+                <strong>From</strong>
+            </div>
+            <div class="col-xs-4">
+                <strong>To</strong>
+            </div>
+            <div class="col-xs-4">
+                <strong>Fare/Mile</strong>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="no-steps" ng-show="steps.length == 0">
+            No Fare Levels Added
+        </div>
+        <div class="step" ng-repeat="s in steps" ng-hide="steps.length == 0">
+            <a class="remove" ng-click="remove(s)" ng-show="viewMode !== 'VIEW' && $last">
+                <i class="material-icons" ng-click="remove(s)">close</i>
+            </a>
+            <div class="row">
+                <div class="col-xs-8" ng-show="$last">
+                    <b>Per Mile</b> After {{getPrevious(s)}}
+                </div>
+                <div class="col-xs-4" ng-show="!$last">
+                    {{getPrevious(s)}}
+                </div>
+                <div class="col-xs-4" ng-show="!$last">
+                    <div ng-show="viewMode === 'VIEW'">{{s.max}}</div>
+                    <div ng-show="viewMode !== 'VIEW'">
+                        <input ng-change="onChange()" type="number" class="form-control" min="{{getPrevious(s) + 1}}" ng-model="s.max" />
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div ng-show="viewMode === 'VIEW'">{{s.fare | currency}}</div>
+                    <div ng-show="viewMode !== 'VIEW'">
+                        <input ng-change="onChange()" type="number" class="form-control" ng-model="s.fare" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt10" ng-show="viewMode != 'VIEW'">
+            <a class="btn btn-xs btn-success" ng-click="add(s)"><i class="material-icons">add_circle</i>Add Step</a>
+        </div>
+    </div>
+</div>

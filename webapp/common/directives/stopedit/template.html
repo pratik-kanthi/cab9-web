@@ -1,0 +1,22 @@
+<div ng-show="viewMode === 'VIEW'">
+    {{value}}
+</div>
+<div ng-show="viewMode !== 'VIEW'" class="booking-stop-directive">
+    <div class="form-edit">
+        <ui-select class="edit" style="width:auto" ng-model="selected.value" theme="selectize" tabindex="{{tI}}">
+            <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                <div class="select-text">
+                    {{$select.selected.StopSummary}}
+                </div>
+            </ui-select-match>
+            <ui-select-choices refresh="searchLocations($select.search)" refresh-delay="200" repeat="item in fetchedLocations" group-by="'$source'">
+                <div class="select-text-option">
+                    <strong ng-bind="item.Name"></strong><div ng-bind-html="::item.StopSummary | highlight: $select.search"></div>
+                    <!--<small class="text-muted" ng-show="::item.Description">{{::item.Description}}</small>-->
+                </div>
+            </ui-select-choices>
+        </ui-select>
+        <a href="" ng-hide="hideEdit" class="edit-stop"><i class="material-icons" ng-click="editStop($index)">edit_location</i></a>
+    </div>
+</div>
+<div id="mapsDiv"></div>

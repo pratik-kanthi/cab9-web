@@ -1,0 +1,429 @@
+<div id="cc-bookings">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="filter">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title"> Bookings Filters</div>
+                    </div>
+                    <div class="panel-body" style="overflow:visible;">
+                        <div class="form-group">
+                            <label class="control-label">StartDate</label>
+                            <div class="form-edit calendar-picker">
+                                <input class="form-control" type="text" ng-model="filters.From" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.From" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" ng-focus="openCalendar($event, 'From')" />
+                                <span class="cal-icon"><i class="material-icons">event</i></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">End Date</label>
+                            <div class="form-edit calendar-picker">
+                                <input class="form-control" type="text" ng-model="filters.To" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.To" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" ng-focus="openCalendar($event, 'To')" />
+                                <span class="cal-icon"><i class="material-icons">event</i></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Search Text</label>
+                            <div class="form-edit calendar-picker">
+                                <input class="form-control" type="text" ng-model="filters.SearchTerm" />
+                                <span class="cal-icon"><i class="material-icons">search</i></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Clients</label>
+                            <div class="form-edit">
+                                <ui-select multiple ng-model="filters.ClientIds" theme="select2" ng-disabled="false">
+                                <ui-select-match placeholder="Search Clients...">
+                                <span>
+                                    {{$item.AccountNo}}
+                                </span>
+                                </ui-select-match>
+                                <ui-select-choices refresh="searchClients($select.search)" repeat="item.Id as item in fetchedClients">
+                                <div class="ui-select-box">
+                                    <div class="option-details">
+                                        <strong>{{item.Name}}</strong>
+                                        <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                                    </div>
+                                </div>
+                                </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Payment Status</label>
+                            <div class="form-edit">
+                                <ui-select multiple ng-model="filters.CardPaymentStatus" theme="select2">
+                                <ui-select-match placeholder="Select Stauses">
+                                {{$item.Name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item.Id as item in cardPaymentStatuses | filter: $select.search">
+                                <div>
+                                    <strong ng-bind-html="item.Name | highlight: $select.search"></strong>
+                                </div>
+                                </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="mt10 actions">
+                            <button class="btn btn-warning pull-left" ng-click="clearFilters()">
+                            <i class="material-icons">cancel</i>Clear
+                            </button>
+                            <button class="btn btn-success pull-right" ng-click="fetchBookings(1)">
+                            <i class="material-icons">play_arrow</i>Fetch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="bookings">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" ng-if="!paging.loading">
+                        <i class="material-icons">toc</i> Bookings
+                        </h3>
+                        <h3 class="panel-title" ng-if="paging.loading">
+                        <i class="fa fa-circle-o-notch fa-spin"></i> Fetching Bookings...
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <p class="brand-primary t-l bold p20" ng-if="bookings.length == 0 && !paging.loading">
+                            No Credit Card Bookings Found
+                        </p>
+                        <div class="brand-primary bold stats" ng-if="bookings.length > 0 && !paging.loading">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <button class="btn btn-primary" ng-click="takeAllPayments()" ng-if="!bar || (bar.Total == (bar.Success + bar.Failure))">
+                                    <i class="material-icons">credit_card</i> Take Payments
+                                    </button>
+                                    <button class="btn btn-primary" disabled="disabled" ng-if="bar && (bar.Total != (bar.Success + bar.Failure))">
+                                    <i class="fa fa-circle-o-notch fa-spin"></i> Collecting Payments...
+                                    </button>
+                                </div>
+                                <div class="col-sm-4">
+                                    <ul class="summary">
+                                        <li>
+                                            <span class="heading">Bookings</span>
+                                            <span class="value brand-primary" ng-show="!paging.loading" ng-bind="stats.Bookings | AbbrValue"></span>
+                                            <span class="value loading" ng-show="paging.loading"></span>
+                                        </li>
+                                        <li ng-if="bookings.length>0">
+                                            <span class="heading">Revenue</span>
+                                            <span class="value brand-primary" ng-show="!paging.loading" ng-bind="'£' + (stats.ClientInvoice | AbbrValue)"></span>
+                                            <span class="value loading" ng-show="paging.loading"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="bookings-progress">
+                                <progress max="bar.Total" ng-if="bar">
+                                    <bar value="bar.Success" type="success">
+                                    <span>{{bar.Success}} Succeeded</span>
+                                    </bar>
+                                    <bar value="bar.Failure" type="danger">
+                                    <span>{{bar.Failure}} Failed</span>
+                                    </bar>
+                                </progress>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-condensed" style="min-width: 900px;" ng-if="bookings.length > 0 && !paging.loading">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%">
+                                        <div class="checkbox">
+                                            <input type="checkbox" id="bookings-select-all" class="form-control" ng-model="paging.allBookingsSelected" ng-change="toggleSelect()" />
+                                            <label for="bookings-select-all"></label>
+                                        </div>
+                                    </th>
+                                    <th style="width: 12.5%">Details</th>
+                                    <th style="width: 12.5%">Client</th>
+                                    <th style="width: 40%">Journey</th>
+                                    <!-- <th style="width: 30%">Finance</th> -->
+                                    <th style="width: 25%">Card</th>
+                                    <th style="width: 5%" class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody ng-if="bookings.length == 0">
+                                <tr>
+                                    <td colspan="7">
+                                        No Credit Card Bookings Found.
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody ng-if="bookings.length > 0">
+                                <tr ng-repeat-start="item in bookings track by item.Id" ng-class="::item.BookingStatus">
+                                    <td>
+                                        <div class="checkbox" ng-if="(item.CardPaymentStatus != 'Success' && item.CardPaymentStatus != 'Pending')">
+                                            <input type="checkbox" id="{{::$index}}-booking" class="form-control" ng-model="item.$Selected" />
+                                            <label for="{{::$index}}-booking"></label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="booking-status">
+                                            <span ng-bind="::item.BookingStatus"></span>
+                                        </div>
+                                        <a href="" ui-sref="root.bookings.search({ localId: item.LocalId })" target="_blank">
+                                            <strong class="brand-primary">{{::item.LocalId}}</strong>
+                                        </a>
+                                        <br />
+                                        {{::item.BookedDateTime | date:'dd/MM/yyyy HH:mm'}}
+                                    </td>
+                                    <td>
+                                        <strong class="brand-primary">
+                                        {{::item.LeadPassengerName}}
+                                        </strong>
+                                        <br />
+                                        {{::item.ClientName}}
+                                    </td>
+                                    <td>
+                                        {{::item.JourneySummary | Mtruncate: 40}}
+                                        <br />
+                                        <strong class="brand-primary" ng-if="item.Stops.length == 1">As Directed</strong>
+                                        <strong class="brand-primary" ng-if="item.Stops.length != 1">Est. Distance: {{::item.EstimatedDistance}} mi.</strong>
+                                    </td>
+                                    <!-- <td class="finance">
+                                        <strong class="brand-primary">Total: {{::((item.ActualCost + item.WaitingCost + item.ExtrasCost + item.AdjustmentTotal) | currency:'£')}}</strong>
+                                        <table border="0" width="100%" class="finance-details">
+                                            <tr>
+                                                <td>
+                                                    <b>Journey</b>
+                                                    <br /> {{::item.ActualCost | currency: '£'}}
+                                                </td>
+                                                <td>
+                                                    <b>Waiting</b>
+                                                    <br /> {{::item.WaitingCost | currency: '£'}}
+                                                </td>
+                                                <td>
+                                                    <b>Extra</b>
+                                                    <br /> {{::item.ExtrasCost | currency: '£'}}
+                                                </td>
+                                                <td>
+                                                    <b>Adjustments</b>
+                                                    <br /> {{::item.AdjustmentTotal | currency: '£'}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td> -->
+                                    <td class="card-type">
+                                        <div class="credit-card-type xs small" ng-class="::item.PaymentCardType"></div>
+                                        - <strong ng-bind="item.PaymentCardNumber"></strong>
+                                        <br />
+                                        <div class="card-status" ng-class="item.CardPaymentStatus">
+                                            {{item.CardPaymentStatus}}
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-xs btn-primary expand-booking" ng-show="!item.$Expanded" ng-click="expandBooking(item)">
+                                        <i class="material-icons">expand_more</i>
+                                        </button>
+                                        <button class="btn btn-xs btn-warning expand-booking" ng-show="item.$Expanded" ng-click="item.$Expanded = !item.$Expanded">
+                                        <i class="material-icons">expand_less</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat-end ng-if="item.$Expanded">
+                                    <td colspan="7" class="expanded">
+                                        <h3 class="panel-title" ng-if="fetchingFinance">
+                                        <i class="fa fa-circle-o-notch fa-spin"></i> Fetching Transactions...
+                                        </h3>
+                                        <h3 class="panel-title" ng-if="!fetchingFinance">
+                                        Finance Info
+                                        </h3>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="finance-info" ng-if="item.$FinanceInfo">
+                                            <div class="row mt20">
+                                                <div class="col-md-6">
+                                                    <div class="info-box">
+                                                        <div class="title">Distance</div>
+                                                        <div class="content">
+                                                            <span class="cost" ng-bind="::(item.$FinanceInfo.EstimatedDistance) + ' mi.'"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="info-box">
+                                                        <div class="title">Waiting Time</div>
+                                                        <div class="content">
+                                                            <span class="cost" ng-bind="::(item.$FinanceInfo.WaitingTime) + ' mins'"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="info-box">
+                                                        <div class="title">Fare</div>
+                                                        <div class="content">
+                                                            <span class="cost" ng-bind="::(item.$FinanceInfo.ActualCost * (item.CurrencyRate || 1) | currency:item.Currency.Prepend)"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="info-box">
+                                                        <div class="title">Waiting Cost</div>
+                                                        <div class="content">
+                                                            <span class="cost" ng-bind="::(item.$FinanceInfo.WaitingCost * (item.CurrencyRate || 1) | currency:item.Currency.Prepend)"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="info-box">
+                                                        <div class="title">Adjustments</div>
+                                                        <div class="content">
+                                                            <span class="cost" ng-bind="::(item.$FinanceInfo.AdjustmentsTotal * (item.CurrencyRate || 1) | currency:item.Currency.Prepend)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="info-box mt0" ng-if="item.$FinanceInfo.Adjustments.length > 0">
+                                                        <div class="content">
+                                                            <table class="table table-striped table-bordered info-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="width: 50%;">Details</th>
+                                                                        <th style="width: 25%;">Cost</th>
+                                                                        <th style="width: 25%">Tax</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="item in item.$FinanceInfo.Adjustments">
+                                                                        <td><strong class="brand-primary">{{item.Name}}</strong></td>
+                                                                        <td class="text-right">{{item.Amount | currency}}</td>
+                                                                        <td class="text-right">{{item.TaxAmount | currency}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="info-box">
+                                                        <div class="title">Extras</div>
+                                                        <div class="content">
+                                                            <span class="cost" ng-bind="::(item.$FinanceInfo.ExtrasTotal * (item.CurrencyRate || 1) | currency:item.Currency.Prepend)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="info-box mt0" ng-if="item.$FinanceInfo.Extras.length > 0">
+                                                        <div class="content">
+                                                            <table class="table table-striped table-bordered info-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="width: 50%;">Details</th>
+                                                                        <th style="width: 25%;">Cost</th>
+                                                                        <th style="width: 25%">Tax</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr ng-repeat="item in item.$FinanceInfo.Extras">
+                                                                        <td><strong class="brand-primary">{{item.Expense}}</strong></td>
+                                                                        <td class="text-right">{{item.Amount | currency}}</td>
+                                                                        <td class="text-right">{{item.TaxAmount | currency}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="info-box">
+                                                        <div class="title">Total</div>
+                                                        <div class="content">
+                                                            <span class="cost" ng-bind="::(item.$FinanceInfo.ActualCost + item.$FinanceInfo.WaitingCost + item.$FinanceInfo.AdjustmentsTotal + item.$FinanceInfo.ExtrasTotal) * (item.CurrencyRate || 1) | currency:item.Currency.Prepend"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="info-box">
+                                                        <div class="title">Total VAT</div>
+                                                        <div class="content">
+                                                            <span class="cost" ng-bind="::(item.$FinanceInfo.ActualTax + item.$FinanceInfo.WaitingTax + item.$FinanceInfo.AdjustmentsTax + item.$FinanceInfo.ExtrasTax) * (item.CurrencyRate || 1) | currency:item.Currency.Prepend"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                            </div>
+                                        </div>
+                                        <h3 class="panel-title mt20" ng-if="!fetchingFinance">
+                                        Transactions
+                                        </h3>
+                                        <div id="credit-cards-transactions" class="mt10" ng-if="item.$Transactions.length > 0">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 10%">Status</th>
+                                                        <th style="width: 10%">Type</th>
+                                                        <th style="width: 15%">Date/Time</th>
+                                                        <th style="width: 30%">Card Number</th>
+                                                        <th style="width: 12.5%">Provider</th>
+                                                        <th style="width: 12.5%" class="text-center">Details</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-if="item.$Transactions.length==0">
+                                                        <td colspan="6" height="40">
+                                                            <strong class="brand-primary">
+                                                            No Transactions Found
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-repeat-start="transaction in item.$Transactions">
+                                                        <td class="status" ng-class="(transaction.Success)?'SUCCESS':'FAILURE'">
+                                                            <strong class="brand-primary">{{(transaction.Success)? 'Success': 'Failure'}}</strong>
+                                                        </td>
+                                                        <td class="transaction-type">
+                                                            <strong ng-bind="transaction.TransactionType" class="brand-secondary"></strong>
+                                                            <br />
+                                                            <strong class="brand-primary" ng-bind="transaction.Amount | currency"></strong>
+                                                        </td>
+                                                        <td>
+                                                            <span ng-bind="transaction.CreatedAt | date:'dd/MM/yyyy HH:mm'"></span>
+                                                        </td>
+                                                        <td class="card-type">
+                                                            <div class="credit-card-type small" ng-class="transaction.PaymentCardType"></div>
+                                                            <strong ng-bind="transaction.PaymentCardNumber"></strong>
+                                                        </td>
+                                                        <td class="provider-type">
+                                                            <div class="credit-card-provider-type small" ng-class="transaction.Provider"></div>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <button class="btn btn-xs btn-primary" ng-show="!transaction.$expanded" ng-disabled="card.DefaultCard" ng-click="expandTransaction(transaction)"><i class="material-icons">expand_more</i>Details</button>
+                                                            <button class="btn btn-xs btn-warning" ng-show="transaction.$expanded" ng-disabled="card.DefaultCard" ng-click="transaction.$expanded = !transaction.$expanded"><i class="material-icons">expand_less</i>Hide</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-repeat-end ng-if="transaction.$expanded">
+                                                        <td colspan="6" class="p10">
+                                                            <div class="row transaction-details">
+                                                                <div class="col-sm-6">
+                                                                    <strong class="brand-primary">Payment Request</strong>
+                                                                <pre>{{transaction.Request|json:true}}</pre>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <strong class="brand-primary">Provider Response</strong>
+                                                            <pre>{{transaction.Response|json:true}}</pre>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div>
+                                        <a class="btn btn-primary btn-xs" ng-click="emailTo('RECEIPT', item)"><i class="material-icons">receipt</i> Send Receipt</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-if="bookings.length>0" class="pr20">
+                <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm pull-right mt0" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="fetchBookings(paging.currentPage)"></pagination>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>

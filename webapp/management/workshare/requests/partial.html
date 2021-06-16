@@ -1,0 +1,88 @@
+<div class="workshare-requests">
+    <ul class="filters">
+        <li class="mr10" ng-class="(apiRequest.Type == 'Received')?'active':''" ng-click="fetchRequests('Received')">Partnership Requests Received</li>
+        <li ng-class="(apiRequest.Type == 'Sent')?'active':''" ng-click="fetchRequests('Sent')">Partnership Requests Sent</li>
+    </ul>
+
+    <table class="table table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    Company
+                </th>
+                <th>
+                    Request Time
+                </th>
+                <th>
+                    Driver Visibility
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-if="fetching">
+            <td colspan="5" ng-if="fetching">
+                <img src="/includes/images/spinner.gif" width="40" />
+            </td>
+        </tbody>
+        <tbody ng-if="!fetching &&( !requests || requests.length==0)">
+            <td colspan="5" ng-if="!fetching">
+                <span class="text-muted">No requests found</span>
+            </td>
+        </tbody>
+        <tbody ng-if="!fetching">
+            <tr ng-repeat="request in requests" id="request-{{request.Id}}">
+                <td>
+                    <img class="logo" ng-src="{{request.LogoUrl|formatImage}}" width="40" />
+                    <strong class="brand-primary" ng-bind="::request.CompanyName"></strong>
+                </td>
+                <td>
+                    <strong class="brand-primary" ng-bind="request.CreationTime|companyDate:'DD/MM/YYYY HH:mm'"></strong>
+                </td>
+                <td>
+                    <strong class="brand-primary" ng-bind="request.PartnerDriverVisibilityConfig"></strong>
+                </td>
+                <td>
+                    <strong class="partner-request-status" ng-class="request.Status" ng-bind="::request.Status"></strong>
+                    <br>
+                    <small ng-bind="'Reason: '+request.ReasonForRejection" ng-if="request.Status=='Rejected'"></small>
+                </td>
+                <td class="actions">
+                    <div ng-if="apiRequest.Type && apiRequest.Type=='Sent'">
+                        <button href="" class="btn btn-xs mb8" ng-class="request.Status=='Rejected'?'btn-danger':'btn-warning'" ng-click="removeRequest(request)">
+                            <i class='material-icons'>delete_forever</i>
+                            {{request.Status=='Rejected'?'Delete':'Withdraw'}} Request
+                        </button>
+                    </div>
+                    <div ng-if="apiRequest.Type && apiRequest.Type=='Received'">
+                        <div ng-if="request.Status=='Requested'">
+                            <button ng-disabled="loading" id="accept-{{request.Id}}" ng-click="acceptRequest(request,$index)" class="btn btn-xs btn-success"><i class='material-icons'>thumb_up_alt</i>Accept</button>
+                            <button ng-disabled="loading" ng-click="showRejectBox(request,$index)" class="btn btn-xs btn-danger"><i class='material-icons'>thumb_down_alt</i>Reject</button>
+                        </div>
+                        <div ng-if="request.Status!='Requested'">
+                            <strong class="red">You have rejected the partnership</strong>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="reject-box" ng-show="selectedRequest && selectedRequest.Id" class="reject-box panel panel-default">
+        <div class="panel-heading">
+            Reject Reason
+        </div>
+        <div class="panel-body">
+            <textarea rows="5" cols="32" ng-model="rejectReason" placeholder="Type the reason for rejection"></textarea>
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-danger pull-right" style="display:inline-block" ng-click="rejectRequest()" ng-disabled="!rejectReason || loading"><i class="material-icons">save</i>Reject</button>
+            <button type="button" class="btn btn-warning pull-left" style="display:inline-block" ng-click="cancelReject()"><i class="material-icons">cancel</i>Cancel</button>
+            <br class="clearfix">
+        </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,45 @@
+<form id="add-payment-card-modal" name="addPaymentCardForm">
+    <div class="modal-header">
+        <h3 class="modal-title" ng-hide="edit">New Payment Card</h3>
+    </div>
+    <div class="modal-body">
+        <div class="card-wrapper"></div>
+        <div class="form-container active">
+            <strong class="brand-primary">Card Details</strong>
+            <div class="row">
+                <div class="col-sm-6">
+                    <input ng-model="card.CardNumber" placeholder="Card number" type="tel" name="number" required />
+                </div>
+                <div class="col-sm-6">
+                    <input ng-model="card.BillingName" placeholder="Full name" type="text" name="name" required />
+                </div>
+            </div>
+            <div class="row mb20">
+                <div class="col-sm-6">
+                    <input ng-model="card.$Expiry" placeholder="MM/YY" type="tel" name="expiry" required />
+                </div>
+                <div class="col-sm-6">
+                    <input ng-model="card.Cvc" placeholder="CVC" type="text" name="cvc" required />
+                </div>
+            </div>
+            <strong class="brand-primary">Billing Address</strong>
+            <div class="row">
+                <div class="col-sm-8">
+                    <input ng-model="card.BillingAddress" placeholder="Address Line 1" type="text" name="address" required />
+                </div>
+                <div class="col-sm-4">
+                    <input ng-model="card.BillingPostcode" placeholder="Postcode" type="text" name="postcode" required />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success pull-right" ng-disabled="addPaymentCardForm.$invalid" ng-click="addCard(card)" ng-if="!showLoader">
+            <i class="material-icons">save</i>Add Card
+        </button>
+        <button class="btn btn-success pull-right" disabled ng-click="addCard(card)" ng-if="showLoader">
+            <i class="fa fa-circle-o-notch fa-spin"></i> Saving...
+        </button>
+        <button class="btn btn-danger pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Close</button>
+    </div>
+</form>

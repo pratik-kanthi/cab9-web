@@ -1,0 +1,995 @@
+.booking-modal {
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    h3 {
+        color: @brand-primary;
+        margin: 0 0 8px;
+        font-weight: 600;
+        font-size: 16px;
+        margin-top: 20px !important;
+        i {
+            position: relative;
+            top: 3px;
+            font-size: 20px;
+            margin-right: 4px;
+        }
+    }
+    .form-box {
+        margin-bottom: 10px;
+        label {
+            font-weight: 600;
+            color: @brand-secondary;
+        }
+        .info {
+            font-size: 14px !important;
+        }
+    }
+    .profile-box-small {
+        .picture {
+            padding-right: 8px;
+            padding-top: 2px;
+        }
+        .info {
+            padding-top: 0 !important;
+            b {
+                font-size: 13px !important;
+            }
+        }
+    }
+    .dropdown-menu {
+        top: 25px !important;
+        right: 0 !important;
+        li {
+            a {
+                height: 36px !important;
+                line-height: 28px !important;
+            }
+            &:first-child {
+                a {
+                    border-top-left-radius: 3px;
+                    border-top-right-radius: 3px;
+                }
+            }
+            &:last-child {
+                a {
+                    border-bottom-left-radius: 3px;
+                    border-bottom-right-radius: 3px;
+                }
+            }
+        }
+    }
+    &.Incoming {
+        background-color: mix(@orange, #fff, 10%);
+    }
+    &.Unconfirmed {
+        background-color: mix(@yellow, #fff, 10%);
+    }
+
+    &.Allocated {
+        background-color: mix(@dark-green, #fff, 10%);
+    }
+
+    &.OnRoute {
+        background-color: mix(@brand-primary, #fff, 10%);
+    }
+
+    &.PreAllocated {
+        background-color: mix(@light-green, #fff, 10%);
+    }
+
+    &.Arrived {
+        background-color: mix(@purple, #fff, 10%);
+    }
+
+    &.InProgress {
+        background-color: mix(@sky, #fff, 10%);
+    }
+
+    &.OpenToBid {
+        background-color: mix(@yellow, #fff, 10%);
+    }
+
+    &.Completed {
+        background-color: mix(@blue, #fff, 10%);
+    }
+
+    &.Cancelled {
+        background-color: mix(@red, #fff, 10%);
+    }
+    &.Rejected {
+        background-color: mix(@red, #fff, 10%);
+    }
+
+    &.COA {
+        background-color: mix(@red, #fff, 10%);
+    }
+}
+
+.booking-strip {
+    margin-bottom: 5px;
+    position: relative !important;
+    [class*=" col-"] {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    &.header {
+        height: 40px;
+        margin-top: 10px;
+        .brand-gradient();
+        .booking {
+            height: 40px;
+            .info {
+                color: #fff !important;
+                line-height: 30px !important;
+                font-weight: 600 !important;
+                text-transform: uppercase;
+                border-left: 0 !important;
+            }
+        }
+    }
+    .booking {
+        padding: 0 100px 0 0;
+        height: 59px;
+        line-height: 25px;
+        position: relative !important;
+        border: 1px solid #f1f1f1;
+        .info {
+            padding: 2px 0 1px 10px;
+            .row {
+                margin-left: -10px;
+                margin-right: -10px;
+            }
+            a {
+                color: @grey;
+            }
+            .id {
+                font-weight: 600;
+            }
+            .date-time {
+                span {
+                    color: #000;
+                    &.time {
+                        display: block;
+                        float: left;
+                        margin-right: 8px;
+                        font-size: 22px;
+                        font-weight: 300;
+                        color: @brand-primary;
+                    }
+                    &.flight {
+                        float: left;
+                        font-size: 14px !important;
+                        background-color: #9c27b0;
+                        color: #fff !important;
+                        padding: 0 8px;
+                        text-transform: uppercase;
+                        .border-radius(3px);
+                        > span {
+                            color: #fff !important;
+                            font-size: 14px !important;
+                        }
+                        i {
+                            float: left;
+                            font-size: 16px !important;
+                            margin-top: 4px;
+                            margin-right: 4px;
+                        }
+                    }
+                }
+            }
+            .from-to {
+                padding-left: 20px !important;
+                background-image: url("/includes/images/journey.png");
+                background-position: left center;
+                background-repeat: no-repeat;
+                background-size: 11px;
+                .text-ellipsis();
+                display: block;
+                .additional {
+                    position: absolute;
+                    top: 14px;
+                    left: 18px;
+                    font-size: 11px;
+                    color: #000;
+                }
+            }
+            .passenger,
+            .driver,
+            .vehicle {
+                .text-ellipsis();
+                .profile {
+                    height: 40px;
+                    width: 40px;
+                    background-size: cover !important;
+                    border-radius: 50%;
+                    background-position: 50% 50% !important; // display: inline-block;
+                    float: left;
+                    margin-top: 8px;
+                    margin-right: 10px;
+                    border: 1px solid #ccc;
+                }
+                img {
+                    width: 40px !important;
+                    height: 40px;
+                    .border-radius(20px);
+                    float: left;
+                    margin-top: 5px;
+                    margin-right: 10px;
+                    border: 1px solid #ccc;
+                }
+                span.payment-method {
+                    background-color: @brand-primary;
+                    display: inline-block;
+                    padding: 2px 6px;
+                    margin-right: 4px;
+                    margin-top: 1px;
+                    line-height: 14px;
+                    cursor: pointer;
+                    .border-radius(2px);
+                    i {
+                        font-size: 12px;
+                        line-height: 14px;
+                        color: #fff;
+                    }
+                }
+            }
+            .passenger,
+            .driver {
+                > div {
+                    display: inline-block;
+                }
+            }
+            .client {
+            }
+            .vehicle {
+                text-align: center;
+                .registration {
+                    background: #fdca4d;
+                    font-weight: 900;
+                    padding: 2px 12px;
+                    line-height: 16px;
+                    border-radius: 2px;
+                    margin-top: 2px;
+                    color: #000 !important;
+                    font-size: 12px;
+                    width: 100px;
+                    .text-ellipsis();
+                    &.na {
+                        background-color: #ddd !important;
+                    }
+                }
+                .vehicle-type {
+                    width: 100px;
+                    .text-ellipsis();
+                    background: @purple;
+                    font-weight: 900;
+                    color: #fff;
+                    text-transform: uppercase;
+                    padding: 2px 12px;
+                    margin-top: -4px;
+                    line-height: 16px;
+                    border-radius: 2px;
+                    font-size: 11px;
+                    &.Passenger {
+                    }
+                    &.Estate,
+                    &.estate {
+                        background-color: @dark-blue !important;
+                        color: #fff !important;
+                    }
+                    &.Unit.Car {
+                        background-color: @cyan !important;
+                        color: #fff !important;
+                    }
+                    &.Black.Taxi {
+                        background-color: white !important;
+                        color: black !important;
+                    }
+                    &.Executive {
+                        background-color: @black;
+                    }
+                    &.Chauffeur {
+                        background-color: gold;
+                        color: #000;
+                    }
+                    &.EcoCar {
+                        background-color: @green;
+                    }
+                    &.MPV {
+                        background-color: #26ae90;
+                        &.Premium {
+                            background-color: gold !important;
+                            color: #000 !important;
+                        }
+                    }
+                }
+            }
+        }
+        .lh50 {
+            line-height: 50px;
+        }
+        color: @grey !important;
+        .status {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 20px;
+            padding: 0 8px;
+            text-transform: uppercase;
+            color: #fff;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 20px;
+            span {
+                line-height: 20px;
+            }
+        }
+        .actions {
+            position: absolute;
+            top: 26px;
+            right: 10px;
+            a {
+                float: right;
+                margin-right: 0px;
+                width: 25px !important;
+                height: 25px !important;
+                border-radius: 25px !important;
+                min-width: inherit;
+                padding: 0;
+                text-align: center !important;
+                margin-left: 4px;
+                i {
+                    line-height: 22px !important;
+                    margin-left: -3px;
+                    float: none;
+                    font-size: 16px;
+                    margin-right: 0;
+                }
+                .stagger(1,
+                5,
+                fadeInUp,
+                0.1,
+                0.3); // &.btn-gradient {
+                //     .animate(1, tada);
+                // }
+            }
+        }
+        &.Incoming {
+            .info {
+                border-left: 5px solid mix(@orange, #fff, 90%);
+            }
+            background-color: mix(@orange, #fff, 10%);
+            .status {
+                background-color: mix(@orange, #fff, 90%);
+            }
+        }
+        &.Unconfirmed {
+            .info {
+                border-left: 5px solid mix(@yellow, #fff, 90%);
+            }
+            background-color: mix(@yellow, #fff, 10%);
+            .status {
+                background-color: mix(@yellow, #fff, 90%);
+            }
+        }
+        &.Allocated {
+            .info {
+                border-left: 5px solid mix(@dark-green, #fff, 90%);
+            }
+            background-color: mix(@dark-green, #fff, 10%);
+            .status {
+                background-color: mix(@dark-green, #fff, 90%);
+            }
+        }
+        &.OnRoute {
+            .info {
+                border-left: 5px solid mix(@brand-primary, #fff, 80%);
+            }
+            background-color: mix(@brand-primary, #fff, 10%);
+            .status {
+                background-color: mix(@brand-primary, #fff, 80%);
+            }
+        }
+        &.PreAllocated {
+            .info {
+                border-left: 5px solid mix(@light-green, #fff, 80%);
+            }
+            background-color: mix(@light-green, #fff, 10%);
+            .status {
+                background-color: mix(@light-green, #fff, 80%);
+            }
+        }
+        &.Arrived {
+            .info {
+                border-left: 5px solid mix(@purple, #fff, 90%);
+            }
+            background-color: mix(@purple, #fff, 10%);
+            .status {
+                background-color: mix(@purple, #fff, 90%);
+            }
+        }
+        &.InProgress {
+            .info {
+                border-left: 5px solid mix(@sky, #fff, 90%);
+            }
+            background-color: mix(@sky, #fff, 10%);
+            .status {
+                background-color: mix(@sky, #fff, 90%);
+            }
+        }
+        &.OpenToBid {
+            .info {
+                border-left: 5px solid mix(@yellow, #fff, 90%);
+            }
+            background-color: mix(@yellow, #fff, 10%);
+            .status {
+                background-color: mix(@yellow, #fff, 90%);
+            }
+        }
+        &.Completed {
+            .info {
+                border-left: 5px solid mix(@blue, #fff, 90%);
+            }
+            background-color: mix(@blue, #fff, 10%);
+            .status {
+                background-color: mix(@blue, #fff, 90%);
+            }
+        }
+        &.Cancelled {
+            .info {
+                border-left: 5px solid mix(@red, #fff, 90%);
+            }
+            background-color: mix(@red, #fff, 10%);
+            .status {
+                background-color: mix(@red, #fff, 90%);
+            }
+        }
+        &.Rejected {
+            .info {
+                border-left: 5px solid mix(@red, #fff, 90%);
+            }
+            background-color: mix(@red, #fff, 10%);
+            .status {
+                background-color: mix(@red, #fff, 90%);
+            }
+        }
+        &.COA {
+            .info {
+                border-left: 5px solid mix(@red, #fff, 80%);
+            }
+            background-color: mix(@red, #fff, 10%);
+            .status {
+                background-color: mix(@red, #fff, 80%);
+            }
+        }
+    }
+    ul.dropdown-menu {
+        max-height: 300px;
+        overflow-y: scroll;
+        width: 220px;
+        overflow-x: hidden;
+        li {
+            a {
+                padding: 0 10px;
+                margin: 10px 0px;
+                line-height: 30px;
+                .details {
+                    width: 100%;
+                    .text-ellipsis();
+                }
+                .registration {
+                    display: block;
+                    font-weight: 700;
+                    width: 100px;
+                    height: 30px;
+                    line-height: 30px;
+                    text-align: center;
+                    padding: 0;
+                    background: #fdca4d;
+                    color: #000 !important;
+                }
+                img {
+                    width: 30px !important;
+                    height: 30px !important;
+                    .border-radius(15px);
+                }
+            }
+        }
+    }
+    .expanded-area {
+        .actions {
+            margin-bottom: 20px;
+            margin-top: 8px;
+            > ul {
+                list-style: none;
+                padding-left: 0;
+                > li {
+                    float: left;
+                    margin-right: 10px;
+                }
+            }
+            .btn-group {
+                a {
+                    &.btn {
+                        color: #fff !important;
+                    }
+                }
+                > ul.dropdown-menu {
+                    left: 0;
+                    right: 0;
+                    top: 24px;
+                    width: 130px;
+                    min-width: inherit;
+                    .border-radius(4px);
+                    overflow: hidden;
+                    li {
+                        height: 30px;
+                        a {
+                            min-width: inherit;
+                            height: 30px;
+                            margin: 0;
+                            text-align: center;
+                            line-height: 30px;
+                            padding: 0;
+                            color: #fff !important;
+                            i {
+                                line-height: 30px;
+                                color: #fff !important;
+                            }
+                            &.Incoming {
+                                background-color: mix(@orange, #fff, 80%);
+                                border-bottom: 1px solid mix(@orange, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@orange, #fff, 90%);
+                                }
+                            }
+                            &.Unconfirmed {
+                                background-color: mix(@yellow, #fff, 80%);
+                                border-bottom: 1px solid mix(@yellow, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@yellow, #fff, 90%);
+                                }
+                            }
+                            &.Allocated {
+                                background-color: mix(@dark-green, #fff, 80%);
+                                border-bottom: 1px solid mix(@dark-green, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@dark-green, #fff, 90%);
+                                }
+                            }
+                            &.OnRoute {
+                                background-color: mix(@brand-primary, #fff, 70%);
+                                border-bottom: 1px solid mix(@brand-primary, #fff, 80%);
+                                &:hover {
+                                    background-color: mix(@brand-primary, #fff, 80%);
+                                }
+                            }
+                            &.Arrived {
+                                background-color: mix(@purple, #fff, 80%);
+                                border-bottom: 1px solid mix(@purple, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@purple, #fff, 90%);
+                                }
+                            }
+                            &.InProgress {
+                                background-color: mix(@sky, #fff, 80%);
+                                border-bottom: 1px solid mix(@sky, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@sky, #fff, 90%);
+                                }
+                            }
+                            &.OpenToBid {
+                                background-color: mix(@yellow, #fff, 80%);
+                                border-bottom: 1px solid mix(@yellow, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@yellow, #fff, 90%);
+                                }
+                            }
+                            &.Completed {
+                                background-color: mix(@blue, #fff, 80%);
+                                border-bottom: 1px solid mix(@blue, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@blue, #fff, 90%);
+                                }
+                            }
+                            &.Cancelled {
+                                background-color: mix(@red, #fff, 80%);
+                                border-bottom: 1px solid mix(@red, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@red, #fff, 90%);
+                                }
+                            }
+                            &.Rejected {
+                                background-color: mix(@red, #fff, 80%);
+                                border-bottom: 1px solid mix(@red, #fff, 90%);
+                                &:hover {
+                                    background-color: mix(@red, #fff, 90%);
+                                }
+                            }
+                            &.COA {
+                                background-color: mix(@red, #fff, 60%);
+                                border-bottom: 1px solid mix(@red, #fff, 80%);
+                                &:hover {
+                                    background-color: mix(@red, #fff, 80%);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        &.Incoming {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@orange, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.Unconfirmed {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@yellow, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.Allocated {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@dark-green, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.OnRoute {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@brand-primary, #fff, 70%);
+                    }
+                }
+            }
+        }
+        &.Arrived {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@purple, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.InProgress {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@sky, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.OpenToBid {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@yellow, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.Completed {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@blue, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.Cancelled {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@red, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.Rejected {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@red, #fff, 80%);
+                    }
+                }
+            }
+        }
+        &.COA {
+            .actions {
+                .btn-group {
+                    .btn {
+                        background-color: mix(@red, #fff, 60%);
+                    }
+                }
+            }
+        }
+        #credit-cards-transactions {
+            table {
+                background: #fff;
+                th {
+                    background-color: @brand-primary;
+                    color: #fff;
+                }
+                td {
+                    &:first-child {
+                        border-left: 1px solid #ddd !important;
+                    }
+                    &:last-child {
+                        border-right: 1px solid #ddd !important;
+                    }
+                }
+                tr {
+                    &:last-child {
+                        td {
+                            border-bottom: 1px solid #ddd !important;
+                        }
+                    }
+                }
+            }
+        }
+        table.info-table {
+            background-color: #fff;
+            // border: 1px solid #eee;
+            th {
+                padding: 4px 8px !important;
+                background: @brand-primary;
+                color: #fff;
+            }
+            tbody {
+                tr {
+                    td {
+                        padding: 4px 8px !important;
+                        //background: #eee!important
+                    }
+                }
+            }
+        }
+        background: #f1f1f1;
+        padding: 0;
+        position: relative;
+        border-left: 1px solid #fff;
+        margin-left: 32px;
+        ul.nav.nav-tabs {
+            background-color: #ddd;
+            li {
+                border-bottom: 2px solid #ddd;
+                a {
+                    line-height: 20px;
+                    text-transform: capitalize;
+                    font-size: 16px;
+                }
+                &.active {
+                    border-bottom: 2px solid @brand-primary;
+                    background-color: @brand-primary;
+                    a {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+        .tab-content {
+            padding: 0 32px;
+            width: calc(~"100% - 56px");
+        }
+        h6 {
+            color: @brand-primary;
+            margin: 0px 0 8px;
+            font-weight: 600;
+            font-size: 16px;
+            i {
+                font-size: 18px;
+            }
+        }
+        img.icon {
+            width: 40px;
+            height: 40px;
+            float: left;
+            margin-right: 10px;
+            .border-radius(20px);
+            .box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+        }
+        .journey-map {
+            img {
+                width: 100%;
+                border: 1px solid #c2c2c2;
+                .box-shadow(0 1px 4px rgba(0, 0, 0, 0.1));
+                margin: 5px 0 20px 0;
+            }
+        }
+        .check + label.check-label {
+            background-color: lighten(@grey, 20%);
+        }
+        .phone-calls {
+            min-height: 200px;
+            audio {
+                width: 100%;
+                outline: 0;
+                height: 32px;
+            }
+            span.caller {
+                display: inline !important;
+                > span {
+                    display: inline !important;
+                }
+            }
+        }
+        .journey-details {
+            .additional-stops {
+                margin: 10px 0;
+                color: @brand-secondary;
+                i {
+                    color: @brand-secondary;
+                    float: left;
+                    line-height: 25px;
+                }
+            }
+            i {
+                font-size: 14px;
+            }
+            .passengers,
+            .bags {
+                margin-top: 10px;
+                height: 32px;
+                width: 70px;
+                float: left;
+                margin-right: 10px;
+                line-height: 32px;
+                font-size: 16px;
+                background: #ddd;
+                .border-radius(20px);
+                font-weight: 800;
+                color: #fff;
+                .icon-small {
+                    width: 50%;
+                    display: inline-block;
+                    float: left;
+                    text-align: center;
+                    i {
+                        font-size: 16px;
+                        position: relative;
+                        top: 1px;
+                    }
+                }
+                .number {
+                    width: 50%;
+                    font-weight: 600;
+                    padding-right: 5px;
+                    text-align: center;
+                    display: inline-block;
+                }
+            }
+            .passengers {
+                background-color: @blue;
+                .icon-small {
+                    border-right: 2px solid darken(@blue, 10%);
+                }
+            }
+            .bags {
+                background-color: @purple;
+                .icon-small {
+                    border-right: 2px solid darken(@purple, 10%);
+                }
+            }
+        }
+        .journey-cost {
+            .cost {
+                font-size: 22px;
+            }
+
+            img {
+                height: 250px; 
+                width: 250px; 
+                border: 1px solid #c2c2c2;
+                margin: 5px 0 10px 0;
+            }
+        }
+        .booking-details {
+            a.link {
+                color: @brand-primary !important;
+                i {
+                    color: @brand-primary !important;
+                }
+                &.red {
+                    color: @red !important;
+                    i {
+                        color: @red !important;
+                    }
+                }
+            }
+        }
+        .expanded-actions {
+            position: absolute;
+            top: 72px;
+            right: 20px;
+            width: 50px;
+            a {
+                float: right;
+                width: 40px !important;
+                height: 40px !important;
+                .border-radius(20px);
+                margin-left: 30px;
+                min-width: inherit;
+                padding: 0;
+                text-align: center !important;
+                margin-bottom: 10px;
+                .stagger(1,
+                5,
+                fadeInDown,
+                0.1,
+                0.3);
+                i {
+                    // line-height: 37px !important;
+                    line-height: 40px !important;
+                    padding-left: 8px;
+                    float: none;
+                    font-size: 18px;
+                    display: block;
+                    &.collapse {
+                        font-size: 36px;
+                    }
+                }
+            }
+        }
+        @media (max-width: 768px) {
+        }
+    }
+    @media (max-width: 767px) {
+        .booking {
+            height: 117px;
+            padding-right: 50px;
+            .info {
+                .from-to {
+                    padding-left: 25px !important;
+                    background-position: left 10px top 7px;
+                }
+            }
+        }
+        .expanded-area {
+            .expanded-actions {
+                position: absolute;
+                width: 120px;
+                top: 10px;
+                right: 10px;
+                a {
+                    float: right;
+                    margin-right: 0px;
+                    width: 25px !important;
+                    height: 25px !important;
+                    border-radius: 25px !important;
+                    min-width: inherit;
+                    padding: 0;
+                    text-align: center !important;
+                    margin-left: 4px;
+                    i {
+                        line-height: 22px !important;
+                        float: none;
+                        font-size: 16px !important;
+                        margin-right: 0;
+                        padding-left: 0;
+                        padding-right: 6px;
+                    }
+                    .stagger(1,
+                    4,
+                    fadeInDown,
+                    0.1,
+                    0.3);
+                }
+            }
+        }
+    }
+}

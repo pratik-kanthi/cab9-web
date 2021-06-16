@@ -1,0 +1,58 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Sms Settings</h3>
+    </div>
+    <div class="panel-body">
+        <div form-for="item" schema="SmsDetail" mode="{{viewMode}}">
+            <div class="mt10 mb10">
+                <button class="btn btn-warning" ng-show="viewMode == 'VIEW'" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.company','W')"><i class="material-icons">create</i>Edit</button>
+                <button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+                <button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+            </div>
+            <p>This page configures your nexmo SMS integration</p>
+            <h3 class="section-title">Api Info</h3>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div field-for="ApiKey"></div>
+                </div>
+                <div class="col-sm-4">
+                    <div field-for="ApiSecret"></div>
+                </div>
+                <div class="col-sm-4">
+                    <div field-for="From"></div>
+                </div>
+            </div>            <hr />
+            <h3 class="section-title">Templates Info</h3>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="ConfirmationTemplate"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="AssignedTemplate"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="OnRouteTemplate"></div>
+                </div>
+                <div class="col-sm-6"></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="ArrivalTemplate"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="ArrivalScript"></div>
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col-sm-6">
+                    <div field-for="CompletionTemplate"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="CompletedMessageMinutesAfter" display="Completion Message After Minutes"></div>
+                </div>
+            </div>   
+        </div>
+    </div>
+</div>

@@ -1,0 +1,227 @@
+@import '../bootstrap/css/bootstrap.min.css';
+
+@brand-primary:					#455674;
+@brand-secondary:				#3D799B;
+@grey:                          #788195;
+@red:                           #d21d1d;
+
+body {
+  -webkit-font-smoothing: antialiased !important;
+  font-size: 14;
+  // background-color: #eee;
+}
+
+.brand-primary {
+    color: @brand-primary !important;
+}
+.t-s {
+    font-size: 12px;
+}
+
+.container {
+    width: 8.5in;
+}
+
+.bold {
+    font-weight: 600;
+}
+.upper {
+    text-transform: uppercase;
+}
+
+.info-box {
+    margin-bottom: 20px;
+    .icon {
+        float: left;
+        margin-right: 10px;
+        img {
+            max-height: 38px;
+            &.rounded {
+                border-radius: 20px;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            }
+        }
+        i {
+            font-size: 16px;
+            width: 38px;
+            height: 38px;
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            text-align: center;
+            line-height: 38px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+    }
+    .title {
+        font-weight: 800;
+        margin-bottom: 0px;
+        color: @grey;
+    }
+    .content {
+        line-height: 20px;
+        a {
+            display: block;
+            font-size: 12px;
+            &.remove {
+                color: @red !important;
+            }
+        }
+        .registration {
+            background: #fdca4d !important;
+            font-weight: 900;
+            padding: 8px 18px;
+            line-height: 48px;
+            border-radius: 4px;
+            color: #000 !important;
+        }
+    }
+}
+.invoice-table {
+    margin-top: 60px;
+}
+table.invoice-summary {
+    margin-top: 10px;
+    width: 100%;
+    font-size: 16px;
+    border-top: 2px solid #ddd;
+    tbody {
+        td {
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+    }
+    tfoot {
+        border-top: 2px solid #ddd;
+        border-bottom: 2px solid #ddd;
+        td {
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+    }
+}
+table.table {
+    font-size: 12px;
+    th {
+        color: @brand-primary;
+    }
+    td.cost {
+        font-size: 24px;
+        font-weight: 300;
+        margin-top: 10px;
+        text-align: right;
+        color: @brand-primary !important;
+    }
+}
+
+#company-information {
+    img.company-logo {
+        width: 100px;
+        height: 100px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        border-radius: 50px;
+    }
+}
+
+#invoice-pdf {
+    .header {
+        background-color: #F1F5F8;
+        border-bottom: 5px solid @brand-primary;
+        h3 {
+            font-size: 32px;
+            text-transform: uppercase;
+            font-weight: 300;
+            color: #777;
+        }
+    }
+    .client-information {
+        font-size: 16px;
+        p {
+            word-wrap:break-word;
+        }
+        pre {
+            background: none;
+            border:0;
+            padding: 0;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+        }
+    }
+}
+.footer {
+    border-top: 5px solid @brand-primary;
+    background-color: #F1F5F8;
+    margin-top: 60px;
+    padding: 30px;
+    img.footer-logo {
+        height: 60px;
+        width: 60px;
+        border-radius: 30px;
+    }
+}
+
+
+
+#booking-receipt {
+	h2 {
+
+		font-size: 22px;
+	}
+	.container {
+		width: 800px;
+        padding: 20px;
+        background-color: #fff;
+	}
+	h4 {
+		color: @brand-primary !important;
+        // text-transform: uppercase;
+        margin-bottom: 10px;
+	}
+	img.booking-journey {
+		width: 100%;
+		padding:4px;
+		border: 1px solid #ccc;
+	}
+}
+#invoice {
+    .container {
+        background-color: #fff;
+    }
+}
+
+
+@iterations: 50;
+.helper-loops (@i) when (@i > -5) {
+    .pt@{i} {
+        padding-top: ~"@{i}px" !important;
+    }
+    .pr@{i} {
+        padding-right: ~"@{i}px" !important;
+    }
+    .pb@{i} {
+        padding-bottom: ~"@{i}px" !important;
+    }
+    .pl@{i} {
+        padding-left: ~"@{i}px" !important;
+    }
+    .p@{i} {
+    	padding: ~"@{i}px" !important;
+    }
+    .mt@{i} {
+        margin-top: ~"@{i}px" !important;
+    }
+    .mr@{i} {
+        margin-right: ~"@{i}px" !important;
+    }
+    .mb@{i} {
+        margin-bottom: ~"@{i}px" !important;
+    }
+    .ml@{i} {
+        margin-left: ~"@{i}px" !important;
+    }
+    .m@{i} {
+    	margin: ~"@{i}px" !important;
+    }
+    .helper-loops(@i - 5);
+}
+.helper-loops (@iterations);

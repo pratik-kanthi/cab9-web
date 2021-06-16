@@ -1,0 +1,37 @@
+<div class="expense" ng-class="expense.$Status">
+	<div class="wrapper">
+		<div class="profile">
+			<div class="image" style="background-image: url('{{::formatUrl(expense._ImageUrl, expense.Callsign)}}')"></div>
+		</div>
+		<div class="info">
+			<div class="row">
+				<div class="col-xs-8">
+					<span class="driver">({{::expense.Callsign}}) {{::expense.Firstname}} {{::expense.Surname}}</span>
+					<span class="expense-name">{{::expense.Name}}</span>
+                    <span class="booking">Booking #{{::expense.LocalId}}</span>
+                    <span class="time">Added {{::expense.CreationTime | date:'dd/MM/yyyy HH:mm'}}</span>
+				</div>
+				<div class="col-xs-4 text-right">
+					<span class="amount">
+						{{::expense.DriverAmount | currency}}
+					</span>
+				</div>
+			</div>
+        </div>
+		<div class="actions">
+			<button class="approve" ng-if="expense.$Status != 'Approved'" ng-click="acceptExpense(expense)">
+				<i class="material-icons">done</i>
+			</button>
+			<button class="decline" ng-if="expense.$Status != 'Declined'" ng-click="declineExpense(expense)">
+				<i class="material-icons">close</i>
+			</button>
+			<button class="delete" ng-if="expense.$Status == 'Declined'" ng-click="deleteExpense(expense)">
+				<i class="material-icons">delete</i>
+			</button>
+			<button class="view" ng-click="openEditModal($event, expense)">
+				<i class="material-icons">assignment</i>
+			</button>
+        </div>
+        <br class="clearfix" />
+    </div>
+</div>

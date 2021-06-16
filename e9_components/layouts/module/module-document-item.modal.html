@@ -1,0 +1,49 @@
+<div form-for="document" schema="Document">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+        <h3 class="modal-title">Upload Document</h3>
+    </div>
+    <div class="modal-body">
+        <small>Please fill in the fields below</small>
+        <div class="mt20">
+            <div class="row mb20">
+                <div class="col-sm-6">
+                    <div field-for="Name" display="Identification"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="DocumentTypeId" display="Type" select-from="documentTypes"></div>
+                </div>
+            </div>
+            <div class="row mb20">
+                <div class="col-sm-6">
+                    <div field-for="IssueDate"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="ExpiryDate"></div>
+                </div>
+            </div>
+            <div class="row mb20">
+                <div class="col-md-6">
+                    <div field-for="IssuedBy"></div>
+                </div>
+                <div class="col-md-6">
+                    <div field-for="Active"></div>
+                </div>
+            </div>
+            <div class="row mb20">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label">File</label>
+                        <input type="file" file-picker file="document.file" name="file" ng-required="viewMode=='CREATE'">
+                    </div>
+                </div>
+            </div>
+            <progressbar ng-show="progress !== null" value="progress">Uploading</progressbar>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()" ng-disabled="progress !== null"><i class="material-icons">undo</i>Cancel</button>
+        <button class="btn btn-xs btn-success" ng-click="saveDocument()" ng-show="viewMode=='CREATE'" ng-disabled="formFor.form.$invalid || !document.file || progress !== null"><i class="material-icons">save</i>Save</button>
+        <button class="btn btn-xs btn-success" ng-click="saveDocument()" ng-show="viewMode!='CREATE'" ng-disabled="formFor.form.$invalid "><i class="material-icons">save</i>Save</button>
+    </div>
+</div>

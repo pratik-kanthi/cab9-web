@@ -1,0 +1,48 @@
+<div id="pricing-models" class="driver-payments-model">
+    <h2 class="page-title">
+        <i class="material-icons">assignment</i>
+        Driver Payment Models
+    </h2>
+    <button class="btn btn-success" ng-click="openPaymentModal()" ng-if="PERMISSIONS.test('settings.payments','W')"><i class="material-icons">playlist_add</i>Add New</button>
+    <div class="row pricing-model-wrapper">
+        <div class="col-md-3 col-sm-4 col-xs-12" ng-repeat="pm in paymentModels">
+            <div class="card-wrapper">
+                <div class="pricing-model info-card">
+                    <div class="name">{{pm.Name}}</div>
+                    <div class="description" ng-if="pm.Description">
+                        <span ng-bind="pm.Description | Truncate: 90"></span>
+                    </div>
+                    <div class="description" ng-if="!pm.Description">
+                        <span class="muted">No Description</span>
+                    </div>
+                    <strong class="grey upper t-l" ng-bind="pm.Type" ng-if="pm.Type"></strong>
+                    <div class="row" ng-if="pm.Type == 'Commission'">
+                        <div class="col-xs-6">
+                            <div class="stat">
+                                <div class="label">Commission Rate (Own Car)</div>
+                                <div class="number">{{pm.OwnCarCommision}}%</div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">Commission Rate (Company Car)</div>
+                                <div class="number">{{pm.CompanyCarCommision}}%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="pm.Type == 'Mileage'">
+                        <br />
+                        <strong class="brand-primary">Own Car Mileage</strong>
+                        <div mileage-step value="pm.OwnCarPerMileSteps"></div>
+                        <strong class="brand-primary">Company Car Mileage</strong>
+                        <div mileage-step value="pm.CompanyCarPerMileSteps"></div>
+                    </div>
+                    <div class="actions">
+                        <a ui-sref="root.settings.payments.viewer.details({ Id: pm.Id })" ng-if="PERMISSIONS.test('settings.payments','W')"><i class="material-icons">create</i></a>
+                    </div>
+                    <div class="default-badge" ng-if="pm.Id == COMPANY.DefaultDriverPaymentModelId">
+                        Default
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

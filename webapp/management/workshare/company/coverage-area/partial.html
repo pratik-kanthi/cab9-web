@@ -1,0 +1,47 @@
+<div id="workshare-company-profile">
+    <div class="panel panel-default coverage-areas">
+        <div class="panel-heading">
+            <h3 class="panel-title">Coverage Areas</h3>
+        </div>
+        <div class="panel-body">
+            <p>
+                <span class="grey">
+                    Coverage areas are the locations you have selected to receive workshare bookings. There can be one or multiple areas.
+                </span>
+                <br />
+                <strong class="brand-secondary">Please Note: </strong><span class="grey">Your standard pricing will apply in all the areas below. Any zonal pricing is managed via your pricing model.</span>
+            </p>
+            <div class="mt0 mb15">
+                <button class="btn btn-success btn-xs" ng-show="selectedCoverageAreaMode != 'CREATE' && selectedCoverageAreaMode != 'EDIT'" ng-click="addNewCoverageArea()"><i class="material-icons">playlist_add</i>Add New</button>
+                <p ng-if="selectedCoverageAreaMode == 'CREATE'">
+                    <strong class="brand-secondary">
+                        Please draw a coverage area using your mouse/trackpad. Once created you will be able to modify the area.
+                    </strong>
+                </p>
+
+                <button class="btn btn-success btn-xs" ng-show="selectedCoverageAreaMode == 'EDIT'" ng-click="updateCoverageArea()"><i class="material-icons">save</i>Update
+                </button>
+                <button class="btn btn-warning btn-xs" ng-show="selectedCoverageAreaMode == 'EDIT' || selectedCoverageAreaMode == 'CREATE'" ng-click="cancelEditCoverageArea()"><i class="material-icons">undo</i>Cancel
+                </button>
+            </div>
+            <div class="zones">
+                <div class="zone" ng-mouseover="highlightCoverageArea($index)" ng-mouseleave="removeHighlightCoverageArea($index)" ng-repeat="cvgArea in coverageAreas track by $index"
+                     ng-class="(cvgArea == selectedCoverageArea.rawPath)?'active':''">
+                    Zone-{{$index + 1}}
+                    <div class="actions" ng-if="!selectedCoverageArea">
+                        <a ng-click="startEditCoverageArea($index)"><i class="material-icons">create</i></a>
+                        <a ng-click="deleteCoverageArea($index)"><i class="material-icons">delete</i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="map-div">
+                <ui-gmap-google-map center="map.center" zoom="map.zoom" pan="true" control="map.control" styles="map.styles" options="map.options" bounds="mapBounds">
+                    <ui-gmap-drawing-manager options="drawingManager.options" control="drawingManager.control">
+                    </ui-gmap-drawing-manager>
+                    <ui-gmap-polygons models="configPolygons" path="'path'" editable="'editable'" draggable="'draggable'" stroke="'stroke'" events="'events'" static="false">
+                    </ui-gmap-polygons>
+                </ui-gmap-google-map>
+            </div>
+        </div>
+    </div>
+</div>

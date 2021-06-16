@@ -1,0 +1,185 @@
+<div id="calls">
+    <div class="pl20" ng-if="noTelephonySet == true">
+        <h3 class="section-title">No telephony provider has been configured.</h3>
+        <p class="brand-primary">To setup a Telephony provider please navigate to <a href="" class="brand-primary bold" ui-sref="root.settings.telephony">Settings > Telephony</a></p>
+    </div>
+    <div class="row" ng-if="noTelephonySet == false">
+        <div class="col-sm-4">
+            <div class="filter">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <i class="material-icons">filter_list</i> Filters Calls
+                        </h3>
+                    </div>
+                    <div class="panel-body" style="overflow:visible;">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Start Date</label>
+                                    <div class="form-edit calendar-picker">
+                                        <input class="form-control" type="text" ng-model="filters.$startDate" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.From" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" ng-focus="openCalendar($event, 'From')" />
+                                        <span class="cal-icon"><i class="material-icons">event</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">Start Time</label>
+                                    <div class="form-edit calendar-picker">
+                                        <input class="form-control" type="time" ng-model="filters.$startTime" placeholder="HH:MM" />
+                                        <span class="cal-icon"><i class="material-icons">access_time</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">End Date</label>
+                                    <div class="form-edit calendar-picker">
+                                        <input class="form-control" type="text" ng-model="filters.$endDate" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.To" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" ng-focus="openCalendar($event, 'To')" />
+                                        <span class="cal-icon"><i class="material-icons">event</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label">End Time</label>
+                                    <div class="form-edit calendar-picker">
+                                        <input class="form-control" type="time" ng-model="filters.$endTime" placeholder="HH:MM" />
+                                        <span class="cal-icon"><i class="material-icons">access_time</i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="ClientIdInput">Answered By</label>
+                            <div class="form-edit">
+                                <ui-select class="edit" ng-model="filters.staffId" theme="selectize" name="staffInput" tabindex="1" ng-model-options="{ debounce: 100 }">
+                                    <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                        <div class="select-text" style="font-size: 13px;">
+                                            {{$select.selected.Name}}
+                                        </div>
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="searchStaff($select.search)" refresh-delay="200" repeat="item.Id as item in fetchedStaff">
+                                        <div class="select-text-option">
+                                            <div>{{item.Name}}</div>
+                                        </div>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <a ng-click="filters.staffId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="filters.staffId" class="red">Clear</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Ringing more than (seconds)</label>
+                            <div class="form-edit calendar-picker">
+                                <input ng-model="filters.minDurationRinging" class="form-control" placeholder="Ringing Duration" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Duration more than (seconds)</label>
+                            <div class="form-edit">
+                                <input ng-model="filters.minDurationCall" class="form-control" placeholder="Call Duration" type="text">
+                            </div>
+                        </div>
+                        <div class="mt10 actions">
+                            <button class="btn btn-warning pull-left" ng-click="clearFilters()">
+                                <i class="material-icons">cancel</i>Clear
+                            </button>
+                            <button class="btn btn-success pull-right" ng-click="fetchCalls(1)">
+                                <i class="material-icons">play_arrow</i>Fetch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="calls">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" ng-if="!paging.loading">
+                            <i class="material-icons">call</i> Calls
+                        </h3>
+                        <h3 class="panel-title" ng-if="paging.loading">
+                            <i class="fa fa-circle-o-notch fa-spin"></i> Fetching Calls...
+                        </h3>
+                        <ul class="summary">
+                            <li>
+                                <span class="heading">Calls</span>
+                                <span class="value" ng-show="!paging.loading" ng-bind="stats.Calls"></span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                            <li>
+                                <span class="heading">Avg. Ringing Duration</span>
+                                <span class="value" ng-show="!paging.loading" ng-bind="stats.AverageRingingDuration + 's'"></span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                            <li>
+                                <span class="heading">Avg. Call Duration</span>
+                                <span class="value" ng-show="!paging.loading" ng-bind="stats.AverageCallDuration  + 's'"></span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                            <li>
+                                <span class="heading">Agents</span>
+                                <span class="value" ng-show="!paging.loading" ng-bind="stats.StaffUsed"></span>
+                                <span class="value loading" ng-show="paging.loading"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-body">
+                        <p class="brand-primary t-l bold p20" ng-if="Calls.length == 0 && !paging.loading">
+                            No Calls Found
+                        </p>
+                        <div class="table-responsive mb20 b-none">
+                            <table class="table table-bordered table-condensed table-striped" style="min-width: 780px;" ng-if="Calls.length > 0 && !paging.loading">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 17.5%" class="pl10">Caller/Booking</th>
+                                        <th style="width: 27.5%">Answered By</th>
+                                        <th style="width: 15%">Duration</th>
+                                        <th style="width: 17.5%">Timestamp</th>
+                                        <th style="width: 32.5%">Listen</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-if="Calls.length == 0">
+                                    <tr>
+                                        <td colspan="7">
+                                            No Calls Found.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody ng-if="Calls.length > 0">
+                                    <tr ng-repeat="item in Calls track by item.Id" ng-class="::item.status">
+                                        <td class="pl10">
+                                            <a class="brand-secondary" ui-sref="root.bookings.search({ localId: item.Booking.LocalId })" class="brand-primary" target="_blank"><strong>{{item.Booking.LocalId}}</strong></a>
+                                            <span class="brand-primary" ng-bind="item.Caller"></span>
+                                        </td>
+                                        <td>
+                                            <strong class="brand-primary">{{item.Staff.Firstname}} {{item.Staff.Surname}}</strong><br />{{item.AnsweredTime | date:'dd/MM/yyyy HH:mm:ss'}}
+                                        </td>
+                                        <td>
+                                            <strong class="brand-primary">Ringing:</strong> {{item.$RingingDuration}}s<br />
+                                            <strong class="brand-primary">Duration:</strong> {{item.$CallDuration}}s
+                                        </td>
+                                        <td>
+                                            <strong class="brand-primary">Started:</strong> {{item.StartTime | date:'HH:mm:ss'}}<br />
+                                            <strong class="brand-primary">Ended:</strong> {{item.EndTime | date:'HH:mm:ss'}}
+                                        </td>
+                                        <td>
+                                            <a href="{{item.RecordingUrl}}" target="_blank"><i class="material-icons mr10">graphic_eq</i><b class="t-l">Listen</b></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-if="Calls.length>0" class="pr20">
+                            <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm pull-right mt0" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="fetchCalls(paging.currentPage)"></pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

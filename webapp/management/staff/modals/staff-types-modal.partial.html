@@ -1,0 +1,55 @@
+<div class="modal-header">
+    <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">close</i></button>
+    <h3 class="modal-title">Staff Types</h3>
+</div>
+<div class="modal-body">
+    <div class="mb20">
+        <a class="btn btn-xs btn-success" ng-click="createNewStaffType()"><i class="material-icons">person_add</i>New Staff Type</a>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th style="width:30%">Name</th>
+                <th style="width:45%">Description</th>
+                <th style="width:25%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="newStaffType">
+                <td>
+                    <input type="text" class="form-control" ng-model="newStaffType.Name" placeholder="Name" />
+                </td>
+                <td>
+                    <textarea class="form-control" ng-model="newStaffType.Description" placeholder="Description" ></textarea>
+                </td>
+                <td>
+                    <a class="btn btn-xs btn-success" ng-click="saveStaffType()"><i class="material-icons">save</i>Save</a>
+                    <a class="btn btn-xs btn-warning" ng-click="cancelSave()"><i class="material-icons">undo</i>Cancel</a>
+                </td>
+            </tr>
+            <tr ng-repeat="st in staffTypes">
+                <td>
+                    <span ng-bind="st.Name" ng-show="st!=selected"></span>
+                    <input type="text" class="form-control" ng-model="selected.Name" ng-show="st==selected" placeholder="Name" />
+                </td>
+                <td>
+                    <span ng-bind="st.Description" ng-show="st!=selected"></span>
+                    <textarea class="form-control" ng-model="selected.Description" ng-show="st==selected" placeholder="Description" ></textarea>
+                </td>
+                <td class="text-right">
+                    <div ng-show="st!=selected">
+                        <a class="btn btn-xs btn-warning" ng-click="selectStaffType(st)"><i class="material-icons">create</i>Edit</a>
+                        <a class="btn btn-xs btn-danger" ng-click="deleteStaffType(st)"><i class="material-icons">delete</i>Delete</a>
+                    </div>
+                    <div ng-show="st==selected">
+                        <a class="btn btn-xs btn-success" ng-click="updateStaffType(st)"><i class="material-icons">save</i>Save</a>
+                        <a class="btn btn-xs btn-warning" ng-click="cancelUpdate(st)"><i class="material-icons">undo</i>Cancel</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+</div>

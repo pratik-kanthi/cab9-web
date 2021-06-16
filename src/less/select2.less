@@ -1,0 +1,192 @@
+.ui-select-choices {
+    border: 1px solid @light-grey  !important;
+    margin-top: 0px;
+}
+
+.ui-select {
+    width: 100%;
+}
+
+.ui-select-choices-group-label {
+    font-size: 14px;
+    background-color: @brand-primary  !important;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.ui-select-container {
+    width: 100%;
+
+    ul.select2-choices {
+        border: 0;
+        padding: 0;
+        .border-radius(4px);
+        max-height: 65px;
+        overflow: auto;
+        background: #fff;
+        border: 1px solid #d9d9d9;
+        .box-shadow(none);
+        -webkit-appearance: none;
+        color: #000;
+
+        input[type="text"] {
+            height: 30px;
+            line-height: 20px;
+            margin: 0;
+            font-size: 13px;
+            font-family: @font-family-base;
+            .box-shadow(none);
+            -webkit-appearance: none;
+        }
+
+        .ui-select-match {
+            li.ui-select-match-item {
+                width: auto;
+                border: 0;
+                font-size: 14px;
+                background: #dbe9f3;
+                .box-shadow(none);
+
+                a {
+                    font-size: 14px;
+                }
+            }
+        }
+
+        .select2-search-choice-close {
+            top: 4px;
+            left:4px;
+            height: 12px;
+            border-radius: 50%;
+            background-image: none !important;
+
+            &:after {
+                font-family: 'Material Icons';
+                content: 'close';
+                border-radius: 50%;
+                background-color: #fff;
+                font-size: 10px;
+            }
+        }
+
+        .ui-select-match-item {
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 14px;
+            background-color: @brand-primary  !important;
+            ;
+            color: #fff;
+        }
+    }
+
+    .select2-drop {
+        background: #fff;
+        border: 0;
+        margin-top: 4px;
+        .border-radius(4px);
+        overflow: hidden;
+
+        // .box-shadow(none);
+        .select2-results {
+            margin: 0;
+        }
+
+        .ui-select-choices {
+            padding: 0;
+            border: 0 !important;
+
+            .select2-result-single {
+                li {
+                    .select2-result-label {
+                        font-family: inherit;
+                        font-size: 13px;
+                        line-height: 18px;
+                        padding: 0;
+                    }
+
+                    &.select2-highlighted {
+                        background-color: #eee;
+                        color: #455674;
+                    }
+                }
+            }
+
+            .ui-select-box {
+                width: 100%;
+
+                .option-details {
+                    width: 100%;
+
+                    strong {
+                        display: block !important;
+                        .text-ellipsis();
+                        font-size: 12px;
+                        line-height: 16px;
+                    }
+
+                    small {
+                        display: block;
+                        line-height: 16px;
+                    }
+                }
+            }
+
+            .ui-select-choices-row {
+                border-top: 1px solid #ddd;
+                border-left: 1px solid #ddd;
+                border-right: 1px solid #ddd;
+                padding: 4px 8px;
+
+                &:first-child {
+                    .border-radius(4px 4px 0 0);
+                }
+
+                &.active {
+                    background-color: #eee;
+                }
+            }
+        }
+    }
+}
+
+.select2-search-choice-close {
+    top: 4px;
+    left: 4px;
+    height: 12px;
+    border-radius: 50%;
+    background-image: none !important;
+
+    &:after {
+        font-family: 'Material Icons';
+        content: 'close';
+        border-radius: 50%;
+        background-color: #fff;
+        font-size: 10px;
+    }
+}
+
+.select2-container-multi.select2-container-active .select2-choices {
+    .box-shadow(none);
+    width: auto;
+}
+
+.ui-select-container {
+    .edit-modal {
+        display: none;
+        position: absolute;
+        right: 16px;
+        top: 4px;
+
+        i {
+            color: @grey;
+            font-size: 18px;
+        }
+    }
+
+    &:hover {
+        .edit-modal {
+            display: block;
+            .animate(0.5, slideInRight);
+        }
+    }
+}

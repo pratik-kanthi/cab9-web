@@ -1,0 +1,55 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> Dispatch Settings</h3>
+    </div>
+    <div class="panel-body">
+        <div form-for="company" schema="Company" mode="{{viewMode}}">
+            <div class="mt10 mb10">
+                <button class="btn btn-warning" ng-show="viewMode == 'VIEW'" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.company','W')"><i class="material-icons">create</i>Edit</button>
+                <button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+                <button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+            </div>
+            <h3 class="section-title">Dispatch Center</h3>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div ng-show="viewMode === 'EDIT'">
+                        <b>Search Location</b>
+                        <br />
+                        <address-populate object="company" prefix="Dispatch"></address-populate>
+                        <br />
+                    </div>
+                    <div field-for="DispatchLatitude" display="Latitude"></div>
+                    <div field-for="DispatchLongitude" display="Longitude"></div>
+                    <div field-for="DispatchZoom" display="Zoom"></div>
+                    <h3 class="section-title">Routing Config</h3>
+                    <div class="row mt15">
+                        <div class="col-sm-6">
+                            <label class="check-container">Shortest
+                                <input type="radio" ng-model="company.RoutingOption" value="SHORTEST" ng-disabled="viewMode == 'VIEW'"/>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="check-container">Fastest
+                                <input type="radio" ng-model="company.RoutingOption" value="FASTEST" ng-disabled="viewMode == 'VIEW'"/>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <ui-gmap-google-map center='map.center' zoom='map.zoom' pan="true" style="width:100%;height:375px;overflow:hidden;">
+                        <ui-gmap-marker idKey='2' coords='markerOptions.coords' options="markerOptions"></ui-gmap-marker>
+                    </ui-gmap-google-map>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <div field-for="OfferTimeout"></div>
+                    <div field-for="AutomatedWaitTimeCalculation" display="Waiting Time Auto Calculation"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

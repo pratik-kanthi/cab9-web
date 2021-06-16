@@ -1,0 +1,55 @@
+<div class="modal-header">
+    <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+    <h3 class="modal-title">Vehicle Classes</h3>
+</div>
+<div class="modal-body">
+    <div class="mb20">
+        <a class="btn btn-xs btn-success" ng-click="createNewVehicleClass()" ng-if="PERMISSIONS.test('vehicles', 'W')"><i class="material-icons">person_add</i>New Vehicle Class</a>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th style="width:30%">Name</th>
+                <th style="width:40%">Description</th>
+                <th style="width:25%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="newVehicleClass">
+                <td>
+                    <input type="text" class="form-control" ng-model="newVehicleClass.Name" placeholder="Name" />
+                </td>
+                <td>
+                    <textarea class="form-control" ng-model="newVehicleClass.Description" placeholder="Description"></textarea>
+                </td>
+                <td>
+                    <a class="btn btn-xs btn-success" ng-click="saveVehicleClass()"><i class="material-icons">save</i>Save</a>
+                    <a class="btn btn-xs btn-warning" ng-click="cancelSave()"><i class="material-icons">undo</i>Cancel</a>
+                </td>
+            </tr>
+            <tr ng-repeat="dt in vehicleClasses">
+                <td>
+                    <span ng-bind="dt.Name" ng-show="dt!=selected"></span>
+                    <input type="text" class="form-control" ng-model="selected.Name" ng-show="dt==selected" placeholder="Name" />
+                </td>
+                <td>
+                    <span ng-bind="dt.Description" ng-show="dt!=selected"></span>
+                    <textarea class="form-control" ng-model="selected.Description" ng-show="dt==selected" placeholder="Description"></textarea>
+                </td>
+                <td class="text-right">
+                    <div ng-show="dt!=selected">
+                        <a class="btn btn-xs btn-warning" ng-click="selectVehicleClass(dt)" ng-if="PERMISSIONS.test('vehicles', 'W')"><i class="material-icons">create</i>Edit</a>
+                        <a class="btn btn-xs btn-danger" ng-click="deleteVehicleClass(dt)" ng-if="PERMISSIONS.test('vehicles', 'D')"><i class="material-icons">delete</i>Delete</a>
+                    </div>
+                    <div ng-show="dt==selected">
+                        <a class="btn btn-xs btn-success" ng-click="updateVehicleClass(dt)"><i class="material-icons">save</i>Save</a>
+                        <a class="btn btn-xs btn-warning" ng-click="cancelUpdate(dt)"><i class="material-icons">undo</i>Cancel</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+</div>

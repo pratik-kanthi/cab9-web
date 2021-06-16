@@ -1,0 +1,37 @@
+<div class="modal-header">
+	<h3 class="modal-title">Filter Bookings</h3>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label class="control-label" for="FromDateInput">From</label>
+				<div class="form-edit">
+					<div class="input-group">
+						<input class="form-control" type="text" name="FromDateInput" ng-model="filterOptions.date.from" datepicker-popup="shortDate" is-open="datePickers.from" show-weeks="false" show-button-bar="false" />
+						<span class="input-group-btn">
+                        	<button type="button" class="btn btn-default" ng-click="openDatePicker($event, 'from')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    	</span>
+                    </div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="form-group">
+				<label class="control-label" for="ToDateInput">To</label>
+				<div class="form-edit">
+					<div class="input-group">
+						<input class="form-control" type="text" name="ToDateInput" ng-model="filterOptions.date.to" datepicker-popup="shortDate" is-open="datePickers.to" show-weeks="false" show-button-bar="false" />
+						<span class="input-group-btn">
+                        	<button type="button" class="btn btn-default" ng-click="openDatePicker($event, 'to')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    	</span>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+	<button class="btn btn-xs btn-success pull-right" ng-click="confirmFilters()"><i class="material-icons">date_range</i>Filter</button>
+</div>

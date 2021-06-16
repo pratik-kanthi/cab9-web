@@ -1,0 +1,117 @@
+.bid-driver {
+
+    .bid-drivers {
+        margin-top: 10px;
+        //max-width: 480px;
+
+        .header {
+            background: @brand-primary;
+            color: #fff;
+            line-height: 32px;
+            padding: 0px 12px;
+            margin-bottom: 4px;
+        }
+
+        .body {
+            .step {
+                //width: 99%;
+                position: relative;
+                background-color: @lighter-grey;
+                padding: 0px 12px;
+                margin-bottom: 4px;
+                line-height: 32px;
+                font-weight: 700;
+                color: @brand-primary;
+
+                .checkbox {
+                    width: 12px !important;
+                    height: 12px !important;
+
+                    .radio {
+                        margin-top: 4px !important;
+                        margin-bottom: 4px !important;
+                    }
+
+                    label {
+                        &:after {
+                            top: 2px !important;
+                            left: 2px !important;
+                            content: '';
+                            width: 8px;
+                            height: 5px;
+                        }
+                    }
+                }
+
+                .box-shadow(0);
+
+                input.form-control {
+                    margin: 0;
+                    height: 32px;
+                    text-align: right;
+                    .box-shadow(none);
+                    font-weight: 400;
+                    border: 1px solid #ddd;
+                    max-width: 120px;
+                    float: right;
+                    background: #fff;
+                    outline: 0 !important;
+
+                    &:focus {
+                        outline: 0;
+                        .box-shadow(none);
+                    }
+                }
+
+                .remove {
+                    z-index: 1000;
+                    position: absolute;
+                    width: 18px;
+                    height: 18px;
+                    .border-radius(50%);
+                    background-color: @red;
+                    top: 12px;
+                    right: -8px;
+                    line-height: 22px !important;
+                    text-align: center;
+
+                    i {
+                        color: #fff;
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            .no-steps {
+                background-color: @lighter-grey;
+                padding: 0px 12px;
+                margin-bottom: 10px;
+                line-height: 32px;
+                font-weight: 700;
+                color: @brand-primary;
+                text-align: center;
+            }
+        }
+    }
+}
+
+.scroll {
+    margin-bottom: 16px;
+    overflow: scroll;
+    max-height: 350px;
+    overflow-x: hidden;
+}
+
+.wrap {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.fetching {
+    background-color: rgba(100, 100, 100, 0.1);
+    padding: 16px;
+    color: #455674;
+    font-weight: 800;
+    text-align: center;
+}

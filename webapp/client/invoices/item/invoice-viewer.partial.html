@@ -1,0 +1,481 @@
+﻿<div class="module" id="invoice-edit">
+    <h2 class="page-title">Invoice Details</h2>
+    <div class="row">
+        <div class="col-sm-6">
+        </div>
+        <div class="col-sm-6 text-right" ng-if="displayMode === 'VIEW'">
+            <button class="btn btn-xs btn-success" ng-click="logPayments()"> <i class="material-icons">monetization_on</i> Payments</button>
+            <button class="btn btn-xs btn-info" ng-click="exportReceipt()"> <i class="material-icons">insert_drive_file</i> Export PDF</button>
+            <button class="btn btn-xs btn-info" ng-click="exportReceiptExcel()"> <i class="material-icons">insert_drive_file</i> Export Excel</button>
+            <button class="btn btn-xs btn-info" ng-click="emailTo()"> <i class="material-icons">mail</i> Email</button>
+        </div>
+    </div>
+    <div class="mt30">
+        <div form-for="invoice" schema="Invoice" mode="{{displayMode}}" ng-if="displayMode === 'VIEW'" class="viewer">
+            <div class="invoice">
+                <div class="row" id="company-information">
+                    <div class="col-sm-2">
+                        <card class="module-item-card" allow-click="false" show-score="false" show-title="false" show-subtitle="false"></card>
+                    </div>
+                    <div class="col-sm-3">
+                        <h4 ng-bind="COMPANY.Name" class="grey thin"></h4>
+                        <p ng-bind-html="COMPANY._FullAddress"></p>
+                    </div>
+                    <div class="col-sm-7 text-right">
+                        <h2 class="grey thin">INVOICE</h2>
+                    </div>
+                </div>
+                <div class="row mt50">
+                    <div class="col-md-6">
+                        <small class="text-muted">For the attention of:</small>
+                        <br />
+                        <span class="bold" ng-bind-html="invoice.Client.Name"></span>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <p ng-bind-html="invoice.Client._FullAddress"></p>
+                            </div>
+                        </div>
+                        <span>P: {{invoice.Client.Mobile}}</span>
+                        <br />
+                        <span>E: {{invoice.Client.Email}}</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <div class="mb20 invoice-status">
+                            <span class="upper t-xxl {{invoice.Status}}" ng-bind="invoice.Status"></span>
+                        </div>
+                        <div class="mb20">
+                            <strong class="upper brand-primary">Invoice Ref: </strong>
+                            <br />{{invoice.Reference}}
+                        </div>
+                        <div class="mb20">
+                            <strong class="upper brand-primary">Created On: </strong>
+                            <br />{{invoice.CreationTime | companyDate:'DD/MM/YYYY'}}
+                        </div>
+                        <div class="mb20">
+                            <strong class="upper brand-primary">Due Date: </strong>
+                            <br />{{invoice.DueDate | companyDate:'DD/MM/YYYY'}}
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="invoice.InvoiceDetails.length > 0">
+                    <span class="bold brand-primary upper">Extra Items</span>
+                    <div class="table-responsive mt20">
+                        <table class="table table-bordered table-hover table-condensed  bookings-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:15%">Item</th>
+                                    <th style="width:45%">Description</th>
+                                    <th style="width:10%" class="text-right">Price</th>
+                                    <th style="width:10%" class="text-right">Qty</th>
+                                    <th style="width:10%" class="text-right">Tax</th>
+                                    <th style="width:10%" class="text-right">Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in invoice.InvoiceDetails | orderBy:'CreationTime'">
+                                    <td>{{item.ItemName}}</td>
+                                    <td>{{item.ItemDescription}}</td>
+                                    <td class="text-right">{{item.UnitPrice | Format}}</td>
+                                    <td class="text-right">{{item.Quantity}}</td>
+                                    <td class="text-right">{{(item.Tax) ? ((item.Tax._TaxAmount * item.Quantity * item.UnitPrice) | Format) : (0 | Format)}}</td>
+                                    <td class="text-right">{{calculateExtrasCost(item) | Format}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="bold brand-primary upper">Invoiced Bookings</span>
+                        <div class="table-responsive mt20">
+                            <table class="table table-bordered table-hover table-condensed bookings-table payments-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:15%">Time</th>
+                                        <th style="width:45%">Description</th>
+                                        <th style="width:10%" class="text-right">Invoice Fare</th>
+                                        <th style="width:10%" class="text-right">Waiting</th>
+                                        <th style="width:10%" class="text-right">Extras</th>
+                                        <th style="width:10%" class="text-right">Adjustments</th>
+                                        <th style="width:10%" class="text-right">Tax</th>
+                                        <th style="width:10%" class="text-right">Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="day in days">
+                                    <tr ng-show="invoice.InvoiceGroupField">
+                                        <td colspan="8" class="date-group">
+                                            {{day.date}}
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="booking in day.bookings | orderBy:'BookedDateTime'" ng-init="booking.Price = 0" ng-class="booking.BookingStatus">
+                                        <td>
+                                            <strong>#{{booking.LocalId}}</strong>
+                                            <br /> {{booking.BookedDateTime | companyDate:'DD/MM/YYYY HH:mm' }}
+                                            <br /> <strong class="upper status">{{booking.BookingStatus}}</strong>
+                                        </td>
+                                        <td style="overflow:hidden;">
+                                            <strong>Booker: </strong>{{booking.ClientStaff._Fullname}}
+                                            <br />
+                                            <strong>Passenger: </strong>{{booking.LeadPassenger._Fullname}}
+                                            <br />
+                                            <div ng-repeat="stop in booking.BookingStops">
+                                                <strong>{{$first ? 'From:' : ($last ? 'To:' : 'Via') }} </strong>{{stop.StopSummary}}
+                                            </div>
+                                            <strong>Tariff: </strong>{{booking.VehicleType.Name}}
+                                            <div ng-repeat="cr in booking.BookingValidations"><strong>{{cr.ClientReference.ReferenceName}} </strong>{{cr.Value}}</div>
+                                            <div ng-repeat="exp in booking.BookingExpense">
+                                                
+                                                <strong>{{exp.BookingExpenseType.Name}}: </strong>{{exp.Amount | Format}}
+                                            </div>
+
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{booking.InvoiceCost | Format}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{booking.WaitingCost | Format}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{booking.ExtrasCost | Format}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{booking.AdjustmentTotal | Format}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            {{(booking.InvoiceCost + booking.WaitingCost + booking.ExtrasCost + booking.AdjustmentTotal - booking.Discount) * (booking.Tax._TaxAmount) | Format}}
+                                        </td>
+                                        <td class="text-right">
+                                            {{(booking.InvoiceCost + booking.WaitingCost + booking.ExtrasCost + booking.AdjustmentTotal - booking.Discount) * (1 + booking.Tax._TaxAmount) | Format}}
+                                        </td>
+                                    </tr>
+                                    <tr ng-show="invoice.InvoiceGroupField">
+                                        <td colspan="2" class="date-group">
+                                            {{day.date}} Totals
+                                        </td>
+                                        <td class="text-right date-group">
+                                            {{day.InvoiceCost | Format}}
+                                        </td>
+                                        <td class="text-right date-group">
+                                            {{day.WaitingCost | Format}}
+                                        </td>
+                                        <td class="text-right date-group">
+                                            {{day.ExtrasCost | Format}}
+                                        </td>
+                                        <td class="text-right date-group">
+                                            {{day.AdjustmentTotal | Format}}
+                                        </td>
+                                        <td class="text-right date-group">
+                                            {{day.TaxAmount | Format}}
+                                        </td>
+                                        <td class="text-right date-group">
+                                            {{day.TotalAmount | Format}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <!--<tr>
+                                        <td colspan="2" class="text-right">
+                                            <strong>Sub Totals</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{(JourneyTotal() | Format)}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{(WaitingTotal() | Format)}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{(BExtrasTotal() | Format)}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{(BAdjustmentsTotal() | Format)}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{BTaxesTotal() | Format}}</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{BookingsTotal() | Format}}</span>
+                                        </td>
+                                    </tr>-->
+                                    <tr>
+                                        <td colspan="7" class="text-right">
+                                            <strong>Booking
+                                            <strong>Bookings SubTotal </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{invoice.BookingsSubTotal + invoice.ExtrasSubTotal + invoice.WaitingSubTotal | Format}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" class="text-right">
+                                            <strong>Bookings Tax Amount </strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span>{{(invoice.BookingsTaxAmount + invoice.ExtrasTaxAmount + invoice.WaitingTaxAmount) | Format}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" class="text-right">
+                                            <strong class="grey">Bookings Total (inc Tax)</strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <strong class="grey">{{invoice.BookingsSubTotal + invoice.ExtrasSubTotal + invoice.WaitingSubTotal + invoice.BookingsTaxAmount + invoice.ExtrasTaxAmount + invoice.WaitingTaxAmount  | Format}}</strong>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div ng-show="invoice.InvoiceDetails.length > 0">
+                    <span class="bold brand-primary upper">Extra Items</span>
+                    <div class="table-responsive mt20">
+                        <table class="table table-bordered table-hover table-condensed  bookings-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:15%">Item</th>
+                                    <th style="width:45%">Description</th>
+                                    <th style="width:10%" class="text-right">Price</th>
+                                    <th style="width:10%" class="text-right">Qty</th>
+                                    <th style="width:10%" class="text-right">Tax</th>
+                                    <th style="width:10%" class="text-right">Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in invoice.InvoiceDetails | orderBy:'CreationTime'">
+                                    <td>{{item.ItemName}}</td>
+                                    <td>{{item.ItemDescription}}</td>
+                                    <td class="text-right">{{item.UnitPrice | Format}}</td>
+                                    <td class="text-right">{{item.Quantity}}</td>
+                                    <td class="text-right">{{(item.Tax) ? ((item.Tax._TaxAmount * item.Quantity * item.UnitPrice) | Format) : (0 | Format)}}</td>
+                                    <td class="text-right">{{calculateExtrasCost(item) | Format}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="text-right">
+                                        <strong>Extras SubTotal </strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span>{{(invoice.ExtrasSubTotal | Format)}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right">
+                                        <strong>Extras Tax Amount</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span>{{(invoice.ExtrasTaxAmount | Format)}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right">
+                                        <h6 class="grey">Extras Total (inc Tax)</h6>
+                                    </td>
+                                    <td class="text-right">
+                                        <h6 class="grey">{{invoice.ExtrasSubTotal + invoice.ExtrasTaxAmount | Format}}</h6>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div ng-show="invoice.Adjustments.length > 0">
+                    <span class="bold brand-primary upper">Adjustments</span>
+                    <div class="table-responsive mt20">
+                        <table class="table table-bordered table-hover table-condensed bookings-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Reference</th>
+                                    <th>Source</th>
+                                    <th class="text-right" style="width:10%">Amount</th>
+                                    <th class="text-right" style="width:10%">Tax</th>
+                                    <th class="text-right" style="width:10%">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" class="date-group">
+                                        Deductions
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="adjustment in invoice.Adjustments | filter:{'Type':'Debit'} | orderBy:'CreationTime'" ng-hide="adjustment.BookingId">
+                                    <td><span ng-bind="adjustment.Type"></span></td>
+                                    <td><span ng-bind="(adjustment.ClientAdjustmentId) ? adjustment.ClientAdjustment.Reference : adjustment.ClientPricingModelAdjustment.Reference"></span></td>
+                                    <td><span ng-bind="(adjustment.ClientAdjustmentId) ? 'Client' : 'Pricing Model'"></span></td>
+                                    <td class="text-right"><span ng-bind="adjustment.Amount | Format"></span></td>
+                                    <td class="text-right"><span ng-bind="adjustment.TaxAmount | Format"></span></td>
+                                    <td class="text-right">{{adjustment.Amount + adjustment.TaxAmount | Format}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="date-group">
+                                        Credits
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="adjustment in invoice.Adjustments | filter:{'Type':'Credit'} | orderBy:'CreationTime'" ng-hide="adjustment.BookingId">
+                                    <td><span ng-bind="adjustment.Type"></span></td>
+                                    <td><span ng-bind="(adjustment.ClientAdjustmentId) ? adjustment.ClientAdjustment.Reference : adjustment.ClientPricingModelAdjustment.Reference"></span></td>
+                                    <td><span ng-bind="(adjustment.ClientAdjustmentId) ? 'Client' : 'Pricing Model'"></span></td>
+                                    <td class="text-right"><span ng-bind="adjustment.Amount | Format"></span></td>
+                                    <td class="text-right"><span ng-bind="adjustment.TaxAmount | Format"></span></td>
+                                    <td class="text-right">-{{adjustment.Amount + adjustment.TaxAmount | Format}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="text-right">
+                                        <strong>Adjustments SubTotal </strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span>{{(invoice.AdjustmentsSubTotal | Format)}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right">
+                                        <strong>Adjustments Tax Amount</strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <span>{{(invoice.AdjustmentsTaxAmount | Format)}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right">
+                                        <h6 class="grey">Adjustments Total (inc Tax)</h6>
+                                    </td>
+                                    <td class="text-right">
+                                        <h6 class="grey">{{invoice.AdjustmentsSubTotal + invoice.AdjustmentsTaxAmount | Format}}</h6>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <span class="bold brand-primary upper">Totals</span>
+                    <div class="row">
+                        <div class="col-md-12" ng-show="invoice.InvoiceGroupField">
+                            <table class="table table-bordered table-hover table-condensed bookings-table">
+                                <thead>
+                                    <tr>
+                                        <th>{{invoice.InvoiceGroupField || 'Date'}}</th>
+                                        <th class="text-right" style="width:10%">Bookings</th>
+                                        <th class="text-right" style="width:10%">Amount</th>
+                                        <th class="text-right" style="width:10%">Adjustments</th>
+                                        <th class="text-right" style="width:10%">Discount</th>
+                                        <th class="text-right" style="width:10%">Tax</th>
+                                        <th class="text-right" style="width:10%">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody ng-repeat="day in days">
+                                    <tr>
+                                        <td class="">
+                                            {{day.date}}
+                                        </td>
+                                        <td class="text-right">
+                                            {{day.bookings.length}}
+                                        </td>
+                                        <td class="text-right ">
+                                            {{day.InvoiceCost | Format}}
+                                        </td>
+                                        <td class="text-right ">
+                                            {{day.AdjustmentTotal | Format}}
+                                        </td>
+                                        <td class="text-right ">
+                                            {{day.Discount | Format}}
+                                        </td>
+                                        <td class="text-right ">
+                                            {{day.TaxAmount| Format}}
+                                        </td>
+                                        <td class="text-right ">
+                                            {{day.TotalAmount | Format}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="col-md-12">
+                            <div class="table-responsive mt20">
+                                <table class="table table-bordered table-hover table-condensed bookings-table">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Bookings Total</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{(invoice.BookingsSubTotal + invoice.ExtrasSubTotal + invoice.WaitingSubTotal) | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show="invoice.InvoiceDetails.length > 0">
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Extras Total</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{invoice.DetailsSubTotal | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show="invoice.Adjustments.length > 0">
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Adjustments Total</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{invoice.AdjustmentsSubTotal | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Total Tax</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{invoice.TaxAmount | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Total (inc Tax)</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{invoice.TotalAmount | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Paid</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{calculatePaidAmount() | Format}}</h6>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:90%" class="text-right">
+                                                <h6 class="grey">Outstanding Amount</h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <h6 class="grey">{{invoice.TotalAmount - calculatePaidAmount() | Format}}</h6>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="bold brand-primary upper">Notes</span>
+                        <p ng-bind="invoice.Notes" ng-show="invoice.Notes"></p>
+                        <p class="text-muted" ng-show="!invoice.Notes">No Notes Added</p>
+                    </div>
+                    <div class="col-md-6">
+                        <span class="bold brand-primary upper">Payment Instructions</span>
+                        <p ng-bind="invoice.PaymentInstructions" ng-show="invoice.PaymentInstructions"></p>
+                        <p class="text-muted" ng-show="!invoice.PaymentInstructions">No Payment Instructions Added</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="grid-item stats-panel passengers">
+    <div class="wrapper">
+        <div class="panel panel-default" promise-shadow promise="deferred.promise">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span><i class="material-icons">people_outline</i></span>Top 5 Passengers</h3>
+            </div>
+            <div class="panel-body no-padding pb0">
+                <div class="best-entity" ng-if="bestPassenger">
+                    <div class="details">
+                        <strong class="best-label">Most Bookings</strong>
+                        <strong class="best-name">{{bestPassenger.Name}}</strong>
+                        <strong>{{bestPassenger.Bookings}}</strong>
+                    </div>
+                    <div class="profile" style="background-image: url('{{bestPassenger.ImageUrl}}')"></div>
+                    <!-- <img holder ng-src="{{bestPassenger.ImageUrl}}" alt="{{bestPassenger.Name}}" /> -->
+                    <div class="image-name">
+                        <!--   <div class="row">
+                            <div class="col-xs-3 text-center">
+                                <img holder ng-src="{{bestPassenger.ImageUrl}}" alt="{{bestPassenger.Name}}" class="rounded50" />
+                            </div>
+                            <div class="col-xs-9">
+                                <strong class="best-label">Most Bookings</strong>
+                                <strong class="best-name">{{bestPassenger.Name}}</strong>
+                                <strong>{{bestPassenger.Bookings}} Booking<span ng-show="bestPassenger.Bookings > 1">s</span></strong>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="best-chart">
+                        <div id="passenger-sparkline"></div>
+                    </div>
+                </div>
+                <table class="table table-condensed table-hover mt0 mb0" border="0" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th style="width:70%">Passengers</th>
+                            <th class="text-right" style="width:30%">Bookings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in passengers | orderBy:'-Bookings' | limitTo:5">
+                            <td>
+                                <a ui-sref="root.passengers.viewer.dashboard({ Id: item.LeadPassengerId })" class="brand-primary">
+                                    <strong>{{item.Name}}</strong>
+                                </a>
+                            </td>
+                            <td class="text-right bold">{{item.Bookings}}</td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-if="passengers.length==0">
+                        <tr>
+                            <td colspan="2" class="text-center" style="height:80px;">
+                                No Stats for the time period.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

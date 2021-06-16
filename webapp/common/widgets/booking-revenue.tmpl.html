@@ -1,0 +1,26 @@
+<div class="grid-item number-stats-panel" promise-shadow promise="deferred.promise">
+    <div class="wrapper">
+        <div class="number-stats">
+            <div class="stats-wrapper">
+                <div class="icon brand-secondary-bg">
+                    <i class="material-icons">assignment</i>
+                </div>
+                <div class="data">
+                    <small>Bookings Count</small>
+                    <strong class="brand-secondary" ng-bind="totalBookings | number:0"></strong>
+                </div>
+            </div>
+        </div>
+        <div class="number-stats">
+            <div class="stats-wrapper">
+                <div class="icon green-bg">
+                    <i class="material-icons">account_balance</i>
+                </div>
+                <div class="data">
+                    <small>Bookings Value</small>
+                    <strong class="green" ng-bind="'£' + (totalAmount | AbbrValue)"></strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

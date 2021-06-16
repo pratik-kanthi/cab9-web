@@ -1,0 +1,62 @@
+﻿<div form-for="pickUpPoint" schema="KnownPickupPoint" mode="{{displayMode}}">
+    <div class="modal-header">
+        <h3 class="modal-title">Pick Up Location <span class="pull-right" ng-click="$dismiss()"><i class="material-icons cancel">cancel</i></span></h3>
+    </div>
+    <div class="modal-body">
+        <div class="module mt16">
+            <div class="row">
+                <div class="col-sm-7">
+                    <div id="map-div" style="height:250px;" class="mb16">
+                    </div>
+                    <div id="pano-div" style="height:275px;">
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <form>
+                        <h3 class="section-title mt0">Add Details</h3>
+                        <p>Please use the available map tools on the left to find your pickup point. You can also add details at the bottom.</p>
+                        <div field-for="Name"></div>
+                        <div field-for="Description" textarea="4"></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div field-for="Latitude" required="true"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div field-for="Longitude" required="true"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div field-for="Bearing" required="true"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div field-for="Pitch" required="true"></div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="displayMode!='VIEW'">
+                            <label class="control-label">Custom Image</label>
+                            <input type="file" file-picker file="pickUpPoint.$image" name="file" ng-required="displayMode=='CREATE'">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer ">
+        <div ng-show="displayMode=='CREATE' ">
+            <button class="btn btn-xs btn-warning pull-left " ng-click="$dismiss() ">
+                <i class="material-icons ">undo</i>Cancel
+            </button>
+            <button class="btn btn-xs btn-success " ng-click="save() " ng-disabled="formFor.form.$invalid "><i class="material-icons ">save</i>Save</button>
+        </div>
+        <div ng-show="displayMode=='EDIT' ">
+            <button class="btn btn-xs btn-warning pull-left " ng-click="cancelEdit() ">
+                <i class="material-icons ">undo</i>Cancel
+            </button>
+            <a ng-click="removePoint()" class="btn btn-xs btn-danger pull-left mb8">
+                <i class="material-icons">delete_forever</i>Remove
+            </a>
+            <button class="btn btn-xs btn-success " ng-click="save() " ng-disabled="formFor.form.$invalid "><i class="material-icons ">save</i>Save</button>
+        </div>
+    </div>
+</div>

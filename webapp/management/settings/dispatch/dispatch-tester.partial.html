@@ -1,0 +1,328 @@
+﻿<div class="row" id="dispatch-settings">
+    <div class="col-sm-6">
+        <!--<div class="panel panel-default settings">
+            <div class="panel-heading">
+                <h3 class="panel-title">Settings</h3>
+                <div class="panel-options">
+                    <i class="material-icons" ng-click="show.settings = !show.settings" ng-bind="(show.settings)? 'indeterminate_check_box': 'add_box'"></i>
+                </div>
+            </div>
+            <div class="panel-body" ng-show="show.settings">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Offer New Bookings to Nearest First</label>
+                            <input type="checkbox" ng-model="settings.OFFER_NEAREST" />
+                            <small class="help-block">
+                                With this On, New Bookings will be offered to the nearest driver by default then be eligible for auto-dispatch.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" ng-if="show.advanced">
+                            <label>AutoDispatch Poll Time</label>
+                            <input type="number" class="form-control" ng-model="settings.POLL_TIME" />
+                            <small class="help-block">
+                                How many minutes between each cycle of the auto-dispatch.
+                                Recommended: 1.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>First Pass Distance</label>
+                            <input type="number" class="form-control" ng-model="settings.FIRST_PASS_DISTANCE" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Second Pass Distance</label>
+                            <input type="number" class="form-control" ng-model="settings.SECOND_PASS_DISTANCE" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Maximum Distance</label>
+                            <input type="number" class="form-control" ng-model="settings.MAXIMUM_DISTANCE" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt20">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Distance Weighting</label>
+                            <rzslider rz-slider-model="settings.DISTANCE_WEIGHTING" rz-slider-options="verticalSlider.options"></rzslider>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="settings.DISTANCE_BASE" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="settings.DISTANCE_CAP" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Green Weighting</label>
+                            <rzslider rz-slider-model="settings.GREEN_WEIGHTING" rz-slider-options="verticalSlider.options"></rzslider>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="settings.GREEN_BASE" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="settings.GREEN_CAP" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt20">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Fairness Weighting</label>
+                            <rzslider rz-slider-model="settings.FAIRNESS_WEIGHTING" rz-slider-options="verticalSlider.options"></rzslider>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="settings.FAIRNESS_BASE" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="settings.FAIRNESS_CAP" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Rating Weighting</label>
+                            <rzslider rz-slider-model="settings.RATING_WEIGHTING" rz-slider-options="verticalSlider.options"></rzslider>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="settings.RATING_BASE" />
+                                </div>
+                            </div>
+                            <div class="col-sm-6" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="settings.RATING_CAP" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer text-right" ng-show="show.settings">
+                <a class="pull-left btn btn-primary" style="padding-left:16px;" ng-click="show.advanced = !show.advanced">{{show.advanced ? 'Hide' : 'Show'}} Advanced</a>
+                <a class="btn btn-success" style="padding-left:16px;" ng-click="saveSetup()">Save</a>
+                <a class="btn btn-warning" style="padding-left:16px;" ng-click="revertSetup()">Undo</a>
+            </div>
+        </div>-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Bookings <span ng-if="bookings.length>0"> - {{bookings.length}}</span></h3>
+                <div class="panel-options">
+                    <i class="material-icons" ng-click="show.bookings = !show.bookings" ng-bind="(show.bookings)? 'indeterminate_check_box': 'add_box'"></i>
+                </div>
+            </div>
+            <div class="panel-body p0" ng-show="show.bookings">
+                <div class="p10">
+                    <a class="btn btn-success btn-xs" ng-click="adding = 'BOOKINGS'"><i class="material-icons">add_circle</i><span ng-bind="(adding=='BOOKINGS')?'Adding':'Add'"></span></a>
+                    <a class="btn btn-warning btn-xs" ng-click="bookings = []"><i class="material-icons">block</i>Clear</a>
+                </div>
+                <table class="table table-condensed mt0 mb0">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%">Id</th>
+                            <th style="width: 15%;">Pax</th>
+                            <th style="width: 15%;">Priority</th>
+                            <th style="width: 20%;">Client</th>
+                            <th style="width: 20%" class="text-center">Result</th>
+                            <th style="width: 10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="bookings.length == 0">
+                            <td colspan="4">No Bookings Added</td>
+                        </tr>
+                        <tr ng-repeat-start="b in bookings" ng-mouseenter="onMouseEnter(b, null)" ng-mouseleave="onMouseLeave(b, null)">
+                            <td>{{b.id}}</td>
+                            <td>
+                                <input type="number" class="form-control" ng-model="b.pax" min="1" max="8" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" ng-model="b.priority" min="1" max="3" />
+                            </td>
+                            <td>
+                                <select class="form-control mt10" ng-model="b.clientId" ng-options="c.Id as c.Name for c in clients">
+                                    <option value="">Select a client</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <div class="badge badge-success" ng-if="b.dispatchInfo && b.dispatchInfo.ChoosenPairing">
+                                    Driver {{ idToDriverMapping[b.dispatchInfo.ChoosenPairing.DriverId] }} Assigned
+                                </div>
+                                <div class="badge badge-warning" ng-if="b.dispatchInfo && !b.dispatchInfo.ChoosenPairing">
+                                    No Driver Assigned
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <a href="" class="btn btn-primary btn-xs" ng-click="b.$details = !b.$details"><i class="material-icons">subject</i></a>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end="" ng-show="b.$details">
+                            <td colspan="6" class="grey-bg p10">
+                                <table class="table table-condensed mt0 mb0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%">Driver</th>
+                                            <th style="width: 10%">Pass</th>
+                                            <th style="width: 15%">Time</th>
+                                            <th style="width: 15%">CO2</th>
+                                            <th style="width: 15%">Fairness</th>
+                                            <th style="width: 15%">Rating</th>
+                                            <th style="width: 20%">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="d in b.dispatchInfo.Pairings | orderBy:'-FinalScore'">
+                                            <td class="text-center">{{d.Driver.DriverCallsign}}</td>
+                                            <td class="text-center">{{d.Driver.VehicleTypeMax}}</td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.TimeScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.ActualTime | number:1}} mins</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.GreenScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.Driver.CORating | number:0}}g/Km</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.FairnessScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.Driver.ShiftEarnings}}/{{d.Driver.ShiftHours}} Hrs</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.RatingScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.Driver.DriverScore}}/5</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                <b>{{d.TotalScore * 100 | number:0}}/100</b>
+                                            </td>
+                                            <td ng-if="!d.Eligable" colspan="5">
+                                                {{d.IneligableReason}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Drivers <span ng-if="drivers.length>0"> - {{drivers.length}}</span></h3>
+                <div class="panel-options">
+                    <i class="material-icons" ng-click="show.drivers = !show.drivers" ng-bind="(show.drivers)? 'indeterminate_check_box': 'add_box'"></i>
+                </div>
+            </div>
+            <div class="panel-body p0" ng-show="show.drivers">
+                <div class="p10">
+                    <a class="btn btn-success btn-xs" ng-click="adding = 'DRIVERS'">
+                        <i class="material-icons">add_circle</i><span ng-bind="(adding=='DRIVERS')?'Adding':'Add'"></span>
+                    </a>
+                    <a class="btn btn-warning btn-xs" ng-click="drivers = []"><i class="material-icons">block</i>Clear</a>
+                </div>
+                <table class="table table-condensed mt0 mb0">
+                    <thead>
+                        <tr>
+                            <th style="width:8%">Id</th>
+                            <th style="width:15%">Pax</th>
+                            <th style="width:15%">CO2</th>
+                            <th style="width:13%">Bookings</th>
+                            <th style="width:13%">Hours</th>
+                            <th style="width:15%">Rating</th>
+                            <th style="width:21%" class="text-center">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="drivers.length == 0">
+                            <td colspan="7">No Drivers Added</td>
+                        </tr>
+                        <tr ng-repeat="d in drivers" ng-mouseenter="onMouseEnter(null, d)" ng-mouseleave="onMouseLeave(null, d)">
+                            <td>{{d.id}}</td>
+                            <td>
+                                <input type="number" class="form-control" ng-model="d.pax" min="1" max="8" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" ng-model="d.corating" min="0" max="500" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" ng-model="d.bookings" min="0" max="100" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" ng-model="d.hours" min="0" max="24" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" ng-model="d.rating" min="0" max="5" />
+                            </td>
+                            <td class="text-center">
+                                <div class="badge badge-success" ng-if="d.dispatchInfo">
+                                    Booking {{ idToBookingMapping[d.dispatchInfo.Booking.Id] }}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Map</h3>
+                <a class="pull-right btn btn-success btn-xs" ng-click="runDispatch()" ng-show="!dispatchStarted">
+                    <i class="material-icons">local_taxi</i>Test Dispatch
+                </a>
+                <a class="pull-right btn btn-success btn-xs" disabled ng-show="dispatchStarted">
+                    <i class="material-icons spin">donut_large</i>Dispatching
+                </a>
+            </div>
+            <div class="panel-body">
+                <ui-gmap-google-map center="map.center" zoom="map.zoom" pan="true" events="map.events" style="width:100%;">
+                    <ui-gmap-marker idKey='2' coords='markerOptions.coords' options="markerOptions"></ui-gmap-marker>
+                    <ui-gmap-markers models="drivers" coords="'coords'" options="'options'"></ui-gmap-markers>
+                    <ui-gmap-markers models="bookings" coords="'coords'" options="'options'"></ui-gmap-markers>
+                    <ui-gmap-polylines ng-if="selected.B" idKey="'id'" models="selected.B" path="'path'" stroke="'stroke'" static="'static'"></ui-gmap-polylines>
+                </ui-gmap-google-map>
+            </div>
+        </div>
+    </div>
+</div>

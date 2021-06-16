@@ -1,0 +1,103 @@
+
+#invite{
+    .nav-tabs {
+        background: #fff;
+        li {
+            border-bottom: 0;
+            border-right: 1px solid #fff !important;
+            a {
+                border-radius: 0;
+                font-weight: 600;
+                position: relative;
+                padding: 8px 4px;
+                span.badge {
+                    position: absolute;
+                    right: 5px;
+                    top: -10px;
+                    border: 1px solid #fff;
+                }
+                &.invited {
+                    span.badge {
+                        background: @green;
+                    }
+                }
+                &.uninvited {
+                    span.badge {
+                        background: @orange;
+                    }
+                }
+                &.declined {
+                    span.badge {
+                        background: @red;
+                    }
+                }
+            }
+            &.active {
+                //background: none;
+                a {
+                    border-left: 0 !important;
+                    border-top: 0 !important;
+                    border-right: 1px solid #fff !important;
+                    &:after,
+                    &:before {
+                        display: none;
+                    }
+                    .badge {
+                        top: 10px;
+                    }
+                    &.invited {
+                        box-shadow: inset 0 4px 0 @green;
+                        color: @green;
+                    }
+                    &.declined {
+                        box-shadow: inset 0 4px  @red;
+                        color: @red;
+                    }
+                    &.uninvited {
+                        box-shadow: inset 0 4px  @orange;
+                        color: @orange;
+                    }
+                }
+            }
+            @media(max-width:767px) {
+                width: 100%;
+            }
+        }
+    }
+
+    .invite-table {
+        margin-top: 12px;
+        .header {
+            background: @brand-primary;
+            color: #fff;
+            line-height: 32px;
+            padding: 0px 12px;
+            margin-bottom: 4px;
+        }
+        .body {
+            margin-bottom: 16px;
+            .checkbox {
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            .passenger-row {
+                position: relative;
+                background-color: @lighter-grey;
+                padding: 0px 12px;
+                margin-bottom: 4px;
+                line-height: 24px;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important; 
+                padding-top: 5px;
+                .row{
+                    .div{
+                        .label{
+                            margin-top: 5px;
+                        }
+                    }
+                }          
+            }
+        }
+    }
+}
+

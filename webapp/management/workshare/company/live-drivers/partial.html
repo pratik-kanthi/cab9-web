@@ -1,0 +1,35 @@
+<div id="workshare-company-profile">
+    <div class="panel panel-default coverage-areas">
+        <div class="panel-heading">
+            <h3 class="panel-title">Live Drivers</h3>
+        </div>
+        <div class="panel-body">
+            <h3 class="panel-title">Live Drivers Opt-In</h3>
+            <p class="grey mb5 mt10">
+                This feature allows you to view the live drivers of prospective partners on their profile page.<br />
+                Only companies who opt-in to this feature will be able to view live drivers and will also have their own drivers shared with other prospective partners.<br />
+                This will help partners make a more informed choice when choosing to partner with each other.
+            </p>
+            <strong class="brand-secondary">Please Note: </strong><span class="grey">Enabling this feature will allow other partners who have also enabled the live drivers feature to view your live drivers.</span>
+            <div class="form-group mt10">
+                <label class="control-label">Activate</label>
+                <p class="grey mb5 mt10">
+                    Activation/Deactivation will take 12 hours.
+                </p>
+                <div class="mt5">
+                    <input class="check ng-pristine ng-untouched ng-valid" type="checkbox" id="ShowLiveDrivers" ng-change="toggleLiveDrivers()" ng-disabled="companyProfile.ShowLiveDriversUpdateTime" ng-model="companyProfile.ShowLiveDrivers">
+                    <label class="check-label" for="ShowLiveDrivers"></label>
+                </div>
+                <br class="clearfix">
+                <p class="grey mb5 mt5" ng-if="companyProfile.ShowLiveDriversUpdateTime">
+                    There is already a pending request to switch this feature <b>{{companyProfile.ShowLiveDrivers? 'OFF':'ON'}}</b> at {{companyProfile.ShowLiveDriversUpdateTime | companyDate:'DD/MM/YYYY HH:mm'}}
+                    <br>
+                    <button href="" class="btn btn btn-warning mt20" ng-click="toggleLiveDrivers(true)">
+                        <i class='material-icons'>delete_forever</i>
+                        Cancel Request
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

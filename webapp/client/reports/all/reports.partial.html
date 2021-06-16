@@ -1,0 +1,112 @@
+<div class="row" id="reports">
+    <div class="col-md-3 col-sm-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Filters</div>
+            </div>
+            <div class="panel-body" style="overflow:visible;">
+                <div class="form-group">
+                    <label class="control-label">From</label>
+                    <div class="form-edit">
+                        <div class="input-group mb5">
+                            <input class="form-control" type="text" ng-model="$root.filters.From" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.From" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" />
+                            <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="openCalendar($event, 'From')"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">To</label>
+                    <div class="form-edit">
+                        <div class="input-group mb5">
+                            <input class="form-control" type="text" ng-model="$root.filters.To" datepicker-popup="{{DATETIME_FORMAT}}" is-open="opened.To" placeholder="{{DATETIME_FORMAT}}" ng-disabled="false" show-weeks="false" show-button-bar="false" />
+                            <span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="openCalendar($event, 'To')"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a href="" class="bold t-s brand-secondary" ng-click="showAdvanced = !showAdvanced"><span ng-bind="(showAdvanced)?'Hide Advanced':'Show Advanced'"></span></a>
+                </div>
+                <div ng-if="showAdvanced">
+                    <div class="form-group">
+                        <label class="control-label">Passengers</label>
+                        <div class="form-edit">
+                            <ui-select multiple ng-model="$root.filters.PassengerIds" theme="select2" ng-disabled="false" style="width: 100%;">
+                                <ui-select-match placeholder="Type to search Passengers...">
+                                    <div class="select-text">
+                                        <img class="img-responsive img-circle" ng-if="$select.selected.ImageUrl" ng-src="{{$select.selected.ImageUrl}}" />
+                                        {{$select.selected.Name}}
+                                    </div>
+                                    <!--<div>
+                                        <img ng-src="{{$item.ImageUrl}}" ng-if="$item.ImageUrl" />
+                                        {{$item.Name}}
+                                    </div>-->
+                                </ui-select-match>
+                                <ui-select-choices refresh="searchPassengers($select.search)" repeat="item.Id as item in fetchedPassengers">
+                                    <div class="ui-select-box">
+                                        <div class="option-img">
+                                            <img ng-src="{{item.ImageUrl}}" ng-if="item.ImageUrl" />
+                                        </div>
+                                        <div class="option-details">
+                                            <strong>{{item.Name}}</strong>
+                                            <small class="text-muted" ng-show="item.Description">{{item.Description}}</small>
+                                        </div>
+                                    </div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Vehicle Types</label>
+                        <div class="form-edit">
+                            <ui-select multiple ng-model="$root.filters.VehicleTypeIds" theme="select2" ng-disabled="false" style="width: 100%;">
+                                <ui-select-match placeholder="Select Vehicle Types...">
+                                    {{$item.Name}}
+                                </ui-select-match>
+                                <ui-select-choices repeat="item.Id as item in vehicleTypes | filter: $select.search">
+                                    <div class="ui-select-box">
+                                        <strong ng-bind-html="item.Name | highlight: $select.search"></strong>
+                                    </div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="form-group mb20">
+                        <label class="control-label">Breakdown Period</label>
+                        <ui-select ng-model="$root.filters.PeriodLength" theme="selectize" style="width: 100%;">
+                            <ui-select-match placeholder="Select a Period...">
+                                {{$select.selected.value}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="period.id as period in PeriodLength | filter: { value: $select.search }">
+                                <span ng-bind-html="period.value"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="mt10">
+                    <button class="btn btn-xs btn-success pull-right" ng-click="fetchData(); generated = true"><i class="material-icons">play_arrow</i>Run</button>
+                    <!-- <button class="btn btn-xs btn-success pull-left" ng-click="printReport()"><i class="material-icons">print</i>Print Reports</button> -->
+                    <button class="btn btn-xs btn-success pull-left" ng-click="downloadExcel()"><i class="material-icons">print</i>Download Reports</button>
+                </div>
+                <br class="clearfix" />
+                <div class="mt10">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9 col-sm-7" ng-if="fetched">
+        <div class="row">
+            <div class="col-md-12">
+                <client-booking-stats></client-booking-stats>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <passenger-stats></passenger-stats>
+            </div>
+            <div class="col-md-6">
+                <vehicletype-stats></vehicletype-stats>
+            </div>
+        </div>
+    </div>
+</div>

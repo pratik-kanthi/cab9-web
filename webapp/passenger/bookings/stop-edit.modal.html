@@ -1,0 +1,14 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">Choose Location</h3>
+</div>
+<div class="modal-body">
+    <input type="text" class="form-control" g-places-autocomplete ng-model="choosen" />
+    <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+        <ui-gmap-markers models='markers' coords='"coords"'></ui-gmap-markers>
+    </ui-gmap-google-map>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+    <!-- <input type="button" class="btn btn-danger pull-left" ng-click="$dismiss()" value="Cancel" /> -->
+    <button class="btn btn-success" ng-click="confirmDestination()" ng-disabled="!destinationValid" value="Save" /><i class="material-icons">save</i>Save</button>
+</div>

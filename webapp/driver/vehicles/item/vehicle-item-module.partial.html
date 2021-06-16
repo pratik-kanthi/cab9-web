@@ -1,0 +1,17 @@
+﻿<div class="module-item">
+    <div class="module-item-cover"></div>
+    <div class="module-item-nav-bar">
+        <numplate allow-click="false" show-score="false" show-title="false" show-subtitle="false" showscore="false" style="margin-bottom:0;margin-top: 4px;margin-right:0px;"></numplate>
+        <div class="module-item-brief" style="padding-left: 10px;">
+            <h3>{{accessors.Title(item)}}</h3>
+            <h4>{{accessors.SubTitle(item)}}</h4>
+        </div>
+        <tabs data="tabDefs" type="tabs" justified="false"></tabs>
+    </div>
+    <div class="module-item-options">
+        <div ui-view name="options-area"></div>
+    </div>
+    <div class="module-item-content">
+        <ui-view class="tab-content"></ui-view>
+    </div>
+</div>

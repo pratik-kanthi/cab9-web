@@ -1,0 +1,62 @@
+<div class="payment-model auto-dispatch-settings" style="margin-top: -75px;">
+    <div class="row">
+        <div class="payment-details">
+            <div class="row mb5">
+                <div class="col-xs-6">
+                    <h3 class="section-title">Tags</h3>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <button class="btn btn-success" ng-click="addTag()"><i class="material-icons">add</i>Add Tag</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table table-bordered">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th style="color:white;width:30%;">Name</th>
+                                <th style="color:white;width:30%;">Entity Types</th>
+                                <th style="color:white;width:15%;">Tag Type</th>
+                                <th style="color:white;width:15%;">Client Visible</th>
+                                <th style="color:white;width:5%;"></th>
+                            </tr>
+                        </thead>
+                        <tbody style="background:white;">
+                            <tr ng-if="tags.length == 0">
+                                <td colspan="6">
+                                    <span class="text-muted">No Tags Added</span>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="t in tags">
+                                <td>
+                                    {{t.Name}}<br />
+                                    <small class="text-muted">{{t.Description}}</small>
+                                </td>
+                                <td>
+                                    {{t.EntityType}}
+                                </td>
+                                <td>
+                                    {{t.Type}}
+                                </td>
+
+                                <td>
+                                    {{t.ClientVisible ? 'Yes' : 'No'}}
+                                </td>
+                                <td>
+                                    <button class="btn btn-xs btn-round btn-success" tooltip="Edit Tag" ng-click="editTag(t)">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                    <button class="btn btn-xs btn-round btn-danger" tooltip="Delete Tag" ng-click="removeTag(t)">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                    <!-- <a ng-click="editTag(t)"><i class="material-icons">edit</i></a>
+        <a ng-click="removeTag(t)"><i class="material-icons">delete</i></a> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

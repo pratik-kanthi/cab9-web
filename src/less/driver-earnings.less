@@ -1,0 +1,62 @@
+#driver-earnings {
+	.average, .max, .earning {
+		background-color: @sky;
+		padding: 8px;
+		height: 56px;
+		//.shadow();
+		color: #fff;
+		i.material-icons {
+			float: left;
+			display: block;
+			font-size: 32px;
+			margin-right: 8px;
+			width: 40px;
+			height: 40px;
+			.border-radius(20px);
+			background-color: #fff;
+			color: @sky;
+			line-height: 40px;
+			text-align: center;
+		}
+		strong {
+			display: block;
+			line-height: 16px;
+			margin-top: 5px;
+			width: 170px;
+			.text-ellipsis();
+		}
+		.info {
+			float: left;
+		}
+		span {
+			font-size: 12px;
+			line-height: 9px;
+			display: block;
+		}
+		.amount {
+			float: right;
+			font-size: 20px;
+			
+		}
+	}
+	.max {
+		background-color: @green;
+		i.material-icons {
+			color: @green;
+		}
+	}
+	.earning {
+		background-color: #fff;
+		color: @brand-primary;
+		border: 1px solid #ddd;
+		.image {
+			float: left;
+			width: 40px;
+			height: 40px;
+			.border-radius(20px);
+			background-size: cover;
+			margin-right: 8px;
+			margin-bottom: 20px;
+		}
+	}
+}

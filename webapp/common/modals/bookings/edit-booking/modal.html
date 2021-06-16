@@ -1,0 +1,20 @@
+<form name="bookingForm" id="dispatch-booking-edit" form-for="item" schema="Booking" mode="EDIT">
+    <div class="booking-payment-calculation">
+        <div class="modal-body">
+            <nav>
+                <ul>
+                    <li ng-click="bookingInfo=true;finance=false" ng-class="(bookingInfo==true)?'active':''"><a href=""><span>Booking Information</span></a></li>
+                    <li ng-click="finance=true;bookingInfo=false" ng-class="(finance==true)?'active':''"><a href=""><span>Finance</span></a></li>
+                </ul>
+            </nav>
+            <form name="dispatchBookingForm" form-for="item" schema="Booking" mode="CREATE">
+                <div ng-include="'/webapp/common/modals/bookings/edit-booking/booking-info.partial.html'"></div>
+                <div ng-include="'/webapp/common/modals/bookings/edit-booking/booking-finance.partial.html'"></div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Close</button>
+        <button class="btn btn-xs btn-success pull-right" ng-click="save()" ng-disabled="formFor.form.$invalid || testMaskReferences()"><i class="material-icons">undo</i>Update</button>
+    </div>
+</form>

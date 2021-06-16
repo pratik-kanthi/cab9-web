@@ -1,0 +1,174 @@
+.numplate-view-options {
+    margin-bottom: 0px;
+    height: 55px;
+    .group-filters {
+        width: auto;
+        height: 55px;
+        overflow: scroll;
+        white-space: nowrap;
+        .hide-scrollbars()
+    }
+    .show-hide-score {
+        width: 140px;
+    }
+    .group-options {
+        margin-right: 10px;
+        margin-bottom: 10px;
+        display: inline-block;
+        border-bottom: 3px solid @lighter-grey;
+        text-transform: uppercase;
+        padding-bottom: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        color: @light-grey !important;
+        .standard-transition(all);
+        &:hover,
+        &.active {
+            color: @brand-primary !important;
+            border-color: @brand-secondary;
+        }
+    }
+    .group-select {
+        -webkit-appearance: none;
+        background-color: @brand-primary;
+        .border-radius(3px);
+        color: #fff;
+        padding: 3px 4px;
+        border: 1px solid @brand-primary;
+        background-image: url('/includes/images/select-white.png');
+        background-repeat: no-repeat;
+        background-size: 15px;
+        background-position: right 7px center;
+        outline: 0 !important;
+    }
+}
+
+.tooltip.in {
+    .opacity(90);
+}
+
+.numplate {
+    width: 155px;
+    float: left;
+    margin: 0 50px 0px 0;
+    overflow: visible;
+    text-align: center;
+    line-height: 20px;
+    cursor: pointer;
+    color: @grey;
+    height: 96px;
+    position: relative;
+    &.single {
+        float: none;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        .center-block();
+    }
+    > .numplate-container {
+        width: 100%;
+        .logo {
+            .border-radius(3px);
+            .center-block();
+            .transition(all 100ms);
+            margin-bottom: 10px;
+            background-color: #ddd;
+            width: 150px;
+            height: 40px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            .box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+            circle {
+                .rotate(-90deg);
+                .transform-origin(center);
+                .transition(all 0.5s);
+                .opacity(100);
+                .animate(0.4,
+                fadeIn);
+                &.ng-hide-add,
+                &.ng-hide-remove {
+                    display: block;
+                }
+                &.ng-hide-remove {}
+                &.ng-hide-add {
+                    .animate(0.4,
+                    fadeOut);
+                }
+            }
+        }
+        strong {
+            .center-block();
+            margin-bottom: 0px;
+            color: @grey;
+            white-space: nowrap;
+            width: 120px;
+            line-height: 11px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            font-size: 12px;
+            color: @brand-primary;
+            i {
+                font-size: 16px;
+                position: absolute;
+                top: 0;
+                left: 0;
+                line-height: 20px;
+            }
+        }
+        small {
+            i {
+                margin: 0 5px;
+                line-height: 20px;
+                font-size: 14px;
+            }
+            span {
+                font-size: 10px;
+                // font-weight: 600;
+                color: #777;
+            }
+        }
+    }
+    &:hover {
+        > .numplate-container {
+            .logo {
+                // background-size: 140px;
+            }
+        }
+    }
+    ;
+    @media only screen and (min-width: 769px) and (max-width: 1159px) {
+        width: 20%;
+        margin-right: 0;
+        > .numplate-container {
+            .logo {
+                width: 150px;
+                height: 40px;
+                background-size: 100px;
+            }
+        }
+    }
+    @media only screen and (min-width: 415px) and (max-width: 767px) {
+        width: 25% !important;
+        margin-right: 0;
+        > .numplate-container {
+            .logo {
+                width: 100px;
+                height: 30px;
+                background-size: 100px;
+            }
+        }
+    }
+    @media only screen and (max-width: 414px) {
+        width: 50%;
+        margin-right: 0;
+        > .numplate-container {
+            .logo {
+                width: 100px;
+                height: 30px;
+                background-size: 100px;
+            }
+        }
+    }
+}

@@ -1,0 +1,67 @@
+<div id="settings-email">
+    <h2 class="page-title">
+        <i class="material-icons">email</i>Scoring Settings
+    </h2>
+    <div form-for="settings" schema="ScoreWeighting" mode="{{viewMode}}">
+        <div class="mt10 mb10">
+            <button class="btn btn-warning btn-xs" ng-show="viewMode == 'VIEW'" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.scores','W')"><i class="material-icons">create</i>Edit</button>
+            <button class="btn btn-success btn-xs mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+            <button class="btn btn-warning btn-xs" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+        </div>
+        <div class="row mt20">
+            <div class="col-sm-4">
+                <b class="section-title">Time Weightings</b>
+                <div field-for="WeekWeighting" display="Week"></div>
+                <div field-for="MonthWeighting" display="Month"></div>
+                <div field-for="YearlyWeighting" display="Year"></div>
+                <div class="alert alert-danger" ng-show="sum(settings.WeekWeighting, settings.MonthWeighting, settings.YearlyWeighting) != 1">
+                    Time Weightings must add to 1.
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <b class="section-title">Driver Score Weightings</b>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div field-for="DriverCountWeighting" display="Number of Bookings"></div>
+                        <div field-for="DriverValueWeighting" display="Value of Bookings"></div>
+                        <div field-for="DriverPassengerWeighting" display="Passenger Ratings"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div field-for="DriverAcceptanceWeighting" display="Job Acceptance"></div>
+                        <div field-for="DriverShiftWeighting" display="Availability"></div>
+                        <div class="alert alert-danger" ng-show="sum(settings.DriverCountWeighting, settings.DriverValueWeighting, settings.DriverPassengerWeighting, settings.DriverAcceptanceWeighting, settings.DriverShiftWeighting) != 1">
+                            Driver Score Weightings must add to 1.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-4">
+                <b class="section-title">Client Score Weightings</b>
+                <div field-for="ClientCountWeighting" display="Number of Bookings"></div>
+                <div field-for="ClientValueWeighting" display="Value of Bookings"></div>
+                <div class="alert alert-danger" ng-show="sum(settings.ClientCountWeighting, settings.ClientValueWeighting) != 1">
+                    Client Score Weightings must add to 1.
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <b class="section-title">Vehicle Score Weightings</b>
+                <div field-for="VehicleCountWeighting" display="Number of Bookings"></div>
+                <div field-for="VehicleValueWeighting" display="Value of Bookings"></div>
+                <div class="alert alert-danger" ng-show="sum(settings.VehicleCountWeighting, settings.VehicleValueWeighting) != 1">
+                    Vehicle Score Weightings must add to 1.
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <b class="section-title">Passenger Score Weightings</b>
+                <div field-for="PassengerCountWeighting" display="Number of Bookings"></div>
+                <div field-for="PassengerValueWeighting" display="Value of Bookings"></div>
+                <div class="alert alert-danger" ng-show="sum(settings.PassengerCountWeighting, settings.PassengerValueWeighting) != 1">
+                    Passenger Score Weightings must add to 1.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

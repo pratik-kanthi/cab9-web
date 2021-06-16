@@ -1,0 +1,89 @@
+<div class="peak-date-selector">
+    <p class="no-data" ng-hide="steps && steps.length > 0">
+        No Peak Dates Added
+    </p>
+    <div class="peak-date" ng-repeat="s in steps">
+        <div class="remove" ng-hide="viewMode == 'VIEW'">
+            <a class="" ng-click="remove(s)">
+                <i class="material-icons">close</i>
+            </a>
+        </div>
+        <strong class="brand-primary">
+        Configuration {{$index + 1}}
+        </strong>
+        <div class="row mt5">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label">Start Date</label>
+                    <div class="form-edit">
+                        <div class="input-group" style="overflow:visible;">
+                            <input ng-change="onChange()" type="text" class="form-control" datepicker-popup="dd/MM/yyyy" is-open="s.$$from" ng-model="s.start" ng-disabled="viewMode == 'VIEW'" show-weeks="false" show-button-bar="false" ng-model-options="{debounce: 500}" />
+                            <span class="input-group-btn"><button type="button" class="btn btn-default" ng-disabled="viewMode == 'VIEW'" ng-click="s.$$from = true"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Start Time</label>
+                    <div class="form-edit">
+                        <div class="input-group" style="overflow:visible" dropdown is-open="s.$$fromTime" auto-close="outsideClick">
+                            <input ng-change="onChange()" ng-disabled="viewMode == 'VIEW'" type="time" class="form-control" ng-model="s.startTime" placeholder="HH:MM" ng-model-options="{debounce: 500}" />
+                            <ul class="dropdown-menu timepicker">
+                                <li>
+                                    <timepicker ng-model="s.startTime" hour-step="1" minute-step="5" show-meridian="false" show-seconds="false" ng-model-options="{debounce: 500}"></timepicker>
+                                </li>
+                            </ul>
+                            <span class="input-group-btn">
+                                <button type="button" ng-disabled="viewMode == 'VIEW'" class="btn btn-default" ng-click="s.$$fromTime = true;$event.preventDefault();$event.stopPropagation();"><i class="glyphicon glyphicon-time"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label">End Date</label>
+                    <div class="form-edit">
+                        <div class="input-group" style="overflow:visible">
+                            <input ng-change="onChange()" type="text" class="form-control" ng-disabled="viewMode == 'VIEW'" datepicker-popup="dd/MM/yyyy" is-open="s.$$to" ng-model="s.end" show-weeks="false" show-button-bar="false" ng-model-options="{debounce: 500}" />
+                            <span class="input-group-btn"><button type="button" class="btn btn-default" ng-disabled="viewMode == 'VIEW'" ng-click="s.$$to = true"><i class="glyphicon glyphicon-calendar"></i></button></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">End Time</label>
+                    <div class="form-edit">
+                        <div class="input-group" style="overflow:visible" dropdown is-open="s.$$toTime" auto-close="outsideClick">
+                            <input ng-change="onChange()" ng-disabled="viewMode == 'VIEW'" type="time" class="form-control" ng-model="s.endTime" placeholder="HH:MM" ng-model-options="{debounce: 500}"/>
+                            <ul class="dropdown-menu timepicker">
+                                <li>
+                                    <timepicker ng-model="s.endTime" hour-step="1" minute-step="5" show-meridian="false" show-seconds="false" ng-model-options="{debounce: 500}"></timepicker>
+                                </li>
+                            </ul>
+                            <span class="input-group-btn">
+                                <button type="button" ng-disabled="viewMode == 'VIEW'" class="btn btn-default" ng-click="s.$$toTime = true;$event.preventDefault();$event.stopPropagation();"><i class="glyphicon glyphicon-time"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label class="control-label">Multiplier</label>
+                    <div class="form-edit">
+                        <input type="number" ng-change="onChange()" ng-disabled="viewMode == 'VIEW'" class="form-control" ng-model="s.multiplier">
+                    </div>
+                </div>
+                <div class="form-group" ng-if="!hideTimes">
+                    <label class="control-label">With Peak Times</label>
+                </div>
+                <div class="mt40" ng-if="!hideTimes">
+                    <div class="checkbox">
+                        <input id="group-check-withtime{{$index}}" ng-disabled="viewMode == 'VIEW'" ng-change="onChange()" ng-model="s.withpeaks" ng-checked="s.withpeaks" type="checkbox" />
+                        <label for="group-check-withtime{{$index}}"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-success" ng-hide="viewMode == 'VIEW'" ng-click="add(s)"><i class="material-icons">add_circle</i>Add New</a>
+</div>

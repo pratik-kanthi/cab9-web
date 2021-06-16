@@ -1,0 +1,57 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title" ng-if="fetchingFTPDetails == false">
+			<i class="material-icons">folder_shared</i> FTP Details
+		</h3>
+
+		<h3 class="panel-title" ng-if="fetchingFTPDetails == true"><i class="fa fa-circle-o-notch fa-spin"></i> Fetching Details</h3>
+
+	</div>
+	<div class="panel-body">
+		<div id="settings-ftpdetails">
+			<div form-for="ftpDetails" schema="FTPDetails" mode="{{(viewMode == 'ADD' || viewMode == 'EDIT')? 'EDIT':'VIEW'}}">
+				<div class="mt10 mb10">
+					<button class="btn btn-primary" ng-show="viewMode == 'VIEW' && !ftpDetails" ng-click="addFTPDetails()" ng-if="PERMISSIONS.test('settings.ftpDetails','W')">
+						<i class="material-icons">note_add</i>Add</button>
+
+
+					<button class="btn btn-primary" ng-show="viewMode == 'VIEW' && ftpDetails" ng-click="editFTPDetails()" ng-if="PERMISSIONS.test('settings.ftpDetails','W')">
+						<i class="material-icons">create</i>Edit</button>
+
+					<button class="btn btn-danger" ng-show="viewMode == 'VIEW' && ftpDetails" ng-click="deleteFTPDetails()" ng-if="PERMISSIONS.test('settings.ftpDetails','D')" ng-disabled="deletingFTPDetails">
+						<span ng-show="!deletingFTPDetails">
+							<i class="material-icons">delete</i>Delete
+						</span>
+						<span ng-show="deletingFTPDetails">
+							<i class="fa fa-circle-o-notch fa-spin"></i>Deleting...
+						</span>
+						
+					</button>
+
+					<button class="btn btn-success mr10" ng-show="viewMode == 'EDIT' || viewMode == 'ADD'" ng-click="saveFTPDetails()" ng-disabled="savingFTPDetails">
+						<span ng-show="!savingFTPDetails">
+							<i class="material-icons">save</i>Save
+						</span>
+						<span ng-show="savingFTPDetails">
+							<i class="fa fa-circle-o-notch fa-spin"></i>Saving...
+						</span>
+					</button>
+					<button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelFTPEditing()">
+						<i class="material-icons">undo</i>Cancel</button>
+				</div>
+				<div class="row mt20" ng-show="ftpDetails">
+					<div class="col-sm-6">
+						<div field-for="Host"></div>
+						<div field-for="Username"></div>
+						<div field-for="Password"></div>
+					</div>
+					<div class="col-sm-6">
+						<div field-for="SFTP" display="Is this SFTP?"></div>
+						<div field-for="FolderPath" display="Folder Path"></div>
+						<small>Please enter the folder path with a trailing / e.g. foldername/subfoldername/</small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

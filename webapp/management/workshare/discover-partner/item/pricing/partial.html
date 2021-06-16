@@ -1,0 +1,274 @@
+<div id="pricing">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Pricing Details</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="tabs mb10">
+                        <span class="tab" ng-class="activeTab=='Default'?'active':''" ng-click="setActiveTab('Default')">Default Pricing</span>
+                        <span class="tab" ng-class="activeTab=='Vehicle'?'active':''" ng-click="setActiveTab('Vehicle')">Vehicle Overrides</span>
+                        <span class="tab" ng-class="activeTab=='Peak'?'active':''" ng-click="setActiveTab('Peak')">Peak Pricing</span>
+                        <br class="clearfix">
+                    </div>
+                    <img src="/includes/images/spinner.gif" width="40" ng-if="fetching" />
+                    <div class="default-charges" ng-if="activeTab=='Default' && !fetching">
+                        <div class="row mt15">
+                            <div class="col-sm-6">
+                                <label class="control-label">Minimum Charge</label>
+                                <p ng-bind="pricingModel.MinimumCharge | currency"></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">Waiting Charge/Min</label>
+                                <p ng-bind="pricingModel.WaitTimeCharge | currency"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="control-label">Free Waiting Time</label>
+                                <p ng-bind="pricingModel.FreeWaitingTime || 0"></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">Free Waiting Time (Airport)</label>
+                                <p ng-bind="pricingModel.FreeWaitingTimeAirport || 0"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="control-label">Grace Waiting</label>
+                                <p ng-bind="pricingModel.IsWaitingTimeGrace"></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">Grace Waiting (Airport)</label>
+                                <p ng-bind="pricingModel.IsWaitingTimeGraceAirport"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="control-label">Standing Charge</label>
+                                <p ng-bind="pricingModel.StandingCharge | currency"></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="control-label">Extra Stop Charge</label>
+                                <p ng-bind="pricingModel.ExtraStopCharge || 0 | currency"></p>
+                            </div>
+                        </div>
+                        <div class="mileage-steps">
+                            <div class="header">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <strong>From</strong>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <strong>To</strong>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <strong>Fare/Mile</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="body">
+                                <div class="no-steps" ng-if="!steps || steps.length == 0">
+                                    No Fare Levels Added
+                                </div>
+                                <div class="step" ng-repeat="s in steps" ng-if="steps && steps.length > 0">
+                                    <div class="row">
+                                        <div class="col-xs-8" ng-show="$last">
+                                            <b>Per Mile</b> After {{getPreviousStep(s,steps)}}
+                                        </div>
+                                        <div class="col-xs-4" ng-show="!$last">
+                                            {{getPreviousStep(s,steps)}}
+                                        </div>
+                                        <div class="col-xs-4" ng-show="!$last">
+                                            <div>{{s.max}}</div>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <div>{{s.fare | currency}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vehicle-overrides" ng-if="activeTab=='Vehicle'">
+                        <span class="text-muted" ng-if="!vehicleOverrides || vehicleOverrides.length==0">No vehicle overrides found.</span>
+                        <div ng-repeat="vt in vehicleOverrides">
+                            <div>
+                                <strong class="brand-secondary" style="font-size: 18px;">{{vt.Name}}</strong>
+                                <div class="row mt10">
+                                    <div class="col-sm-6">
+                                        <label class="control-label">Minimum Charge</label>
+                                        <p>{{(vt.MinimumCharge)?(vt.MinimumCharge | currency): 'Default' }}</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="control-label">Standing Charge</label>
+                                        <p>{{(vt.StandingCharge)?(vt.StandingCharge | currency): 'Default' }}</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="control-label">Waiting Charge/Min</label>
+                                        <p>{{(vt.WaitTimeCharge)?(vt.WaitTimeCharge | currency): 'Default' }}</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="control-label">Fare/Mile</label>
+                                        <p>{{(vt.FarePerMile)?(vt.FarePerMile | currency): 'Default' }}</p>
+                                    </div>
+                                </div>
+                                <strong class="brand-primary" style="font-size: 16px;">Fare Steps</strong>
+                                <div class="no-steps" ng-if="vt._Steps == null || vt._Steps.length == 0">
+                                    No Fare Levels Added
+                                </div>
+                                <div class="mileage-steps" ng-if="vt._Steps && vt._Steps.length > 0">
+                                    <div class="header">
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <strong>From</strong>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <strong>To</strong>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <strong>Fare/Mile</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="body">
+                                        <div class="step" ng-repeat="s in vt._Steps">
+                                            <div class="row">
+                                                <div class="col-xs-8" ng-show="$last">
+                                                    <b>Per Mile</b> After {{getPreviousStep(s,vt._Steps)}}
+                                                </div>
+                                                <div class="col-xs-4" ng-show="!$last">
+                                                    {{getPreviousStep(s,vt._Steps)}}
+                                                </div>
+                                                <div class="col-xs-4" ng-show="!$last">
+                                                    <div>{{s.max}}</div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div>{{s.fare | currency}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="peak-settings" ng-if="activeTab=='Peak'">
+                        <span class="text-muted" ng-if="!vehicleOverrides || vehicleOverrides.length==0"> No peak dates added</span>
+                        <div class="peak-date" ng-repeat="p in peakDates">
+                            <strong class="t-l brand-secondary">Configuration {{$index + 1}}</strong>
+                            <div class="row mt10">
+                                <div class="col-sm-6">
+                                    <label class="control-label">Start Date</label>
+                                    <p>{{ p.start | companyDate:'DD/MM/YYYY'}}</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label">Start Time</label>
+                                    <p>{{ p.startTime }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label">End Date</label>
+                                    <p>{{ p.end | companyDate:'DD/MM/YYYY'}}</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label">End Time</label>
+                                    <p>{{ p.endTime }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label">Multiplier</label>
+                                    <p>{{ p.multiplier }}</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label">With Peak Times</label>
+                                    <div>
+                                        <input class="check" type="checkbox" id="peakTimes" ng-model="p.withpeaks" disabled />
+                                        <label class="check-label" for="peakTimes"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Booking Quote</h3>
+                </div>
+                <div class="panel-body">
+                    <span class="text-muted" ng-if="!polygons || polygons.length==0">Partner has not configured coverage area</span>
+                    <span class="text-muted" ng-if="!services || services.length==0">Partner has not configured vehicle services</span>
+                    <div form-for="selectedBooking" schema="Booking" mode="EDIT" ng-if="polygons && polygons.length>0 && services && services.length>0">
+                        <div class="journey">
+                            <div ng-repeat="stop in selectedBooking.BookingStops">
+                                <div class="form-group" ng-if="$first">
+                                    <label class="control-label" for="stop{{$index}}">
+                                        Pickup
+                                    </label>
+                                    <div class="form-edit booking-stop">
+                                        <div stop-edit name="stop{{$index}}" map="map" required="$first" model="stop"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-init="stop.StopOrder = $index + 1" ng-if="!$first">
+                                    <label class="control-label" for="stop{{$index}}">Drop Off</label>
+                                    <div class="form-edit booking-stop">
+                                        <div stop-edit name="stop{{$index}}" map="map" required="$first" model="stop"></div>
+                                        <div style="display: block; margin-top: 10px;">
+                                            <a href="" class="stop-button sub" ng-show="$middle" ng-click="selectedBooking.BookingStops.splice($index, 1)"><i class="material-icons">remove_circle</i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="" class="btn btn-primary pull-right" ng-disabled="!selectedBooking.$canQuote" ng-click="getAllQuotes()"><i class="material-icons">receipt</i>Fetch Quotes</a>
+                        <br class="clearfix">
+                        <div class="mileage-steps mt20">
+                            <div class="header">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <strong>Service</strong>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <strong>Partner Type</strong>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <strong ng-bind="'Fare ('+distance+' mi.)'" ng-if="distance"></strong>
+                                        <strong ng-if="!distance">Fare</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="body">
+                                <div class="step" ng-repeat="service in services">
+                                    <div class="row">
+                                        <div class="col-xs-4" ng-bind="service.ServiceName">
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <span ng-bind="service.VehicleTypeName"></span>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <div ng-show="service.$fetching">
+                                                <img src="/includes/images/spinner.gif" width="40" />
+                                            </div>
+                                            <div ng-show="!service.$fetching">
+                                                <span ng-bind="service.$fare?(service.$fare | currency):'-'"></span>
+                                                <!-- <span ng-bind="'/'+(service.$distance | currency)" ng-show="service.$distance"></span> -->
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

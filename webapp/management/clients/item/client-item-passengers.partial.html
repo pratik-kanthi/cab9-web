@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-xs-6 module-options">
+        <a ng-click="newPassenger()" class="btn btn-success" ng-if="PERMISSIONS.test('passengers', 'W')"><i class="material-icons">person_add</i>New Passenger</a>
+    </div>
+    <div class="col-xs-6 view-options">
+        <a href="" ng-click="">
+            <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+            <br />
+            <input type="text" ng-model="searchTerm.$" id="searchTerm" ng-show="showSearch" />
+        </a>
+    </div>
+</div>
+<div class="mt10">
+    <table-for datasource="passengers" class="table table-condensed table-hover" schema="Passenger" filtering="searchTerm" sorting="" paging="" grouping="grouping" wrapper-class="" table-class="">
+        <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+        <table-heading sorting="true">
+
+        </table-heading>
+        <table-data-rows>
+            <table-selection></table-selection>
+
+            <table-actions>
+                <a class="btn btn-xs btn-primary" ui-sref="root.passengers.viewer.dashboard({ Id: $row.Id })" ng-click="viewItem($row)" ng-if="PERMISSIONS.test('passengers.viewer')"><i class="material-icons">chrome_reader_mode</i> View</a>
+            </table-actions>
+        </table-data-rows>
+        <table-footer paging="true">
+
+        </table-footer>
+    </table-for>
+</div>

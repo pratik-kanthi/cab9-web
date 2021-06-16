@@ -1,0 +1,29 @@
+<a href="" ng-click="newAddress()" class="btn btn-success mb20"  ng-if="PERMISSIONS.test('passengers.viewer.addresses','W')"><i class="material-icons">add_location</i>New Address</a>
+<br/>
+<span class="bold brand-primary upper">Passenger Addresses</span>
+<div class="table-responsive mt20">
+    <table class="table table-bordered table-condensed bookings-table">
+        <thead>
+            <tr>
+                <th width="15%">Name</th>
+                <th width="65%">Full Address</th>
+                <th width="20%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="address in addresses" ng-show="addresses.length>0">
+                <td><strong ng-bind="address.Name"></strong></td>
+                <td><span ng-bind="address._Summary"></span></td>
+                <td class="text-center">
+                    <a class="btn btn-xs btn-warning" ng-click="editAddress(address)" ng-if="PERMISSIONS.test('passengers.viewer.addresses','W')"><i class="material-icons">create</i>Edit</a>
+                    <a class="btn btn-xs btn-danger" ng-click="deleteAddress(address)" ng-if="PERMISSIONS.test('passengers.viewer.addresses','D')"><i class="material-icons">delete_forever</i>Delete</a>
+                </td>
+            </tr>
+            <tr ng-show="addresses.length==0">
+                <td colspan="3">
+                    No Addresses added yet.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

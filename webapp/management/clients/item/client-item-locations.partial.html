@@ -1,0 +1,36 @@
+<div class="module">
+    <h3 class="section-title mt0">Common Locations</h3>
+    <small>These are the common locations that will be available for all the bookers while making the booking. These are account level addresses.</small>
+    <div class="options mt20 mb20" ng-if="PERMISSIONS.test('clients.viewer.locations', 'W')">
+        <a ng-click="addLocation()" class="btn btn-success"><i class="material-icons">add_circle</i>New Location</a>
+    </div>
+    <table class="table table-condensed table-hover mb10 table-bordered mt30">
+        <thead>
+            <tr>
+                <th style="width:20%"><strong class="brand-secondary">Name</strong></th>
+                <th style="width:60%"><strong class="brand-secondary">Address</strong></th>
+                <th style="width:20%"><strong class="brand-secondary"></strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-if="existingLocations.length==0">
+                <td colspan="3">
+                    <span class="text-muted">No Linked Locations</span>
+                </td>
+            </tr>
+            <tr ng-repeat="item in existingLocations|orderBy:'$distance'">
+                <td>
+                    <strong class="brand-primary">{{item.Name}}</strong>
+                </td>
+                <td>
+                    <span class="brand-primary">{{item.StopSummary}}</span>
+                </td>
+                <td class="text-center" >
+                    <a href="" class="btn btn-xs btn-danger" ng-click="removeLocation(item)" ng-if="PERMISSIONS.test('clients.viewer.locations', 'D')">
+                        <i class="material-icons">delete</i> Delete
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

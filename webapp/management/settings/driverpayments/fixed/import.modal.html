@@ -1,0 +1,27 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">Import Fixed Prices</h3>
+</div>
+<div class="modal-body">
+    <p>
+        Choose a file to upload:
+    </p>
+    <div class="form-group">
+        <label class="control-label">Choose File:</label>
+        <input type="file" class="form-control" file-picker file="import.file" style="border:0" />
+    </div>
+
+    <div ng-show="import.percent && import.status != 'Processing'">
+        {{import.status}} {{import.percent}}%
+    </div>
+    <div ng-show="import.status == 'Processing'">
+        Please wait.. Processing file.
+    </div>
+    <div ng-show="import.status == 'Error Uploading'">
+        An Error has occured!
+    </div>
+</div>
+<div class="modal-footer text-right">
+    <a class="btn btn-xs btn-info pull-left" download="DriverFixedImportTemplate.csv" href="/Uploads/Imports/Templates/DriverFixedImportTemplate.csv"><i class="material-icons">play_arrow</i> Download Template</a>
+    <button class="btn btn-xs btn-warning" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+    <button class="btn btn-xs btn-success" ng-click="validateFile()"><i class="material-icons">date_range</i>Upload</button>
+</div>

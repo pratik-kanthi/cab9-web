@@ -1,0 +1,14 @@
+﻿<div class="module-item">
+    <div class="module-item-cover"></div>
+    <div class="module-item-nav-bar">
+        <card class="module-item-card" allow-click="false" show-score="false" class="single pull-left" show-title="false" show-subtitle="false"></card>
+        <div class="module-item-brief">
+            <h3>#{{booking.LocalId}}</h3>
+            <h4>{{booking.BookedDateTime | companyDate: 'DD/MM/YYYY'}} {{booking._Time}}</h4>
+        </div>
+        <tabs data="tabDefs" type="tabs" justified="false"></tabs>
+    </div>
+    <div class="module-item-content">
+        <ui-view class="tab-content"></ui-view>
+    </div>
+</div>

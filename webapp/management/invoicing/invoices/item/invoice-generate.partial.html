@@ -1,0 +1,219 @@
+﻿<div class="module" id="generate-invoice">
+    <div class="module-options">
+       <!--ngclick - generated = true;--> <button class="btn btn-xs btn-success" ng-click="fetchBookings();" ng-hide="generated" ng-disabled="!range.From || !range.To || (range.ClientIds.length == 0)"> <i class="material-icons">view_list</i> Generate</button>
+        <button class="btn btn-xs btn-danger" ng-click="reset()" ng-show="generated"><i class="material-icons">cached</i>Reset</button>
+        <button class="btn btn-xs btn-warning" ng-click="cancelEditing()"> <i class="material-icons">undo</i> Cancel</button>
+    </div>
+    <h3 class="section-title mt0 mb30">
+        Client Invoice Details
+    </h3>
+    <h4 ng-show="fetching" class="brand-primary"><i class="fa fa-circle-o-notch fa-spin mr10"></i>Please wait while we fetch the invoice details...</h4>
+    <div ng-show="data && !fetching">
+        <h3 class="section-title">Invoice Preview</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th class="text-right">Bookings</th>
+                </tr>
+            </thead>
+            <tbody ng-if="invoices.length==0">
+                <tr>
+                    <td colspan="2">
+                        Choose and Generate
+                    </td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr ng-repeat-start="item in invoices | orderBy:'Client.Name'">
+                    <td colspan="2">
+                        {{item.Client.Name}} <span ng-show="item.InvoiceSplitField">- {{item.InvoiceSplitField}}: {{item.InvoiceSplitValue}}</span>
+                        <span class="pull-right">
+                            <a ng-click="expand(item);" class="btn btn-xs btn-success">{{item.Bookings.length}} bookings</a>
+                        </span>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="selectedClient == item">
+                    <td colspan="2" class="p5">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h5 class="brand-primary mb20">Editing Invoice For {{item.Client.Name}} </h5>
+                                <strong class="brand-primary" ng-show="item.InvoiceSplitField">{{item.InvoiceSplitField}}: {{item.InvoiceSplitValue}}</strong>
+                            </div>
+                            <div class="col-sm-6 text-right pt10">
+                                <button class="btn btn-xs btn-info" ng-disabled="formFor.form.$invalid || !item.Bookings ||  getSelectedBookings(item).length == 0" ng-click="confirmInvoice(item)">Confirm</button>
+                                <button class="btn btn-xs btn-danger" ng-click="cancelInvoice(item)" ng-disabled="invoices.length == 1"><i class="material-icons">undo</i>Cancel</button>
+                            </div>
+                        </div>
+                        <tabset>
+                            <tab heading="Bookings">
+                                <br />
+                                <div form-for="item" schema="Invoice" mode="CREATE">
+                                    <div class="text-center mt10">
+                                        <span class="bold brand-primary upper">Bookings</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div field-for="Reference" display="Reference (Auto Generated)"></div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div field-for="DueDate" display="Tax Date"></div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table bookings-table table-bordered payments-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%" class="text-center">
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" id="tableCheck{{$index}}" ng-click="toggleSelectAll(item, 'Bookings')" ng-checked="item.$allSelected">
+                                                            <label for="tableCheck{{$index}}"></label>
+                                                        </div>
+                                                    </th>
+                                                    <th style="width:10%">Item</th>
+                                                    <th style="width:30%">Description</th>
+                                                    <th style="width:15%" class="text-right">Invoice Fare</th>
+                                                    <th style="width:15%" class="text-right">Waiting</th>
+                                                    <th style="width:15%" class="text-right">Extras</th>
+                                                    <th style="width:15%" class="text-right">Tax</th>
+                                                    <th style="width:10%" class="text-right">Cost</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="booking in item.Bookings | orderBy:'BookedDateTime'" ng-class="booking.BookingStatus">
+                                                    <td class="text-center">
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" id="bookingSelectedCheck{{booking.LocalId}}" ng-disabled="displayMode === 'VIEW'" ng-model="booking.$selected" />
+                                                            <label for="bookingSelectedCheck{{booking.LocalId}}"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <strong>#{{booking.LocalId}}</strong><br />
+                                                        {{booking.BookedDateTime | companyDate:'DD/MM/YYYY HH:mm'}}
+                                                        <br /> <strong class="upper status">{{booking.BookingStatus}}</strong>
+                                                    </td>
+                                                    <td style="overflow:hidden;">
+                                                        <strong>Booker: </strong>{{booking.ClientStaff._Fullname}}
+                                                        <br />
+                                                        <strong>Passenger: </strong>{{booking.LeadPassenger._Fullname}}
+                                                        <br />
+                                                        <div ng-repeat="stop in booking.BookingStops">
+                                                            <strong>{{$first ? 'From:' : ($last ? 'To:' : 'Via') }} </strong>{{stop.StopSummary}}
+                                                        </div>
+                                                        <strong>Tariff: </strong>{{booking.VehicleType.Name}}
+                                                        <div ng-repeat="cr in booking.BookingValidations">
+                                                            <strong>{{cr.ClientReference.ReferenceName}} </strong>{{cr.Value}}
+                                                        </div>
+                                                        <div ng-repeat="exp in booking.BookingExpense">
+                                                            <br ng-hide="$first" />
+                                                            <strong>{{exp.BookingExpenseType.Name}}: </strong>{{exp.Amount | Format}}
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <input type="number" class="form-control text-right" ng-model="booking.InvoiceCost" />
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{booking.WaitingCost | Format}}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{booking.ExtrasCost | Format}}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{(booking.InvoiceCost + booking.WaitingCost + booking.ExtrasCost - booking.Discount) * (booking.Tax._TaxAmount) | Format}}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{(booking.InvoiceCost + booking.WaitingCost + booking.ExtrasCost - booking.Discount) * ( 1 +  booking.Tax._TaxAmount) | Format}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" class="text-right">
+                                                        <span>Sub Totals: </span>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{(BookingsTotal(item,'InvoiceCost') | Format)}}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{(BookingsTotal(item,'WaitingCost') | Format)}}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{(BookingsTotal(item,'ExtrasCost') | Format)}}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{(TaxesTotal(item) | Format)}}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <strong>{{BookingsTotal(item,'InvoiceCost') + BookingsTotal(item,'WaitingCost') + BookingsTotal(item,'ExtrasCost') + TaxesTotal(item) | Format }}</strong>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div field-for="Notes" textarea="4"></div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div field-for="PaymentInstructions"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tab>
+                            <tab heading="Adjustments">
+                                <br />
+                                <div>
+                                    <div class="text-center mt10">
+                                        <span class="bold brand-primary upper">Adjustments</span>
+                                    </div>
+                                    <!--<button class="btn btn-xs btn-primary" ng-click="add()">
+                                        <i class="material-icons">add</i>Add Adjustment
+                                    </button>-->
+                                    <div class="table-responsive mt20">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%" class="text-center">
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" id="table-group-check" ng-click="toggleSelectAll(item, 'Adjustments')" ng-checked="item.$allAdjustmentsSelected">
+                                                            <label for="table-group-check"></label>
+                                                        </div>
+                                                    </th>
+                                                    <th>Reference</th>
+                                                    <th>Type</th>
+                                                    <th>Source</th>
+                                                    <th>Amount</th>
+                                                    <!--<th></th>-->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="adjustment in item.Adjustments" ng-init="adjustment.$t = ((adjustment.ClientAdjustmentId) ? adjustment.ClientAdjustment.AmountType : adjustment.ClientPricingModelAdjustment.AmountType)">
+                                                    <td class="text-center">
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" id="adjSelectedCheck{{$index}}" ng-model="adjustment.$selected" />
+                                                            <label for="adjSelectedCheck{{$index}}"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td><span ng-bind="(adjustment.ClientAdjustmentId) ? adjustment.ClientAdjustment.Reference : adjustment.ClientPricingModelAdjustment.Reference"></span></td>
+                                                    <td><span ng-bind="(adjustment.ClientAdjustmentId) ? adjustment.ClientAdjustment.Type : adjustment.ClientPricingModelAdjustment.Type"></span></td>
+                                                    <td><span ng-bind="(adjustment.ClientAdjustmentId) ? 'Client' : 'Pricing Model'"></span></td>
+                                                    <td>      
+                                                        <span style="display:inline;" ng-if="adjustment.$t == 'Fixed'">£</span>
+                                                        <span style="display:inline;" ng-bind="adjustment.Amount | number:2"></span>
+                                                        <span style="display:inline;" ng-if="adjustment.$t == 'Percentage'">%</span>
+                                                    </td>
+                                                    <!--<td ng-show="!adjustment.ClientPricingModelAdjustmentId">
+                                                        <a class="btn btn-xs btn-warning" ng-click="openAdjustmentEdit(adjustment)"><i class="material-icons">create</i>Edit</a>
+                                                    </td>-->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </tab>
+                        </tabset>
+                                    
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

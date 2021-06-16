@@ -1,0 +1,99 @@
+.tags-wrapper {
+	position: relative;
+	.tags-list {
+		.tag {
+			background-color: @brand-primary;
+			float: left;
+			margin-right: 20px;
+			margin-bottom: 10px;
+			padding: 5px 20px 5px 15px;
+			line-height: 20px;
+			position: relative;
+			.border-radius(20px 0 0 20px);
+			color: #fff;
+			text-align: center;
+			font-size: 11px;
+			font-weight: 800;
+			text-transform: uppercase;
+			.ng-stagger(0.2,fadeInUp,fadeOutDown);
+			&::after {
+				content: ' ';
+				position: absolute;
+				width: 0;
+				height: 0;
+				top:0;
+				right: -15px;
+				border-style: solid;
+				border-width: 15px 0 15px 15px;
+				border-color: transparent transparent transparent @brand-primary;
+			}
+			.tag-remove {
+				position: absolute;
+				top: 0;
+				right: -5px;
+				font-size: 16px;
+				line-height: 30px;
+				cursor: pointer;
+				display: block;
+				text-align: center;
+				.border-radius(10px);
+				z-index: 1000;
+			}
+			&.none {
+				.opacity(60);
+			}
+		}
+		.search-tags {
+			position: relative;
+			display: block;
+			margin-left: 5px;
+			.tag-text {
+				border: 0;
+				line-height: 30px;
+				widows: 50px;
+				.placeholder(@brand-primary);
+				outline: 0;
+				cursor: pointer;
+				color: #aaa;
+			}
+			ul.suggestions-list {
+				position: absolute;
+				left: 0;
+				padding-left: 0;
+				top:40px;
+				li {
+					cursor: pointer;
+					background-color: @brand-primary;
+					.opacity(50);
+					display: inline-block;
+					margin-right: 20px;
+					margin-bottom: 10px;
+					padding: 5px 20px 5px 15px;
+					line-height: 20px;
+					position: relative;
+					.border-radius(20px 0 0 20px);
+					.ng-stagger(0.2,fadeInDown,fadeOutUp);
+					color: #fff;
+					text-align: center;
+					font-size: 11px;
+					font-weight: 800;
+					text-transform: uppercase;
+					&::after {
+						content: ' ';
+						position: absolute;
+						width: 0;
+						height: 0;
+						top:0;
+						right: -15px;
+						border-style: solid;
+						border-width: 15px 0 15px 15px;
+						border-color: transparent transparent transparent @brand-primary;
+					}
+					&.active {
+						.opacity(100);
+					}
+				}
+			}
+		}
+	}
+}

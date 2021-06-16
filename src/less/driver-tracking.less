@@ -1,0 +1,244 @@
+                .map-area {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background-color: #fff;
+                    .map-wrapper {
+                        position: relative;
+                        height: 100%;
+                        #driver-map {
+                            position: absolute;
+                            top: 0px;
+                            left: 0px;
+                            right: 0px;
+                            bottom: 0px;
+                        }
+                    }
+                }
+                
+                @-webkit-keyframes loader {
+                    0% {
+                        width: 8px;
+                        height: 8px;
+                        opacity: 0.9;
+                        -webkit-transform: translateY(0);
+                    }
+                    100% {
+                        width: 8px;
+                        height: 8px;
+                        opacity: 0.1;
+                        -webkit-transform: translateY(-10px);
+                    }
+                }
+                
+                @-moz-keyframes loader {
+                    0% {
+                        width: 8px;
+                        height: 8px;
+                        opacity: 0.9;
+                        -moz-transform: translateY(0);
+                    }
+                    100% {
+                        width: 8px;
+                        height: 8px;
+                        opacity: 0.1;
+                        -moz-transform: translateY(-10px);
+                    }
+                }
+                
+                
+                #passenger-details {
+                    position: absolute;
+                    left: 20px;
+                    top: 20px;
+                    z-index: 100000;
+                    background: rgba(69, 86, 116, .9);
+                    padding: 16px 32px;
+                    .border-radius(4px);
+                    .wrapper {
+                        color: #fff;
+                        text-transform: capitalize;
+                        font-size: 18px;
+                        letter-spacing: 0.8px;
+                        span {
+                            font-size: 14px;
+                            text-transform: uppercase;
+                            margin-bottom: 10px;
+                            display: block;
+                        }
+                        .status {
+                            position: absolute;
+                            top: 100%;
+                            left: 10px;
+                            height: 20px;
+                            padding: 0 8px;
+                            text-transform: uppercase;
+                            color: #fff;
+                            text-align: center;
+                            font-size: 12px;
+                            font-weight: 600;
+                            line-height: 20px;
+                            // .border-radius(4px);
+                            &.OnRoute {
+                                background-color: mix(@brand-primary, #fff, 80%);
+                            }
+                            &.Arrived {
+                                background-color: mix(@brand-primary, #fff, 90%);
+                            }
+                            &.InProgress {
+                                background-color: mix(@sky, #fff, 90%);
+                            }
+                            &.OpenToBid {
+                                background-color: mix(@yellow, #fff, 90%);
+                            }
+                            &.Completed {
+                                background-color: mix(@blue, #fff, 90%);
+                            }
+                        }
+                    }
+                }
+                
+                #driverDetails {
+                    position: absolute;
+                    right: 10px;
+                    bottom: 150px;
+                    z-index: 100000;
+                    background: rgba(69, 86, 116, .9);
+                    width: 230px;
+                    padding: 16px;
+                    border-radius: 4px;
+                    display: none;
+                    -webkit-animation-duration: 0.3s;
+                    animation-duration: 0.3s;
+                    -webkit-animation-fill-mode: both;
+                    animation-fill-mode: both;
+                    -webkit-animation-name: rotateInUpRight;
+                    animation-name: rotateInUpRight;
+                    .profile-box-small {
+                        .picture {
+                            img {
+                                width: 65px;
+                                height: 65px;
+                                border-radius: 50%;
+                                margin: 0 auto;
+                            }
+                        }
+                        .info {
+                            color: #fff;
+                            h4 {
+                                font-size: 18px;
+                                line-height: 22px;
+                            }
+                            h6 {
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                    .vehicle {
+                        text-align: center;
+                        span.registration {
+                            background: #fdca4d;
+                            font-weight: 900;
+                            padding: 8px 12px;
+                            line-height: 16px;
+                            border-radius: 2px;
+                            margin-top: 2px;
+                            color: #000!important;
+                            font-size: 18px;
+                            width: 80%;
+                            margin: 0 auto;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            -ms-text-overflow: ellipsis;
+                            text-overflow: ellipsis;
+                            display: block;
+                            margin-bottom: 10px;
+                        }
+                        .description {
+                            color: #fff;
+                            // text-transform: uppercase;
+                            font-size: 16px;
+                            padding: 8px 12px;
+                            // display: block;
+                            margin: 0 auto;
+                            margin-bottom: 10px;
+                            width: 80%;
+                            // border: 1px solid #ea910e;
+                            color: #fff;
+                            border-radius: 2px;
+                            font-weight: 900;
+                        }
+                        .vehicle-type {
+                            width: 80%;
+                            color: #fff;
+                            .text-ellipsis();
+                            background: @purple;
+                            font-weight: 900;
+                            color: #fff;
+                            text-transform: uppercase;
+                            padding: 8px 12px;
+                            margin-top: -4px;
+                            line-height: 16px;
+                            border-radius: 2px;
+                            font-size: 16px;
+                            &.Passenger {}
+                            &.Estate, &.estate {
+                                background-color: @dark-blue !important;
+                                color: #fff !important;
+                            }
+                            &.Black.Taxi {
+                                background-color: white !important;
+                                color: black !important;
+                            }
+                            &.Executive {
+                                background-color: @black;
+                            }
+                            &.Chauffer {
+                                background-color: gold;
+                                color: #000;
+                            }
+                            &.EcoCar {
+                                background-color: @green;
+                            }
+                            &.MPV {
+                                background-color: #26ae90;
+                                &.Premium {
+                                    background-color: gold !important;
+                                    color: #000 !important;
+                                }
+                            }
+                        }
+                    }
+                    .driver-status {
+                        color: #fff;
+                        text-align: center;
+                        span {
+                            text-transform: uppercase;
+                            font-size: 12px;
+                        }
+                    }
+                }
+                
+                @-webkit-keyframes orbit {
+                    from {
+                        -webkit-transform: rotate(0deg)
+                    }
+                    to {
+                        -webkit-transform: rotate(360deg)
+                    }
+                }
+                
+                #mapid {
+                    height: 100%;
+                }
+                
+                .leaflet-marker-pane > *,
+                .leaflet-shadow-pane > * {
+                    -webkit-transition: transform 1.0s linear;
+                    -moz-transition: transform 1.0s linear;
+                    -o-transition: transform 1.0s linear;
+                    -ms-transition: transform 1.0s linear;
+                    transition: transform 1.0s linear;
+                }

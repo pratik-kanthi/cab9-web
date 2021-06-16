@@ -1,0 +1,37 @@
+﻿<div class="email-config">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="templates">
+                <button type="button" ng-repeat="template in templates" ng-click="selectTemplate(template)" ng-class="selectedTemplate.Id==template.Id?'btn-primary':'btn-default'" class="btn">{{template.Display}}</button><br />
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" ng-show="selectedTemplate.params == 'Booking'">
+                        <label class="control-label">Booking</label>
+                        <ui-select ng-model="data.selectedOption" theme="selectize" ng-disabled="disabled">
+                            <ui-select-match placeholder="Select Booking...">{{$select.selected.LocalId}}</ui-select-match>
+                            <ui-select-choices repeat="option in bookings | filter: $select.search">
+                                #<span ng-bind-html="option.LocalId | highlight: $select.search"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                    <button class="btn btn-info" ng-click="preview()" ng-disabled="(selectedTemplate.params != 'none') && !data.selectedOption"><i class="material-icons">chrome_reader_mode</i>Preview</button>
+                    <button class="btn btn-success" ng-click="saveEdits()" ng-if="PERMISSIONS.test('settings.email', 'W')"> <i class="material-icons">save</i> Save</button>
+                    <button class="btn btn-warning" ng-click="reset()" ng-if="PERMISSIONS.test('settings.email', 'W')"> <i class="material-icons">undo</i> Cancel</button><br/><br/>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button class="btn btn-success" ng-click="upload()" ng-if="PERMISSIONS.test('settings.email', 'W')"> <i class="material-icons">save</i> Upload Live</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="template">
+                    <div style="height:700px;">
+                        <textarea ng-model="selectedTemplate.data" class="form-control" style="height:100%" ng-disabled="!PERMISSIONS.test('settings.email', 'W')"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

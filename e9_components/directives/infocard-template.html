@@ -1,0 +1,14 @@
+﻿<div class="row" ng-show="item">
+    <div class="col-xs-4 col-sm-5 image-edit">
+        <div class="card">
+            <div class="card-container">
+                <div class="logo" style="background-image:url('{{accessor.LogoUrl(item)}}')"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-8 col-sm-7 pt10">
+        <strong>{{accessor.Title(item)}}</strong><br/>
+        <span>{{accessor.SubTitle(item)}}</span>
+        <div class="mt15" tagsinput tagsdata="{{[]}}" displaymode="'VIEW'" model="accessor.Tags(item)"></div>
+    </div>
+</div>

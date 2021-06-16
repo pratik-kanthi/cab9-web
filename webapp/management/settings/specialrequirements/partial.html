@@ -1,0 +1,21 @@
+﻿<table-for datasource="requirements" class="table table-condensed table-hover" schema="BookingRequirement" filtering="searchTerm" sorting="" paging="" grouping="grouping" wrapper-class="" table-class="">
+    <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+    <table-heading sorting="true">
+
+    </table-heading>
+    <table-data-rows>
+        <table-selection></table-selection>
+
+        <table-actions>
+            <a class="btn btn-xs btn-warning" ng-click="viewItem($row)" ng-if="PERMISSIONS.test('settings.specialrequirements','W')" ng-show="$row.TenantId != null && !($row.Bookings.length > 0)">
+                <i class="material-icons">create</i> Edit
+            </a>
+            <a class="btn btn-xs btn-danger" ng-click="deleteItem($row)" ng-if="PERMISSIONS.test('settings.specialrequirements','D')" ng-show="$row.TenantId != null && !($row.Bookings.length > 0)">
+                <i class="material-icons">delete</i> Delete
+            </a>
+        </table-actions>
+    </table-data-rows>
+    <table-footer paging="true">
+
+    </table-footer>
+</table-for>

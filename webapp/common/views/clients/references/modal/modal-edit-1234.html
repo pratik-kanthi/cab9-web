@@ -1,0 +1,138 @@
+<form form-for="reference" schema="ClientReference" mode="{{viewMode}}" class="reference-modal">
+    <div class="modal-header">
+        <h3 class="modal-title">Client Reference <span class="pull-right" ng-click="$dismiss()"><i class="material-icons">clear</i></span></h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div field-for="ReferenceName"></div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group" ng-show="viewMode=='EDIT' && reference.ReferenceType == 'List'">
+                    <label class="control-label">Choose an action</label>
+                    <select class="form-control" ng-model="selected.action" ng-options="a for a in actions">
+                        <option value="">-- choose an option --</option>
+                    </select>
+                </div>
+                <div class="form-group" ng-show="viewMode=='EDIT' && reference.ReferenceType == 'Mask'">
+                    <div field-for="Value"></div>
+                </div>
+                <div class="form-group" ng-show="viewMode!='EDIT'">
+                    <div field-for="ReferenceType" required="true"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group" ng-show="viewMode != 'EDIT' || reference.ReferenceType == 'Mask'">
+                    <div field-for="Mandatory"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-6" ng-show="viewMode!='EDIT'">
+                <div class="form-group" ng-show="reference.ReferenceType == 'List'">
+                    <label class="control-label">Upload a csv</label>
+                    <input type="file" id="file" file-data-picker data="reference.$data" file="reference.$file" name="file" ng-required="viewMode=='CREATE'" novalidate>
+                </div>
+                <div class="form-group" ng-show="reference.ReferenceType == 'Mask'">
+                    <div field-for="Value"></div>
+                </div>
+            </div>
+            <div class="col-md-6" ng-show="reference.ReferenceType == 'Mask'">
+                <div class="form-group">
+                    <label class="control-label">Test</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="reference.$testValue" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default">
+                                <i class="material-icons" ng-show="reference.$testValue && !reference.$testReg.test(reference.$testValue)">close</i>
+                                <i class="material-icons" ng-show="reference.$testValue && reference.$testReg.test(reference.$testValue)">check</i>
+                                <i class="material-icons" ng-show="!reference.$testValue">help_outline</i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="help" ng-show="viewMode != 'EDIT' && reference.ReferenceType == 'List'">
+            <small>Please use a CSV file with reference numbers as a list. Please ensure that each line is just a single reference. The below image is an example Excel file with references.</small>
+            <img src="/includes/images/csv.jpg" alt="" />
+        </div>
+        <div class="help" ng-show="viewMode != 'EDIT' && reference.ReferenceType == 'Mask'">
+            <small>
+                Please use the following schema for the mask.
+                <div class="row">
+                    <div class="col-md-3">A</div>
+                    <div class="col-md-9">Alphanumeric character only in this position. (A-Z, a-z, 0-9)</div>
+                    <div class="col-md-3">a</div>
+                    <div class="col-md-9">Optional alphanumeric character in this position. (A-Z, a-z, 0-9)</div>
+                    <div class="col-md-3">L</div>
+                    <div class="col-md-9">Letter character only in this position. (A-Z, a-z)</div>
+                    <div class="col-md-3">l</div>
+                    <div class="col-md-9">Optional letter character only in this position. (A-Z, a-z)</div>
+                    <div class="col-md-3">0</div>
+                    <div class="col-md-9">Numeric character only in this position. (0-9)</div>
+                    <div class="col-md-3">9</div>
+                    <div class="col-md-9">Optional numeric character only in this position. (0-9)</div>
+                    <div class="col-md-3">></div>
+                    <div class="col-md-9">Start an uppercase block or end a lowercase block.</div>
+                    <div class="col-md-3"><</div>
+                    <div class="col-md-9">Start an lowercase block or end a uppercase block.</div>
+                    <div class="col-md-3">'</div>
+                    <div class="col-md-9">Start/End a Verbatim block.</div>
+                </div>
+            </small>
+        </div>
+        <div class="row" ng-show="viewMode!='EDIT'">
+            <div class="col-md-6">
+                <div class="form-group file-preview" ng-show="reference.$data">
+                    <label class="control-label">Preview</label>
+                    <span style="white-space:pre-line" ng-bind="reference.$data"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" ng-show="viewMode=='EDIT'">
+            <div class="col-md-6">
+                <div class="form-group" ng-show="selected.action=='Replace CSV'">
+                    <label class="control-label">Upload a csv</label>
+                    <input type="file" id="file" file-data-picker data="reference.$data" file="reference.$file" name="file" ng-required="viewMode=='CREATE'" novalidate>
+                </div>
+                <div class="form-group" ng-show="selected.action=='Add Known Values'">
+                    <label class="control-label">Add Known Values</label>
+                    <textarea class="form-control" ng-model="reference.$KnownValues" placeholder="Comma separated"></textarea>
+                </div>
+                <div class="form-group" ng-show="selected.action=='Delete Known Values'">
+                    <label class="control-label">Delete Known Values</label>
+                    <textarea class="form-control" ng-model="reference.$KnownValues" placeholder="Comma separated"></textarea>
+                </div>
+                <div class="form-group" ng-show="selected.action=='Validate Known Value'">
+                    <label class="control-label">Validate Known Value</label>
+                    <input class="form-control" type="text" ng-model="reference.$KnownValues" />
+                </div>
+                <i class="material-icons validate-tick" style="color:green" ng-show="valid=='valid'">done</i>
+                <i class="material-icons validate-tick" style="color:red" ng-show="valid=='invalid'">clear</i>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group file-preview" ng-show="reference.$data && selected.action=='Replace CSV'">
+                    <label class="control-label">Preview</label>
+                    <span style="white-space:pre-line" ng-bind="reference.$data"></span>
+                </div>
+                <div ng-show="selected.action=='Validate Known Value'" class="mt25">
+                    <button class="btn btn-xs btn-primary" ng-click="validate()">
+                        <i class="material-icons">save</i> Validate
+                    </button>
+                </div>
+            </div>
+        </div>
+        <progressbar ng-show="progress !== null" value="progress">Uploading</progressbar>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()">
+            <i class="material-icons">undo</i>Cancel
+        </button>
+        <button class="btn btn-xs btn-success" ng-click="save()" ng-disabled="formFor.form.$invalid || (reference.ReferenceType == 'Mask' && testMask(reference.Value))">
+            <i class="material-icons">save</i> Save {{(selected.action) ? (' & ' + selected.action) : ''}}
+        </button>
+    </div>
+</form>

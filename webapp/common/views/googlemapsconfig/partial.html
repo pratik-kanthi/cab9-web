@@ -1,0 +1,38 @@
+<h2 class="page-title">
+    <i class="material-icons">map</i>Google Maps Configuration
+</h2>
+<div class="row ">
+    <div class="col-sm-8" >
+        <instructions instructions-obj="instructionsObj" />
+    </div>
+    <div class="col-sm-4">
+        <h3 class="section-title">Details</h3>
+        <p class="description">Please provide your Google map keys by following the simple steps. </p>
+        <div ng-show="googleMapsDetails">
+            <div form-for="googleMapsDetails" schema="GoogleMapsConfig" mode="{{viewMode}}" required>
+                <h3 class="section-title mb5">Android API Key</h3>
+                <div class="grey mb10 t-xs">This key will be added to the Android apps used by drivers and passengers.</div>
+                <div field-for="AndroidKey" display=""></div>
+                <h3 class="section-title mb5">Server Key</h3>
+                <div class="grey mb10 t-xs">This key will be used by Cab9 to manage directions and routing related tasks which are not currently covered by Cab9's internal mapping.</div>
+                <div field-for="ServerKey" display=""></div>
+                <h3 class="section-title mb5">Browser Key</h3>
+                <div class="grey mb10 t-xs">This key will be used by Cab9 in the dispatch page and passenger tracking webpage.</div>
+                <div field-for="BrowserKey" display=""></div>
+                <h3 class="section-title mb5">iOS Key</h3>
+                <div class="grey mb10 t-xs">This key will be used by Cab9 on the iOS driver app.</div>
+                <div field-for="iOSKey" display="" ></div>
+            </div>
+        </div>
+        <button class="btn btn-xs btn-success mr10" ng-click="saveDetails()" ng-disabled="savingDetails">
+            <span ng-show="!savingDetails">
+                <i class="material-icons">save</i>
+                <span ng-show="!googleMapsDetails.$$originalValues.Id">Save Keys</span>
+                <span ng-show="googleMapsDetails.$$originalValues.Id">Update Keys</span>
+            </span>
+            <span ng-show="savingDetails">
+                <i class="fa fa-circle-o-notch fa-spin"></i>Saving...
+            </span>
+        </button>
+    </div>
+</div>

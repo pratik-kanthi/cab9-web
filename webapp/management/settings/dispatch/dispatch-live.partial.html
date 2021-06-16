@@ -1,0 +1,191 @@
+﻿<div class="row" id="dispatch-settings">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Map</h3>
+                <a class="pull-right btn btn-success btn-xs" ng-click="pause()" ng-show="!paused">
+                    <i class="material-icons">pause</i> Pause
+                </a>
+                <a class="pull-right btn btn-warning btn-xs" ng-click="unpause()" ng-show="paused">
+                    <i class="material-icons">play</i> Resume
+                </a>
+            </div>
+            <div class="panel-body">
+                <ui-gmap-google-map center="map.center" zoom="map.zoom" pan="true" events="map.events" style="width:100%;">
+                    <ui-gmap-marker idKey='2' coords='markerOptions.coords' options="markerOptions"></ui-gmap-marker>
+                    <ui-gmap-markers models="data.Drivers" coords="'coords'" options="'options'"></ui-gmap-markers>
+                    <ui-gmap-markers models="data.Bookings" coords="'coords'" options="'options'"></ui-gmap-markers>
+                    <ui-gmap-polylines idKey="'id'" models="pairedLines" path="'path'" stroke="'stroke'" static="'static'"></ui-gmap-polylines>
+                    <ui-gmap-polylines ng-if="selected.B" idKey="'id'" models="selected.B" path="'path'" stroke="'stroke'" static="'static'"></ui-gmap-polylines>
+                </ui-gmap-google-map>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Bookings <span ng-if="data.Bookings.length>0"> - {{data.Bookings.length}}</span></h3>
+                <div class="panel-options">
+                    <i class="material-icons" ng-click="show.bookings = !show.bookings" ng-bind="(show.bookings)? 'indeterminate_check_box': 'add_box'"></i>
+                </div>
+            </div>
+            <div class="panel-body p0" ng-show="show.bookings">
+                <table class="table table-condensed mt0 mb0">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%">Id</th>
+                            <th style="width: 15%;">Pax</th>
+                            <th style="width: 15%;">Priority</th>
+                            <th style="width: 20%;">Client</th>
+                            <th style="width: 20%" class="text-center">Result</th>
+                            <th style="width: 10%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="data.Bookings.length == 0">
+                            <td colspan="4">No Bookings Added</td>
+                        </tr>
+                        <tr ng-repeat-start="b in data.Bookings" ng-mouseenter="onMouseEnter(b, null)" ng-mouseleave="onMouseLeave(b, null)">
+                            <td>{{b.LocalId}}</td>
+                            <td>
+                                {{b.BookingPassengers}}
+                            </td>
+                            <td>
+                                {{b.Priority}}
+                            </td>
+                            <td>
+                                <select class="form-control mt10" ng-model="b.ClientId" ng-options="c.Id as c.Name for c in clients" disabled>
+                                    <option value="">Select a client</option>
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <div class="badge badge-success" ng-if="b.ChoosenPairing">
+                                    {{b.ChoosenPairing.Driver.DriverCallsign}} Assigned
+                                </div>
+                                <div class="badge badge-warning" ng-if="!b.ChoosenPairing">
+                                    No Driver Assigned
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <a href="" class="btn btn-primary btn-xs" ng-click="b.$details = !b.$details"><i class="material-icons">subject</i></a>
+                            </td>
+                        </tr>
+                        <tr ng-repeat-end="" ng-show="b.$details">
+                            <td colspan="6" class="grey-bg p10">
+                                <table class="table table-condensed mt0 mb0">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%">Driver</th>
+                                            <th style="width: 10%">Vehicle</th>
+                                            <th style="width: 15%">Time</th>
+                                            <th style="width: 15%">CO2</th>
+                                            <th style="width: 15%">Fairness</th>
+                                            <th style="width: 15%">Empty</th>
+                                            <th style="width: 15%">Rating</th>
+                                            <th style="width: 20%">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="d in b.Pairings | orderBy:'-TotalScore'">
+                                            <td class="text-center">{{d.Driver.DriverCallsign}}</td>
+                                            <td class="text-center">{{d.Driver.VehicleType}}</td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.TimeScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.ActualTime | number:1}} mins</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.GreenScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.Driver.CORating | number:0}}g/Km</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.FairnessScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.Driver.ShiftEarnings}}/{{d.Driver.ShiftHours}} hrs</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.EmptyScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.Driver.EmptyTime}} mins</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                {{d.RatingScore * 100 | number:0}}
+                                                <br />
+                                                <span class="text-muted">{{d.Driver.DriverScore}}/5</span>
+                                            </td>
+                                            <td ng-if="d.Eligable">
+                                                <b>{{d.TotalScore * 100 | number:0}}/100</b>
+                                            </td>
+                                            <td ng-if="!d.Eligable" colspan="6">
+                                                {{d.IneligableReason}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Drivers <span ng-if="data.Drivers.length>0"> - {{data.Drivers.length}}</span></h3>
+                <div class="panel-options">
+                    <i class="material-icons" ng-click="show.drivers = !show.drivers" ng-bind="(show.drivers)? 'indeterminate_check_box': 'add_box'"></i>
+                </div>
+            </div>
+            <div class="panel-body p0" ng-show="show.drivers">
+                <table class="table table-condensed mt0 mb0">
+                    <thead>
+                        <tr>
+                            <th style="width:8%">Id</th>
+                            <th style="width:15%">Vehicle Type</th>
+                            <th style="width:15%">CO2</th>
+                            <th style="width:13%">Bookings</th>
+                            <th style="width:13%">Empty Time</th>
+                            <th style="width:15%">Rating</th>
+                            <th style="width:15%">Rank</th>
+                            <th style="width:21%" class="text-center">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="data.Drivers.length == 0">
+                            <td colspan="7">No Drivers Added</td>
+                        </tr>
+                        <tr ng-repeat="d in data.Drivers" ng-mouseenter="onMouseEnter(null, d)" ng-mouseleave="onMouseLeave(null, d)">
+                            <td>{{d.DriverCallsign}}</td>
+                            <td>
+                                {{d.VehicleType}}
+                            </td>
+                            <td>
+                                {{d.CORating}}
+                            </td>
+                            <td>
+                                {{d.ShiftEarnings | currency}}<br />
+                                {{d.ShiftHours}} hrs
+                            </td>
+                            <td>
+                                {{d.EmptyTime}} mins
+                            </td>
+                            <td>
+                                {{d.DriverScore}}
+                            </td>
+                            <td>
+                                {{d.RankZoneId}}<br />
+                                {{d.RankZoneEnterTime | date:'HH:mm'}}
+                            </td>
+                            <td class="text-center">
+                                <!--<div class="badge badge-success" ng-if="d.dispatchInfo">
+            Booking {{ idToBookingMapping[d.dispatchInfo.Booking.Id] }}
+        </div>-->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

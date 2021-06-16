@@ -1,0 +1,208 @@
+<div form-for="item" schema="DispatchOverrides">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">close</i></button>
+        <h3 class="modal-title">Dispatch Override</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label class="control-label" for="ClientIdInput">Client</label>
+                    <div class="form-edit">
+                        <ui-select class="edit" ng-model="item.ClientId" theme="selectize" name="ClientInput" tabindex="1" ng-model-options="{ debounce: 100 }">
+                            <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                <div class="select-text"><img class="img-responsive img-circle" ng-if="$select.selected.ImageUrl" ng-src="{{$select.selected.ImageUrl}}" />{{$select.selected.Name}}</div>
+                            </ui-select-match>
+                            <ui-select-choices refresh="searchClients($select.search)" refresh-delay="200" repeat="item.Id as item in fetchedClients">
+                                <div class="select-text-option">
+                                    <img class="img-responsive img-circle" ng-src="{{::item.ImageUrl}}" ng-if="::item.ImageUrl" />
+                                    <div ng-bind-html="::item.Name"></div>
+                                    <small class="text-muted" ng-show="::item.Description">{{::item.Description}}</small>
+                                </div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <a ng-click="item.ClientId = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="_dbooking.ClientId" class="red">Clear</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group mb20">
+                    <label class="control-label">Days</label>
+                    <div class="row days">
+                        <div class="col-xs-3 day" ng-repeat="day in week">
+                            <div class="checkbox" style="display:inline-block;margin-bottom:0;margin-right:10px;">
+                                <input id="filter-{{day.day}}" name="{{day.day}}" type="checkbox" value="{{day.value}}" ng-model="day.selected" />
+                                <label for="filter-{{day.day}}"></label>
+                            </div>
+                            {{day.full}}
+                        </div>
+                        <br class="clearfix" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div field-for="$startTime"></div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div field-for="$endTime"></div>
+                    </div>
+                </div>
+                <div field-for="PaymentType"></div>
+                <div class="form-group">
+                    <label>{{overrideMode == 'WeightedAverage' ? 'Weighting' : 'Priority'}}</label>
+                    <input type="number" class="form-control" ng-model="item.Strength" min="0" max="10000" />
+                </div>
+                <div class="form-group">
+                    <label>Profile</label>
+                    <select class="form-control" ng-model="item.$profile">
+                        <option ng-repeat="(p, v) in profiles" ng-value="p">{{p}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group">
+                    <label>Profile Breakdown</label><br class="clearfix" />
+                    <div class="progress mb30" style="height:30px;">
+                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.TimeWeighting * 100) + '%', 'border-width': item.TimeWeighting ? '1px' : 0,'background-color':'#A88ADC' }" tooltip="{{item.TimeWeighting * 100}}%, Time Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">access_time</i></div>
+                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.EmptyWeighting * 100) + '%', 'border-width': item.EmptyWeighting ? '1px' : 0,'background-color':'#FA7B70' }" tooltip="{{item.EmptyWeighting * 100}}%, Empty Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">hourglass_empty</i></div>
+                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.FairnessWeighting * 100) + '%', 'border-width': item.FairnessWeighting ? '1px' : 0,'background-color':'#68CCFB' }" tooltip="{{item.FairnessWeighting * 100}}%, Fairness Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">how_to_reg</i></div>
+                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.RatingWeighting * 100) + '%', 'border-width': item.RatingWeighting ? '1px' : 0,'background-color':'#F7B500' }" tooltip="{{item.RatingWeighting * 100}}%, Rating Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">star</i></div>
+                        <div class="progress-bar" role="progressbar" style="line-height:30px;" ng-style="{'width': (item.GreenWeighting * 100) + '%', 'border-width': item.GreenWeighting ? '1px' : 0,'background-color':'#31C85A' }" tooltip="{{item.GreenWeighting * 100}}%, Green Weighting" tooltip-placement="bottom"><i style="line-height:30px;" class="material-icons">eco</i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="item.$profile == 'Custom'" class="mt20">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label><i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">access_time</i>Time Weighting</label>
+                        <small class="help-block">Importance given to the driver who is nearest the pickup location.</small>
+                        <rzslider rz-slider-model="item.TimeWeighting" rz-slider-options="verticalSlider.TimeWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.TimeBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.TimeCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label><i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">hourglass_empty</i>Empty Weighting</label>
+                        <small class="help-block">Importance given to the driver who has been empty the longest.</small>
+                        <rzslider rz-slider-model="item.EmptyWeighting" rz-slider-options="verticalSlider.EmptyWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.EmptyBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.EmptyCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label><i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">how_to_reg</i>Fairness Weighting</label>
+                        <small class="help-block">Importance given to the driver who has earned the least in the current period.</small>
+                        <rzslider rz-slider-model="item.FairnessWeighting" rz-slider-options="verticalSlider.FairnessWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.FairnessBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.FairnessCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label> <i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">star</i> Rating Weighting</label>
+                        <small class="text-muted help-block">Importance given to the driver who has the best rating.</small>
+                        <rzslider rz-slider-model="item.RatingWeighting" rz-slider-options="verticalSlider.RatingWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.RatingBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.RatingCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label><i style="line-height: 18px; float: left; margin-right: 6px; font-size: 18px;" class="material-icons">eco</i>Green Weighting</label>
+                        <small class="text-muted help-block">Importance given to driver who would produce least emissions.</small>
+                        <rzslider rz-slider-model="item.GreenWeighting" rz-slider-options="verticalSlider.GreenWeighting.options" ng-disabled="viewMode == 'VIEW'"></rzslider>
+                        <div class="row">
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Base</label>
+                                    <input type="number" class="form-control" ng-model="item.GreenBase" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                            <div class="col-sm-3" ng-if="show.advanced">
+                                <div class="form-group">
+                                    <label>Max</label>
+                                    <input type="number" class="form-control" ng-model="item.GreenCap" ng-disabled="viewMode == 'VIEW'" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col-xs-6 text-left">
+                <button class="btn btn-danger btn-fix pull-left" ng-show="!!deleteOverride" ng-click="deleteOverride()">Delete</button>
+            </div>
+            <div class="col-xs-6 text-right">
+                <button class="btn btn-success btn-fix" ng-click="save()" ng-disabled="(item.$profile == 'Custom') && (item.TimeWeighting + item.RatingWeighting + item.FairnessWeighting + item.GreenWeighting + item.EmptyWeighting)<1">Save</button>
+                <button class="btn btn-warning btn-fix" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

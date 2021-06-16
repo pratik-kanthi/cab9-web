@@ -1,0 +1,37 @@
+﻿<form form-for="item" schema="KnownLocation" mode="{{viewMode}}" class="reference-modal">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+        <h3 class="modal-title">New Address</h3>
+    </div>
+    <div class="modal-body" id="driverpayments">
+        <small>Please give your address a name. It is a required field is and is used to identify each address.</small>
+        <h3 class="section-title">Basic Details</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div field-for="Name"></div>
+            </div>
+            <div class="col-md-6">
+                <div field-for="LocationType"></div>
+            </div>
+        </div>
+                    <h3 class="section-title">Address Details</h3>
+        <div class="row">
+            <div class="col-md-6">
+                    <address-populate object="item"></address-populate>
+                </div>
+                <div class="col-md-6">
+                    <div field-for="Address1"></div>
+                    <div field-for="Address2"></div>
+                    <div field-for="Area"></div>
+                    <div field-for="TownCity"></div>
+                    <div field-for="Postcode"></div>
+                    <div field-for="County"></div>
+                    <div field-for="Country"></div>
+                </div>
+            </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-success" ng-disabled="formFor.form.$invalid" ng-click="save()"> <i class="material-icons">save</i> Submit</button>
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"> <i class="material-icons">undo</i> Cancel</button>
+    </div>
+</form>

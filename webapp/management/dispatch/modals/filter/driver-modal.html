@@ -1,0 +1,50 @@
+<div id="dispatch-filters">
+    <div class="modal-header">
+        <h3 class="modal-title">Filter Drivers</h3>
+    </div>
+    <div class="modal-body">
+        <h3 class="section-title mt0">Status Filters</h3>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="status Incoming">
+                    <div class="checkbox">
+                        <input id="filter-OnBreak" type="checkbox" ng-model="status.OnBreak" />
+                        <label for="filter-OnBreak"></label>
+                    </div>
+                    On Break
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status OnRoute">
+                    <div class="checkbox">
+                        <input id="filter-onjob" type="checkbox" ng-model="status.OnJob" />
+                        <label for="filter-onjob"></label>
+                    </div>
+                    On Job
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status Completed">
+                    <div class="checkbox">
+                        <input id="filter-Clearing" type="checkbox" ng-model="status.Clearing" />
+                        <label for="filter-Clearing"></label>
+                    </div>
+                    Clearing
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="status Allocated">
+                    <div class="checkbox">
+                        <input id="filter-available" type="checkbox" ng-model="status.Available" />
+                        <label for="filter-available"></label>
+                    </div>
+                    Available
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-xs btn-warning pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Cancel</button>
+        <button class="btn btn-xs btn-success pull-right" ng-click="confirmFilters()"><i class="material-icons">filter_list</i>Filter</button>
+    </div>
+</div>

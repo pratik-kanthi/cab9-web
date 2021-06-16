@@ -1,0 +1,20 @@
+<div class="tags-wrapper">
+    <div class="tags-list" >
+        <div ng-repeat="selectedTag in selectedTags" class="tag">
+            <span class="tag-name">{{selectedTag.Name}}</span>
+            <i class="material-icons tag-remove" ng-click="removeTag($index)" ng-show="mode=='EDIT' || mode=='CREATE'">clear</i>
+            <!-- <i class="material-icons tag-remove" ng-show="mode!='EDIT' && mode!='CREATE'">clear</i> -->
+        </div>
+        <div class="tag none" ng-if="selectedTags.length==0">
+            <span class="tag-name">No Tags Added</span>
+            <!-- <i class="material-icons tag-remove" ng-show="mode!='EDIT' && mode!='CREATE'">clear</i> -->
+        </div>
+        <br class="clearfix" />
+        <div class="search-tags">
+            <input type="text" placeholder="+ Tags" ng-keydown="checkKeyDown($event)" class="tag-text" ng-model="searchText" ng-change="search()" ng-focus="search()" ng-show="(mode=='EDIT' || mode=='CREATE') && data.length>0" />
+            <ul class="suggestions-list" ng-show="mode=='EDIT' || mode=='CREATE'">
+                <li ng-repeat="suggestion in suggestions" class="animate-tag" ng-click="addToSelectedTags($index)" ng-mouseover="$parent.selectedIndex=$index" ng-class="{active : selectedIndex===$index}">{{suggestion.Name}}</li>
+            </ul>    
+        </div>
+    </div>
+</div>

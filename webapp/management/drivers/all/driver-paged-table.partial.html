@@ -1,0 +1,31 @@
+<div class="cards-view-options">
+        <div class="row">
+            <div class="col-sm-8 col-xs-12">
+                <div class="group-filters">
+                    <select class="group-select" ng-model="chosenDriverType">
+                        <option value="">All</option>
+                        <option ng-repeat="dt in driverTypes" value="{{dt.Id}}">{{dt.Name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+<table-for datasource="items" class="table table-condensed table-hover" schema="{{Schema}}" filtering="serverSearchTerm" sorting="" paging="paging" grouping="grouping" columns="customColumns" wrapper-class="table-responsive table-striped" table-class="">
+    <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+    <table-heading sorting="true">
+        <!--<table-cell column=""></table-cell>-->
+        <!-- for overriding -->
+    </table-heading>
+    <table-data-rows>
+        <table-selection></table-selection>
+        <!--<table-cell column=""></table-cell>-->
+        <!-- for overriding -->
+        <!--<table-expand-template></table-expand-template>-->
+        <!-- for expanding -->
+        <table-actions>
+            <a class="btn btn-xs btn-primary" ng-click="viewItem($row)" ng-if="state!=null && PERMISSIONS.test(state)"><i class="material-icons">open_in_new</i><span class="view">View</span></a>
+        </table-actions>
+    </table-data-rows>
+    <table-footer paging="true">
+    </table-footer>
+</table-for>

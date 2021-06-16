@@ -1,0 +1,228 @@
+.three-panel-layout {
+    .sidebar {
+        .sidebar-content {
+            .sidebar-content-wrapper {
+                .booking {
+                    cursor: pointer;
+                    box-shadow: 0px 1px 0px #fff;
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: #4E4E4E;
+                    padding-left: 15px;
+                    .transition(all 400ms);
+                    background-color: #fff;
+                    .content-wrapper {
+                        padding: 5px 0 10px;
+                        border-bottom: 1px solid #e7e7e7;
+                        .top,
+                        .middle,
+                        .bottom {
+                            position: relative;
+                        }
+                        .top {
+                            .id {
+                                font-weight: 600;
+                                .source {
+                                    color: #aaa;
+                                    font-weight: 400;
+                                }
+                            }
+                            .time {
+                                position: absolute;
+                                top: -4px;
+                                right: 5px;
+                                width: auto;
+                                font-size: 22px;
+                                font-weight: 300;
+                                .border-radius(2px);
+                                width: 64px;
+                                text-align: center;
+                            }
+                        }
+                        .middle {
+                            position: relative;
+                            padding-left: 0px;
+                            .location {
+                                margin-bottom: 5px;
+                                position: relative;
+                                i {
+                                    position: absolute;
+                                    left: -25px;
+                                    top: 2px;
+                                    font-size: 22px;
+                                }
+                                .passenger {
+                                    font-size: 12px;
+                                    line-height: 12px;
+                                    .countdown {
+                                        color: #aaa;
+                                        margin-left: 10px;
+                                    }
+                                }
+                            }
+                            .status,
+                            .offer-status {
+                                position: absolute;
+                                right: 9px;
+                                top: 14px;
+                                width: auto;
+                                padding: 0px 8px;
+                                .border-radius(2px);
+                                color: #fff;
+                                font-size: 11px;
+                                text-transform: uppercase;
+                                width: 80px;
+                                text-align: center;
+                                font-weight: 600;
+                                &.Cancelled {
+                                    background-color: @red;
+                                }
+                                &.Incoming {
+                                    background-color: @orange;
+                                }
+                                &.Allocated {
+                                    background-color: mix(@green, #fff, 80%);
+                                }
+                                &.OnRoute {
+                                    background-color: mix(@brand-primary, #fff, 40%);
+                                }
+                                &.Arrived {
+                                    background-color: mix(@brand-primary, #fff, 60%);
+                                }
+                                &.InProgress {
+                                    background-color: mix(@brand-primary, #fff, 80%);
+                                }
+                                &.OpenToBid {
+                                    background-color: mix(@brand-primary, #fff, 80%);
+                                }
+                                &.Clearing {
+                                    background-color: @brand-primary;
+                                }
+                                &.Completed {
+                                    background-color: @blue;
+                                }
+                                &.Sent {
+                                    background-color: @dark-grey;
+                                }
+                                &.Read {
+                                    background-color: @blue;
+                                }
+                                &.Accepted {
+                                    background-color: @green;
+                                }
+                                &.Rejected {
+                                    background-color: @red;
+                                }
+                            }
+                            .offer-status {
+                                right: 90px !important;
+                            }
+                        }
+                        .bottom {
+                            margin-bottom: 0;
+                            .driver {
+                                margin-top: 5px;
+                                line-height: 20px;
+                                font-weight: 600;
+                                img.profile {
+                                    float: left;
+                                    width: 20px;
+                                    height: 20px;
+                                    .border-radius(50%);
+                                    margin-right: 5px;
+                                }
+                            }
+                            .status,
+                            .offer-status {
+                                position: absolute;
+                                right: 5px;
+                                top: 0px;
+                                width: auto;
+                                padding: 0px 8px;
+                                .border-radius(2px);
+                                color: #fff;
+                                font-size: 11px;
+                                text-transform: uppercase;
+                                width: 80px;
+                                text-align: center;
+                                font-weight: 600;
+                                &.Cancelled {
+                                    background-color: @red;
+                                }
+                                &.Incoming {
+                                    background-color: @orange;
+                                }
+                                &.Allocated {
+                                    background-color: mix(@green, #fff, 80%);
+                                }
+                                &.OnRoute {
+                                    background-color: mix(@brand-primary, #fff, 40%);
+                                }
+                                &.Arrived {
+                                    background-color: mix(@brand-primary, #fff, 60%);
+                                }
+                                &.InProgress {
+                                    background-color: mix(@brand-primary, #fff, 80%);
+                                }
+                                &.OpenToBid {
+                                    background-color: mix(@brand-primary, #fff, 80%);
+                                }
+                                &.Clearing {
+                                    background-color: @brand-primary;
+                                }
+                                &.Completed {
+                                    background-color: @blue;
+                                }
+                                &.Sent {
+                                    background-color: @dark-grey;
+                                }
+                                &.Read {
+                                    background-color: @blue;
+                                }
+                                &.Accepted {
+                                    background-color: @green;
+                                }
+                                &.Rejected {
+                                    background-color: @red;
+                                }
+                            }
+                            .offer-status {
+                                right: 90px !important;
+                            }
+                        }
+                    }
+                    &.Cancelled {
+                        border-left: 5px solid @red !important;
+                    }
+                    &.Incoming {
+                        border-left: 5px solid @orange !important;
+                    }
+                    &.Allocated {
+                        border-left: 5px solid mix(@green, #fff, 80%) !important;
+                    }
+                    &.OnRoute {
+                        border-left: 5px solid mix(@brand-primary, #fff, 40%) !important;
+                    }
+                    &.Arrived {
+                        border-left: 5px solid mix(@brand-primary, #fff, 60%) !important;
+                    }
+                    &.InProgress {
+                        border-left: 5px solid mix(@brand-primary, #fff, 80%) !important;
+                    }
+                    &.OpenToBid {
+                        border-left: 5px solid mix(@brand-primary, #fff, 80%) !important;
+                    }
+                    &.Clearing {
+                        border-left: 5px solid @brand-primary !important;
+                    }
+                    &.Completed {
+                        border-left: 5px solid @blue !important;
+                    }
+                    &.active {
+                        background-color: mix(@brand-primary, #f9f9f9, 15%);
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,74 @@
+<script type="text/ng-template" id="/dispatch-driver.template">
+    <div class="driver-strip" ng-class="::d.DriverStatus">
+        <div class="driver">
+            <div class="image">
+                <img class="img-circle" ng-src="{{::formatImage(d.Driver)}}" />
+                <i class="material-icons" ng-class="(d.$marker && dispatchObj.map.selected.driverId == d.DriverId)? 'pop':''" ng-click="dispatchObj.drivers.selectDriver(d)" tooltip="Location" tooltip-placement="bottom">location_on</i>
+            </div>
+            <div class="info">
+                <strong ng-bind="::(d.Callsign + ' ' + d.Firstname + ' ' + d.Surname)"></strong>
+                <div ng-if="d.Id">
+                    <span style="color:black;" tooltip="{{::d.LastKnownLocation }}" tooltip-placement="bottom" ng-bind="::d.LastKnownShortLocation" ng-show="(d.LastKnownShortLocation)"></span>
+                    <span class="text-muted" ng-show="!(d.LastKnownShortLocation)"><i class="fa fa-refresh fa-spin" aria-hidden="true"></i> Fetching Location...</span>
+                </div>
+                <div ng-if="!d.Id">
+                    <span class="text-muted">Driver Offline</span>
+                </div>
+            </div>
+        </div>
+        <div class="bookings" ng-if="d.Id">
+            <div class="stat">
+                <span class="number" ng-bind="d.WeeksEarnings | currency:'&pound;':0"></span>
+                <span class="lbl">Earnings</span>
+            </div>
+        </div>
+        <div class="time" ng-if="d.Id">
+            <div class="stat" style="text-align:left;padding-top:0;white-space: nowrap;overflow: hidden;-ms-text-overflow: ellipsis;-o-text-overflow: ellipsis;text-overflow: ellipsis;">
+                <b style="color:black;">{{ d.ShiftLengthTime | time:'HH:mm' }}</b> <b>Shift</b><br />
+                <span ng-if="d.EmptyTime && d.EmptyTime != '00:00:00' && d.DriverStatus=='Available'" ><b style="color:black;">{{ d.EmptyTime | time:'HH:mm' }}</b> <b>Empty</b></span>
+            </div>
+        </div>
+        <div class="vehicle" ng-if="d.VehicleId && d.Id">
+            <div class="number-plate">{{::d.Registration}}</div>
+            <div class="description">{{::d.Colour}} {{::d.Make}} {{::d.Model}}</div>
+        </div>
+        <div class="vehicle" ng-if="(!d.VehicleId) && d.Id">
+            <div class="number-plate">N/A</div>
+            <div class="description">Vehicle Not Found</div>
+        </div>
+        <div class="option" dropdown>
+            <a class="btn btn-xs btn-primary" dropdown-toggle><i ng-class="(!d.$activity) ? 'fa fa-caret-down':'fa fa-circle-o-notch fa-spin'"></i></a>
+            <ul class="dropdown-menu">
+                <li ng-show="d.DriverStatus=='Available' || d.DriverStatus=='OnJob' || d.DriverStatus=='Clearing' ">
+                    <a href="" ng-click="dispatchObj.drivers.nudgeDriverOnShift(d)"><i class="material-icons">settings_remote</i> Nudge Driver</a>
+                </li>
+                <li ng-show="d.DriverStatus=='Available'">
+                    <a href="" ng-click="dispatchObj.drivers.endShift(d)"><i class="material-icons">highlight_off</i> End Shift</a>
+                </li>
+                <!-- <li ng-show="d.DriverStatus=='Available'">
+                    <a href="" ng-click="dispatchObj.putDriverOnJob(d)"><i class="material-icons">remove_circle</i> On Job</a>
+                </li>
+                <li ng-show="d.DriverStatus=='OnJob'">
+                    <a href="" ng-click="dispatchObj.makeDriverAvailable(d)"><i class="material-icons">check_circle</i> Make Available</a>
+                </li> -->
+                <li>
+                    <a href=""><i class="material-icons">message</i> Chat (Coming Soon)</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>
+<div ng-if="'dispatch.drivers' | isState" id="dispatch-drivers">
+    <div class="drivers-wrapper">
+        <!-- <div ng-repeat="status in dispatchObj.drivers.byStatus" class="shift-section" ng-class="status.status" ng-if="dispatchObj.filters.driverStatuses[status.status]">
+            <div class="header">{{status.display}} ({{status.drivers.length}} Drivers)</div>
+            <div ng-repeat="d in status.drivers | filter:dispatchObj.driverSearch | orderBy:'-EmptyTime'" class="driver-strip-wrapper">
+                <ng-include src="'/dispatch-driver.template'"></ng-include>
+            </div>
+            <br class="clearfix" />
+        </div> -->
+        
+        <!-- directive binding react and angular -->
+        <react-driver dispatch-obj="dispatchObj" reload="dispatchObj.drivers.reload"  format-image="formatImage(driver)"></react-driver>
+    </div>
+</div>

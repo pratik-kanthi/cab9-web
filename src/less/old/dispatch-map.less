@@ -1,0 +1,105 @@
+.three-panel-layout {
+    .main-section {
+        .map-area {
+            position: absolute;
+            top: 0px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            #dispatch-map {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+            .page-options {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                z-index: 1000;
+                a.button {
+                    float: right;
+                    margin-left: 10px;
+                    width: 50px;
+                    height: 50px;
+                    padding: 0;
+                    text-align: center;
+                    .border-radius(50%);
+                    background: #f9f9f9;
+                    border: 0;
+                    color: #fff;
+                    .shadow();
+                    i {
+                        color: @brand-primary;
+                        line-height: 50px;
+                        font-size: 24px !important;
+                    }
+                }
+                .map-options-menu {
+                    position: absolute;
+                    top: 65px;
+                    right: 60px;
+                    width: 250px;
+                    background: #f9f9f9;
+                    list-style: none;
+                    padding-left: 0;
+                    .border-radius(4px);
+                    .shadow();
+                    li {
+                        padding: 4px 15px;
+                        border-bottom: 1px solid #ddd;
+                        strong {
+                            display: block;
+                            color: @grey;
+                            text-transform: uppercase;
+                        }
+                        label {
+                            display: inline-block;
+                            margin-right: 10px;
+                            input {
+                                margin-right: 5px;
+                            }
+                            font-weight: 400;
+                            color: #444;
+                        }
+                        .toggle {
+                            .control {
+                                float: right;
+                            }
+                            .info {
+                                line-height: 40px;
+                            }
+                            color: #444;
+                        }
+                    }
+                }
+            }
+            .journey-stats {
+            	.animate(0.4, zoomInUp);
+            	position: absolute;
+                bottom: 10px;
+                left: 10px;
+                z-index: 1000;
+                background-color: #eee;
+                padding:10px;
+                width: 300px;
+                h3.section-title {
+                	margin: 0;
+                }
+                .stats {
+                	margin-top: 10px;
+                	.col-sm-4 {
+                		strong{
+                			display: block;
+                			color: @brand-primary;
+                		}
+                		span {
+							color: @dark-grey;
+                		}
+                	}
+                }
+            }
+        }
+    }
+}

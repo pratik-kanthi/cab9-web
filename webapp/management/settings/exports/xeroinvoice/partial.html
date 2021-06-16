@@ -1,0 +1,22 @@
+<div class="panel panel-default" form-for="report.params" schema="ReportParams">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i> XERO - Invoice Export</h3>
+    </div>
+    <div class="panel-body" style="overflow:visible;">
+        <p>This export will provide a XERO compatible CSV for importing Client Invoices into XERO.</p>
+        <div class="row">
+            <div class="col-xs-4">
+                <div field-for="From"></div>
+            </div>
+            <div class="col-xs-4">
+                <div field-for="To"></div>
+            </div>
+            <div class="col-xs-4">
+                
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button type="button" class="btn btn-success" ng-disabled="formFor.form.$invalid" ng-click="runReport()"><i class="material-icons">play_arrow</i> Run Report</button>
+    </div>
+</div>

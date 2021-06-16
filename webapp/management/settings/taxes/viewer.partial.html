@@ -1,0 +1,70 @@
+﻿<div form-for="tax" schema="Tax" displayMode="{{displayMode}}">
+    <div class="row">
+        <div class="col-xs-12" style="padding: 8px 15px;">
+            <div ng-if="displayMode === 'VIEW'">
+                <button class="btn btn-xs btn-primary" ng-click="startEditing()" ng-if="PERMISSIONS.test('settings.taxes','W')"> <i class="material-icons">create</i> Edit</button>
+            </div>
+            <div ng-if="displayMode === 'EDIT' || displayMode === 'CREATE'">
+                <button class="btn btn-xs btn-success" ng-click="saveEdits()" ng-disabled="formFor.form.$invalid || tax.TaxComponents.length == 0"> <i class="material-icons">save</i> Submit</button>
+                <button class="btn btn-xs btn-warning" ng-click="cancelEditing()"> <i class="material-icons">undo</i> Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <h3 class="section-title">Tax Details</h3>
+            <div field-for="Name"></div>
+            <div field-for="Description" textarea="3"></div>
+            <div field-for="TaxTypeId" select-from="taxTypes"></div>
+        </div>
+        <div class="col-md-8 col-sm-6">
+            <h3 class="section-title">Tax Components</h3>
+            <div class="mb20">
+                <a class="btn btn-xs btn-success" ng-click="createNewComponent()" ng-if="PERMISSIONS.test('settings.taxes','W')"><i class="material-icons">add</i>Add</a>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th style="width:30%">Name</th>
+                        <th style="width:45%">Rate (%)</th>
+                        <th style="width:25%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-if="newComponent">
+                        <td>
+                            <input type="text" class="form-control" ng-model="newComponent.Name" placeholder="Name" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="newComponent.Rate" placeholder="Rate" />
+                        </td>
+                        <td>
+                            <a class="btn btn-xs btn-success" ng-click="addComponent()"><i class="material-icons">save</i>Save</a>
+                            <a class="btn btn-xs btn-warning" ng-click="cancelAdd()"><i class="material-icons">undo</i>Cancel</a>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="component in tax.TaxComponents">
+                        <td>
+                            <span ng-bind="component.Name" ng-show="component!=selected"></span>
+                            <input type="text" class="form-control" ng-model="component.Name" ng-show="component==selected" placeholder="Name" />
+                        </td>
+                        <td>
+                            <span ng-bind="component.Rate" ng-show="component!=selected"></span>
+                            <input type="text" class="form-control" ng-model="component.Rate" ng-show="component==selected" placeholder="Rate" />
+                        </td>
+                        <td class="text-right">
+                            <div ng-show="component!=selected">
+                                <a class="btn btn-xs btn-warning" ng-click="selectComponent(component)" ng-if="PERMISSIONS.test('settings.taxes','W')"><i class="material-icons">create</i>Edit</a>
+                                <a class="btn btn-xs btn-danger" ng-click="deleteComponent(component)" ng-if="PERMISSIONS.test('settings.taxes','D')"><i class="material-icons">delete</i>Delete</a>
+                            </div>
+                            <div ng-show="component==selected">
+                                <a class="btn btn-xs btn-success" ng-click="updateComponent(component)"><i class="material-icons">save</i>Save</a>
+                                <a class="btn btn-xs btn-warning" ng-click="cancelUpdate(component)"><i class="material-icons">undo</i>Cancel</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

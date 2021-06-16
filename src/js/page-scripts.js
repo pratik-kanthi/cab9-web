@@ -1,0 +1,30 @@
+// @codekit-prepend "../../bower_components/jquery/dist/jquery.min.js";
+// @codekit-prepend "../../bower_components/jquery.easing/js/jquery.easing.js";
+// @codekit-prepend "../../bower_components/moment/moment.js";
+// @codekit-prepend "../../bower_components/angular/angular.min.js";
+// @codekit-prepend "../../bower_components/masonry/dist/masonry.pkgd.min.js";
+// @codekit-prepend "../../bower_components/pace/pace.min.js";
+// @codekit-prepend "../../bower_components/angular-animate/angular-animate.min.js";
+// @codekit-prepend "../../bower_components/angular-ui-router/release/angular-ui-router.js";
+// @codekit-prepend "../../bower_components/angular-ui-router-tabs/src/ui-router-tabs.js";
+// @codekit-prepend "../../bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js";
+// @codekit-prepend "../../bower_components/angular-ui-select/dist/select.min.js";
+// @codekit-prepend "../../bower_components/jcrop/js/jquery.Jcrop.min.js";
+// @codekit-prepend "../../bower_components/angular-filter/dist/angular-filter.js";
+// @codekit-prepend "../../additional_components/jQuery.Sparklines/jquery.sparkline.js";
+// @codekit-prepend "../../bower_components/flot/jquery.flot.js";
+// @codekit-prepend "../../bower_components/flot/jquery.flot.time.js";
+// @codekit-prepend "../../bower_components/flot/curvedLines.js";
+// @codekit-prepend "../../bower_components/angular-flot/angular-flot.js";
+// @codekit-prepend "../../bower_components/angular-messages/angular-messages.js";
+// @codekit-prepend "../../bower_components/sweetalert/lib/sweet-alert.min.js";
+// @codekit-prepend "../../bower_components/signalr/jquery.signalR.min.js";
+// @codekit-prepend "../../bower_components/lodash/dist/lodash.js";
+// @codekit-prepend "../../bower_components/fastclick/lib/fastclick.js";
+// @codekit-prepend "../../bower_components/angular-google-maps/dist/angular-google-maps.js";
+// @codekit-prepend "../../bower_components/marker-animate-unobtrusive/vendor/markerAnimate.js";
+// @codekit-prepend "../../bower_components/marker-animate-unobtrusive/SlidingMarker.js";
+// @codekit-prepend "../../bower_components/angular-google-places-autocomplete/src/autocomplete.js";
+// @codekit-prepend "Cab9.js";
+
+

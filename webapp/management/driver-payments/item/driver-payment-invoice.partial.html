@@ -1,0 +1,241 @@
+<div sub-form-for="Invoice" schema="Invoice" mode="{{displayMode}}">
+    <div>
+        <div class="row">
+            <div class="col-sm-6">
+                <p class="bold brand-primary">Payable To Company</p>
+                <a class="btn btn-primary" ng-click="recalculate('Invoice')"><i class="material-icons">save</i>Recalculate Selected</a>
+                <a class="btn btn-warning" ng-click="removeBookings('Invoice')"><i class="material-icons">save</i>Remove Selected</a>
+            </div>
+            <div class="col-sm-6">
+                <div ng-show="displayMode === 'EDIT'">
+                    <div field-for="Notes" textarea="4" display="Payment Notes"></div>
+                </div>
+                <div class="col-md-6" ng-show="displayMode === 'VIEW'">
+                    <strong class="brand-primary">Payment Notes</strong>
+                    <p ng-bind="payment.Invoice.Notes" ng-show="payment.Invoice.Notes"></p>
+                    <p class="text-muted" ng-show="!payment.Invoice.Notes">No Notes Added</p>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive mt20">
+            <table class="table table-condensed payments-table">
+                <thead>
+                    <tr>
+                        <th style="width:5%" class="text-center">
+                            <div class="checkbox">
+                                <input type="checkbox" id="table-group-check" ng-click="toggleSelectAll('Invoice')" ng-checked="allInvoiceSelected" ng-disabled="displayMode === 'VIEW'">
+                                <label for="table-group-check"></label>
+                            </div>
+                        </th>
+                        <th style="width:15%">Item</th>
+                        <th style="width:30%">Description</th>
+                        <th style="width:15%" class="text-right">Company Commission</th>
+                        <th style="width:10%" class="text-right">Waiting</th>
+                        <th style="width:10%" class="text-right">Tax(VAT)</th>
+                        <th style="width:10%" class="text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="8" ng-show="selectedItem.InvoiceBookings.length == 0">
+                            <strong class="brand-primary">
+                                No Bookings
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="item in selectedItem.InvoiceBookings | orderBy:'Booking.BookedDateTime'" ng-init="item.Booking.Price = 0" ng-class="item.Booking.BookingStatus">
+                        <td class="text-center" ng-init="index=$index">
+                            <div class="checkbox">
+                                <input type="checkbox" id="bookingSelectedCheck{{index}}" ng-disabled="displayMode === 'VIEW'" ng-model="item.Booking.$selected" />
+                                <label for="bookingSelectedCheck{{index}}"></label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb5" ng-if="displayMode =='CREATE'">
+                                <a href="" class="btn btn-xs btn-warning" ng-click="openEditWindow(item.Booking, false)"><i class="material-icons">create</i>Edit</a>
+                            </div>
+                            <strong>#{{item.Booking.LocalId}}</strong>
+                            <br /> {{item.Booking.BookedDateTime | companyDate:'DD/MM/YYYY HH:mm'}}
+                            <br /> <strong class="upper status">{{item.Booking.BookingStatus}}</strong><br />
+                            {{item.Booking.PaymentMethod}}
+                        </td>
+                        <td style="overflow:hidden;">
+                            <div ng-if="!!item.Booking.Client"><strong>Client: </strong>{{item.Booking.Client && item.Booking.Client.Name}}</div>
+                            <div ng-repeat="s in item.Booking.BookingStops">
+                                <strong>{{($first ? 'From' : ($last ? 'To' : 'Via'))}}: </strong>
+                                {{s.StopSummary}}
+                                <br />
+                            </div>
+                            <strong>Vehicle: </strong>{{item.Booking.VehicleType && item.Booking.VehicleType.Name}}
+                            <br />
+                            <strong>Fare: </strong>{{(item.Booking.ActualCost - item.Booking.Discount || 0) | Format}}
+                            <span ng-repeat="e in item.Breakdown.Workings" ng-show="e.Distance < 0">
+                                {{e.Text}}: {{e.Cost | Format}}
+                                <br />
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <strong class="brand-primary" ng-bind="item.Booking.CompanyCommission | Format"></strong><br />
+                            <span ng-if="item.Booking.ManualCommission" class="text-muted">(Manual)</span>
+                        </td>
+                        <td class="text-right">
+                            <span ng-bind="item.Booking.CompanyWaitingCommission | Format"></span>
+                        </td>
+                        <td class="text-right">
+                            <span ng-bind="item.Booking.CompanyCommissionTax | Format"></span>
+                        </td>
+                        <td class="text-right">
+                            <span class="bold" ng-bind="item.Booking.CompanyCommission + item.Booking.CompanyWaitingCommission + item.Booking.CompanyCommissionTax | Format"></span>
+                            <a class="brand-secondary" ng-click="showBreakdown(item)"><strong>Details</strong></a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-right">
+                            <h4>Commission Total </h4>
+                        </td>
+                        <td class="text-right">
+                            <h4>{{((payment.Invoice.SubTotal)  | Format)}}</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-right">
+                            <h4>Tax Total </h4>
+                        </td>
+                        <td class="text-right">
+                            <h4>{{(payment.Invoice.TaxAmount | Format)}}</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-right">
+                            <h4>Commission Receivable</h4>
+                        </td>
+                        <td class="text-right">
+                            <h4>{{(payment.Invoice.TotalAmount  | Format)}}</h4>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div ng-if="invoiceAdjustments">
+        <div class="mt30">
+            <strong class="brand-primary">Adjustments</strong>
+        </div>
+        <div class="table-responsive mt20">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th style="width:5%" class="text-center" ng-show="displayMode=='CREATE'">
+                            <div class="checkbox">
+                                <input type="checkbox" id="table-group-check" ng-click="toggleSelectAll('Adjustment')" ng-checked="allAdjustmentsSelected" ng-disabled="displayMode === 'VIEW'">
+                                <label for="table-group-check"></label>
+                            </div>
+                        </th>
+                        <th>Type</th>
+                        <th>Source</th>
+                        <th class="text-right">Amount</th>
+                        <th class="text-right">Tax</th>
+                        <th class="text-center">Reference</th>
+                        <th ng-show="displayMode!=='CREATE'"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" ng-show="invoiceAdjustments.length == 0">
+                            <strong class="brand-primary">No Adjustments</strong>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="adjustment in invoiceAdjustments">
+                        <td class="text-center" ng-init="index=$index" ng-show="displayMode=='CREATE'">
+                            <div class="checkbox">
+                                <input type="checkbox" id="bookingSelectedCheck{{index}}" ng-disabled="displayMode === 'VIEW'" ng-model="adjustment.$selected" />
+                                <label for="bookingSelectedCheck{{index}}"></label>
+                            </div>
+                        </td>
+                        <td><strong class="brand-primary" ng-bind="adjustment.Type"></strong></td>
+                        <td><strong class="brand-primary" ng-bind="adjustment.DriverAdjustmentId ? 'Driver - ' + adjustment.DriverAdjustment.Recurring : 'Payment Model'"></strong></td>
+                        <td class="text-right">
+                            <span ng-bind="adjustment.Amount | currency" ng-hide="editing.adjustment == adjustment"></span>
+                            <input type="number" class="form-control" ng-model="adjustment.Amount" ng-show="editing.adjustment == adjustment"/>
+                        </td>
+                        <td class="text-right">
+                            <span ng-bind="adjustment.TaxAmount | currency" ng-hide="editing.adjustment == adjustment"></span>
+                        </td>
+                        <td class="text-center"><span ng-bind="adjustment.DriverAdjustmentId ? adjustment.DriverAdjustment.Reference : adjustment.DriverPaymentModelAdjustment.Reference"></span></td>
+                        <td ng-show="displayMode!=='CREATE'">
+                            <a class="btn btn-info btn-xs" ng-click="startEditAdjustment(adjustment)" ng-hide="editing.adjustment == adjustment"><i class="material-icons">edit</i>Edit</a>
+                            <a class="btn btn-danger btn-xs" ng-click="removeAdjustment(adjustment)" ng-hide="editing.adjustment == adjustment"><i class="material-icons">delete</i>Remove</a>
+                            <a class="btn btn-success btn-xs" ng-click="saveEditAdjustment()" ng-show="editing.adjustment == adjustment"><i class="material-icons">check_circle</i>Save</a>
+                            <a class="btn btn-warning btn-xs" ng-click="cancelEditAdjustment()" ng-show="editing.adjustment == adjustment"><i class="material-icons">undo</i>Cancel</a>
+                        </td>
+                    </tr>
+                    <tr ng-hide="creating.adjustment">
+                        <td colspan="5">
+                            <a class="btn btn-xs btn-success" ng-click="addAdjustment('invoice')"><i class="material-icons">playlist_add</i>Add Adjustment</a>
+                        </td>
+                    </tr>
+                    <tr ng-show="creating.adjustment">
+                        <td>
+                            <span ng-bind="creating.adjustment.Type"></span>
+                        </td>
+                        <td>
+                            Driver - One Off
+                        </td>
+                        <td class="text-right">
+                            <input type="number" class="form-control" ng-model="creating.adjustment.Amount" />
+                        </td>
+                        <td class="text-right">
+                            <select class="form-control" ng-model="creating.adjustment.TaxId" ng-options="x.Id as x.Name for x in taxes">
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" ng-model="creating.adjustment.Reference" />
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-xs" ng-click="saveNewAdjustment()" ng-disabled="!creating.adjustment.Amount || !creating.adjustment.Reference"><i class="material-icons">check_circle</i>Save</button>
+                            <a class="btn btn-warning btn-xs" ng-click="cancelNewAdjustment()"><i class="material-icons">undo</i>Cancel</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+    <!-- <div class="row" ng-show="displayMode === 'EDIT'">
+        <div class="col-md-6">
+            <div field-for="Notes" textarea="4"></div>
+        </div>
+        <div class="col-md-6">
+            <div field-for="PaymentInstructions"></div>
+        </div>
+    </div>
+    <div class="row" ng-if="displayMode === 'VIEW'">
+        <div class="col-md-6">
+            <span class="bold brand-primary upper">Notes</span>
+            <p ng-bind="payment.Invoice.Notes" ng-show="payment.Invoice.Notes"></p>
+            <p class="text-muted" ng-show="!payment.Invoice.Notes">No Notes Added</p>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Collect From Driver - Invoices</h3>
+                </div>
+                <div class="panel-body">
+                    <small>Amount driver owes to the company. These are the bookings for which driver has collected the money from the passengers and owes commision to the company.</small>
+                    <h4 class="mt20">Total Bookings Value: {{payment.Invoice.BookingsSubTotal | Format}}</h4>
+                    <h4 class="mt20">Adjustments Value: {{payment.Invoice.AdjustmentsSubTotal | Format}}</h4>
+                    <h4 class="mt20">Tax: {{payment.Invoice.TaxAmount | Format}}</h4>
+                    <h4 class="mt20">Total Due: {{payment.Invoice.TotalAmount | Format}}</h4>
+                    <div class="mt10">
+                        <a href="" class="btn btn-primary" ng-click="details('Invoice')" ng-if="PERMISSIONS.test('driverpayments.viewer.invoice')"><i class="material-icons">chrome_reader_mode</i>Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+<div class="mt40 mb40" ng-show="selectedItem.InvoiceBookings.length==0">
+    <h4 class="grey text-center">Receivables not available for the payment!</h4>
+</div>

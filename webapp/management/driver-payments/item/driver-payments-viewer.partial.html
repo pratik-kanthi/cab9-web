@@ -1,0 +1,110 @@
+<div form-for="payment" id="driverpayments" schema="DriverPayment" mode="{{displayMode}}" class="module">
+    <div class="row mb20">
+        <div class="col-sm-6">
+            <button class="btn btn-warning" ng-click="editMode()" ng-if="displayMode == 'VIEW' && PERMISSIONS.test('driverpayments.viewer','W')"><i class="material-icons">create</i>Edit</button>
+            <button class="btn btn-success" ng-click="Save()" ng-if="displayMode == 'EDIT' && PERMISSIONS.test('driverpayments.viewer','W')"><i class="material-icons">update</i>Save</button>
+            <button class="btn btn-warning" ng-if="displayMode == 'EDIT' || displayMode =='CREATE'" ng-click="Cancel()"><i class="material-icons">undo</i>Cancel</button>
+            <a class="btn btn-primary ml10" ng-click="fetchBookings()" ng-if="displayMode =='CREATE'"><i class="material-icons">save</i>Refetch Bookings</a>
+        </div>
+        <div class="col-sm-6 text-right" ng-if="displayMode === 'VIEW' || displayMode === 'EDIT'">
+            <button class="btn btn-success" ng-click="exportCompanyInvoice()" ng-show="payment.InvoiceId"> <i class="material-icons">get_app</i>Company Invoice</button>
+            <button class="btn btn-warning" ng-click="exportInvoice()" ng-show="payment.InvoiceId"> <i class="material-icons">get_app</i>Driver Statement</button>
+            <button class="btn btn-info" ng-click="emailTo()"> <i class="material-icons">mail</i> Email Statment</button>
+            <button class="btn btn-danger" ng-click="remove()" ng-if="displayMode == 'VIEW' && PERMISSIONS.test('driverpayments.viewer','D')"><i class="material-icons">delete</i>Delete</button>
+        </div>
+    </div>
+    <h3 class="section-title mt0 mb30">
+        Driver Payment Details
+    </h3>
+    <div ng-show="displayMode === 'EDIT' || displayMode === 'VIEW'">
+        <div class="row">
+            <div class="col-sm-6 driver-details">
+                <img ng-src="{{payment.Driver._ImageUrl}}" alt="" />
+                <div class="details">
+                    <h4 class="driver-name">{{payment.Driver._Fullname}} ({{payment.Driver.Callsign}})</h4>
+                    <p class="address">{{payment.Driver._FullAddress}}</p>
+                    <p>
+                        <strong>Supplier No:</strong> {{payment.Driver.SupplierNo}} <br />
+                        <strong>Mobile:</strong> {{payment.Driver.Mobile}} <br />
+                        <strong>Email:</strong> {{payment.Driver.Email}}
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group" ng-show="(payment.DriverId && payment.Driver)">
+                    <label class="control-label">Status</label>
+                    <p class="form-control-static" ng-bind="payment.Status | uppercase"></p>
+                </div>
+                <div class="form-group" ng-show="(payment.DriverId && payment.Driver)">
+                    <label class="control-label">Payment From</label>
+                    <p class="form-control-static" ng-bind="payment.PaymentFrom | date:'mediumDate'"></p>
+                </div>
+                <div class="form-group" ng-show="(payment.DriverId && payment.Driver)">
+                    <label class="control-label">Payment To</label>
+                    <p class="form-control-static" ng-bind="payment.PaymentTo | date:'mediumDate'"></p>
+                </div>
+            </div>
+        </div>
+        <tabs data="tabDefs" type="tabs" justified="true"></tabs>
+        <ui-view class="tab-content"></ui-view>
+    </div>
+    <div ng-show="displayMode==='CREATE'">
+        <h4 ng-show="fetching" class="brand-primary"><i class="fa fa-circle-o-notch fa-spin mr10"></i>Please wait while we fetch the payment details...</h4>
+        <div ng-show="data && !fetching">
+            <h3 class="section-title">Payments Preview</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Driver</th>
+                        <th class="text-right">Bookings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat-start="item in data">
+                        <td colspan="2"><span ng-bind="item.Driver.Name"></span>
+                            <button ng-click="expand(item)" class="btn btn-success pull-right"><i class="material-icons">arrow_drop_down</i><span ng-bind="item.InvoiceBookings.length+item.BillBookings.length"></span> Bookings</button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat-end ng-if="selectedItem==item">
+                        <td colspan="2">
+                            <div ng-if="selectedItem.conflicts.length>0">
+                                <b class="brand-secondary" ng-if="selectedItem.conflicts.length>1">
+                                There are {{selectedItem.conflicts.length}} conflicts.
+                                </b>
+                                <b class="brand-secondary" ng-if="selectedItem.conflicts.length==1">
+                                There is {{selectedItem.conflicts.length}} conflict.
+                                </b>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Invoice Amount</th>
+                                            <th>Bill Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="conflict in selectedItem.conflicts">
+                                            <td><span ng-bind="conflict.PaymentFrom | date:'mediumDate'"></span></td>
+                                            <td><span ng-bind="conflict.PaymentTo | date:'mediumDate'"></span></td>
+                                            <td><span ng-bind="conflict.Invoice.SubTotal| Format"></span></td>
+                                            <td><span ng-bind="conflict.Bill.SubTotal| Format"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mb10 mt10">
+                                <a class="btn btn-success mb20" ng-click="save()" ng-disabled="(getSelectedBookings('Bill').length+getSelectedBookings('Invoice').length)==0"><i class="material-icons">save</i>Confirm Payment</a>
+                            </div>
+                            <div class="mt10 mb10">
+                                Please check the details below and make necessary adjustments. Once you are happy with the payment please click on the Confirm Payment button above.
+                            </div>
+                            <tabs data="tabDefs" type="tabs" justified="true"></tabs>
+                            <ui-view class="tab-content" autoscroll='true'></ui-view>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

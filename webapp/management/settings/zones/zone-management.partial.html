@@ -1,0 +1,146 @@
+<div id="zone-settings">
+    <div id="zone-list" class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Zones</h3>
+            <div ng-if="selected.mode == 'VIEW'" class="close">
+                <button type="button" ng-click="startAddingNewZone()">
+                    <i class="material-icons">add</i>
+                </button>
+            </div>
+            <!--<div class="pull-right">
+
+            </div>-->
+        </div>
+        <div class="list-group">
+            <div class="list-group-item p0 search-box">
+                <input type="text" class="form-control" ng-model="searchTerm.$" style="border:0;border-radius:0 !important;" placeholder="Search by name..." />
+            </div>
+            <a ng-click="selectZone(zone)" class="list-group-item zone" style="padding: 8px 12px;" ng-repeat="zone in zones | filter:searchTerm.$" ng-class="(selected.current ==zone)? 'active-zone':''">
+                <div>
+                    <b style="margin: 0;" ng-bind="zone.Name"></b>
+                </div>
+                <small style="margin: 0;" ng-bind="zone.Description || 'No Description Added'"></small>
+            </a>
+        </div>
+        <!--<div class="panel-body">
+        </div>-->
+    </div>
+    <div class="map-container">
+        <div class="list-group-item p0 search-box autocomplete">
+            <input type="text" id="myInput" class="form-control hidden-xs search" placeholder="Enter a location"/>
+          </div>
+        <div id="zone-map"></div>
+        <div id="info" class="panel panel-default" ng-if="selected.current != null">
+            <div class="panel-heading">
+                <h3 class="panel-title"><strong class="text-primary">{{selected.current.Name}}</strong></h3>
+                <div ng-if="selected.mode == 'VIEW'" class="pull-right">
+                    <div class="close">
+                        <button type="button" ng-click="selectZone(null)">
+                            <i class="material-icons">close</i>
+                        </button>
+                    </div>
+                    <div class="close">
+                        <button type="button" ng-click="startEditingZone()">
+                            <i class="material-icons">edit</i>
+                        </button>
+                    </div>
+                    <div class="close">
+                        <button type="button" ng-click="startMerge()">
+                            <i class="material-icons" style="transform:rotate(90deg);transform-origin:center;">call_merge</i>
+                        </button>
+                    </div>
+                    <br class="clearfix">
+                </div>
+                <div ng-if="selected.mode == 'EDIT' || selected.mode == 'CREATE'" class="pull-right">
+                    <div class="close">
+                        <button type="button" ng-click="deleteZone()" ng-if="selected.mode == 'EDIT'">
+                            <i class="material-icons">delete</i>
+                        </button>
+                        <button type="button" ng-click="cancelEditingZone()">
+                            <i class="material-icons">undo</i>
+                        </button>
+                        <div class="close">
+                            <button type="button" ng-click="finishEditingZone()" ng-disabled="!selected.current.$poly">
+                                <i class="material-icons">save</i>
+                            </button>
+                        </div>
+                        <br class="clearfix">
+                    </div>
+                </div>
+                <div ng-if="selected.mode == 'MERGE'" class="pull-right">
+                    <div class="close">
+                        <button type="button" ng-click="cancelMerge()">
+                            <i class="material-icons">undo</i>
+                        </button>
+                        <div class="close">
+                            <button type="button" ng-click="performMerge()" ng-disabled="!selected.merge.zone || !selected.merge.type">
+                                <i class="material-icons">check</i>
+                            </button>
+                        </div>
+                        <br class="clearfix">
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body" ng-if="selected.mode == 'VIEW'">
+                {{selected.current.Description}}<br />
+            </div>
+            <div class="panel-body" ng-if="selected.mode == 'EDIT' || selected.mode == 'CREATE'">
+                <div class="form-group">
+                    <label class="control-label">Name</label>
+                    <div class="form-edit">
+                        <input type="text" class="form-control" placeholder="Enter Zone Name..." ng-model="selected.current.Name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Description</label>
+                    <div class="form-edit">
+                        <textarea class="form-control" rows="3" ng-model="selected.current.Description" placeholder="Enter Zone Description..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body" ng-if="selected.mode == 'MERGE'">
+                <div class="form-group">
+                    <label class="control-label">Merge With:</label>
+                    <div class="form-edit">
+                        <ui-select class="edit" ng-model="selected.merge.zone" name="MergeZoneInput" theme="selectize">
+                            <ui-select-match allow-clear="true" placeholder="Select Zone...">
+                                <div class="select-text">
+                                    {{$select.selected.Name}}
+                                </div>
+                            </ui-select-match>
+                            <ui-select-choices repeat="option as option in zones | filter: notSelectedFilter | filter: $select.search">
+                                <div class="select-text-option">
+                                    <div ng-bind-html="option.Name | highlight: $select.search"></div>
+                                    <small class="text-muted" ng-show="::option.Description">{{::option.Description}}</small>
+                                </div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Merge Type:</label>
+                    <div class="form-edit">
+                        <select class="form-control" ng-model="selected.merge.type">
+                            <option value="nochange">No Zone Change</option>
+                            <option value="combine" ng-disabled="!selected.merge.check.overlaps">Combine Zone Areas</option>
+                            <option value="overlap" ng-disabled="!selected.merge.check.overlaps">Take Overlap</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="alert alert-warning mb10" ng-if="selected.merge.check && !selected.merge.check.overlaps">
+                    You are merging two zones which don't appear to overlap, merge type is restricted.
+                </div>
+                <div class="alert alert-warning mb0">
+                    Merging zones will update all existing Fixed Prices and Pricing Model Zone overrides currently using <b>{{selected.merge.zone.Name}}</b> to instead use <b>{{selected.current.Name}}</b>.<br />
+                    <b>{{selected.merge.zone.Name}} Zone will be deleted.</b>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .map-container button:disabled {
+        cursor: not-allowed !important;
+    }
+</style>

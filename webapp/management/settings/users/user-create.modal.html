@@ -1,0 +1,81 @@
+﻿<div class="modal-content">
+    <div class="modal-header">
+        <button class="close" type="button" ng-click="$dismiss()"><i class="material-icons">clear</i></button>
+        <h3 class="modal-title">New User</h3>
+    </div>
+    <div class="modal-body">
+        <div form-for="user" schema="NewUser" mode="CREATE">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label">User Type</label>
+                        <div class="form-edit">
+                            <ui-select class="edit" ng-model="data.selectedOption" on-select="reset($item, $model)" theme="selectize">
+                                <ui-select-match placeholder="Search User Type...">
+                                    <span>
+                                        {{$select.selected.Name}}
+                                    </span>
+                                </ui-select-match>
+                                <ui-select-choices repeat="option in userTypes | filter: $select.search">
+                                    <div class="ui-select-box">
+                                        <div class="option-details">
+                                            <strong>{{option.Name}}</strong>
+                                        </div>
+                                    </div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" ng-if="data.selectedOption">
+                        <label class="control-label">{{type}}</label>
+                        <div class="form-edit">
+                            <ui-select class="edit" ng-model="user" ng-change="setUser($select.selected)" theme="selectize" tabindex="1" ng-model-options="{ debounce: 300 }">
+                                <ui-select-match allow-clear="true" placeholder="Start typing to search...">
+                                    <div class="select-text" style="font-size: 13px;">
+                                        {{$select.selected.Firstname}} {{$select.selected.Surname}}
+                                    </div>
+                                </ui-select-match>
+                                <ui-select-choices repeat="option in nUsers | filter: $select.search" refresh-delay="300" refresh="newUsers($select.search)">
+                                    <div class="select-text-option">
+                                        <div><strong class="brand-primary">{{option.Firstname}} {{option.Surname}}</strong><br />
+                                        {{option.Callsign}}{{option.ClientName}}</div>
+                                    </div>
+                                </ui-select-choices>
+                            </ui-select>
+                            <a ng-click="user = null;" style="position:absolute;right:0px;top:2px;font-size:11px;" ng-show="user" class="red">Clear</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb10 bg-success p10" ng-if="data.selectedOption">
+                <small>
+                    You will only be able to add the user for a Driver, Client, Passenger and Staff if they already have an email address on their account.
+                </small>
+            </div>
+            <div class="row" ng-show="data.selectedOption && user.Id">
+                <div class="col-sm-6">
+                    <div field-for="UserName"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="Email" editable="false"></div>
+                </div>
+            </div>
+            <div class="row" ng-show="data.selectedOption && user.Id">
+                <div class="col-sm-6">
+                    <div field-for="Password"></div>
+                </div>
+                <div class="col-sm-6">
+                    <div field-for="PasswordRepeat"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-xs btn-danger" ng-click="$dismiss()"><i class="material-icons">clear</i>Close</button>
+        <button type="button" class="btn btn-xs btn-success" ng-click="save()" ng-disabled="!formCheck()" ng-if="PERMISSIONS.test('settings.users','W')"><i class="material-icons">save</i>
+            Save
+        </button>
+    </div>
+</div>

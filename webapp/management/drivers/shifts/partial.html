@@ -1,0 +1,178 @@
+<div class="module" id="driver-shifts">
+  <div class="row">
+    <div class="col-sm-8">
+      <h2 class="page-title ng-scope">
+        <i class="material-icons">calendar_view_day</i>Driver Shifts
+      </h2>
+    </div>
+    <div class="col-sm-4">
+      <!-- <i class="material-icons" ng-click="nextWeek()">keyboard_arrow_right</i>
+      <strong> Week Ending {{currentWeekEnding | date:'dd/MM/yyyy'}} </strong>
+      <i class="material-icons" ng-click="prevWeek()">keyboard_arrow_left</i> -->
+      <div class="time-controls pull-right" id="time-controls">
+        <a id="daterangepicker_shifts" href=""> <i class="material-icons">date_range</i></a><span class="current-period" ng-bind="filter.date.selectedPeriod"></span>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default" id="driver-shift-lists">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-sm-9">
+          <h3 class="panel-title" ng-if="!fetchingShifts">
+            <i class="material-icons">toc</i>
+            <span ng-bind="shifts.length + ' '" ng-if="shifts.length > 0"></span
+            >Shifts
+          </h3>
+          <h3 class="panel-title" ng-if="fetchingShifts">
+            <i class="fa fa-circle-o-notch fa-spin"></i> Fetching Driver
+            Shifts...
+          </h3>
+        </div>
+        <div class="col-xs-3 view-options">
+            <a href="" dropdown-toggle><i class="material-icons" ng-click="exportDriverShifts()">receipt</i> Export</a>
+            <a href="" ng-click="">
+                <span ng-click="toggleSearch()"><i class="material-icons">search</i>Search</span>
+                <br />
+                <input type="text" ng-model="searchText" id="searchTerm" ng-show="showSearch" />
+            </a>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p
+        class="brand-primary t-l bold"
+        ng-if="shifts.length == 0 && !fetchingShifts"
+      >
+        No Shifts Found
+      </p>
+      <div
+        class="table-responsive"
+        ng-if="!fetchingShifts && shifts.length > 0"
+      >
+        <table
+          class="table table-condensed shifts-table"
+          style="min-width: 1400px"
+        >
+          <thead>
+            <tr>
+              <th width="80px"></th>
+              <th ng-repeat="item in filterdDates track by $index">
+                {{item._uidate}}
+              </th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              ng-repeat-start="item in shifts | filter:searchText track by item.DriverId"
+            >
+              <td>{{::item.Callsign}}</td>
+              <td
+                ng-repeat="dt in filterdDates track by $index"
+                class="shift-cell"
+                ng-class="!(item.Shifts[dt._date])?'off':''"
+              >
+                <a
+                  href=""
+                  ng-click="expandShifts(item,$index, dt)"
+                  ng-show="item.Shifts[dt._date]"
+                >
+                  <i class="material-icons">visibility</i>
+                </a>
+                <span class="time" ng-if="item.Shifts[dt._date]">
+                  {{::(item.Shifts[dt._date]?item.Shifts[dt._date]:0 |
+                  minsToHr)}}
+                </span>
+                <span
+                  class="commission"
+                  ng-if="item.Shifts[dt._date]"
+                  ng-class="(item.Commissions[dt._date])?'green':'orange'"
+                >
+                  {{::(item.Commissions[dt._date]?item.Commissions[dt._date]:0 |
+                  currency:'£')}}
+                </span>
+                <span ng-show="!item.Shifts[dt._date]"> OFF </span>
+                <i
+                  ng-show="item.Notes[dt._date] == 1"
+                  class="material-icons red t-l"
+                  >note</i
+                >
+              </td>
+              <td class="shift-cell">
+                <span class="time"> {{::(item.$totalTime | minsToHr)}} </span>
+                <span
+                  class="commission"
+                  ng-class="(item.$totalCommission > fdAvg)?'green':'orange'"
+                >
+                  {{::(item.$totalCommission | currency:'£')}}
+                </span>
+              </td>
+            </tr>
+            <tr ng-repeat-end ng-if="item.$expanded">
+              <td colspan="{{filterdDates.length + 2}}" class="expanded">
+                <strong class="brand-primary"
+                  >{{::item.Callsign}}'s Shift on {{::item.$expanded}}</strong
+                >
+                <table class="table table-condensed mb10 mt10">
+                  <tr>
+                    <th>Callsign</th>
+                    <th>Driver Name</th>
+                    <th>Vehicle Reg</th>
+                    <th>Shift Start Time</th>
+                    <th>Shift End Time</th>
+                    <th>Minutes</th>
+                    <th>Last Location Received</th>
+                    <th style="width: 300px">Notes</th>
+                  </tr>
+                  <tr ng-repeat="data in item.$data">
+                    <td>{{data.DriverCallsign}}</td>
+                    <td>{{data.DriverName}}</td>
+                    <td>
+                      <span tooltip="{{data.VehicleDescription}}"
+                        >{{data.VehicleReg}}</span
+                      >
+                    </td>
+                    <td>{{data.ShiftStart | date : 'dd/MM/yyyy HH:mm' }}</td>
+                    <td>{{data.ShiftEnd | date : 'dd/MM/yyyy HH:mm' }}</td>
+                    <td>{{data.$minutes | minsToHr}}</td>
+                    <td>
+                      <span tooltip="{{data.LastKnownLocation}}"
+                        >{{data.LastKnownShortLocation}}</span
+                      >
+                    </td>
+                    <td>
+                      <p ng-if="data.Notes" style="white-space: normal">
+                        {{data.Notes}}
+                        <br />
+                        <a
+                          href=""
+                          class="brand-secondary"
+                          ng-click="openNotesModal(data)"
+                          ng-if="data.Notes"
+                          >Edit</a
+                        >
+                      </p>
+                      <a
+                        href=""
+                        class="brand-secondary"
+                        ng-click="openNotesModal(data)"
+                        ng-if="!data.Notes"
+                        >Add</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+                <button
+                  class="btn btn-xs btn-danger"
+                  ng-click="expandShifts(item,$index, dt)"
+                >
+                  <i class="material-icons">close</i>Close
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

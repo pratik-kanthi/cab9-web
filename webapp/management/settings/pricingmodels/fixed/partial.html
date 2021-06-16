@@ -1,0 +1,185 @@
+<h3 class="section-title mt0">
+    Fixed Prices
+</h3>
+<p class="grey">
+    This view shows fixed price Defaults and overrides added per pricing zone with vehicle types. Click on
+    <strong class="brand-secondary">Add Fixed Pricing</strong> to add new fixed pricing or click on values to edit existing values. For importing csv to add pricings click on
+    <strong class="brand-secondary">Import Fixed Pricings</strong>. To delete existing pricing click on
+    <strong class="brand-secondary">Delete</strong> and select rows to delete. For deleting specific fixed price, right click on it to delete.
+</p>
+<div class="row">
+    <div class="col-md-6">
+        <a class="btn btn-success" ng-show="!addNew && !showDeleteCheckbox" ng-click="startNew()">
+            <i class="material-icons">playlist_add</i>Add Fixed Pricing
+        </a>
+        <a class="btn btn-success" ng-show="addNew && !showDeleteCheckbox" ng-click="saveNew(newfixed)">
+            <i class="material-icons">done</i>Save New Fixed Pricing
+        </a>
+        <a class="btn btn-success" ng-show="!showDeleteCheckbox" ng-click="startImport()">
+            <i class="material-icons">playlist_add</i>Import Fixed Pricings
+        </a>
+        <a class="btn btn-success" ng-show="!showDeleteCheckbox" ng-click="export()">
+            <i class="material-icons">playlist_add</i>Export Fixed Pricings
+        </a>
+        <a class="btn btn-danger" ng-click="deleteSelected()">
+            <i class="material-icons">delete</i>Delete
+        </a>
+        <a class="btn btn-danger" ng-show="showDeleteCheckbox" ng-click="deleteAll()">
+            <i class="material-icons">delete</i>Delete All
+        </a>
+
+        <a class="btn btn-warning" ng-show="showDeleteCheckbox" ng-click="cancelDelete()">
+            <i class="material-icons">undo</i>Cancel
+        </a>
+        <a class="btn btn-warning" ng-show="addNew" ng-click="cancelNewEdit()">
+            <i class="material-icons">undo</i>Cancel
+        </a>
+    </div>
+    <div class="col-md-6">
+        <div class="view-options pull-right">
+            <a ng-click="showFilters=!showFilters">
+                <i class="material-icons">build</i>Filter
+            </a>
+        </div>
+    </div>
+</div>
+<div class="filter-options" ng-class="(showFilters)?'show-filter':'hide-filter'">
+    <div class="form-group">
+        <label for="">Choose From Zone</label>
+        <select class="form-control" ng-model="filters.fromZone" ng-options="zone.Id as zone.Name for zone in zones|filter:{Id:'!!'}">
+            <option value="">All</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="">Choose To Zone</label>
+        <select class="form-control" ng-model="filters.toZone" ng-options="zone.Id as zone.Name for zone in zones|filter:{Id:'!!'}">
+            <option value="">All</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="">From Postcode</label>
+        <input type="text" class="form-control" ng-model="filters.fromPostcode" placeholder="From Postcode" />
+    </div>
+    <div class="form-group">
+        <label for="">To Postcode</label>
+        <input type="text" class="form-control" ng-model="filters.toPostcode" placeholder="To Postcode" />
+    </div>
+    <a class="btn btn-primary pull-right" ng-click="filter()">
+        <i class="material-icons">location_searching</i>Filter</a>
+</div>
+<div>
+    <pagination total-items="paging.totalResults" ng-model="paging.currentPage" max-size="5" class="pagination-sm" boundary-links="true" items-per-page="paging.resultsPerPage" ng-change="setPage(paging.currentPage)"></pagination>
+</div>
+<div class="table-responsive outer-frame">
+    <table class="table table-alternate" ng-style="{ 'width': (750 + (125 * vehicleTypes.length)) + 'px'}">
+        <thead>
+            <tr>
+                <th ng-show="showDeleteCheckbox" style=" width: 20px;" class="fixed-top-header"></th>
+                <th colspan="{{::showDeleteCheckbox == 'true' ? 5 : 4}}" class="fixed-top-header">
+                    Defaults
+                </th>
+                <th ng-hide="vehicleTypes.length == 0" colspan="{{::vehicleTypes.length}}" class="fixed-top-header">
+                    Vehicle Type Overrides
+                </th>
+            </tr>
+            <tr class="fixed-header">
+                <th ng-show="showDeleteCheckbox" style="padding-left: 10px !important">
+                    <div class="checkbox">
+                        <input type="checkbox" id="deleteAll" class="form-control" ng-model="selectAll" />
+                        <label for="deleteAll"></label>
+                    </div>
+                </th>
+                <th style="width:200px;">From</th>
+                <th style="width:200px;">To</th>
+                <th class="input-text-right " style="width:125px;">Fixed Fare(£)</th>
+                <th id="solid-border both-ways" style="width:125px;text-align: center;">Both Ways</th>
+                <th class="input-text-right" ng-repeat="vt in vehicleTypes track by $index" style="width:125px;">
+                    {{::vt.Name}}(£)
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-show="(fixeds.length==0 || fixeds == undefined) && !addNew">
+            <tr>
+                <td colspan="100" style="padding: 15px !important;">
+                    No Fixed Prices Added.
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-if="addNew">
+            <tr class="new-fixed-price-row">
+                <td>
+                    <input-dropdown fixed="newfixed" on-element-click="SaveChanges(newfixed)" is-from="true" filter-list-method="filterObjectList(userInput)" input-placeholder="From Postcode/Zone" input-required="true" selected-item="newfixed.$SelectedFrom" default-dropdown-items="dropdownItems" model-type="pricingfixeds"></input-dropdown>
+                </td>
+                <td>
+                    <input-dropdown fixed="newfixed" filter-list-method="filterObjectList(userInput)" is-to="true" input-placeholder="To Postcode/Zone" input-required="true" selected-item="newfixed.$SelectedTo" default-dropdown-items="dropdownItems" model-type="pricingfixeds"></input-dropdown>
+                </td>
+                <td>
+                    <input type="text" ng-change="saveChanges(newfixed)" class="input-text-right form-control" min="0" max="1000" ng-model="newfixed.FixedPrice" placeholder="(fixed price)" />
+                </td>
+                <td id="solid-border">
+                    <div class="checkbox both-ways">
+                        <input ng-change="saveChanges(newfixed)" type="checkbox" id="{{::$index}}bothnewWays" class="form-control" ng-model="newfixed.BothWays" />
+                        <label for="{{::$index}}bothnewWays"></label>
+                    </div>
+                </td>
+                <td ng-repeat="vt in vehicleTypes track by $index">
+                    <input type="text" class="input-text-right form-control" min="0" max="1000" ng-init="$$val = getVehicleTypeCost(newfixed, vt)" ng-model="$$val" ng-change="setVehicleTypeCost(newfixed, vt, $$val)" placeholder="(base fare)" />
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-disabled="disabled">
+            <tr ng-repeat="fixed in fixeds | orderBy: '-CreationTime' track by fixed.Id" id="row{{::$index}}" >
+                <td ng-show="showDeleteCheckbox" style="padding-right:10px !important;">
+                    <div class="checkbox">
+                        <input type="checkbox" id="{{::$index}}delete" class="form-control" ng-model="fixed.delete" ng-checked="selectAll" />
+                        <label for="{{::$index}}delete"></label>
+                    </div>
+                </td>
+                <td>
+                    <input-dropdown fixed="fixed" on-element-click="SaveChanges(fixed)" is-from="true" filter-list-method="filterObjectList(userInput)" input-placeholder="From Postcode/Zone" input-required="true" selected-item="fixed.$SelectedFrom" default-dropdown-items="dropdownItems" model-type="pricingfixeds"></input-dropdown>
+                    <ul id="context2" class="dropdown-menu" ng-click="remove($index)">
+                        <li>
+                            <a id="btndelete">Delete</a>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+
+                    <input-dropdown fixed="fixed" filter-list-method="filterObjectList(userInput)" is-to="true" input-placeholder="To Postcode/Zone" input-required="true" selected-item="fixed.$SelectedTo" default-dropdown-items="dropdownItems" model-type="pricingfixeds"></input-dropdown>
+                    <ul id="context2" class="dropdown-menu" ng-click="remove($index)">
+                        <li>
+                            <a id="btndelete">Delete</a>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <input type="text" ng-change="saveChanges(fixed)" class="input-text-right form-control" placeholder="(fixed price)" ng-model="fixed.FixedPrice" ng-model-options="{ debounce: 400 }" />
+                    <ul id="context2" class="dropdown-menu" ng-click="remove($index)">
+                        <li>
+                            <a id="btndelete">Delete</a>
+                        </li>
+                    </ul>
+                </td>
+                <td id="solid-border">
+                    <div class="checkbox  both-ways">
+                        <input ng-change="saveChanges(fixed)" type="checkbox" id="{{::$index}}bothnewWays" class="form-control" ng-model="fixed.BothWays" />
+                        <label for="{{::$index}}bothnewWays"></label>
+                    </div>
+                    <ul id="context2" class="dropdown-menu" ng-click="remove($index)">
+                        <li>
+                            <a id="btndelete">Delete</a>
+                        </li>
+                    </ul>
+                </td>
+                <td ng-repeat="vt in vehicleTypes track by $index">
+                    <input type="text" class="input-text-right form-control" min="0" max="1000" ng-init="$$val = getVehicleTypeCost(fixed, vt)" ng-model="$$val" ng-change="setVehicleTypeCost(fixed, vt, $$val)" ng-model-options="{ debounce: 400 }" placeholder="(base fare)" />
+                    <ul id="context2" class="dropdown-menu" ng-click="remove($index)">
+                        <li>
+                            <a id="btndelete">Delete</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

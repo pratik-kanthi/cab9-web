@@ -1,0 +1,32 @@
+﻿<!-- <div id="settings-locations">
+    <h2 class="page-title">
+        <i class="material-icons">supervisor_account</i>Known Locations
+    </h2>
+    <button class="btn btn-success" ng-click="addNewLocation()"><i class="material-icons">add_circle</i>Add New</button>
+    <div class="mt10">
+        <table-for datasource="locations" class="table table-condensed table-hover" schema="KnownLocation" filtering="searchTerm" sorting="" paging="" grouping="grouping" wrapper-class="" table-class="">
+            <table-titlebar columns-options="true" export-options="true" paging="true"></table-titlebar>
+            <table-heading sorting="true">
+            </table-heading>
+            <table-data-rows>
+                <table-selection></table-selection>
+                <table-actions>
+                    <div ng-show="$row.Id == currentUserId">
+                        <button class="btn btn-default" ng-click="editLocation($row.Id)"><i class="material-icons">lock</i>Location</button>
+                    </div>
+                </table-actions>
+            </table-data-rows>
+            <table-footer paging="true">
+            </table-footer>
+        </table-for>
+    </div>
+</div>
+ -->
+<div class="module">
+    <div ui-view name="options-area"></div>
+    <div class="row">
+        <div class="col-md-12 module-primary">
+            <div ui-view name="view-area"></div>
+        </div>
+    </div>
+</div>

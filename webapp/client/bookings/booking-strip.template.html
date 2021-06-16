@@ -1,0 +1,540 @@
+<div class="booking-strip">
+    <div class="booking" ng-class="::((booking.BookingStatus == 'OpenToBid' || booking.BookingStatus == 'PreAllocated') ? 'Incoming' : booking.BookingStatus)">
+        <div class="info">
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-3 id date-time">
+                    #{{booking.LocalId}} | <span class="date">{{::booking.BookedDateTime | companyDate: 'DD/MM/YYYY'}}</span>
+                    <span class="time">{{::booking.BookedDateTime | companyDate: 'HH:mm'}}</span>
+                    <span class="flight" ng-show="::booking.FlightInfo" tooltip="{{::booking.FlightInfo.$Status}}">
+                        <i class="material-icons">airplanemode_active</i>
+                        <span ng-bind="::booking.FlightInfo.FlightNumber"></span>
+                    </span>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-4 from-to" style="line-height:27px;">
+                    <strong class="black">{{::booking._FromSummary}}</strong>
+                    <br />
+                    <span>{{::booking._ToSummary}}</span>
+                    <span class="additional" ng-show="::booking.BookingStops.length > 2">+{{::booking.BookingStops.length - 2}}</span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 passenger hidden-xs">
+                    <img ng-src="{{::booking.Client._ImageUrl}}" ng-if="booking.Client" />
+                    <img ng-src="{{::booking.LeadPassenger._ImageUrl}}" ng-if="!booking.Client" />
+                    <strong ng-class="(!booking.Client)? 'lh50':''" class="black"><span ng-if="::(booking.LeadPassenger.VIP)">(VIP) </span>{{::booking._LeadPassengerName}}</strong>
+                    <br />
+                    <span ng-if="booking.Client">{{::booking.Client.Name}}</span>
+                </div>
+                <div class="col-lg-2 hidden-md hidden-sm vehicle hidden-xs">
+                    <div class="">
+                        <span class="registration" ng-if="booking.Vehicle">{{::booking.Vehicle.Registration}}</span>
+                        <span class="registration" ng-if="booking.PartnerVehicle">{{::booking.PartnerVehicle.Reg}}</span>
+                        <span class="registration na" ng-if="!booking.Vehicle && !booking.PartnerVehicle">N/A</span>
+                    </div>
+                    <span class="vehicle-type" ng-class="::booking.VehicleType.Name" style="background-color: {{::booking.VehicleType.Colour}}">{{::booking.VehicleType.Name}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="status">
+            <span ng-bind="::((booking.BookingStatus == 'OpenToBid' || booking.BookingStatus == 'PreAllocated') ? 'Incoming' : booking.BookingStatus)"></span>
+        </div>
+        <div class="actions">
+            <a class="btn btn-primary" ng-show="!booking.$expanded" ng-click="expandBooking(booking)"><i class="material-icons">expand_more</i></a>
+            <a class="btn btn-primary" ng-click="openEditModal(booking)"><i class="material-icons">create</i></a>
+        </div>
+    </div>
+    <div class="expanded-area" ng-class="::((booking.BookingStatus == 'OpenToBid' || booking.BookingStatus == 'PreAllocated') ? 'Incoming' : booking.BookingStatus)" ng-if="booking.$expanded">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" ng-class="{ 'active': tab.current == 'Info' }">
+                <a ng-click="tab.current = 'Info'" role="tab" data-toggle="tab">Info</a>
+            </li>
+            <li role="presentation" ng-class="{ 'active': tab.current == 'History' }">
+                <a ng-click="tab.current = 'History'" role="tab" data-toggle="tab">History</a>
+            </li>
+        </ul>
+        <br />
+        <div ng-show="tab.current == 'Info'" class="tab-content">
+            <div class="actions" ng-hide="booking.BookingStatus==='COA'|| booking.BookingStatus==='Cancelled'||booking.BookingStatus==='Completed'">
+                <ul>
+                    <li>
+                        <a class="btn btn-primary btn-xs" ng-click="emailTo('CLIENT', booking)"><i class="material-icons">mail</i> Send Email</a>
+                    </li>
+                    <li ng-if="showCancelButton(booking.BookingStatus)">
+                        <a class="btn btn-xs btn-danger mr5" ng-click="checkCancelBooking(booking.Id)"><i class="material-icons">block</i>Cancel</a>
+                    </li>
+                    <li ng-show="::booking.DriverId">
+                        <a class="btn btn-primary btn-xs" ng-click="trackBooking(booking)"><i class="material-icons">gps_fixed</i> Track</a>
+                    </li>
+                </ul>
+                <br class="clearfix" />
+            </div>
+            <div class="row">
+                <div class="col-sm-3 journey-map">
+                    <h6>Journey</h6>
+                    <img ng-src="{{::booking._ImageUrl}}" class="booking-map" alt="{{::booking.LocalId}}">
+                    <div class="journey-details">
+                        <div class="info-box" ng-repeat="stop in ::booking.BookingStops">
+                            <div class="title" ng-bind="::(($first)?'From':($last)?'To':'Via')">
+                            </div>
+                            <div class="content">
+                                <span ng-bind="::stop.StopSummary"></span>
+                            </div>
+                        </div>
+                        <div class="info-box" ng-if="(booking.FlightNo && booking.FlightNo.length > 0)">
+                            <div class="title">Flight No</div>
+                            <div class="content">
+                                {{::booking.FlightNo}}
+                            </div>
+                        </div>
+                        <button ng-if="booking.BookingStatus=='OnRoute'||booking.BookingStatus=='Arrived'||booking.BookingStatus=='InProgress'" class="btn btn-primary" ng-click="showDriverTrackingModal()"><i class="material-icons">directions_car</i>Track Ride</button>
+                    </div>
+                </div>
+                <div class="col-sm-5 booking-details">
+                    <h6>Information</h6>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="info-box">
+                                <div class="title">Passenger Info</div>
+                                <div class="content">
+                                    {{::booking.LeadPassenger._Fullname}}
+                                    <br /> {{::booking.PassengerNotificationPhone}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-box">
+                                <div class="title">Vehicle</div>
+                                <div class="content">
+                                    <div ng-if="booking.Vehicle">
+                                        {{::booking.Vehicle.Make}} {{::booking.Vehicle.Model}} {{::booking.Vehicle.Colour}}
+                                        <br /> {{::booking.Vehicle.Registration}}
+                                    </div>
+                                    <div ng-if="booking.PartnerVehicle">
+                                        {{::booking.PartnerVehicle.Make}} {{::booking.PartnerVehicle.Model}} {{::booking.PartnerVehicle.Colour}}
+                                        <br />
+                                        {{::booking.PartnerVehicle.Reg}}
+                                    </div>
+                                    <div ng-if="!booking.Vehicle && !booking.PartnerVehicle">
+                                        <span class="text-muted">Not Assigned</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 journey-details">
+                            <div class="info-box">
+                                <div class="title">Passengers &amp; Bags</div>
+                                <div class="content">
+                                    <div class="passengers">
+                                        <div class="icon-small">
+                                            <i class="material-icons">person_outline</i>
+                                        </div>
+                                        <div class="number">
+                                            <span>{{::booking.Pax}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="bags">
+                                        <div class="icon-small">
+                                            <i class="material-icons">business_center</i>
+                                        </div>
+                                        <div class="number">
+                                            <span>{{::booking.Bax}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br class="clearfix" />
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="info-box">
+                                <div class="title">Created By</div>
+                                <div class="content">
+                                    {{::booking.CreationUser.Name}}
+                                    <br /> {{::booking.CreationTime | date:'dd/MM/yyyy HH:mm'}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6" ng-if="isAdmin">
+                            <div class="info-box mb20">
+                                <div class="title">Booker</div>
+                                <div class="content">
+                                    {{::booking.ClientStaff._Fullname}}
+                                    <br /> {{::booking.ClientStaff.Phone}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="info-box">
+                                <div class="title">Driver Notes</div>
+                                <div class="content">
+                                    <span class="text-muted">{{::booking.DriverNotes || 'No Notes Added' }}</span>
+                                </div>
+                            </div>
+                            <div ng-show="::booking.FlightInfo">
+                                <h6 class="mt20">Flight Info</h6>
+                                <div class="form-box">
+                                    <label>Departs</label>
+                                    <div class="info">
+                                        <span ng-bind="::'(' + booking.FlightInfo.OriginCode + ') ' + booking.FlightInfo.Origin">(DXB) Dubai Airport </span>
+                                    </div>
+                                </div>
+                                <div class="form-box">
+                                    <label>Scheduled</label>
+                                    <div class="info">
+                                        <span ng-bind="::booking.FlightInfo.ScheduledArrivalTime | date: 'dd/MM/yyyy HH:mm'"></span>
+                                    </div>
+                                </div>
+                                <div class="form-box">
+                                    <label>Actual</label>
+                                    <div class="info">
+                                        <span ng-bind="::booking.FlightInfo.ArrivalTime | date: 'dd/MM/yyyy HH:mm'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 journey-cost">
+                    <div ng-if="$root.CLIENT.ShowPriceInPortal">
+                        <h6 ng-if="fetchingFinance">
+                            <i class="fa fa-circle-o-notch fa-spin"></i> Fetching Finance Info...
+                        </h6>
+                        <h6>Finance Info</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Distance</div>
+                                    <div class="content">
+                                        <span class="cost" ng-bind="(booking.$FinanceInfo.EstimatedDistance) + ' mi.'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Waiting Time</div>
+                                    <div class="content">
+                                        <span class="cost" ng-bind="(booking.$FinanceInfo.WaitingTime) + ' mins'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Fare</div>
+                                    <div class="content">
+                                        <span class="cost" ng-bind="(booking.$FinanceInfo.ActualCost * (booking.CurrencyRate || 1) | currency:booking.Currency.Prepend)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Waiting Cost</div>
+                                    <div class="content">
+                                        <span class="cost" ng-bind="(booking.$FinanceInfo.WaitingCost * (booking.CurrencyRate || 1) | currency:booking.Currency.Prepend)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Adjustments</div>
+                                    <div class="content">
+                                        <span class="cost" ng-bind="(booking.$FinanceInfo.AdjustmentsTotal * (booking.CurrencyRate || 1) | currency:booking.Currency.Prepend)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Extras</div>
+                                    <div class="content">
+                                        <span class="cost" ng-bind="(booking.$FinanceInfo.ExtrasTotal * (booking.CurrencyRate || 1) | currency:booking.Currency.Prepend)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h6>Total</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Cost</div>
+                                    <div class="content">
+                                        <span class="cost" ng-bind="(booking.$FinanceInfo.ActualCost + booking.$FinanceInfo.WaitingCost + booking.$FinanceInfo.AdjustmentsTotal + booking.$FinanceInfo.ExtrasTotal) * (booking.CurrencyRate || 1) | currency:booking.Currency.Prepend"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">VAT</div>
+                                    <div class="content">
+                                        <span class="cost" ng-bind="(booking.$FinanceInfo.ActualTax + booking.$FinanceInfo.WaitingTax + booking.$FinanceInfo.AdjustmentsTax + booking.$FinanceInfo.ExtrasTax) * (booking.CurrencyRate || 1) | currency:booking.Currency.Prepend"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h6>References</h6>
+                    <div class="info-box">
+                        <div class="content">
+                            <table class="table table-striped table-bordered info-table" ng-if="booking.BookingValidations.length>0 && !loading">
+                                <thead>
+                                    <tr>
+                                        <th class="title">Reference</th>
+                                        <th class="title">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="validation in booking.BookingValidations">
+                                        <td><span ng-bind="validation.ClientReference.ReferenceName"></span></td>
+                                        <td><span ng-bind="validation.Value"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <span ng-if="booking.BookingValidations.length==0 && !loading">No References added.</span>
+                            <span ng-if="loading">Loading...</span>
+                        </div>
+                    </div>
+                    <h6>Special Requirements</h6>
+                    <div class="info-box">
+                        <div class="content">
+                            <table class="table table-striped table-bordered info-table" ng-if="booking.BookingRequirements.length>0 && !loading">
+                                <thead>
+                                    <tr>
+                                        <th class="title">Requirement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="req in booking.BookingRequirements">
+                                        <td><span ng-bind="req.Name"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <span ng-if="booking.BookingRequirements.length==0 && !loading">No Requirements added.</span>
+                            <span ng-if="loading">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="expanded-actions">
+                    <a class="btn btn-primary" ng-click="closeBooking($parent.booking)">
+                        <i class="material-icons">keyboard_arrow_up</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div ng-show="tab.current == 'History'" class="tab-content">
+            <h6>History</h6>
+            <div class="events-wrapper">
+                <div class="empty" ng-if="noHistory">
+                    <h4 ng-bind="today" class="day"></h4>
+                    <div class="event">
+                        <i class="material-icons EDIT">timeline</i>
+                        <div class="content">
+                            No events have been recorded.
+                        </div>
+                    </div>
+                </div>
+                <div class="day" ng-repeat="(date, items) in history">
+                    <h4 class="day">{{::date}}</h4>
+                    <div class="event" ng-repeat="_ev in items">
+                        <i class="material-icons" ng-class="::coloursIndex[_ev.BookingEvent]">{{::iconsIndex[_ev.BookingEvent]}}</i>
+                        <img ng-src='{{::_ev.User._ImageUrl}}' alt='{{_ev.User.Name}}' class='event-owner-icon' />
+                        <div class="content" ng-switch="_ev.BookingEvent">
+                            <div ng-switch-when="Booking Offer Sent">
+                                <span><b>{{_ev.User.Name}}</b> Offered the <b>Booking</b> to <b>{{_ev.Properties[0].NewValue}}</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="Driver Allocated">
+                                <span><b>{{_ev.User.Name}}</b> {{_ev.Properties[0].NewValue}} the <b>Booking</b> to <b>{{_ev.Properties[1].NewValue}}</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="Driver Accepted">
+                                <span><b>{{_ev.User.Name}}</b> Accepted the <b>Booking</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                                <p ng-if="_ev.Properties[2]">
+                                    Using vehicle <b>{{_ev.Properties[2].NewValue}}</b>
+                                </p>
+                            </div>
+                            <div ng-switch-when="Booking Patched">
+                                <span><b>{{_ev.User.Name}}</b> Updated the <b>Booking</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                                <p ng-if="_ev.Properties.length > 0">
+                                    <span ng-repeat="p in _ev.Properties">
+                                        <b>{{p.PropertyName}}</b>
+                                        <span ng-if="p.OldValue && p.NewValue">
+                                            was changed from <b>{{p.OldValue}}</b> to <b>{{p.NewValue}}</b>
+                                        </span>
+                                        <span ng-if="p.OldValue && !p.NewValue">
+                                            was removed.
+                                        </span>
+                                        <span ng-if="!p.OldValue && p.NewValue">
+                                            was set to <b>{{p.NewValue}}</b>
+                                        </span>
+                                        <br />
+                                    </span>
+                                </p>
+                            </div>
+                            <div ng-switch-when="DriverPaymentIssued">
+                                <span><b>{{_ev.User.Name}}</b> Issued a <b>Driver Payment</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                                <p ng-if="booking.DriverPaymentId == _ev.Properties[0].NewValue">
+                                    <span ng-if="booking.ManualCommission">
+                                        <b>Manual Commission: </b>
+                                        <span>{{booking.ManualCommission | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span ng-if="!booking.ManualCommission">
+                                        <b>Journey Commission: </b>
+                                        <span>{{booking.JourneyCommission | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span ng-if="!booking.ManualCommission">
+                                        <b>Waiting Commission: </b>
+                                        <span>{{booking.WaitingCommission | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span ng-if="!booking.ManualCommission">
+                                        <b>Extras Commission: </b>
+                                        <span>{{booking.ExtrasCommission | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <b>Total Commission: </b>
+                                        <span>{{booking.ExtrasCommission || (booking.JourneyCommission + booking.WaitingCommission + booking.ExtrasCommission) | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <a ui-sref="root.driverpayments.viewer.summary({Id: booking.DriverPaymentId})" target="_blank"><i class="material-icons green-bg" style="position: static;display: inline-block;width: 20px;height: 20px;line-height: 17px;">forward</i> Open Payment</a>
+                                        <br />
+                                    </span>
+                                </p>
+                            </div>
+                            <div ng-switch-when="DriverPaymentCancelled">
+                                <span><b>{{_ev.User.Name}}</b> Cancelled a <b>Driver Payment</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="ClientInvoiceIssued">
+                                <span><b>{{_ev.User.Name}}</b> Issued a <b>Client Invoice</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                                <p ng-if="booking.InvoiceId == _ev.Properties[0].NewValue">
+                                    <span>
+                                        <b>Reference: </b>
+                                        <span>{{booking.Invoice.Reference}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <b>Invoice Fare: </b>
+                                        <span>{{booking.InvoiceCost || 0 | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <b>Waiting: </b>
+                                        <span>{{booking.WaitingCost || 0 | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <b>Adjustments: </b>
+                                        <span>{{booking.AdjustmentTotal || 0 | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <b>Extras: </b>
+                                        <span>{{booking.ExtrasCost || 0 | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <b>Discount: </b>
+                                        <span>{{booking.Discount || 0 | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <b>Tax Amount: </b>
+                                        <span>{{(((booking.InvoiceCost || 0) + (booking.WaitingCost || 0) + (booking.ExtrasCost || 0) + (booking.AdjustmentTotal || 0) - (booking.Discount || 0)) * 0.2) | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span>
+                                        <b>Total Commission: </b>
+                                        <span>{{(((booking.InvoiceCost || 0) + (booking.WaitingCost || 0) + (booking.ExtrasCost || 0) + (booking.AdjustmentTotal || 0) - (booking.Discount || 0)) * 1.2) | currency}}</span>
+                                        <br />
+                                    </span>
+                                    <span ng-if="booking.InvoiceId == _ev.Properties[0].NewValue">
+                                        <a ui-sref="root.invoices.viewer({Id: booking.InvoiceId})" target="_blank"><i class="material-icons green-bg" style="position: static;display: inline-block;width: 20px;height: 20px;line-height: 17px;">forward</i> Open Invoice</a>
+                                        <br />
+                                    </span>
+                                </p>
+                            </div>
+                            <div ng-switch-when="ClientInvoiceCancelled">
+                                <span><b>{{_ev.User.Name}}</b> Cancelled a <b>Client Invoice</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="FlightTrackingStarted">
+                                <span><b>Flight Tracking</b> Started at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                                <p ng-if="_ev.Properties.length > 0">
+                                    <span ng-repeat="p in _ev.Properties">
+                                        <b>{{p.PropertyName}}: </b><span>{{p.NewValue}}</span>
+                                        <br />
+                                    </span>
+                                </p>
+                            </div>
+                            <div ng-switch-when="FlightTrackingStopped">
+                                <span><b>Flight Tracking</b> Stopped at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                                <p ng-if="_ev.Properties.length > 0">
+                                    <span ng-repeat="p in _ev.Properties">
+                                        <b>{{p.PropertyName}}: </b><span>{{p.OldValue}}</span>
+                                        <br />
+                                    </span>
+                                </p>
+                            </div>
+                            <div ng-switch-when="Booking Created">
+                                <span><b>{{_ev.User.Name}}</b> Created the <b>Booking</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="Booking Cancelled">
+                                <span><b>{{_ev.User.Name}}</b> Cancelled the <b>Booking</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="Flight Update">
+                                <span><b>Flight Time</b> Updated at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                                <p>
+                                    <span ng-repeat="p in _ev.Properties">
+                                        <b>{{p.PropertyName}}</b>
+                                        <span ng-if="p.OldValue && p.NewValue">
+                                            was updated from <b>{{p.OldValue}}</b> to <b>{{p.NewValue}}</b>
+                                        </span>
+                                        <br />
+                                    </span>
+                                </p>
+                            </div>
+                            <div ng-switch-when="Email Client Confirmation|Email Manual Confirmation" ng-switch-when-separator="|">
+                                <span><b>Confirmation Email Sent</b> to <b>{{_ev.Properties[0].NewValue}}</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="SMS Confirmation">
+                                <span><b>Confirmation SMS Sent</b> to <b>{{_ev.Properties[0].NewValue}}</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="SMS Driver Arrived">
+                                <span><b>Arrival SMS Sent</b> to <b>{{_ev.Properties[0].NewValue}}</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-when="Call Driver Arrived">
+                                <span><b>Arrival Call Placed</b> to <b>{{_ev.Properties[0].NewValue}}</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                            </div>
+                            <div ng-switch-default>
+                                <span><b>{{_ev.User.Name}}</b> {{_ev.Action}} {{_ev.EntityType == 'Booking' ? 'the' : 'a'}} <b>{{_ev.EntityType}}</b> at {{_ev.Timestamp | date: 'HH:mm'}}</span><br />
+                                <p ng-if="_ev.Properties.length > 0">
+                                    <span ng-repeat="p in _ev.Properties" ng-hide="p.PropertyName == 'CompanyCommission' || p.PropertyName == 'ActualCost' || p.PropertyName == 'WaitingCost' || p.PropertyName == 'ManualCommission' || p.PropertyName == 'EstimatedCost'">
+                                        <b>{{p.PropertyName}}</b>
+                                        <span ng-if="p.OldValue && p.NewValue">
+                                            was changed from <b>{{p.OldValue}}</b> to <b>{{p.NewValue}}</b>
+                                        </span>
+                                        <span ng-if="p.OldValue && !p.NewValue && _ev.Action != 'Deleted'">
+                                            was removed.
+                                        </span>
+                                        <span ng-if="p.OldValue && !p.NewValue && _ev.Action == 'Deleted'">
+                                            was {{p.OldValue}}.
+                                        </span>
+                                        <span ng-if="!p.OldValue && p.NewValue">
+                                            was set to <b>{{p.NewValue}}</b>
+                                        </span>
+                                        <br />
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

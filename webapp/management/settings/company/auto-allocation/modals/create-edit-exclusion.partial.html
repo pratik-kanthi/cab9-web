@@ -1,0 +1,98 @@
+<div class="panel auction-settings">
+    <div class="panel-heading">
+        <h3 class="panel-title">Exclusion Rules</h3>
+    </div>
+    <div class="panel-body">
+        <div class="automation-config row">
+            <div class="actions col-sm-6" ng-show="ruleViewMode == 'VIEW'">
+                <button class="btn btn-xs btn-primary" ng-click="addRule()" ng-if="PERMISSIONS.test('settings.company','W')"><i class="material-icons">add</i>Add New Rule</button>
+            </div>
+        </div>
+        <!--Automation Settings-->
+        <div class="automation-rules mt20" ng-show="ruleViewMode == 'VIEW'">
+            <div class="no-rules mb20" ng-if="exclusionRules.length == 0">No rules have been defined</div>
+            <div class="rules-wrapper" ng-if="exclusionRules.length > 0">
+                <div class="rules">
+                    <table class="table primary-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40%">Timespan</th>
+                                <th style="width: 40%">Days</th>
+                                <th style="width: 20%">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in exclusionRules">
+                                <td>
+                                    {{item.$timespan}}
+                                    <span class="text-muted" ng-if="!item.$timespan">N/A</span>
+                                </td>
+                                <td>
+                                    {{item.DaysOfWeek}}
+                                    <span class="text-muted" ng-if="!item.DaysOfWeek">N/A</span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-xs btn-round btn-success" tooltip="Edit Rule" ng-click="editRule(item)">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                    <button class="btn btn-xs btn-round btn-danger" tooltip="Delete Rule" ng-click="deleteRule(item)">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--Add Exclusion Settings-->
+        <div class="automation-config" ng-show="ruleViewMode != 'VIEW'">
+            <div class="rules-creation">
+                    <div form-for="exclusionRule" name="newRuleForm" schema="BiddingExclusionRule" mode="{{ruleViewMode}}">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group mb20">
+                                    <label class="control-label">Days</label>
+                                    <div class="row days">
+                                        <div class="col-xs-3 day" ng-repeat="day in week">
+                                            <div class="checkbox" style="display:inline-block;margin-bottom:0;margin-right:10px;">
+                                                <input id="filter-{{day.day}}" name="{{day.day}}" type="checkbox" value="{{day.value}}" ng-model="day.selected" />
+                                                <label for="filter-{{day.day}}"></label>
+                                            </div>
+                                            {{day.full}}
+                                        </div>
+                                        <br class="clearfix" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div field-for="$startTime"></div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div field-for="$endTime"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actions mt20 mb20">
+                            <button ng-if="ruleViewMode == 'CREATE'" class="btn btn-xs btn-success mr10" ng-click="saveRule()">
+                                <i class="material-icons">save</i>
+                                Save</button>
+
+                             <button ng-if="ruleViewMode == 'EDIT'" class="btn btn-xs btn-success mr10" ng-click="updateRule()">
+                                <i class="material-icons">save</i>
+                                Update</button>
+
+                            <button class="btn btn-xs btn-warning" ng-click="cancel()"><i class="material-icons">undo</i>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <!--View Exclusion Settings-->
+    </div>
+</div>

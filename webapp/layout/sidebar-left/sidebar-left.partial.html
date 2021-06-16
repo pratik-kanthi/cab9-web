@@ -1,0 +1,49 @@
+﻿<div class="sidebar-wrapper">
+    <section id="brand">
+        <h1 class="title">CABb<span class="red">9</span></h1>
+        <small class="time">2.0</small>
+    </section>
+    <section id="company">
+        <div class="profile-box">
+            <img class="img-circle logo" ng-src="{{formatImage(COMPANY.LogoUrl, COMPANY.Name)}}" alt="{{COMPANY.Name}}" />
+            <h4 class="title" ng-bind="COMPANY.Name"></h4>
+        </div>
+    </section>
+    <section id="profile">
+        <div class="profile-box-small">
+            <div class="picture">
+                <img ng-src="{{formatImage(USER.ImageUrl, USER.Name)}}" alt="{{USER.Name}}" ng-if="USER" />
+            </div>
+            <div class="info">
+                <h4 class="title">
+					{{USER.Name}}
+				</h4>
+                <h6 class="subtitle">
+					<a href="" class="grey" ng-click="logout()">Logout</a>
+				</h6>
+            </div>
+        </div>
+    </section>
+    <section id="navigation">
+        <ul class="main-nav">
+            <li ng-repeat="item in menu.menuItems" ui-sref-active="active" ng-class="(item.subMenus.length > 0)? 'has-dropdown' : '' ">
+                <a ui-sref="{{item.state}}" href="" ng-click="item.$open = !item.$open" ng-if="item.state">
+                    <i class="material-icons">{{item.icon}}</i> {{item.title}}
+                </a>
+                <a href="" ng-click="item.$open = !item.$open" ng-if="!item.state">
+                    <i class="material-icons">{{item.icon}}</i> {{item.title}}
+                </a>
+                <ul class="sub-nav" ng-class="(item.$open)? 'open':''">
+                    <li ng-repeat="subItem in item.subMenus">
+                        <a ui-sref="{{subItem.state}}">
+                            <i ng-class="(subItem.icon) ? subItem.icon:''"></i> {{subItem.title}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <section id="security">
+        <img src="/includes/images/ssl.png" alt="" />
+    </section>
+</div>

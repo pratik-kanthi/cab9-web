@@ -1,0 +1,35 @@
+﻿<div id="application-layout" ng-controller="PageController">
+    <div id="quick-navigate" ng-show="showQuickNav" ui-view name="quick-nav"></div>
+    <div id="sidebar-left" ui-view name="sidebar-left"></div>
+    <div id="topbar" ui-view name="topbar"></div>
+    <div id="content-wrapper">
+        <div id="breadcrumb-bar" ng-include="'/e9_components/layouts/breadcrumb/breadcrumb.partial.html'"></div>
+        <div class="app-alert" ng-if="isAlert">
+            <div class="transluscent"></div>
+            <div class="content">
+                <span>
+                    Season's Greetings from Excel Executive - The Christmas and New Year operational and tariff timetable is now available.
+                    <a href="" ng-click="showAlert()">
+                        Click Here.
+                    </a>
+                </span>
+            </div>
+        </div>
+        <div ng-if="EXPIRING_SOON && EXPIRING_SOON()" style="background-color: #c0392b; height: 40px; text-align: center; color: #fff; text-shadow: 1px 1px 1px #444; line-height: 40px; font-weight: 600; font-size: 16px; position: relative;">
+            <div class="content">
+                <span>
+                    <a ng-click="logout()" style="color: #fff;">
+                        This session will expire in {{EXPIRES | Countdown}}. -
+                        Log in again to extend session.
+                    </a>
+                </span>
+            </div>
+        </div>
+        <div ui-view name="content-wrapper"></div>
+    </div>
+    <div id="sidebar-toggle">
+        <i class="material-icons">menu</i>
+        <!-- <i class="material-icons">menu</i> -->
+    </div>
+    <div id="sidebar-right" ui-view name="sidebar-right"></div>
+</div>

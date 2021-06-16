@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-sm-6">
+        <h3 class="section-title mt0"><i class="material-icons">beenhere</i>Vehicle Types</h3><span ng-if="PERMISSIONS.test('vendors', 'W') || PERMISSIONS.test('clients.viewer.vehicletypes', 'W')"> You can click on "<span ng-bind="(client.VehicleTypes.length > 0)?'Edit':'Add'"></span> VehicleTypes" to manage the vehicle types.</span>
+        <div class="options mt30 mb30" ng-if="PERMISSIONS.test('vendors', 'W') || PERMISSIONS.test('clients.viewer.vehicletypes', 'W')">
+            <button class="btn btn-xs btn-primary" ng-click="startEdit()" ng-show="viewMode === 'VIEW'">
+                <i class="material-icons">create</i><span ng-bind="(client.VehicleTypes.length > 0)?'Edit':'Add'"></span> Vehicle Types
+            </button>
+            <button class="btn btn-xs btn-warning" ng-click="cancelEdit()" ng-show="viewMode != 'VIEW'">
+                <i class="material-icons">undo</i>Cancel
+            </button>
+            <button class="btn btn-xs btn-success" ng-click="saveChanges()" ng-disabled="formFor.form.$invalid" ng-show="viewMode != 'VIEW'">
+                <i class="material-icons">save</i>Save
+            </button>
+        </div>
+        <table class="table table-condensed table-hover mb10 table-bordered">
+            <thead>
+                <tr>
+                    <th><strong class="brand-secondary">Linked Vehicle Types</strong></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="client.VehicleTypes.length==0">
+                    <td>
+                        <span class="text-muted">No VehicleTypes added.</span>
+                    </td>
+                </tr>
+                <tr ng-repeat="item in client.VehicleTypes">
+                    <td>
+                        <strong class="brand-primary">{{item.Name}}</strong>
+                        <a href="" class="red pull-right ml8" ng-click="removeVehicle(item)" ng-show="viewMode!='VIEW'">
+                            <i class="material-icons">remove_circle</i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-sm-6" style="height: 400px;" ng-show="viewMode != 'VIEW'">
+                <div class="form-group" ng-show="unlinkedVehicleTypes.length>0">
+                    <label for="">Add Vehicle Type</label>
+                    <ui-select ng-model="selected.VehicleType" theme="selectize" title="Choose Vehicle Type" ng-change="addVehicle($select.selected)" class="edit">
+                        <ui-select-match placeholder="Select from list...">{{$select.selected.Name}}</ui-select-match>
+                        <ui-select-choices repeat="vt in unlinkedVehicleTypes| filter: $select.search">
+                            <div ng-bind-html="vt.Name| highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <span ng-show="unlinkedVehicleTypes.length==0">No vehicle types available to add.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6"></div>
+</div>

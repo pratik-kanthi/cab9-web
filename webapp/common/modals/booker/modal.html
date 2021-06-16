@@ -1,0 +1,53 @@
+<form name="bookerForm" form-for="booker" schema="ClientStaff" mode="CREATE">
+    <div class="modal-header">
+        <h3 class="modal-title" ng-hide="edit">New Booker</h3>
+        <h3 class="modal-title" ng-show="edit">Update Booker</h3>
+        <div class="arrow"></div>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div field-for="Firstname"></div>
+                <div field-for="Surname"></div>
+            </div>
+            <div class="col-md-6">
+                <div field-for="Phone"></div>
+                <div field-for="Email"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" ng-show="duplicates.length > 0">
+                    <div class="col-md-12">
+                        <label class="control-label">Possible Duplicates:</label>
+                        <table class="table table-bordered table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone/Mobile</th>
+                                    <th style="width:76px;">Bookings</th>
+                                    <th style="width:140px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="pax in duplicates">
+                                    <td>{{::pax.Firstname}} {{::pax.Surname}}</td>
+                                    <td>P: {{::pax.Phone}}<br />E: {{::pax.Email}}</td>
+                                    <td>{{::pax.Bookings}}</td>
+                                    <td>
+                                        <a class="btn btn-xs btn-primary" ng-click="useExisting(pax)" style="padding-left:12px;">Use Existing</a>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success pull-right" ng-click="save()" ng-disabled="formFor.form.$invalid"><i class="material-icons">save</i>Save</button>
+        <button class="btn btn-danger pull-left" ng-click="$dismiss()"><i class="material-icons">undo</i>Close</button>
+    </div>
+</form>
