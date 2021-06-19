@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="material-icons">description</i>Loyalty Account Info</h3>
+    </div>
+    <div class="panel-body" form-for="loyaltyInfo" schema="LoyaltyAccount" mode={{viewMode}}>
+
+        <div class="mt10 mb10" ng-if="!!loyaltyInfo">
+            <button class="btn btn-primary" ng-show="viewMode == 'VIEW'" ng-click="startEdit()" ng-if="PERMISSIONS.test('settings.email','W')"><i class="material-icons">create</i>Edit</button>
+            <button class="btn btn-success mr10" ng-show="viewMode == 'EDIT'" ng-click="saveEdits()"><i class="material-icons">save</i>Save</button>
+            <button class="btn btn-warning" ng-show="viewMode == 'EDIT'" ng-click="cancelEdit()"><i class="material-icons">undo</i>Cancel</button>
+        </div>
+    
+        <div class="row mt20">
+            <div class="col-md-4">
+                <div field-for="Active"></div>
+               
+            </div>
+        </div>
+    
+        <div class="row form-group mt20">
+            <div class="col-md-4">
+               <label class="control-label">Active Points</label>
+               <div>{{loyaltyInfo.ActivePoints.toFixed(2)}}</div>
+               <div>{{loyaltyInfo.ActivePoints * conversion | currency }}</div>
+            </div>
+            <div class="col-md-4">
+                <label class="control-label">Total Points Collected</label>
+                <div>{{loyaltyInfo.TotalPointsCollected.toFixed(2)}}</div>
+                <div>{{loyaltyInfo.TotalPointsCollected * conversion | currency}}</div>
+            </div>
+            <div class="col-md-4">
+                <label class="control-label">Total Points Used</label>
+               <div>{{loyaltyInfo.TotalPointsUsed}}</div>
+               <div>{{loyaltyInfo.TotalPointsUsed * conversion | currency}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

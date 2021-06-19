@@ -209,7 +209,8 @@ var model_files = [
     "models/Tag.js",
     "models/BookingTag.js",
     "models/LoyaltyConfig.js",
-    "models/LoyaltyAccount.js"
+    "models/LoyaltyAccount.js",
+    "models/LoyaltyTransaction.js"
 ]
 
 var app_files = [
@@ -384,7 +385,8 @@ var management = [
     "webapp/management/passengers/all/cards.controller.js",
     "webapp/management/passengers/item/passenger-item-dashboard.controller.js",
     "webapp/management/passengers/item/passenger-item-info.controller.js",
-    "webapp/management/passengers/item/passenger-loyalty-account.controller.js",
+    "webapp/management/passengers/item/loyaltyAccount/info/controller.js",
+    "webapp/management/passengers/item/loyaltyAccount/transactions/controller.js",
     "webapp/management/passengers/item/passenger-item-notes.controller.js",
     "webapp/management/passengers/item/bannedDrivers/controller.js",
     //    "webapp/management/passengers/addresses/controller.js",

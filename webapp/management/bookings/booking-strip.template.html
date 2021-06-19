@@ -914,6 +914,26 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Loyalty Points Gained</div>
+                                    <div class="content">
+                                        <span ng-if="booking.loyaltyTransaction.PointsGained" class="cost" ng-bind="booking.loyaltyTransaction.PointsGained | currency"></span>
+                                        <span ng-if="!booking.loyaltyTransaction.PointsGained" class="cost">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <div class="title">Loyalty Points Used</div>
+                                    <div class="content">
+                                        <span ng-if="booking.loyaltyTransaction.PointsUsed" class="cost" ng-bind="booking.loyaltyTransaction.PointsUsed | currency"></span>
+                                        <span ng-if="!booking.loyaltyTransaction.PointsUsed" class="cost">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h6>Total</h6>
                         <div class="row">
                             <div class="col-md-6">

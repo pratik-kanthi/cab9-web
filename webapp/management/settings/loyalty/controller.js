@@ -35,7 +35,7 @@
 	    }
 
         function saveEdits() {
-            $http.put('https://cab9-loyalty.herokuapp.com/v1.1/api/client/configuration', $scope.config).success(function(data) {
+            $http.put('http://localhost:8081/v1.1/api/client/configuration', $scope.config).success(function(data) {
                 swal("Updated!", "Configuration has been updated.", "success");
                 $scope.viewMode = 'VIEW';
             });

@@ -234,14 +234,57 @@
             $stateProvider.state('root.passengers.viewer.loyalty-account',{
                 url: '/loyalty-account',
                 viewerType: 'Passenger',
-                templateUrl: '/webapp/management/passengers/item/passenger-loyalty-account.partial.html',
-                controller: 'PassengerLoyaltyAccountController',
+                templateUrl: '/webapp/management/passengers/item/loyaltyAccount/partial.html',
+                default: 'root.passengers.viewer.loyalty-account.info',
                 resolve:{
-                    rLoyaltyInfo:['$stateParams','$http', function($stateParams, $http){
-                        return $http.get('http://localhost:8081/v1.1/api/passenger/loyalty-account?passengerId=' + $stateParams.Id, function(response){
-                            return response;
-                        });
-                    }],
+                    rTabs: [
+                        function () {
+                            return [{
+                                heading: 'Loyalty Account',
+                                route: 'root.passengers.viewer.loyalty-account.info'
+                            }, {
+                                heading: 'Transactions',
+                                route: 'root.passengers.viewer.loyalty-account.transactions'
+                            }]
+                        }
+                    ],
+                },
+                controller: ['$scope', 'rTabs', function ($scope, rTabs) {
+                    $scope.tabDefs = rTabs;
+                }]
+            });
+
+            $stateProvider.state('root.passengers.viewer.loyalty-account.info', {
+                url: '/info',
+                views: {
+                    'loyalty-tab-content@root.passengers.viewer.loyalty-account': {
+                        templateUrl: '/webapp/management/passengers/item/loyaltyAccount/info/partial.html',
+                        controller : 'LoyaltyAccountInfoController',
+                        resolve:{
+                            rLoyaltyInfo:['$stateParams','$http', function($stateParams, $http){
+                                return $http.get('http://localhost:8081/v1.1/api/passenger/loyalty-account?passengerId=' + $stateParams.Id, function(response){
+                                    return response;
+                                });
+                            }],
+                        }
+                    }
+                },
+            });
+
+            $stateProvider.state('root.passengers.viewer.loyalty-account.transactions', {
+                url: '/transactions',
+                views: {
+                    'loyalty-tab-content@root.passengers.viewer.loyalty-account': {
+                        templateUrl: '/webapp/management/passengers/item/loyaltyAccount/transactions/partial.html',
+                        controller : 'LoyaltyAccountTransactionsController',
+                        resolve:{
+                            rTransactions:['$stateParams','$http', function($stateParams, $http){
+                                return $http.get('http://localhost:8081/v1.1/api/passenger/loyalty-transactions?passengerId=' + $stateParams.Id).success(function(data){
+                                    return data;
+                                });
+                            }]
+                        }
+                    }
                 }
             });
 

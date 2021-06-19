@@ -925,6 +925,10 @@
                 type: ['BookingExpense'],
                 hidden: true
             },
+            PointsUsed:{
+                type:Number,
+                hidden: true
+            },
             TaxId: {
                 type: String,
                 display: 'VAT',

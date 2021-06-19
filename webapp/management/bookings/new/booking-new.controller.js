@@ -796,13 +796,18 @@
 
                 $scope.selectedPassenger = found;
                 
-                $http.get('http://localhost:8081/v1.1/api/passenger/loyalty-account?passengerId=' + $scope.selectedPassenger.Id).success(function(data){
-                    $scope.AmountPerPoint = parseFloat(data.conversion);
-                    $scope.loyaltyAccount = data.account;
-                    $scope.useLoyalty = false;
-                    $scope.pointsUsed = 0;
-                    $scope.useAllPoints = false;
-                    $scope.partialPonts = 0;
+                $http.get('http://localhost:8081/v1.1/api/passenger/booking-settings?passengerId=' + $scope.selectedPassenger.Id).success(function(data){     
+                    $scope.showLoyaltyOptions = data.account.Active && data.clientSettings.Enabled;
+                    if($scope.showLoyaltyOptions){
+                        $scope.loyaltyOptions = {};
+                        $scope.loyaltyOptions.enabledPointsUse = false;
+                        $scope.loyaltyOptions.useLoyalty = false;
+                        $scope.loyaltyOptions.useAllPoints = false;
+                        $scope.loyaltyOptions.partialPoints = 0;
+                        $scope.loyaltyOptions.ActivePoints = data.account.ActivePoints.toFixed(2);
+                        $scope.loyaltyOptions.clientSettings = new Model.LoyaltyConfig(data.clientSettings);
+                        $scope.loyaltyOptions.ActivePointsVal = $scope.loyaltyOptions.ActivePoints * $scope.loyaltyOptions.clientSettings.AmountPerPoint;
+                    }
                 });
 
                 Model.Note.query()
@@ -1435,6 +1440,13 @@
                     Booking: $scope._dbooking 
                 }));
             } else {
+                if($scope.loyaltyOptions.enabledPointsUse && $scope.loyaltyOptions.useLoyalty){
+                    if($scope.loyaltyOptions.useAllPoints){
+                        $scope._dbooking.PointsUsed = $scope.loyaltyOptions.MaxPointsUsable;
+                    }else if($scope.loyaltyOptions.partialPoints){
+                        $scope._dbooking.PointsUsed = $scope.loyaltyOptions.partialPoints;
+                    }
+                }
                 promises.push($scope._dbooking.$save());
             }
             
@@ -1810,6 +1822,31 @@
                         $scope.quote = result;
 
                         booking._AutoDispatchOffset = Math.max(15, result.DispatchOffset || 15);
+
+                        if($scope.showLoyaltyOptions){
+                            $scope.pointsCollectible = (booking.EstimatedCost / parseFloat($scope.loyaltyOptions.clientSettings.AmountPerPoint)).toFixed(2);
+
+                            // Check Threshold
+                            if($scope.loyaltyOptions.clientSettings.ThresholdType == 'Percentage'){
+                                if($scope.loyaltyOptions.ActivePointsVal >= (booking.EstimatedCost * $scope.loyaltyOptions.clientSettings.ThresholdValue) / 100)
+                                {
+                                    $scope.loyaltyOptions.enabledPointsUse = true;
+                                    $scope.loyaltyOptions.MaxPointsUsable = $scope.pointsCollectible;
+                                    $scope.loyaltyOptions.MaxPointsUsableVal = booking.EstimatedCost;
+                                }
+                                else{
+                                    $scope.loyaltyOptions.enabledPointsUse = false;
+                                    
+                                }
+                            }
+                            
+                            if($scope.loyaltyOptions.clientSettings.ThresholdType == 'Fare'){
+                                if($scope.loyaltyOptions.ActivePointsVal >=  $scope.loyaltyOptions.clientSettings.ThresholdValue )
+                                    $scope.loyaltyOptions.enabledPointsUse = true;
+                                else
+                                    $scope.loyaltyOptions.enabledPointsUse = false;
+                            }  
+                        }
 
                     } else {
                         $scope.quote = result;

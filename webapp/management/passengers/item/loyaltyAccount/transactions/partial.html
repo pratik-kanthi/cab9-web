@@ -1,0 +1,15 @@
+<div ng-if="transactions.length > 0">
+    <table-for datasource="transactions" class="table table-condensed table-hover" schema="LoyaltyTransaction" filtering="searchTerm" sorting="" paging="paging" grouping="grouping" wrapper-class="" table-class="mt20">
+        <table-titlebar columns-options="false" export-options="true" paging="true"></table-titlebar>
+        <table-heading sorting="true">
+        </table-heading>
+        <table-data-rows>
+            <table-selection></table-selection>
+            <table-actions>
+                <a class="btn btn-xs btn-primary" ui-sref="root.bookings.search({ localId: $row.LocalId})"><i class="material-icons">chrome_reader_mode</i> View</a>
+            </table-actions>
+        </table-data-rows>
+        <table-footer paging="true">
+        </table-footer>
+    </table-for>
+</div>

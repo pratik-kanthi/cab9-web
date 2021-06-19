@@ -179,7 +179,12 @@
                             }, {
                                 heading: 'Dispatch',
                                 route: 'root.settings.company.dispatch'
-                            }, {
+                            },
+                            {
+                                heading: 'Loyalty Points',
+                                route: 'root.settings.company.loyalty'
+                            },
+                            {
                                 heading: 'Company Setup',
                                 route: 'root.settings.company.localisation'
                             }, {
@@ -516,6 +521,13 @@
                 controller: 'SettingsCompanyDispatchController',
                 resolve: {}
             });
+
+            $stateProvider.state('root.settings.company.loyalty', {
+                url: '/loyalty',
+                templateUrl: '/webapp/management/settings/loyalty/partial.html',
+                controller: 'LoyaltyConfigController',
+                resolve: {}
+            });
         }
 
         if ($permissions.test('settings.booking')) {
@@ -599,19 +611,6 @@
             });
         }
 
-        if ($permissions.test('settings.telephony')) {
-            $stateProvider.state('root.settings.loyalty', {
-                url: '/loyalty-configuration',
-                permission: 'Settings - Loyalty System',
-                views: {
-                    'settings-content@root.settings': {
-                        templateUrl: '/webapp/management/settings/loyalty/partial.html',
-                        controller: 'LoyaltyConfigController'
-                    }
-                },
-                resolve: {}
-            });
-        }
 
         if ($permissions.test('settings.googlemapsconfig')) {
             $stateProvider.state('root.settings.googlemapsconfig', {
@@ -1555,10 +1554,6 @@
         }, {
             title: 'Telephony',
             state: 'root.settings.telephony',
-            icon: 'icon-phone'
-        }, {
-            title: 'Loyalty',
-            state: 'root.settings.loyalty',
             icon: 'icon-phone'
         }, {
             title: 'Zones',

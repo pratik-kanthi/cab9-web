@@ -251,9 +251,26 @@
                         }
                     );
 
+               
                 $http.post($config.API_ENDPOINT + 'api/quote', $scope.booking).success(function (result) {
                     $scope.booking.quote = result;
+                    
                 });
+
+
+                $http.get('http://localhost:8081/v1.1/api/passenger/loyalty-transaction?localId=' + $scope.booking.LocalId ).success(function (result) {
+                   
+                    result.Points = parseFloat(result.Points);
+                    $scope.booking.loyaltyTransaction = result;
+                    
+                    if(result.Points > 0){
+                        $scope.booking.loyaltyTransaction.PointsGained = result.Points
+                    }else{
+                        $scope.booking.loyaltyTransaction.PointsUsed = result.Points
+                    }
+                });
+
+                
             }
         });
 

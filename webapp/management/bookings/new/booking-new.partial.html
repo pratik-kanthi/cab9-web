@@ -468,41 +468,41 @@
                                     <br class="clearfix" />
                                 </div>
 
-                                <div class="block" ng-if="loyaltyAccount.Active">
+                                <div class="block" ng-if="showLoyaltyOptions">
                                     <h3 class="section-title">
                                         <i class="material-icons">directions_car</i> Loyalty Points
                                     </h3>
                                     <div class="half-column form-group">
                                         <label for="" class="control-label">Available Points</label>
-                                        <div>{{ loyaltyAccount.ActivePoints}}</div>
+                                        <div>{{ loyaltyOptions.ActivePoints }}</div>
                                     </div>
                                     <div class="half-column form-group">
                                         <label for="" class="control-label">Total Points Value</label>
-                                        <div>{{ loyaltyAccount.ActivePoints * AmountPerPoint | currency}}</div>
+                                        <div>{{ loyaltyOptions.ActivePointsVal | currency}}</div>
                                     </div>
                                     <br class="clearfix">
                                     <div class="half-column form-group">
                                         <label class="control-label">Use Loyalty Points</label>
-                                        <input id="useLoyalty" type="checkbox" ng-model="useLoyalty" class="check">
+                                        <input ng-disabled="!loyaltyOptions.enabledPointsUse" id="useLoyalty" type="checkbox" ng-model="loyaltyOptions.useLoyalty" class="check">
                                         <label for="useLoyalty" class="check-label"></label>
                                        
                                     </div>
                                     <br class="clearfix" />
                                     <div class="half-column form-group">
                                             <label class="control-label">Use All Points</label>
-                                            <input ng-disabled="!useLoyalty" id="useAllPoints" type="checkbox" ng-model="useAllPoints" class="check">
+                                            <input ng-disabled="!loyaltyOptions.useLoyalty" id="useAllPoints" type="checkbox" ng-model="loyaltyOptions.useAllPoints" class="check">
                                             <label for="useAllPoints" class="check-label"></label>
                                     </div>
-                                    <div class="half-column form-group" ng-if="useLoyalty && !useAllPoints">
+                                    <div class="half-column form-group" ng-if="loyaltyOptions.useLoyalty && ! loyaltyOptions.useAllPoints">
                                         <div class="form-edit input-group">
                                             <label class="control-label">Use Partial</label>
-                                            <input class="form-control" ng-disabled="!useLoyalty || useAllPoints" type="number" ng-model="partialPoints">
+                                            <input ng-min="0" ng-max="loyaltyOptions.MaxPointsUsable" class="form-control" ng-disabled="!loyaltyOptions.useLoyalty || loyaltyOptions.useAllPoints" type="number" ng-model="loyaltyOptions.partialPoints">
                                         </div>
                                     </div>
                                     <br class="clearfix" />
-                                    <small ng-if="!useLoyalty">points will be added to Passenger's Loyalty Account</small>
-                                    <small ng-if="useLoyalty && partialPoints">{{ partialPoints * AmountPerPoint | currency}} will be paid using Passenger's Loyalty Account</small>
-                                    <small ng-if="useLoyalty && useAllPoints">{{ loyaltyAccount.ActivePoints * AmountPerPoint | currency}} will be paid using Passenger's Loyalty Account</small>
+                                    <strong ng-if="loyaltyOptions.enabledPointsUse && pointsCollectible && !loyaltyOptions.useLoyalty">{{ pointsCollectible }} points will be added to Passenger's Loyalty Account</strong>                                    
+                                    <strong ng-if="loyaltyOptions.enabledPointsUse && loyaltyOptions.useLoyalty && loyaltyOptions.useAllPoints">{{ loyaltyOptions.MaxPointsUsableVal | currency }} ({{ loyaltyOptions.MaxPointsUsable }} points)  will be paid using Passenger's Loyalty Account</strong>                                    
+                                    <strong ng-if="loyaltyOptions.enabledPointsUse && loyaltyOptions.useLoyalty && !loyaltyOptions.useAllPoints">{{ loyaltyOptions.partialPoints * loyaltyOptions.clientSettings.AmountPerPoint | currency }} ({{ loyaltyOptions.partialPoints}} points)  will be paid using Passenger's Loyalty Account</strong>                                    
                                     
                                     <br class="clearfix" />
                                 </div>
@@ -823,26 +823,39 @@
                                         <div class="row mt5 mb15">
                                             <div class="col-xs-6 col-xs-offset-3">
                                                 <div class="text-center">
-                                                    <span class="form-contorl-static t-xl">Quote: {{(_dbooking.EstimatedCost + quote.TotalCharges) | currency}}</span>
+                                                    <span ng-if="!loyaltyOptions.useLoyalty" class="form-contorl-static t-xl">Quote: {{(_dbooking.EstimatedCost + quote.TotalCharges) | currency}}</span>
+                                                    <span ng-if="loyaltyOptions.enabledPointsUse && loyaltyOptions.useLoyalty">
+                                                        <span  ng-if="loyaltyOptions.useAllPoints" class="form-contorl-static t-xl">Quote: {{(_dbooking.EstimatedCost - loyaltyOptions.MaxPointsUsableVal + quote.TotalCharges) | currency}}</span>
+                                                        <span  ng-if="!loyaltyOptions.useAllPoints" class="form-contorl-static t-xl">Quote: {{(_dbooking.EstimatedCost - loyaltyOptions.partialPoints * loyaltyOptions.clientSettings.AmountPerPoint + quote.TotalCharges) | currency}}</span>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row mt5 mb15">
-                                            <div class="col-xs-4">
+                                            <div class="col-xs-3">
                                                 <div class="form-group mt10 mb10">
                                                     <label class="control-label">Journey Quote:</label>
                                                     <br />
                                                     <span class="form-contorl-static">{{_dbooking.EstimatedCost | currency}}</span>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-4">
+                                            <div class="col-xs-3" ng-if="loyaltyOptions.enabledPointsUse && loyaltyOptions.useLoyalty">
+                                                <div class="form-group mt10 mb10">
+                                                    <label class="control-label">Loyalty Points:</label>
+                                                    <br />
+                                                    <span ng-if="loyaltyOptions.useAllPoints" class="form-contorl-static"> - {{ loyaltyOptions.MaxPointsUsableVal | currency}}</span>
+                                                    <span ng-if="!loyaltyOptions.useAllPoints" class="form-contorl-static"> - {{ loyaltyOptions.partialPoints * loyaltyOptions.clientSettings.AmountPerPoint | currency}}</span>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3">
                                                 <div class="form-group mt10 mb10">
                                                     <label class="control-label">Charges:</label>
                                                     <br />
                                                     <span class="form-contorl-static">{{quote.TotalCharges | currency}}</span>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-4">
+                                            <div class="col-xs-3">
                                                 <div class="form-group mt10 mb10">
                                                     <label class="control-label">Taxes:</label>
                                                     <br />
